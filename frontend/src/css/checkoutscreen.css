@@ -1,0 +1,161 @@
+.title {
+    display: flex;
+    justify-content: center;
+}
+
+.title h1 {
+    margin: 0%;
+    margin-top: 1rem;
+    padding: 0%;
+}
+
+.checkout-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    max-width: 1000px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    /* box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1); */
+    margin: 20px;
+    margin-left: 200px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    flex-grow: inherit;
+    flex-shrink: inherit;
+}
+
+.checkout-content h1, h2, h3 {
+    margin: 0;
+}
+
+.checkout-content .ul .li {
+    border: 1px solid rgb(0, 0, 0, 0.125);
+}
+
+.checkout-content .card1 .checkout-form{
+    padding: 1.5rem;
+    flex-wrap: wrap;
+    flex-grow: inherit;
+    flex-shrink: inherit;
+}
+
+
+.checkout-content .card1 label{
+    font-weight: 600;
+    margin-top: 10px;
+    text-align: left;
+    width: 180px;
+    display: flex;
+    align-items: center;
+}
+
+.checkout-content .card1{
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    border-radius: 8px;
+    /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.17); */
+    flex-wrap: wrap;
+    flex-grow: inherit;
+    flex-shrink: inherit;
+}
+
+.checkout-content .card2{
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.17);
+    flex-wrap: wrap;
+    flex-grow: inherit;
+    flex-shrink: inherit;
+}
+
+.checkout-content .card2 small {
+    float: right;
+}
+
+.checkout-content .card2 h2{
+    margin-bottom: 1rem;
+}
+
+.checkout-content .card2 .li{
+    width: 300px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkout-content .card1 .button {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.checkout-content .name{
+    display: flex;
+    flex-direction: row;
+    /* flex-wrap: wrap;
+    flex-grow: inherit;
+    flex-shrink: inherit; */
+}
+
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkout-form .name input {
+    width: 70%;
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid #bebebe;
+    border-radius: 5px;
+}
+
+
+.checkout-form .email-input,
+.checkout-form .phone-number {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkout-form .email-input #email,
+.checkout-form .phone-number #phone-number {
+    width: 85% ;
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid #bebebe;
+    border-radius: 5px;
+}
+
+
+.form-check{
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    font-size: small;
+    align-items: baseline;
+    column-gap: 1rem;
+}
+
+hr{
+    width:100%;
+    margin-top: 1rem;
+}
+
+.form-check label {
+    font-weight: 300 !important ;
+    width: max-content !important;
+}
+
+@media (max-width: 770px) {
+    .checkout-content, label {
+        padding: 0;
+        margin: 0;
+    }
+}

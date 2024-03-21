@@ -1,0 +1,146 @@
+
+
+.club-detail h1,
+.club-detail h2,
+.club-detail h3,
+.club-detail h4,
+.club-detail h5,
+.club-detail h6,
+.club-detail p,
+.club-detail ul,
+.club-detail li {
+margin: 3px;
+padding: 1px;
+}
+
+* {
+box-sizing: border-box;
+}
+.club-detail {
+display: flex;
+}
+
+.club-detail .carousel-container {
+flex: 0;
+padding: 30px;
+box-sizing: border-box;
+margin-left: 100px;
+}
+
+.club-detail .carousel-img {
+height: 550px;
+object-fit: cover;
+}
+
+.club-detail .details {
+flex: 1;
+padding: 30px;
+box-sizing: border-box;
+}
+
+.club-detail .lead{
+font-weight: normal;
+text-decoration: none;
+
+}
+.club-detail .btn1 {
+margin-top: 2rem;
+margin-bottom: 2rem;
+padding: 8px 14px;
+font-size: 15px;
+color: white;
+background: black;
+border: 2px;
+border-radius: 25px;
+cursor: pointer;
+}
+
+.club-detail .btn1:hover {
+background-color: #262255;
+transition: 0.2s;
+}
+
+.club-detail .popup1{
+font-size: small;
+text-decoration: wavy;
+color: blue;
+}
+
+.club-detail .popup {
+display: none;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.7);
+z-index: 1;
+overflow: auto;
+}
+
+
+.club-detail table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+}
+
+th, td {
+padding: 8px;
+border-bottom: 1px solid #ddd;
+text-align: center;
+}
+
+th {
+background-color: #f2f2f2;
+}
+.nav-item, .dropdown-item {
+text-decoration: none;
+text-transform: uppercase;
+}
+.nav-link {
+font-weight: 700;
+}
+
+.similar-clubs{
+margin-left: 100px;
+display: flex;
+}
+
+.popup-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5);
+z-index: 1000;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.popup-content {
+background-color: white;
+padding: 20px;
+border-radius: 5px;
+position: relative; /* Add this to make it relative */
+}
+
+.popup-content button {
+position: absolute;
+top: 10px;
+right: 10px;
+}
+
+.popup1 {
+background: none !important;
+border: none;
+padding: 0 !important;
+font-style: italic;
+text-decoration: wavy;
+color: blue;
+}
+
+
+
+

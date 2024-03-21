@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+footer {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  background-color: black;
+  color: white;
+  margin-top: auto;
+}
+
+.nav-home {
+  background-color: transparent !important;
+  flex-wrap: wrap;
+  flex-grow: inherit;
+  flex-shrink: inherit;
+  width: 100%;
+}
+
+/* @media (max-width: 800px) {
+  .nav-all, .nav-home {
+    width: 120%;
+  }
+  
+} */
+
+.nav-all {
+  background-color: black !important;
+  flex-wrap: wrap;
+  flex-grow: inherit;
+  flex-shrink: inherit;
+  width: 100%;
+}

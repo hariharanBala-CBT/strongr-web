@@ -1,0 +1,67 @@
+.check-availability-container-club {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 10rem;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.form-section {
+  width: auto;
+  background-image: linear-gradient(to top, whitesmoke, white);
+}
+
+.btn-check-availability-club {
+  margin-bottom: 2rem;
+  padding: 8px 14px;
+  font-size: 15px;
+  color: white;
+  background: black;
+  border: 2px;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.btn-check-availability-club:hover {
+  background-color: #262255;
+  transition: 0.2s;
+}
+
+.check-availability-container-club {
+  display: flex;
+  justify-content: center;
+  column-gap: 5rem;
+  font-size: 16px;
+}
+
+.check-availability-container label  {
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.check-availability-container-club .select-date{
+  align-items: baseline;
+}
+
+
+.check-availability-container-club select, .check-availability-container-club input[type="date"] {
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid #bebebe;
+  border-radius: 5px;
+  width: 10rem;
+  max-width: 300px;
+}
+
+
+.availability-btn-class {
+  text-align: center;
+}
+
+.club-list{
+  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}

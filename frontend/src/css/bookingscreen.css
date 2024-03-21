@@ -1,0 +1,198 @@
+.booking-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    max-width: 1000px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    margin-left: 200px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    flex-shrink: inherit;
+    flex-grow: inherit;
+}
+
+@media (max-width: 767px) {
+    .booking-content {
+        margin: 0;
+    }
+  }
+
+.booking-content .ul {
+    display: flex;
+    flex-direction: column;
+}
+
+.booking-content h1, h2, h3 {
+    margin: 0;
+}
+ 
+.booking-content .card1 .booking-form{
+    padding: 1.5rem;
+    flex-wrap: wrap;
+    flex-shrink: inherit;
+    flex-grow: inherit;
+}
+ 
+.booking-content .card1 label{
+    font-weight: 600;
+    margin-top: 10px;
+    text-align: left;
+    /* width: 180px; */
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-shrink: inherit;
+    flex-grow: inherit;
+}
+ 
+.booking-content .card1 select,.booking-content .card1 input{
+    padding: 5px;
+  margin: 5px;
+  border: 1px solid #bebebe;
+  border-radius: 5px;
+  width: 10rem;
+  max-width: 150px;
+  flex-wrap: wrap;
+    flex-shrink: inherit;
+    flex-grow: inherit;
+}
+ 
+.booking-content .card1 .ul{
+    margin: 0%;
+    padding-left: 0%;
+}
+
+ 
+.booking-content .card1{
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.17);
+    flex-wrap: wrap;
+    flex-shrink: inherit;
+    flex-grow: inherit;
+}
+
+ 
+.booking-content .card1 .container-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-shrink: inherit;
+    flex-grow: inherit;
+}
+
+
+.booking-content .card1 .select,.booking-content .card1 .select-date,.booking-content .card1 .hour-field {
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    flex-shrink: inherit;
+    flex-grow: inherit;
+}
+
+ 
+.booking-content .card1 .select-hour{
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-shrink: inherit;
+    flex-grow: inherit;
+}
+ 
+.booking-content .card1 input[type='text']{
+    width:32px;
+    height: 30px;
+}
+
+.booking-content .card2{
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.17);
+    flex-wrap: wrap;
+    flex-shrink: inherit;
+    flex-grow: inherit;
+}
+
+.booking-content .card2 small {
+    float: right;
+}
+
+.booking-content .card2 h2{
+    margin-bottom: 1rem;
+}
+
+.booking-content .card2 .ul{
+    margin-bottom: 1rem;
+
+}
+
+.booking-content .card2 .ul .li {
+    border: 1px solid rgb(0, 0, 0, 0.125);
+}
+
+.booking-content .card2 .li{
+    width: 300px;
+    border: black;
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-shrink: inherit;
+    flex-grow: inherit;
+}
+
+.booking-content .card2 .button {
+    display: flex;
+    justify-content: center;
+}
+    
+@media (max-width: 770px) {
+
+        .booking-content{
+            display: flex;
+            justify-content: center;
+            box-shadow: 0px;
+        }
+
+        .booking-content .card2 h2 {
+            justify-content: center;
+            margin-left: 100px;
+        }
+        .booking-content .card1 .container-title {
+            margin-left: 50px;
+        }
+        .booking-content .card1{
+            margin: 0;
+            padding-bottom: 0;
+        }
+        .booking-content .card1 .select, .select-date, .hour-field{
+            padding: 0%;
+        }
+    
+      }
+
+.eEUAsF {
+    width: 323px;
+}
+.jQMQWL {
+    position: relative;
+    text-align: center;
+    width: 298px !important;
+    margin: auto;
+  }
