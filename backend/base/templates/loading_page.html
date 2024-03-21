@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        .maze-7 {
+            width: 40px;
+            aspect-ratio: 1;
+            background:
+            radial-gradient(farthest-side,#000 90%,#0000) 50%/8px 8px no-repeat,
+            conic-gradient(from -90deg at 15px 15px,#0000 90deg,#fff 0) 0 0/25px 25px;
+            animation:m7 1s infinite;
+        }
+        
+        @keyframes m7 {
+            0%   {background-position:50%,0 0}
+            50%  {background-position:50%,25px 0}
+            100% {background-position:50%,25px 25px}
+        }
+
+        body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+            grid-auto-rows: 130px;
+            place-items:center;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        /* loader.css */
+/* body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} */
+
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="maze-7"></div>
+        Loading...
+    </div>
+</body>
+</html>

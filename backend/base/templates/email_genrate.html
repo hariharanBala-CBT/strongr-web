@@ -1,0 +1,14 @@
+Hello {{ user.first_name }},
+
+Welcome to our website!
+Your Process of Hosting your location has begun.
+Kindly complete further processes to become a part of us!
+
+Username: {{ user.username }}
+Password: {{ random_password }}
+
+You can now log in using the following link:
+http://{{ domain }}{% url 'home_page' %}
+
+Thank you,
+STRONGR.
