@@ -17,7 +17,6 @@ import {
 import { useHomeContext } from '../context/HomeContext'
 
 
-
 function HomeScreen() {
   const dispatch = useDispatch();
   const sectionRef = useRef(null);
@@ -30,25 +29,31 @@ function HomeScreen() {
   };
 
   const areaList = useSelector((state) => state.areaList);
-  const { arealoading, areaserror, areas } = areaList;
+  const { areaerror, arealoading, areas } = areaList;
 
   const gameList = useSelector((state) => state.gameList);
   const { gameerror, gameloading, games } = gameList;
-
-  // const handleDateChange = (selectedDate) => {
-  //   setDate(selectedDate);
-  // };
   
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(filterLocation(areaName, gameName, date));
     navigate("/clubs");
   };
- 
+
   const [gameName, setGameName] = useState(games[0]?.game_name);
   const [areaName, setAreaName] = useState(areas[0]?.area_name);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState();
 
+  const changeGame = (value) => {
+    setGameName(value)
+  }
+  const changeArea = (value) => {
+    setAreaName(value)
+  }
+  const changeGate = (value) => {
+    setDate(value)
+  }
+  
   useEffect(() => {
     dispatch(listGames());
     dispatch(listAreas());
@@ -65,20 +70,15 @@ function HomeScreen() {
   }, [dispatch]);
 
   useEffect(() => {
-    setSelectedArea(areaName)
-    setSelectedGame(gameName)
-    setSelectedDate(date)
-  }, [areaName, gameName, date]);
-
+    setAreaName(areas[0]?.area_name)
+    setGameName(games[0]?.game_name)
+  }, [games, areas]);
+  
   useEffect(() => {
-    const storedSelectedGame = localStorage.getItem("selectedGame");
-    const storedSelectedArea = localStorage.getItem("selectedArea");
-    const storedSelectedDate = localStorage.getItem("selectedDate");
-
-    if (storedSelectedGame) setGameName(storedSelectedGame);
-    if (storedSelectedArea) setAreaName(storedSelectedArea);
-    if (storedSelectedDate) setDate(storedSelectedDate);
-  }, []);
+    setSelectedGame(gameName)
+    setSelectedArea(areaName)
+    setSelectedDate(date)
+  }, [gameName, areaName, date]);
 
   return (
     <div className="home">
@@ -126,25 +126,25 @@ function HomeScreen() {
                 label="game"
                 id="gameName"
                 value={gameName}
-                onChange={(value) => setGameName(value)}
+                onChange={changeGame}
                 options={games}
               />
             )}
             
             {arealoading ? (
               <Loader />
-            ) : areaserror ? (
-              <Message variant="danger">Areas: {areaserror}</Message>
+            ) : areaerror ? (
+              <Message variant="danger">{areaerror}</Message>
             ) : (
             <SelectInput
               label="area"
               id="areaName"
               value={areaName}
-              onChange={(value) => setAreaName(value)}
+              onChange={changeArea}
               options={areas}
             />)}
 
-            <DateInput id="date" value={date} onChange={(selectedDate) => setDate(selectedDate)} />
+            <DateInput id="date" value={date} onChange={changeGate} />
 
           </div>
           <div className="availability-btn-class">

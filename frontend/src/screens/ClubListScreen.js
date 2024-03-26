@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import SelectInput from "../components/SelectInput";
 import DateInput from "../components/DateInput";
 import { useNavigate } from "react-router-dom";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import Club from "../components/Club";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -26,7 +26,7 @@ function ClubListScreen() {
 
   const filterClubLocations = useSelector((state) => state.filterClubLocations);
   const { cluberror, clubloading, clubLocationDetails } = filterClubLocations;
-  
+
   const [gameName, setGameName] = useState(selectedGame);
   const [areaName, setAreaName] = useState(selectedArea);
   const [date, setDate] = useState(selectedDate);
@@ -46,6 +46,7 @@ function ClubListScreen() {
   useEffect(() => {
     dispatch(listGames());
     dispatch(listAreas());
+    
     const dtToday = new Date();
     const month = dtToday.getMonth() + 1;
     const day = dtToday.getDate();
@@ -63,17 +64,23 @@ function ClubListScreen() {
     const storedSelectedArea = localStorage.getItem("selectedArea");
     const storedSelectedDate = localStorage.getItem("selectedDate");
 
+
     if (storedSelectedGame) setGameName(storedSelectedGame);
     if (storedSelectedArea) setAreaName(storedSelectedArea);
     if (storedSelectedDate) setDate(storedSelectedDate);
+
   }, []);
   
+
   useEffect(() => {
     setSelectedArea(areaName)
     setSelectedGame(gameName)
     setSelectedDate(date)
     dispatch(filterLocation(areaName, gameName, date));
-  }, [areaName,gameName,date]);
+
+  }, [areaName,gameName,date, setSelectedArea, setSelectedGame, setSelectedDate, dispatch]);
+
+
 
   return (
     <div>
@@ -123,12 +130,16 @@ function ClubListScreen() {
           <Loader />
         ) : cluberror ? (
           <Message variant="danger">{cluberror}</Message>
-        ) : filterClubLocations  ? (
+        ) : filterClubLocations  && (
           <Club clubs={clubLocationDetails} />
-        ) : (
-          <h2>No clubs available for selected day...</h2>
         )}
       </div>
+      <div className="clubs-error">
+      {clubLocationDetails.length === 0 &&
+        <h2>No clubs available :(</h2>
+      }  
+      </div>
+        
     </div>
   );
 }

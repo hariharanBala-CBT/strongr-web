@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/loginscreen.css";
 import Header from "../components/Header";
 import Button from "../components/Button";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../actions/actions";
 import Loader from '../components/Loader'
@@ -12,20 +12,20 @@ function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const location = useLocation();
+  // const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  // const redirect = location.search ? location.search.split("=")[1] : "/";
 
   const userLogin = useSelector((state) => state.userLogin);
   const { error, loading, userInfo } = userLogin;
 
   useEffect(() => {
     if (userInfo) {
-      navigate(redirect);
+      navigate(-1);
     }
-  }, [navigate, userInfo, redirect]);
+  }, [navigate, userInfo]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

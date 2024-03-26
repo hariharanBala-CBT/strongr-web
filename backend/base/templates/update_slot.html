@@ -142,14 +142,44 @@ form {
                         <h3 class="my-4">Courts:</h3>
                         <h6 class="mb-5">Add Available Courts to your Location</h6>
 
-                        <form method="post">
+                        <form id="slot-form" method="post">
                             {% csrf_token %}
-                            {{ form.as_p }}
-                            <div class="buttons px-4 py-4" style="margin-left: 20%">
-                              <a  href="{% url 'slot-list' %}"  class="btn btn-secondary">Back</a>
-                              <button type="submit" class="btn btn-primary">Next</button>
+                            <div class="form-group">
+                                <label for="id_start_time">Start Time:</label>
+                                {{ form.start_time }}
                             </div>
-                          </form>
+                            <div class="form-group">
+                                <label for="id_end_time">End Time:</label>
+                                {{ form.end_time }}
+                            </div>
+                            <div class="form-group">
+                                <label for="id_court">Court:</label>
+                                <select id="id_court" name="court" disabled>
+                                    {% for value, label in form.court.field.choices %}
+                                        {% if value == form.court.value %}
+                                            <option value="{{ value }}" selected>{{ label }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if error %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_days">Days:</label>
+                                {{ form.days }}
+                            </div>
+                            <div class="form-group" disabled style="display: flex; justify-content: left;">
+                                <label for="id_checkbox" style="margin-right: 50px;">Booked:</label>
+                                {{ form.is_booked }}
+                            </div>
+                            
+                            <div class="buttons px-4 py-4" style="margin-left: 20%">
+                                <a href="{% url 'slot-list' %}" class="btn btn-secondary">Back</a>
+                                <button type="submit" class="btn btn-primary">Next</button>
+                            </div>
+                        </form>
                     </div>
             </main>
             <footer class="py-4 bg-light mt-auto">

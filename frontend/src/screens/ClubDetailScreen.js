@@ -11,13 +11,18 @@ import {
   listclubAmenities,
   listclubWorking,
   listClubImages,
+  listCourts,
 } from "../actions/actions";
 import { IoMdCloseCircleOutline } from "react-icons/io";
+import { useHomeContext } from "../context/HomeContext";
 
 function ClubDetailScreen() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const gameName = localStorage.getItem("selectedGame");
+  const { setSelectedCourt } = useHomeContext();
 
   useEffect(() => {
     dispatch(listclubLocation(id));
@@ -25,7 +30,9 @@ function ClubDetailScreen() {
     dispatch(listclubAmenities(id));
     dispatch(listclubWorking(id));
     dispatch(listClubImages(id));
-  }, [dispatch, id]);
+    dispatch(listCourts(id, gameName));
+
+  }, [dispatch, id, gameName]);
 
   const [isPopupVisible, setPopupVisible] = useState(false);
 
@@ -53,6 +60,14 @@ function ClubDetailScreen() {
 
   const Images = useSelector((state) => state.clubImages);
   const { imageError, imageLoading, clubImage } = Images;
+
+  const { courts } = useSelector((state) => state.courtList);
+
+  useEffect(() => {
+    if(courts){
+      setSelectedCourt(courts[0]?.name);
+    }
+  },[courts])
 
   const handleClick = () => {
     navigate(`/booking/${clubLocation.id}`);

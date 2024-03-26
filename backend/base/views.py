@@ -90,13 +90,17 @@ class HomePageView(TemplateView):
     def get(self, request, *args, **kwargs):
         first_login = request.session.get(
             'first_login_' + str(request.user.id), False)
-        if first_login:
-            return super().get(request, *args, **kwargs)
-        else:
+        
+        if not first_login:
+            request.session['first_login_' + str(request.user.id)] = True
+            
             profile_page_url = reverse(
                 'organization_profile',
                 kwargs={'pk': request.user.organization.pk})
+            
             return redirect(profile_page_url)
+        
+        return super().get(request, *args, **kwargs)
 
 
 class OrganizationSignupView(CreateView):
@@ -268,27 +272,31 @@ class OrganizationProfileView(UpdateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationAddLocationView(CreateView):
-    model = OrganizationLocation
-    template_name = 'org_createlocation.html'
-    form_class = OrganizationLocationForm
-    success_url = reverse_lazy('organization_locationgamelist')
+class OrganizationAddLocationView(CreateView):   
+    model = OrganizationLocation    
+    template_name = 'org_createlocation.html'    
+    form_class = OrganizationLocationForm    
+    success_url = reverse_lazy('organization_locationworkingdays')
 
-    def form_valid(self, form):
-        days = {
-            'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
-            'Saturday'
-        }
-        organization = get_object_or_404(Organization, user=self.request.user)
-        form.instance.organization = organization
-        form.save()
-        self.request.session['location_pk'] = form.instance.pk
-        for day in days:
+    def form_valid(self, form):       
+        organization = get_object_or_404(Organization, user=self.request.user)        
+        form.instance.organization = organization        
+        form.save()        
+        self.request.session['location_pk'] = form.instance.pk   
+
+        days_order = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        
+        days_index_map = {day: index for index, day in enumerate(days_order, start=1)}
+
+        sorted_days = sorted(days_order, key=lambda x: days_index_map[x])
+
+        for day in sorted_days:
             workingdays = OrganizationLocationWorkingDays.objects.create(
                 days=day,
-                organization_location=(OrganizationLocation.objects.get(
-                    pk=form.instance.pk)))
-            workingdays.save()
+                organization_location=form.instance,
+            )            
+            workingdays.save()        
+
         return HttpResponseRedirect(self.success_url)
 
 
@@ -591,7 +599,7 @@ class SlotCreateView(CreateView):
 class SlotUpdateView(UpdateView):
     model = Slot
     template_name = 'update_slot.html'
-    form_class = SlotForm
+    form_class = SlotUpdateForm
     success_url = reverse_lazy('slot-list')
 
     def form_invalid(self, form):
@@ -808,7 +816,6 @@ from django.views.generic import CreateView
 
 
 class CreateMultipleSlotsView(View):
-
     def get(self, request, *args, **kwargs):
         pk = request.session.get('location_pk')
         courts = Court.objects.filter(location_id=pk)
@@ -818,45 +825,43 @@ class CreateMultipleSlotsView(View):
             'form': form,  # Pass the form to the template context
         }
         return render(request, 'ml.html', context)
-
+        
     def post(self, request, *args, **kwargs):
-        # Get the courts for the location
-        location_pk = request.session.get('location_pk')
-        courts = Court.objects.filter(location_id=location_pk)
+        # Get the court_pk from URL parameters
+        court_pk = kwargs.get('court_pk')
+        
+        # Retrieve the court object corresponding to court_pk
+        court = get_object_or_404(Court, pk=court_pk, location_id=request.session.get('location_pk'))
 
-        for court in courts:
-            active_days = OrganizationLocationWorkingDays.objects.filter(
-                organization_location=location_pk, is_active=True)
+        # Get all active days for the organization location
+        active_days = OrganizationLocationWorkingDays.objects.filter(organization_location=request.session.get('location_pk'), is_active=True)
 
-            for day in active_days:
-                # Get start and end time for the day
-                work_from_time = day.work_from_time
-                work_to_time = day.work_to_time
-                # Set current time to the starting work time
-                current_datetime = datetime.combine(datetime.now().date(),
-                                                    work_from_time)
-                print(current_datetime)
-                acc_day = day.days
+        # Iterate over active days
+        for day in active_days:
+            # Get start and end time for the day
+            work_from_time = day.work_from_time
+            work_to_time = day.work_to_time
 
-                # Create slots for each hour within the time range
-                while current_datetime < datetime.combine(
-                        datetime.now().date(), work_to_time):
-                    # Create a new slot for the current hour and court
-                    slot = Slot.objects.create(
-                        start_time=current_datetime.time(),
-                        end_time=(current_datetime +
-                                  timedelta(hours=1)).time(),
-                        court=court,
-                        location=OrganizationLocation.objects.get(
-                            pk=location_pk
-                        ),  # Assuming you are passing location data via POST
-                        days=acc_day,
-                        is_booked=
-                        False  # Assuming slots are initially not booked
-                    )
+            # Set current time to the starting work time
+            current_datetime = datetime.combine(datetime.now().date(), work_from_time)
 
-                    # Move to the next hour
-                    current_datetime += timedelta(hours=1)
+            # Create slots for each hour within the time range
+            while current_datetime < datetime.combine(datetime.now().date(), work_to_time):
+                # Create a new slot for the current hour and court
+                Slot.objects.create(
+                    start_time=current_datetime.time(),
+                    end_time=(current_datetime + timedelta(hours=1)).time(),
+                    court=court,
+                    location=OrganizationLocation.objects.get(pk=request.session.get('location_pk')),  # Assuming you are passing location data via POST
+                    days=day.days, 
+                    is_booked=False  # Assuming slots are initially not booked
+                )
+                
+                # Move to the next hour
+                current_datetime += timedelta(hours=1)
+
+        # Redirect or render as needed
+        return redirect('court-list')
 
         # Redirect or render as needed
         return redirect('court-list')

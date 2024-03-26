@@ -7,15 +7,19 @@ export const HomeProvider = ({ children }) => {
   const [selectedGame, setSelectedGame] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedCourt, setSelectedCourt] = useState("");
+
 
   useEffect(() => {
     const storedSelectedGame = localStorage.getItem("selectedGame");
     const storedSelectedArea = localStorage.getItem("selectedArea");
     const storedSelectedDate = localStorage.getItem("selectedDate");
+    const storedSelectedCourt = localStorage.getItem("selectedCourt");
 
     if (storedSelectedGame) setSelectedGame(storedSelectedGame);
     if (storedSelectedArea) setSelectedArea(storedSelectedArea);
     if (storedSelectedDate) setSelectedDate(storedSelectedDate);
+    if (storedSelectedCourt) setSelectedCourt(storedSelectedCourt);
   }, []);
 
   useEffect(() => {
@@ -30,13 +34,19 @@ export const HomeProvider = ({ children }) => {
     localStorage.setItem("selectedDate", selectedDate);
   }, [selectedDate]);
 
+  useEffect(() => {
+    localStorage.setItem("selectedCourt", selectedCourt);
+  }, [selectedCourt]);
+
   const contextValue = {
     selectedGame,
     setSelectedGame,
     selectedArea,
     setSelectedArea,
     selectedDate,
-    setSelectedDate
+    setSelectedDate,
+    selectedCourt,
+    setSelectedCourt
   };
 
   return (

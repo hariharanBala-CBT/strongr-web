@@ -5,111 +5,98 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import DateInput from "../components/DateInput";
-import Duration from "../components/Duration";
+// import Duration from "../components/Duration";
 import SelectInput from "../components/SelectInput";
 import { useDispatch, useSelector } from "react-redux";
-import DayTimePicker from "@mooncake-dev/react-day-time-picker";
-import { useHomeContext } from '../context/HomeContext'
+// import DayTimePicker from "@mooncake-dev/react-day-time-picker";
+// import ReactTimeslotCalendar from "react-timeslot-calendar";
+import { useHomeContext } from "../context/HomeContext";
 import {
   listclubLocation,
   listclubGame,
-  listclubWorking,
   listCourts,
-  createBooking,
+  // createBooking,
   fetchAvailableSlots,
 } from "../actions/actions";
-import styled from "styled-components";
+// import styled from "styled-components";
 
-
-const Container = styled.div`
-  width: 330px;
-  margin: 1em auto;
-  padding: 1em;
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #f0f0f0;
-  border-radius: 5px;
-  text-align: center;
-  box-shadow: 0 2px 4px #00000018;
-  @media (max-width: 520px) {
-    width: 50%;
-  }
-`;
+// const Container = styled.div`
+//   width: 330px;
+//   margin: 1em auto;
+//   padding: 1em;
+//   background-color: #fff;
+//   color: #333;
+//   border: 1px solid #f0f0f0;
+//   border-radius: 5px;
+//   text-align: center;
+//   box-shadow: 0 2px 4px #00000018;
+//   @media (max-width: 520px) {
+//     width: 50%;
+//   }
+// `;
 
 function BookingScreen() {
+  const {
+    selectedDate,
+    selectedArea,
+    selectedGame,
+    // selectedCourt,
+    setSelectedCourt,
+  } = useHomeContext();
+
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
-  const [selectedDay, setSelectedDay] = useState("");
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
-  const [workingHours, setWorkingHours] = useState([]);
-  const [courtName, setCourtName] = useState("");
+  const { clubLocation } = useSelector((state) => state.Location);
+  const { clubGame } = useSelector((state) => state.clubGame);
+  const { courts } = useSelector((state) => state.courtList);
+  const { slots } = useSelector((state) => state.slot);
+
+  // const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
+  // const [workingHours, setWorkingHours] = useState([]);
   const [slot, setSlot] = useState(null);
-  const { selectedDate, selectedArea, selectedGame  } = useHomeContext();  
+  const [areaName, setAreaName] = useState(selectedArea);
+  const [gameName, setGameName] = useState(selectedGame);
+  const [date, setDate] = useState(selectedDate);
+  const [courtName, setCourtName] = useState("");
 
-
-  const handleDateChange = (selectedDate) => {
-    setDate(selectedDate);
-    setSelectedDay("");
-    setSelectedTimeSlot("");
-    dispatch(fetchAvailableSlots(id, date));
+  const handleAreaChange = (value) => {
+    setAreaName(value);
   };
 
-  // const handleDayChange = (event) => {
-  //   setSelectedDay(event.target.value);
-  //   setSelectedTimeSlot("");
-  // };
-
-  const handleAreaChange = (e) => {
-    setAreaName(e.target.value);
+  const handleGameChange = (value) => {
+    setGameName(value);
   };
 
-  const handleGameChange = (e) => {
-    setGameName(e.target.value);
+  const handleSlotChange = (value) => {
+    setSlot(value);
+    alert(value)
   };
 
-  const handleSlotChange = (event) => {
-    setSlot(event.target.value);
-
-    const selectedDayWorkingHours = workingHours.find(
-      (hour) => hour.day === selectedDay
-    );
-    const slotWorkingHours = selectedDayWorkingHours?.slots.filter(
-      (slot) => slot.startTime.toISOString() === event.target.value
-    );
-
-    setWorkingHours(slotWorkingHours || []);
-  };
-
-  const handleCourtChange = (e) => {
-    setCourtName(e.target.value);
+  const handleCourtChange = (value) => {
+    setCourtName(value);
+    setSelectedCourt(value);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const bookingData = {
-      locationId: clubLocation?.id,
-      areaName,
-      gameName,
-      date,
-      duration,
-      courts,
-      userInfo,
-      slot,
-    };
-
-    dispatch(createBooking(bookingData));
-    navigate("/checkout");
+    navigate("/checkout", {
+      state: {
+        clubLocation,
+        areaName,
+        gameName,
+        date,
+        totalPrice,
+        bookingFee,
+        taxPrice,
+        clubPrice,
+        courts,
+        userInfo,
+        slot,
+      },
+    });
   };
-
-  const { clubLocation } = useSelector((state) => state.Location);
-  const { clubGame } = useSelector((state) => state.clubGame);
-  const { courts } = useSelector((state) => state.courtList);
-  const [areaName, setAreaName] = useState(selectedArea);
-  const [gameName, setGameName] = useState(selectedGame);
-  const [date, setDate] = useState(selectedDate);
-
 
   const getSelectedGamePricing = () => {
     const selectedGame = clubGame?.find(
@@ -118,16 +105,10 @@ function BookingScreen() {
     return Number(selectedGame?.pricing).toFixed(0);
   };
 
-  const [duration, setDuration] = useState(1);
-
-  const handleDurationChange = (newDuration) => {
-    setDuration(newDuration);
-  };
-
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const clubPrice = (Number(getSelectedGamePricing()) * duration).toFixed(0);
+  const clubPrice = (Number(getSelectedGamePricing())).toFixed(0);
   const taxPrice = (Number(clubPrice) * 0.05).toFixed(0);
   const bookingFee = 10;
   const totalPrice = (
@@ -135,38 +116,52 @@ function BookingScreen() {
     Number(taxPrice) +
     Number(bookingFee)
   ).toFixed(0);
-  
+
+  const handleDateChange = (selectedDate) => {
+    setDate(selectedDate);
+
+  };
 
   useEffect(() => {
     const storedSelectedGame = localStorage.getItem("selectedGame");
     const storedSelectedArea = localStorage.getItem("selectedArea");
     const storedSelectedDate = localStorage.getItem("selectedDate");
+    const storedSelectedCourt = localStorage.getItem("selectedCourt");
 
     if (storedSelectedGame) setGameName(storedSelectedGame);
     if (storedSelectedArea) setAreaName(storedSelectedArea);
     if (storedSelectedDate) setDate(storedSelectedDate);
+    if (storedSelectedCourt) setCourtName(storedSelectedCourt);
   }, []);
-  
+
   useEffect(() => {
-    console.log("Available slots:", workingHours);
     const fetchData = async () => {
       dispatch(listclubLocation(id));
       dispatch(listclubGame(id));
-      dispatch(listclubWorking(id));
       dispatch(listCourts(id, gameName));
     };
+    fetchData();
+
     const dtToday = new Date();
     const month = dtToday.getMonth() + 1;
     const day = dtToday.getDate();
     const year = dtToday.getFullYear();
-    const maxDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
-    
-    const dateInput = document.getElementById('date');
+    const maxDate = `${year}-${month < 10 ? "0" + month : month}-${
+      day < 10 ? "0" + day : day
+    }`;
+
+    const dateInput = document.getElementById("date");
     if (dateInput) {
-      dateInput.setAttribute('min', maxDate);
+      dateInput.setAttribute("min", maxDate);
     }
-    fetchData();
-  }, [dispatch, id,gameName]);
+  }, [dispatch, gameName, id]);
+
+  useEffect(() => {
+    const sCourt = courts?.find((court) => court.name === courtName);
+    const courtId = sCourt?.id;
+    dispatch(fetchAvailableSlots(courtId, date));
+  }, [date, courtName, dispatch, courts]);
+
 
   return (
     <div>
@@ -181,7 +176,6 @@ function BookingScreen() {
           <hr style={{ backgroundColor: "black" }} />
           <form onSubmit={handleSubmit} className="booking-form">
             <div className="booking-container">
-
               <SelectInput
                 id="area"
                 value={areaName}
@@ -223,27 +217,14 @@ function BookingScreen() {
 
               <SelectInput
                 id="slot"
-                value={selectedTimeSlot}
+                value={slot}
                 onChange={handleSlotChange}
-                options={workingHours?.map((hour) => ({
-                  id: hour.startTime.toISOString(),
-                  slot_name: `${hour.startTime.toLocaleTimeString()} - ${hour.endTime.toLocaleTimeString()}`,
+                options={slots?.map((slot) => ({
+                  id: slot.id,
+                  area_name: `${slot.start_time} - ${slot.end_time}`,
                 }))}
-                label="Time Slot"
+                label="slot"
               />
-
-              <Duration
-                id="hours"
-                label="Duration"
-                disabled={'disabled'}
-                preventDefault
-                onNumChange={handleDurationChange}
-              />
-
-              <Container>
-                <DayTimePicker   timeSlotSizeMinutes={60} />
-              </Container>
-
 
             </div>
           </form>
@@ -258,7 +239,7 @@ function BookingScreen() {
               <div>
                 <h3>{clubLocation?.organization?.organization_name}</h3>
                 <small>
-                  {gameName}- {duration} hrs &nbsp;({getSelectedGamePricing()}
+                  {gameName} &nbsp;({getSelectedGamePricing()}
                   /hr)
                 </small>
               </div>
@@ -304,6 +285,12 @@ function BookingScreen() {
             />
           </div>
         </div>
+        {/* <ReactTimeslotCalendar
+          initialDate={selectedDate}
+          onSelectTimeslot={onSelectTimeslot}
+          let
+          timeslots={[["1", "2"], ["2", "3"], ["4", "6"], "5", ["4"]]}
+        /> */}
       </div>
     </div>
   );

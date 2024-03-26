@@ -373,6 +373,7 @@ export const createBooking = (id) => async (dispatch, getState) => {
       type: BOOKING_CREATE_SUCCESS,
       payload: data,
     });
+    
   } catch (error) {
     dispatch({
       type: BOOKING_CREATE_FAIL,
@@ -468,21 +469,18 @@ export const listCourts = (id, gameName) => async (dispatch) => {
 };
 
 
-export const fetchAvailableSlots = (id, date) => async (dispatch) => {
+export const fetchAvailableSlots = (courtId, date) => async (dispatch) => {
   try {
     dispatch({ type: AVAILABLE_SLOT_REQUEST });
-    console.log("enter");
 
-    const params = date ? { date } : {};
-    const { data } = await axios.get(`/api/slots/${id}/`, { params });
-
-    console.log("Slots data:", data);
+    const { data } = await axios.get(`/api/slots/`, { params: { courtId : courtId , date: date}});
 
     dispatch({
       type: AVAILABLE_SLOT_SUCCESS,
       payload: data,
     });
   } catch (error) {
+
     console.error("Error fetching available slots:", error);
 
     dispatch({

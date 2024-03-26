@@ -172,3 +172,20 @@ class SlotForm(forms.ModelForm):
         # Check if a slot with the same start_time, end_time, court, and days already exists
         if Slot.objects.filter(start_time=start_time, end_time=end_time, court=court, days=days).exists():
             raise forms.ValidationError("A slot with the same details already exists.")
+
+class SlotUpdateForm(forms.ModelForm):
+    start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
+    end_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
+    days = forms.CharField(disabled=True)
+
+
+    class Meta:
+        model = Slot
+        fields = ['start_time', 'end_time', 'is_booked', 'days', 'court']
+
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(SlotUpdateForm, self).__init__(*args, **kwargs)
+        if self.request:
+            key = self.request.session.get('location_pk')

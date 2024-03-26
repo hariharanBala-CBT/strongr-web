@@ -351,11 +351,11 @@ export const courtListReducer = (state = { courts: [] }, action) => {
 export const slotReducer = (state = { slots: [] }, action) => {
   switch (action.type) {
     case AVAILABLE_SLOT_REQUEST:
-      return { ...state, loading: true, error: null };
+      return { loading: true };
     case AVAILABLE_SLOT_SUCCESS:
-      return { ...state, loading: false, slots: action.payload, error: null };
+      return { loading: false, slots: action.payload };
     case AVAILABLE_SLOT_FAIL:
-      return { ...state, loading: false, error: action.payload };
+      return { loading: false, error: action.payload , slots: []};
     default:
       return state;
   }

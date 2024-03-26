@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Booking
-from .serializers import BookingSerializer 
+from .serializers import BookingSerializer
 import datetime
 
 @api_view(['GET'])
@@ -110,7 +110,7 @@ def createBooking(request):
     print("entered view")
     user = request.user
     data = request.data
-    
+
     try:
         print("entered try")
         court_id = data['court']['id']
@@ -124,7 +124,7 @@ def createBooking(request):
 
         duration_value = data.get('duration', '')
         duration = datetime.timedelta(hours=int(duration_value))
-        
+
         slot_id = data.get('slot', None)
         slot = None
 
@@ -151,45 +151,7 @@ def createBooking(request):
     except Exception as e:
         print(e, 'exception')
         return Response({'detail': 'Booking not created'}, status=status.HTTP_400_BAD_REQUEST)
-    
-@api_view(['GET'])
-def getAvailableSlots(request, pk):
-    print('entered')
-    data = request.data
-    # date_str = data['date']
-    # print('dATE', date_str)
 
-    # if not date_str:
-    #     return Response({'detail': 'Date parameter is missing.'}, status=status.HTTP_400_BAD_REQUEST)
-
-    try:
-        dates = request.query_params.get('date')
-        print(dates,'this')
-        date = datetime.strptime(dates, '%Y-%m-%d').date()
-        print(date)
-    except ValueError:
-        return Response({'detail': 'Invalid date format. It must be in YYYY-MM-DD format.'}, status=status.HTTP_400_BAD_REQUEST)
-    print(f"Location ID: {pk}, Date: {dates}, Working Days: {working_days}")
-
-    working_days = OrganizationLocationWorkingDays.objects.filter(
-        organization_location__pk=pk,
-        days=date.strftime('%A')
-    )
-
-    slots = []
-    for working_day in working_days:
-        start_time = datetime.combine(date, working_day.work_from_time)
-        end_time = datetime.combine(date, working_day.work_to_time)
-        current_time = start_time
-
-        while current_time < end_time:
-            slots.append({
-                'start_time': current_time.time(),
-                'end_time': (current_time + datetime.timedelta(hours=1)).time(),
-            })
-            current_time += datetime.timedelta(hours=1)
-    serializer = SlotSerializer(slots, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def getCourts(request, pk):
@@ -198,4 +160,18 @@ def getCourts(request, pk):
 
     courts = Court.objects.filter(location_id=pk, game__game_type__game_name=game)
     serializer = CourtSerializer(courts, many=True)
+    return Response(serializer.data)
+
+from dateutil.parser import parse
+
+@api_view(['GET'])
+def getAvailableSlots(request):
+    court = request.query_params.get('courtId')
+    date_str = request.query_params.get('date')
+
+    date_obj = parse(date_str)
+    weekday_name = date_obj.strftime('%A')
+
+    slots = Slot.objects.filter(court_id=court, days__contains=weekday_name)
+    serializer = SlotSerializer(slots, many=True)
     return Response(serializer.data)
