@@ -4,6 +4,7 @@ import HomeScreen from "./screens/HomeScreen";
 import ClubListScreen from "./screens/ClubListScreen";
 import LoginScreen from "./screens/LoginScreen";
 import ClubDetailScreen from "./screens/ClubDetailScreen";
+import BookingInfoScreen from "./screens/BookingInfoScreen";
 import BookingScreen from "./screens/BookingScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
 import RegisterScreen from "./screens/RegisterScreen";
@@ -21,8 +22,9 @@ function App() {
               <Route path="/login/" element={<LoginScreen />} />
               <Route path="/signup/" element={<RegisterScreen />} />
               <Route path="/club/:id" element={<ClubDetailScreen />} />
-              <Route path="/booking/:id" element={<BookingScreen />} />
+              <Route path="/bookinginfo/:id" element={<BookingInfoScreen />} />
               <Route path="/checkout/" element={<CheckoutScreen />} />
+              <Route path="/booking/:id" element={<BookingScreen />} />
             </Routes>
           </Container>
         </HomeProvider>

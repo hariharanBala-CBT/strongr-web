@@ -80,6 +80,15 @@ function ClubListScreen() {
 
   }, [areaName,gameName,date, setSelectedArea, setSelectedGame, setSelectedDate, dispatch]);
 
+  // useEffect(() => {
+  //   if(clubLocationDetails){
+  //     alert('got locations')
+  //     // dispatch()
+  //   }
+
+  // }, [dispatch, clubLocationDetails]);
+
+
 
 
   return (

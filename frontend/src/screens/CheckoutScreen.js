@@ -3,44 +3,67 @@ import Header from "../components/Header";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import "../css/checkoutscreen.css";
-import { useSelector } from "react-redux";
-import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createBooking,
+} from "../actions/actions";
+import { BOOKING_CREATE_RESET } from '../constants/constants'
+
+// import { useLocation } from 'react-router-dom';
 
 function CheckoutScreen() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const { success, booking } = useSelector((state) => state.bookingCreate)
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate("/checkout");
+    const placeOrder = () => {
+      dispatch(
+      createBooking({
+        id: bookingData.id,
+        userInfo: userInfo,
+        phoneNumber: phoneNumber,
+        date: bookingData.date,
+        slotId: bookingData.slotId,
+        courtId: bookingData.courtId,
+        taxPrice: bookingData.taxPrice,
+        totalPrice: bookingData.totalPrice,
+      })
+      )
+    }
+    placeOrder();
   };
-
-  const location = useLocation();
-  const clubLocation = location.state.clubLocation;
-  const gameName = location.state.gameName;
-  const duration = location.state.duration;
-  const clubPrice = location.state.clubPrice;
-  const taxPrice = location.state.taxPrice;
-  const bookingFee = location.state.bookingFee;
-  const totalPrice = location.state.totalPrice;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const bookingDataJSON = localStorage.getItem("Bookingdata");
+  const bookingData = JSON.parse(bookingDataJSON);
+
   useEffect(() => {
+    dispatch({type: BOOKING_CREATE_RESET})
+
     if (!userInfo) {
       navigate('/login');
     } else {
-      // Set initial values from userInfo
       setFirstName(userInfo.first_name || "");
       setLastName(userInfo.lastName || "");
       setEmail(userInfo.email || "");
       setPhoneNumber(userInfo.phoneNumber || "");
     }
   }, [userInfo, navigate]);
+  
+  useEffect(() =>  {
+    if(success && booking){
+      navigate(`/booking/${booking.id}`);
+    }
+  },[success, booking, navigate])
 
   return (
     <div>
@@ -111,6 +134,7 @@ function CheckoutScreen() {
                 id="phone-number"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
+                required
               />
             </div>
 
@@ -125,6 +149,7 @@ function CheckoutScreen() {
                 type="checkbox"
                 className="form-check-input"
                 id="same-address"
+                required
               />
               <label className="form-check-label" htmlFor="same-address">
                 I agree to terms and conditions
@@ -151,15 +176,15 @@ function CheckoutScreen() {
           <div className="ul">
             <div className="li">
               <div>
-                <h3>{clubLocation?.organization?.organization_name}</h3>
+                <h3>{bookingData.clubLocation?.organization?.organization_name}</h3>
 
                 <small>
-                  {gameName}- {duration} hrs
+                  {bookingData.gameName}-{bookingData.selectedSlot}- 1 hrs
                 </small>
               </div>
               <span>
                 <i className="fa fa-inr"></i>
-                {clubPrice}
+                {bookingData.clubPrice}
               </span>
             </div>
             <div className="li">
@@ -169,7 +194,7 @@ function CheckoutScreen() {
               </div>
               <span>
                 <i className="fa fa-inr"></i>
-                {taxPrice}
+                {bookingData.taxPrice}
               </span>
             </div>
             <div className="li">
@@ -179,14 +204,14 @@ function CheckoutScreen() {
               </div>
               <span>
                 <i className="fa fa-inr"></i>
-                {bookingFee}
+                {bookingData.bookingFee}
               </span>
             </div>
             <div className="li">
               <span>Total (INR)</span>
               <strong>
                 <i className="fa fa-inr"></i>
-                {totalPrice}
+                {bookingData.totalPrice}
               </strong>
             </div>
           </div>

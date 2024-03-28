@@ -35,7 +35,7 @@ function HomeScreen() {
   const { gameerror, gameloading, games } = gameList;
   
   const handleSubmit = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     dispatch(filterLocation(areaName, gameName, date));
     navigate("/clubs");
   };
@@ -78,7 +78,7 @@ function HomeScreen() {
     setSelectedGame(gameName)
     setSelectedArea(areaName)
     setSelectedDate(date)
-  }, [gameName, areaName, date]);
+  }, [gameName, areaName, date, setSelectedGame, setSelectedArea, setSelectedDate]);
 
   return (
     <div className="home">
@@ -128,6 +128,7 @@ function HomeScreen() {
                 value={gameName}
                 onChange={changeGame}
                 options={games}
+                required='required'
               />
             )}
             
@@ -142,9 +143,10 @@ function HomeScreen() {
               value={areaName}
               onChange={changeArea}
               options={areas}
+              required='required'
             />)}
 
-            <DateInput id="date" value={date} onChange={changeGate} />
+            <DateInput id="date" required='required' value={date} onChange={changeGate} />
 
           </div>
           <div className="availability-btn-class">

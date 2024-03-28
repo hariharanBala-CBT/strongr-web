@@ -49,9 +49,15 @@ import {
   COURT_LIST_REQUEST,
   COURT_LIST_SUCCESS,
   COURT_LIST_FAIL,
+  COURT_DETAILS_REQUEST,
+  COURT_DETAILS_SUCCESS,
+  COURT_DETAILS_FAIL,
   AVAILABLE_SLOT_REQUEST,
   AVAILABLE_SLOT_SUCCESS,
   AVAILABLE_SLOT_FAIL,
+  SLOT_REQUEST,
+  SLOT_SUCCESS,
+  SLOT_FAIL,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -348,7 +354,20 @@ export const courtListReducer = (state = { courts: [] }, action) => {
   }
 };
 
-export const slotReducer = (state = { slots: [] }, action) => {
+export const courtDetailsReducer = (state = { court: [] }, action) => {
+  switch (action.type) {
+    case COURT_DETAILS_REQUEST:
+      return { loading: true };
+    case COURT_DETAILS_SUCCESS:
+      return { loading: false, court: action.payload };
+    case COURT_DETAILS_FAIL:
+      return { loading: false, error: action.payload, court: [] };
+    default:
+      return state;
+  }
+};
+
+export const availableslotsReducer = (state = { slots: [] }, action) => {
   switch (action.type) {
     case AVAILABLE_SLOT_REQUEST:
       return { loading: true };
@@ -360,3 +379,17 @@ export const slotReducer = (state = { slots: [] }, action) => {
       return state;
   }
 };
+
+export const slotReducer = (state = { slot: [] }, action) => {
+  switch (action.type) {
+    case SLOT_REQUEST:
+      return { loading: true };
+    case SLOT_SUCCESS:
+      return { loading: false, slot: action.payload };
+    case SLOT_FAIL:
+      return { loading: false, error: action.payload , slot: []};
+    default:
+      return state;
+  }
+};
+

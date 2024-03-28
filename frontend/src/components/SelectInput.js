@@ -1,6 +1,6 @@
 import React from "react";
 
-function SelectInput({ id, value, onChange, options, label, disabled }) {
+function SelectInput({ id, value, onChange, options, label, disabled, required }) {
   return (
     <div className="select">
       <label key={id} htmlFor={id}>
@@ -10,6 +10,7 @@ function SelectInput({ id, value, onChange, options, label, disabled }) {
         value={value}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
+        required={required}
       >
         {options?.map((option) => (
           <option key={option.id} value={option.area_name ? option.area_name : option.game_name}>

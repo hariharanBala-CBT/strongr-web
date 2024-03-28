@@ -14,6 +14,7 @@ from rest_framework import status
 from .models import Booking
 from .serializers import BookingSerializer
 import datetime
+from django.db import transaction
 
 @api_view(['GET'])
 def getAreas(request):
@@ -21,11 +22,13 @@ def getAreas(request):
     serializer = AreaSerializer(areas, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getGameTypes(request):
     games = GameType.objects.all()
     serializer = GameTypeSerializer(games, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getClubs(request):
@@ -33,11 +36,13 @@ def getClubs(request):
     serializer = ClubSerializer(clubs, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getClub(request, pk):
     club = Organization.objects.get(id=pk)
     serializer = ClubSerializer(club, many=False)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getClubLocation(request, pk):
@@ -45,29 +50,55 @@ def getClubLocation(request, pk):
     serializer = ClubLocationSerializer(club, many=False)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getClubGame(request, pk):
-    game = OrganizationLocationGameType.objects.filter(organization_location_id=pk)
+    game = OrganizationLocationGameType.objects.filter(
+        organization_location_id=pk)
     serializer = OrganizationLocationGameTypeSerializer(game, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getClubAmenities(request, pk):
-    amenities = OrganizationLocationAmenities.objects.get(organization_location_id=pk)
+    amenities = OrganizationLocationAmenities.objects.get(
+        organization_location_id=pk)
     serializer = OrganizationLocationAmenitiesSerializer(amenities, many=False)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getClubWorkingDays(request, pk):
-    days = OrganizationLocationWorkingDays.objects.filter(organization_location_id=pk)
+    days = OrganizationLocationWorkingDays.objects.filter(
+        organization_location_id=pk)
     serializer = OrganizationLocationWorkingDaysSerializer(days, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getClubImages(request, pk):
     images = OrganizationGameImages.objects.filter(organization_id=pk)
     serializer = OrganizationGameImagesSerializer(images, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def getBookingDetails(request, pk):
+    booking = Booking.objects.get(id=pk)
+    serializer = BookingSerializer(booking, many=False)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getCourt(request, pk):
+    court = Court.objects.get(id=pk)
+    serializer = CourtSerializer(court, many=False)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getSlot(request, pk):
+    slot = Slot.objects.get(id=pk)
+    serializer = SlotSerializer(slot, many=False)
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def filterClubs(request):
@@ -104,65 +135,56 @@ def filterClubs(request):
     serializer = ClubLocationSerializer(organizationlocations, many=True)
     return Response(serializer.data)
 
+
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def createBooking(request):
-    print("entered view")
     user = request.user
     data = request.data
 
     try:
-        print("entered try")
-        court_id = data['court']['id']
+        court_id = data['courtId']
         court = Court.objects.get(id=court_id)
-        booking_date_str = data.get('date', '')
+        slot_id = data['slotId']
+        slot = Slot.objects.get(id=slot_id)
 
-        try:
-            booking_date = datetime.datetime.strptime(booking_date_str, '%Y-%m-%d').date()
-        except ValueError:
-            raise ValueError('Invalid date format. It must be in YYYY-MM-DD format.')
+        with transaction.atomic():
+            slot.is_booked = True
+            slot.save()
 
-        duration_value = data.get('duration', '')
-        duration = datetime.timedelta(hours=int(duration_value))
-
-        slot_id = data.get('slot', None)
-        slot = None
-
-        if slot_id:
-            try:
-                slot = Slot.objects.get(id=slot_id)
-            except Slot.DoesNotExist:
-                return Response({'detail': 'Invalid slot ID'}, status=status.HTTP_400_BAD_REQUEST)
-
-        booking = Booking.objects.create(
-            user=user,
-            name=user.first_name,
-            email=data['userInfo']['email'],
-            phone_number='8467586845',
-            booking_date=booking_date,
-            duration=duration,
-            court=court,
-            slot=slot,
-        )
+            booking = Booking.objects.create(
+                user=user,
+                name=user.first_name,
+                email=data['userInfo']['email'],
+                phone_number=data['phoneNumber'],
+                booking_date=data['date'],
+                court=court,
+                slot=slot,
+                tax_price=data['taxPrice'],
+                total_price=data['totalPrice'],
+            )
 
         serializer = BookingSerializer(booking)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     except Exception as e:
         print(e, 'exception')
-        return Response({'detail': 'Booking not created'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': 'Booking not created'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
 def getCourts(request, pk):
     game = request.query_params.get('game')
-    print(game)
 
-    courts = Court.objects.filter(location_id=pk, game__game_type__game_name=game)
+    courts = Court.objects.filter(location_id=pk,
+                                  game__game_type__game_name=game)
     serializer = CourtSerializer(courts, many=True)
     return Response(serializer.data)
 
+
 from dateutil.parser import parse
+
 
 @api_view(['GET'])
 def getAvailableSlots(request):
@@ -172,6 +194,6 @@ def getAvailableSlots(request):
     date_obj = parse(date_str)
     weekday_name = date_obj.strftime('%A')
 
-    slots = Slot.objects.filter(court_id=court, days__contains=weekday_name)
+    slots = Slot.objects.filter(court_id=court, days__contains=weekday_name, is_booked=False)
     serializer = SlotSerializer(slots, many=True)
     return Response(serializer.data)

@@ -47,19 +47,19 @@ function ClubDetailScreen() {
   };
 
   const Location = useSelector((state) => state.Location);
-  const { error, loading, clubLocation } = Location;
+  const { clubLocation } = Location;
 
   const Games = useSelector((state) => state.clubGame);
-  const { gameError, gameLoading, clubGame } = Games;
+  const { clubGame } = Games;
 
   const WorkingDays = useSelector((state) => state.clubWorking);
-  const { daysError, daysLoading, clubWorking } = WorkingDays;
+  const { clubWorking } = WorkingDays;
 
   const Amenities = useSelector((state) => state.clubAmenities);
-  const { amenitiesError, amenitiesLoading, clubAmenity } = Amenities;
+  const { clubAmenity } = Amenities;
 
   const Images = useSelector((state) => state.clubImages);
-  const { imageError, imageLoading, clubImage } = Images;
+  const { clubImage } = Images;
 
   const { courts } = useSelector((state) => state.courtList);
 
@@ -67,10 +67,10 @@ function ClubDetailScreen() {
     if(courts){
       setSelectedCourt(courts[0]?.name);
     }
-  },[courts])
+  },[courts,setSelectedCourt])
 
   const handleClick = () => {
-    navigate(`/booking/${clubLocation.id}`);
+    navigate(`/bookinginfo/${clubLocation.id}`);
   };
 
   return (

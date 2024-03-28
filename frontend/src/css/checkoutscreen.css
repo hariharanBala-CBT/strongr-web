@@ -64,6 +64,7 @@
 }
 
 .checkout-content .card2{
+    width: 450px;
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.17);
@@ -73,7 +74,7 @@
 }
 
 .checkout-content .card2 small {
-    float: right;
+    float: left;
 }
 
 .checkout-content .card2 h2{
@@ -81,7 +82,7 @@
 }
 
 .checkout-content .card2 .li{
-    width: 300px;
+    width: 100%;
     padding: 1rem;
     display: flex;
     flex-direction: row;
