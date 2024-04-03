@@ -15,6 +15,11 @@ from .models import Booking
 from .serializers import BookingSerializer
 import datetime
 from django.db import transaction
+from base.serializers import *
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+from django.template.loader import render_to_string
+
 
 @api_view(['GET'])
 def getAreas(request):
@@ -81,11 +86,13 @@ def getClubImages(request, pk):
     serializer = OrganizationGameImagesSerializer(images, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getBookingDetails(request, pk):
     booking = Booking.objects.get(id=pk)
     serializer = BookingSerializer(booking, many=False)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getCourt(request, pk):
@@ -93,10 +100,25 @@ def getCourt(request, pk):
     serializer = CourtSerializer(court, many=False)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getSlot(request, pk):
     slot = Slot.objects.get(id=pk)
     serializer = SlotSerializer(slot, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getUserBookings(request, pk):
+    booking = Booking.objects.filter(user=pk)
+    serializer = BookingSerializer(booking, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getCustomer(request, pk):
+    customer = Customer.objects.get(user=pk)
+    serializer = CustomerSerializer(customer, many=False)
     return Response(serializer.data)
 
 
@@ -149,7 +171,7 @@ def createBooking(request):
         slot = Slot.objects.get(id=slot_id)
 
         with transaction.atomic():
-            slot.is_booked = True
+            # slot.is_booked = True
             slot.save()
 
             booking = Booking.objects.create(
@@ -194,6 +216,61 @@ def getAvailableSlots(request):
     date_obj = parse(date_str)
     weekday_name = date_obj.strftime('%A')
 
-    slots = Slot.objects.filter(court_id=court, days__contains=weekday_name, is_booked=False)
+    slots = Slot.objects.filter(court_id=court,
+                                days__contains=weekday_name,
+                                is_booked=False)
     serializer = SlotSerializer(slots, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateUserProfile(request):
+    user = request.user
+    serializer = UserSerializerWithToken(user, many=False)
+
+    data = request.data
+
+    otp_from_session = request.session.get('otp')
+    if not otp_from_session or otp_from_session != data.get('otp'):
+        return Response({'error': 'Invalid OTP'},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    user.first_name = data['fname']
+    user.username = data['email']
+    user.email = data['email']
+
+    customer = Customer.objects.get(user=user.id)
+    customer.phone_number = data['phone']
+    customer.save()
+    user.save()
+
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def generateOtp(request):
+    user = request.user
+    serializer = UserSerializerWithToken(user, many=False)
+    email = request.query_params.get('email')
+
+    # Generate OTP
+    otp = get_random_string(length=4, allowed_chars='0123456789')
+    subject = 'Welcome to Our Website'
+    message = render_to_string('email_otp.html', {
+        'user': user,
+        'otp': otp,
+    })
+
+    from_email = 'testgamefront@gmail.com'
+    recipient_list = [email]
+    send_mail(subject,
+              message,
+              from_email,
+              recipient_list,
+              fail_silently=False)
+
+    request.session['otp'] = otp
+
     return Response(serializer.data)

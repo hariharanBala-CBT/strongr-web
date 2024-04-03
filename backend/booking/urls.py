@@ -6,12 +6,16 @@ urlpatterns = [
     path('games/', views.getGameTypes, name='games'),
     path('clubs/', views.getClubs, name='clubs'),
     path('filterclubs/',views.filterClubs, name='filter-clubs'),
+    path('sendotp/', views.generateOtp, name="generate-otp"),
     path('slots/', views.getAvailableSlots, name='get-slots'),
     path('booking/create/', views.createBooking, name='create-booking'),
+    path('profile/update/', views.updateUserProfile, name="user-profile-update"),
     path('<str:pk>/', views.getClub, name="club"),
     path('slot/<str:pk>/', views.getSlot, name='get-slot'),
     path('court/<str:pk>/', views.getCourt, name='get-court'),
+    path('customer/<str:pk>/', views.getCustomer, name='get-customer'),
     path('booking/<str:pk>/', views.getBookingDetails, name='booking'),
+    path('userbookings/<str:pk>/', views.getUserBookings, name='user-bookings'),
     path('clublocation/<str:pk>/', views.getClubLocation, name="club-location"),
     path('clubgame/<str:pk>/', views.getClubGame, name="club-game"),
     path('clubamenities/<str:pk>/', views.getClubAmenities, name="club-amenities"),
@@ -19,6 +23,4 @@ urlpatterns = [
     path('clubimages/<str:pk>/', views.getClubImages, name="club-images"),
     path('courts/<str:pk>/', views.getCourts, name='get-courts'),
 
-    # path('booking/<int:pk>/', views.getBookingDetails, name='booking-details'),
-    # path('booking/list/', views.getBookingList, name='booking-list'),
 ]

@@ -25,6 +25,7 @@
     flex-direction: row;
     text-transform: uppercase;
     min-width: fit-content;
+    cursor:default;
   }
   
   .link {

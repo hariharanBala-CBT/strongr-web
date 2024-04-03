@@ -3,31 +3,32 @@ import "../css/registerscreen.css";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Message from "../components/Message";
-import Loader from '../components/Loader'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../actions/actions";
 
 function RegisterScreen() {
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  // const redirect = location.search ? location.search.split("=")[1] : "/";
 
-  const userRegister = useSelector((state) => state.userRegister);
-  const { error, loading, userInfo } = userRegister;
+  // const userRegister = useSelector((state) => state.userRegister);
+  // const { error, loading, userInfo } = userRegister;
+  const { userInfo } = useSelector((state) => state.userLogin)
 
   useEffect(() => {
     if (userInfo) {
-      navigate(redirect);
+      navigate("/");
     }
-  }, [navigate, userInfo, redirect]);
+  }, [navigate, userInfo]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,7 +36,7 @@ function RegisterScreen() {
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
     } else {
-      dispatch(register(name, email, password));
+      dispatch(register(name, email, password, phoneNumber));
     }
   };
 
@@ -46,8 +47,8 @@ function RegisterScreen() {
         <div className="signup-form">
           <h1 className="signup-title">SIGN IN</h1>
           {message && <Message variant="danger">{message}</Message>}
-          {error && <Message variant="danger">{error}</Message>}
-          {loading && <Loader />}
+          {/* {error && <Message variant="danger">{error}</Message>}
+          {loading && <Loader />} */}
           <form onSubmit={handleSubmit} method="post">
             <label>Name</label>
             <input
@@ -64,10 +65,21 @@ function RegisterScreen() {
             <input
               required
               type="email"
-              placeholder="Enter password"
+              placeholder="Enter email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
+              }}
+            />
+
+            <label>Phone Number</label>
+            <input
+              required
+              type="tel"
+              placeholder="Enter phone number"
+              value={phoneNumber}
+              onChange={(e) => {
+                setPhoneNumber(e.target.value);
               }}
             />
 

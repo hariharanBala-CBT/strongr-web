@@ -21,6 +21,10 @@ import {
   slotReducer,
   courtDetailsReducer,
   availableslotsReducer,
+  userBookingListReducer,
+  customerDetailsReducer,
+  userUpdateProfileReducer,
+  generateOtpredeucer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -39,10 +43,14 @@ const reducer = combineReducers({
   bookingCreate: bookingCreateReducer,
   bookingDetails: bookingDetailsReducer,
   bookingList: bookingListReducer,
+  userBookingsList: userBookingListReducer,
   courtList: courtListReducer,
   court: courtDetailsReducer,
   slot: availableslotsReducer,
   slotDetails: slotReducer,
+  customerDetails: customerDetailsReducer,
+  userUpdate: userUpdateProfileReducer,
+  generateOtp: generateOtpredeucer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

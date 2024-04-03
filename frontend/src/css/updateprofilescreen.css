@@ -1,0 +1,131 @@
+.profile-page{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.profile-page .profile-title{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-grow: inherit;
+  flex-shrink: inherit;
+}
+
+.profile-page .profile-form {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid beige;
+  margin-top: 3rem;
+  padding: 2rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;  flex-shrink: inherit;
+  /* width: 30rem; */
+}
+
+@media (max-width: 770px) {
+  .profile-page .profile-form {
+    box-shadow: 0;
+  }
+}
+
+.profile-form form {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  flex-grow: inherit;
+  flex-shrink: inherit;
+}
+
+
+.profile-page input{
+  padding: 0.3rem;
+  margin: 0.5rem;
+  margin-top: 5px;
+  border: 0px;
+  background: #dadada;
+  border-radius: 5px;
+  align-self: center;
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: inherit;
+  flex-shrink: inherit;
+}
+
+.profile-page form label {
+  margin: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: inherit;
+  flex-shrink: inherit;
+}
+
+.profile-page button {
+  width: fit-content;
+  margin: 1.5rem;
+}
+
+.profile-page .profile-button {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.profile-page span{
+  display: flex;
+  justify-content: center;
+}
+
+.profile-page .username-input{
+  margin-top: 1rem;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.profile-page .firstname-input{
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.profile-page .email-input{
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.profile-page .phonenumber-input{
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.otp-input{
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.otp-input.otp{
+  padding: 2rem;
+  background-color: rgb(158, 158, 158);
+}
+.otp-form{
+  height: 100%;
+  align-self: center;
+}
+.otp-button {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.otp-loader{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

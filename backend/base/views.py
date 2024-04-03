@@ -41,6 +41,12 @@ def registerUser(request):
             password=make_password(data['password']),
         )
 
+        customer = Customer.objects.create(
+            tenant=Tenant.objects.get(id=1),
+            user=user,
+            phone_number=data['phone'],
+        )
+
         serializer = UserSerializerWithToken(user, many=False)
         return Response(serializer.data)
 

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../components/Header";
-import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getBookingDetails,
@@ -18,8 +17,8 @@ function BookingScreen() {
   const { clubdetails } = useSelector((state) => state.clubDetails);
   const { slot } = useSelector((state) => state.slotDetails);
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  // const userLogin = useSelector((state) => state.userLogin);
+  // const { userInfo } = userLogin;
 
   useEffect(() => {
     dispatch(getBookingDetails(id));
@@ -104,17 +103,12 @@ function BookingScreen() {
               <div>
                 <h3>{clubdetails?.organization_name}</h3>
 
+                {slot && slot.start_time &&
                 <small>
-                  {court && court.name}-{slot && slot.days}-1 hrs {slot && (slot.start_time).slice(0,5)}-{slot && (slot.end_time).slice(0,5)}
+                  {court && court.name}-{slot && slot.days}-1 hrs  {(slot.start_time)}-{(slot.end_time)}
                 </small>
+                }
               </div>
-              {/* <span>/
-                {slot && (
-                  <span>
-                    {slot.start_time}-{slot.end_time}
-                  </span>
-                )}
-              </span> */}
             </div>
             <div className="li">
               <div>

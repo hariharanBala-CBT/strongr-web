@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../css/bookingscreen.css";
+import "../css/bookinginfoscreen.css";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -53,6 +53,7 @@ function BookingInfoScreen() {
 
   const handleSlotChange = (value) => {
     setSlot(value);
+    setSelectedSlot(value);
   };
 
   const handleCourtChange = (value) => {
@@ -88,11 +89,15 @@ function BookingInfoScreen() {
     const storedSelectedArea = localStorage.getItem("selectedArea");
     const storedSelectedDate = localStorage.getItem("selectedDate");
     const storedSelectedCourt = localStorage.getItem("selectedCourt");
+    const storedSelectedSlot = localStorage.getItem("selectedSlot");
+
 
     if (storedSelectedGame) setGameName(storedSelectedGame);
     if (storedSelectedArea) setAreaName(storedSelectedArea);
     if (storedSelectedDate) setDate(storedSelectedDate);
     if (storedSelectedCourt) setCourtName(storedSelectedCourt);
+    if (storedSelectedSlot) setCourtName(storedSelectedSlot);
+
   }, []);
 
   useEffect(() => {
@@ -132,13 +137,12 @@ function BookingInfoScreen() {
     }
   }, [date, dispatch, courts]);
 
-  useEffect(() => {
-    setSelectedSlot(slot);
-  }, [slot, setSelectedSlot]);
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if(selectedSlot){
+      alert(selectedSlot)
       const parts = selectedSlot.split("-");
       const court = courts.find((court) => court.name === selectedCourt);
       console.log(slots)
@@ -148,7 +152,7 @@ function BookingInfoScreen() {
       const courtId = court?.id;
       const slotId = myslot?.id;
       // alert(courtId);
-      // alert(slotId);
+      alert(slotId);
   
       const formData = {
         id,
@@ -176,9 +180,18 @@ function BookingInfoScreen() {
 
   useEffect(() => {
     if (slots) {
-      setSlot(`${slots[0]?.start_time} - ${slots[0]?.end_time}`);
+      setSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
+      setSelectedSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
     }
-  }, [slots]);
+  }, [slots,setSelectedSlot]);
+
+  // useEffect(() => {
+  //   const storedSelectedSlot = localStorage.getItem("selectedSlot");
+
+  //   if (storedSelectedSlot) {
+  //     setSlot(storedSelectedSlot);
+  //   }
+  // }, [selectedSlot]);
 
   return (
     <div>

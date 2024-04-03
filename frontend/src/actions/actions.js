@@ -57,6 +57,18 @@ import {
   SLOT_REQUEST,
   SLOT_SUCCESS,
   SLOT_FAIL,
+  USER_BOOKING_LIST_REQUEST,
+  USER_BOOKING_LIST_SUCCESS,
+  USER_BOOKING_LIST_FAIL,
+  CUSTOMER_DETAILS_REQUEST,
+  CUSTOMER_DETAILS_SUCCESS,
+  CUSTOMER_DETAILS_FAIL,
+  USER_UPDATE_PROFILE_REQUEST,
+  USER_UPDATE_PROFILE_SUCCESS,
+  USER_UPDATE_PROFILE_FAIL,
+  GENERATE_OTP_REQUEST,
+  GENERATE_OTP_SUCCESS,
+  GENERATE_OTP_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -318,7 +330,7 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT });
 };
 
-export const register = (name, email, password) => async (dispatch) => {
+export const register = (name, email, password, phoneNumber) => async (dispatch) => {
   try {
     dispatch({
       type: USER_REGISTER_REQUEST,
@@ -332,7 +344,7 @@ export const register = (name, email, password) => async (dispatch) => {
 
     const { data } = await axios.post(
       "/register/",
-      { name: name, email: email, password: password },
+      { name: name, email: email, password: password, phone: phoneNumber },
       config
     );
 
@@ -422,7 +434,7 @@ export const getBookingDetails = (id) => async (dispatch, getState) => {
   }
 };
 
-export const listUserBookings = () => async (dispatch, getState) => {
+export const listBookings = () => async (dispatch, getState) => {
   try {
     dispatch({ type: BOOKING_LIST_REQUEST });
 
@@ -445,6 +457,37 @@ export const listUserBookings = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: BOOKING_LIST_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const listUserBookings = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_BOOKING_LIST_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/userbookings/${id}/`, config);
+
+    dispatch({
+      type: USER_BOOKING_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_BOOKING_LIST_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail
@@ -545,3 +588,91 @@ export const getSlotDetails = (id) => async (dispatch) => {
   }
 };
 
+
+export const listcustomerDetails = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: CUSTOMER_DETAILS_REQUEST });
+
+    const { data } = await axios.get(`/api/customer/${id}`);
+
+    dispatch({
+      type: CUSTOMER_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CUSTOMER_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const updateUserProfile = (user) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_UPDATE_PROFILE_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token} `,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/profile/update/`,
+      user,
+      config
+    );
+
+    dispatch({
+      type: USER_UPDATE_PROFILE_SUCCESS,
+      payload: data,
+    });
+
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    });
+
+    localStorage.setItem("userInfo", JSON.stringify(data));
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_PROFILE_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+
+export const generateOTP = (email) => async (dispatch) => {
+  try {
+    dispatch({ type: GENERATE_OTP_REQUEST });
+
+    const { data } = await axios.get(`/api/sendotp/`, {params: { email: email }});
+
+    dispatch({
+      type: GENERATE_OTP_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GENERATE_OTP_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};

@@ -58,6 +58,19 @@ import {
   SLOT_REQUEST,
   SLOT_SUCCESS,
   SLOT_FAIL,
+  USER_BOOKING_LIST_SUCCESS,
+  USER_BOOKING_LIST_REQUEST,
+  USER_BOOKING_LIST_FAIL,
+  CUSTOMER_DETAILS_REQUEST,
+  CUSTOMER_DETAILS_SUCCESS,
+  CUSTOMER_DETAILS_FAIL,
+  USER_UPDATE_PROFILE_REQUEST,
+  USER_UPDATE_PROFILE_SUCCESS,
+  USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_PROFILE_RESET,
+  GENERATE_OTP_REQUEST,
+  GENERATE_OTP_SUCCESS,
+  GENERATE_OTP_FAIL,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -393,3 +406,83 @@ export const slotReducer = (state = { slot: [] }, action) => {
   }
 };
 
+export const userBookingListReducer = (state = { userbookings: [] }, action) => {
+  switch (action.type) {
+    case USER_BOOKING_LIST_REQUEST:
+      return {
+        loading: true,
+      };
+
+    case USER_BOOKING_LIST_SUCCESS:
+      return {
+        loading: false,
+        userbookings: action.payload,
+      };
+
+    case USER_BOOKING_LIST_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const customerDetailsReducer = (state = { customerDetails: [] }, action) => {
+  switch (action.type) {
+    case CUSTOMER_DETAILS_REQUEST:
+      return { loading: true };
+    case CUSTOMER_DETAILS_SUCCESS:
+      return { loading: false, customerDetails: action.payload };
+    case CUSTOMER_DETAILS_FAIL:
+      return { loading: false, error: action.payload, customerDetails: [] };
+    default:
+      return state;
+  }
+};
+
+export const userUpdateProfileReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_UPDATE_PROFILE_REQUEST:
+      return { loading: true };
+
+    case USER_UPDATE_PROFILE_SUCCESS:
+      return { loading: false, userUpdateSuccess: true, userInfo: action.payload };
+
+    case USER_UPDATE_PROFILE_FAIL:
+      return { loading: false, userUpdateError: action.payload };
+
+    case USER_UPDATE_PROFILE_RESET:
+      return {};
+
+    default:
+      return state;
+  }
+};
+
+export const generateOtpredeucer = (state = {}, action) => {
+  switch (action.type) {
+    case GENERATE_OTP_REQUEST:
+      return {
+        otpLoading: true,
+      };
+
+    case GENERATE_OTP_SUCCESS:
+      return {
+        otpLoading: false,
+        otpSuccess: true,
+      };
+
+    case GENERATE_OTP_FAIL:
+      return {
+        otpLoading: false,
+        otpSuccess: false,
+      };
+
+
+    default:
+      return state;
+  }
+};
