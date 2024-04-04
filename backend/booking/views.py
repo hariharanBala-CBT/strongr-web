@@ -1,5 +1,4 @@
 # Create your views here.from django.shortcuts import render
-from .organizations import organizations
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from base.models import *
@@ -11,9 +10,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
+from dateutil.parser import parse
 from .models import Booking
 from .serializers import BookingSerializer
 import datetime
+from datetime import timedelta
 from django.db import transaction
 from base.serializers import *
 from django.core.mail import send_mail
@@ -205,9 +206,6 @@ def getCourts(request, pk):
     return Response(serializer.data)
 
 
-from dateutil.parser import parse
-
-
 @api_view(['GET'])
 def getAvailableSlots(request):
     court = request.query_params.get('courtId')
@@ -216,9 +214,32 @@ def getAvailableSlots(request):
     date_obj = parse(date_str)
     weekday_name = date_obj.strftime('%A')
 
-    slots = Slot.objects.filter(court_id=court,
-                                days__contains=weekday_name,
-                                is_booked=False)
+    current_datetime = datetime.datetime.now().replace(microsecond=0)
+    current_time = (current_datetime + timedelta(hours=2)).time()
+
+    print("Current Date and Time:", current_datetime)
+
+    # Get all slots for the specified court and weekday
+    slots = Slot.objects.filter(
+        court_id=court,
+        days__contains=weekday_name,
+        is_booked=False
+    )
+
+    # If date_str is today's date, apply the current time filter
+    if date_obj.date() == datetime.datetime.today().date():
+        # Filter slots where start time is greater than or equal to the current time
+        slots = slots.filter(start_time__gte=current_time)
+
+    # Get bookings for the specified date
+    bookings = Booking.objects.filter(
+        court_id=court,
+        booking_date=date_obj.date()
+    ).values_list('slot', flat=True)
+
+    # Exclude booked slots
+    slots = slots.exclude(id__in=bookings)
+
     serializer = SlotSerializer(slots, many=True)
     return Response(serializer.data)
 

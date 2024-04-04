@@ -33,6 +33,11 @@ class MyTokenObtainPairView(TokenObtainPairView):
 def registerUser(request):
     data = request.data
 
+    otp_from_session = request.session.get('otp')
+    if not otp_from_session or otp_from_session != data.get('otp'):
+        return Response({'error': 'Invalid OTP'},
+                        status=status.HTTP_400_BAD_REQUEST)
+
     try:
         user = User.objects.create(
             first_name=data['name'],
@@ -195,20 +200,24 @@ class LoginView(View):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-
             login(request, user)
+            
+            # minutes_since_joined = (timezone.now() - user.date_joined).total_seconds() / 60
+            if (timezone.now() - user.date_joined).total_seconds() < 30:
+                return redirect('home_page')
+
             if user.groups.filter(name='Customer').exists():
-                return redirect('home_page')  # Redirect customer to homepage
+                return redirect('home_page')
             elif user.groups.filter(name='Organization').exists():
-                return redirect(
-                    'home_page')  # Redirect organization user to their page
+                profile_page_url = reverse(
+                    'organization_profile',
+                    kwargs={'pk': user.organization.pk}
+                )
+                return redirect(profile_page_url)  
             elif user.groups.filter(name='TenantEmployee').exists():
-                return redirect(
-                    'tenant_user'
-                )  # Redirect Tenant employee user to their page
+                return redirect('tenant_user')
             elif user.groups.filter(name='TenantAdmin').exists():
-                return redirect(
-                    'admin_page')  # Redirect admin user to their page
+                return redirect('admin_page')
         else:
             messages.info(request, 'Invalid username or password')
             return redirect('login')
@@ -865,9 +874,6 @@ class CreateMultipleSlotsView(View):
                 
                 # Move to the next hour
                 current_datetime += timedelta(hours=1)
-
-        # Redirect or render as needed
-        return redirect('court-list')
 
         # Redirect or render as needed
         return redirect('court-list')

@@ -188,7 +188,7 @@ STATI_ROOT = BASE_DIR / 'static'
 
 # STATICFILES_DIRS = [BASE_DIR / 'static']
 
-MEDIA_ROOT = 'staic/images'
+MEDIA_ROOT = 'static/images'
 MEDIA_URL = '/images/'
 
 
