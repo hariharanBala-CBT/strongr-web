@@ -28,6 +28,7 @@ import {
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
+  userLogin: userLoginReducer,
   clubList: clubListReducer,
   clubDetails: clubDetailsReducer,
   Location: clubLocationReducer,
@@ -37,7 +38,6 @@ const reducer = combineReducers({
   clubImages: clubImageReducer,
   areaList: areaListReducer,
   gameList: gameListReducer,
-  userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   filterClubLocations: filterclubReducer,
   bookingCreate: bookingCreateReducer,

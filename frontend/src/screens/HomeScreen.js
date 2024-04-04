@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import "../css/homescreen.css";
 import Header from "../components/Header";
 import Button from "../components/Button";
-import Loader from "../components/Loader";
 import Message from "../components/Message";
 import SearchBar from "../components/SearchBar";
 import SelectInput from "../components/SelectInput";
@@ -15,6 +14,8 @@ import {
   filterLocation,
 } from "../actions/actions";
 import { useHomeContext } from '../context/HomeContext'
+import { CircularProgress } from "@mui/material";
+import toast, { Toaster } from "react-hot-toast";
 
 
 function HomeScreen() {
@@ -28,11 +29,8 @@ function HomeScreen() {
     sectionRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  const areaList = useSelector((state) => state.areaList);
-  const { areaerror, arealoading, areas } = areaList;
-
-  const gameList = useSelector((state) => state.gameList);
-  const { gameerror, gameloading, games } = gameList;
+  const { areaError, areaLoading, areas } = useSelector((state) => state.areaList);
+  const { gameError, gameLoading, games } = useSelector((state) => state.gameList);
   
   const handleSubmit = (event) => {
     // event.preventDefault();
@@ -57,16 +55,33 @@ function HomeScreen() {
   useEffect(() => {
     dispatch(listGames());
     dispatch(listAreas());
+
     const dtToday = new Date();
     const month = dtToday.getMonth() + 1;
     const day = dtToday.getDate();
     const year = dtToday.getFullYear();
-    const maxDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
-    
-    const dateInput = document.getElementById('date');
+    const minDate = `${year}-${month < 10 ? "0" + month : month}-${
+      day < 10 ? "0" + day : day
+    }`;
+
+    const dtMax = new Date(
+      dtToday.getFullYear(),
+      dtToday.getMonth() + 1,
+      dtToday.getDate()
+    );
+    const maxYear = dtMax.getFullYear();
+    const maxMonth = dtMax.getMonth() + 1;
+    const maxDay = dtMax.getDate();
+    const maxDate = `${maxYear}-${maxMonth < 10 ? "0" + maxMonth : maxMonth}-${
+      maxDay < 10 ? "0" + maxDay : maxDay
+    }`;
+
+    const dateInput = document.getElementById("date");
     if (dateInput) {
-      dateInput.setAttribute('min', maxDate);
+      dateInput.setAttribute("min", minDate);
+      dateInput.setAttribute("max", maxDate);
     }
+    setDate(minDate);
   }, [dispatch]);
 
   useEffect(() => {
@@ -80,9 +95,18 @@ function HomeScreen() {
     setSelectedDate(date)
   }, [gameName, areaName, date, setSelectedGame, setSelectedArea, setSelectedDate]);
 
+  useEffect(() => {
+    if(areaError){
+      toast.error('error in fetching areas')
+    }else if(gameError) {
+      toast.error('error in fetching games')
+    }
+  }, [areaError, gameError])
+
   return (
     <div className="home">
       <Header location="nav-home" />
+      <Toaster />
       <div className="banner">
         <video autoPlay muted loop id="myVideo">
           <source src="/videos/sample-video.mp4" type="video/mp4" />
@@ -117,10 +141,10 @@ function HomeScreen() {
 
         <form onSubmit={handleSubmit}>
           <div className="check-availability-container-home">
-          {gameloading ? (
-              <Loader />
-            ) : gameerror ? (
-              <Message variant="danger">{gameerror}</Message>
+          {gameLoading ? (
+              <CircularProgress />
+            ) : gameError ? (
+              <Message variant="danger">{gameError}</Message>
             ) : (
               <SelectInput
                 label="game"
@@ -132,10 +156,10 @@ function HomeScreen() {
               />
             )}
             
-            {arealoading ? (
-              <Loader />
-            ) : areaerror ? (
-              <Message variant="danger">{areaerror}</Message>
+            {areaLoading ? (
+              <CircularProgress />
+            ) : areaError ? (
+              <Message variant="danger">{areaError}</Message>
             ) : (
             <SelectInput
               label="area"

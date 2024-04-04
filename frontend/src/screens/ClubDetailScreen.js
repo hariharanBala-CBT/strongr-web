@@ -46,21 +46,11 @@ function ClubDetailScreen() {
     }
   };
 
-  const Location = useSelector((state) => state.Location);
-  const { clubLocation } = Location;
-
-  const Games = useSelector((state) => state.clubGame);
-  const { clubGame } = Games;
-
-  const WorkingDays = useSelector((state) => state.clubWorking);
-  const { clubWorking } = WorkingDays;
-
-  const Amenities = useSelector((state) => state.clubAmenities);
-  const { clubAmenity } = Amenities;
-
-  const Images = useSelector((state) => state.clubImages);
-  const { clubImage } = Images;
-
+  const { clubLocation } = useSelector((state) => state.Location);
+  const { clubGame } = useSelector((state) => state.clubGame);
+  const { clubWorking } = useSelector((state) => state.clubWorking);
+  const { clubAmenity } = useSelector((state) => state.clubAmenities);
+  const { clubImage } = useSelector((state) => state.clubImages);
   const { courts } = useSelector((state) => state.courtList);
 
   useEffect(() => {

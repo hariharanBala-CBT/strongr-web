@@ -5,8 +5,8 @@ import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../actions/actions";
-import Loader from '../components/Loader'
-import Message from '../components/Message'
+import toast, { Toaster } from "react-hot-toast";
+import { CircularProgress } from "@mui/material";
 
 function LoginScreen() {
   const [username, setUsername] = useState("");
@@ -32,14 +32,21 @@ function LoginScreen() {
     dispatch(login(username, password));
   };
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
   return (
     <div>
       <Header location="nav-all" />
+      <Toaster />
       <div className="login-page">
         <div className="login-form">
           <h1 className="login-title">LOGIN</h1>
-          {error && <Message variant="danger">{error}</Message>}
-          {loading && <Loader />}
+          {/* {error && <Message variant="danger">{error}</Message>} */}
+          {loading ? <CircularProgress className="loader" /> :
           <form onSubmit={handleSubmit}>
             <label>Username</label>
             <input
@@ -71,6 +78,7 @@ function LoginScreen() {
               />
             </div>
           </form>
+          }
           <span>
             Dont you have an Account?&nbsp;
             <a href="/signup">SignUp</a>

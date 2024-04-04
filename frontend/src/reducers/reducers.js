@@ -79,13 +79,13 @@ export const filterclubReducer = (
 ) => {
   switch (action.type) {
     case FILTER_CLUB_REQUEST:
-      return { ...state, loading: true, clubLocationDetails: [] };
+      return { ...state, clubFilterLoading: true, clubLocationDetails: [] };
 
     case FILTER_CLUB_SUCCESS:
-      return { ...state, loading: false, clubLocationDetails: action.payload };
+      return { ...state, clubFilterLoading: false, clubLocationDetails: action.payload };
 
     case FILTER_CLUB_FAIL:
-      return { ...state, loading: false, error: action.payload };
+      return { ...state, clubFilterLoading: false, clubFilterError: action.payload };
 
     default:
       return state;
@@ -207,13 +207,13 @@ export const clubImageReducer = (state = { clubImage: [] }, action) => {
 export const areaListReducer = (state = { areas: [] }, action) => {
   switch (action.type) {
     case AREA_LIST_REQUEST:
-      return { ...state, arealoading: true };
+      return { ...state, areaLoading: true };
 
     case AREA_LIST_SUCCESS:
-      return { ...state, arealoading: false, areas: action.payload };
+      return { ...state, areaLoading: false, areas: action.payload };
 
     case AREA_LIST_FAIL:
-      return { ...state, arealoading: false, areaserror: action.payload };
+      return { ...state, areaLoading: false, areaError: action.payload };
 
     default:
       return state;
@@ -223,13 +223,13 @@ export const areaListReducer = (state = { areas: [] }, action) => {
 export const gameListReducer = (state = { games: [] }, action) => {
   switch (action.type) {
     case GAME_LIST_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, gameLoading: true };
 
     case GAME_LIST_SUCCESS:
-      return { ...state, loading: false, games: action.payload };
+      return { ...state, gameLoading: false, games: action.payload };
 
     case GAME_LIST_FAIL:
-      return { ...state, loading: false, error: action.payload };
+      return { ...state, gameLoading: false, gameError: action.payload };
 
     default:
       return state;
@@ -258,13 +258,13 @@ export const userLoginReducer = (state = {}, action) => {
 export const userRegisterReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_REGISTER_REQUEST:
-      return { loading: true };
+      return { registerUserLoading: true };
 
     case USER_REGISTER_SUCCESS:
-      return { loading: false, userInfo: action.payload };
+      return { registerUserLoading: false, userinfo: action.payload };
 
     case USER_REGISTER_FAIL:
-      return { loading: false, error: action.payload };
+      return { registerUserLoading: false, registerError: action.payload };
 
     case USER_LOGOUT:
       return {};
@@ -278,20 +278,20 @@ export const bookingCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case BOOKING_CREATE_REQUEST:
       return {
-        loading: true,
+        createBookingLoading: true,
       };
 
     case BOOKING_CREATE_SUCCESS:
       return {
-        loading: false,
+        createBookingLoading: false,
         success: true,
         booking: action.payload,
       };
 
     case BOOKING_CREATE_FAIL:
       return {
-        loading: false,
-        error: action.payload,
+        createBookingLoading: false,
+        createBookingError: action.payload,
       };
 
     case BOOKING_CREATE_RESET:

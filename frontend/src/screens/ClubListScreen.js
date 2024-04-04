@@ -11,6 +11,8 @@ import Message from "../components/Message";
 import { listAreas, listGames, filterLocation } from "../actions/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useHomeContext } from '../context/HomeContext'
+import { CircularProgress } from "@mui/material";
+import toast, { Toaster } from "react-hot-toast";
 
 function ClubListScreen() {
 
@@ -18,14 +20,11 @@ function ClubListScreen() {
   const navigate = useNavigate();
   const { selectedDate, selectedArea, selectedGame, setSelectedDate, setSelectedArea, setSelectedGame  } = useHomeContext();
   
-  const areaList = useSelector((state) => state.areaList);
-  const { areaerror, arealoading, areas } = areaList;
-
-  const gameList = useSelector((state) => state.gameList);
-  const { gameerror, gameloading, games } = gameList;
+  const { areaError, areaLoading, areas } = useSelector((state) => state.areaList);
+  const { gameError, gameLoading, games } = useSelector((state) => state.gameList);
 
   const filterClubLocations = useSelector((state) => state.filterClubLocations);
-  const { cluberror, clubloading, clubLocationDetails } = filterClubLocations;
+  const { clubFilterLoading, clubLocationDetails } = filterClubLocations;
 
   const [gameName, setGameName] = useState(selectedGame);
   const [areaName, setAreaName] = useState(selectedArea);
@@ -51,11 +50,26 @@ function ClubListScreen() {
     const month = dtToday.getMonth() + 1;
     const day = dtToday.getDate();
     const year = dtToday.getFullYear();
-    const maxDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
-    
-    const dateInput = document.getElementById('date');
+    const minDate = `${year}-${month < 10 ? "0" + month : month}-${
+      day < 10 ? "0" + day : day
+    }`;
+
+    const dtMax = new Date(
+      dtToday.getFullYear(),
+      dtToday.getMonth() + 1,
+      dtToday.getDate()
+    );
+    const maxYear = dtMax.getFullYear();
+    const maxMonth = dtMax.getMonth() + 1;
+    const maxDay = dtMax.getDate();
+    const maxDate = `${maxYear}-${maxMonth < 10 ? "0" + maxMonth : maxMonth}-${
+      maxDay < 10 ? "0" + maxDay : maxDay
+    }`;
+
+    const dateInput = document.getElementById("date");
     if (dateInput) {
-      dateInput.setAttribute('min', maxDate);
+      dateInput.setAttribute("min", minDate);
+      dateInput.setAttribute("max", maxDate);
     }
   }, [dispatch]);
 
@@ -80,27 +94,25 @@ function ClubListScreen() {
 
   }, [areaName,gameName,date, setSelectedArea, setSelectedGame, setSelectedDate, dispatch]);
 
-  // useEffect(() => {
-  //   if(clubLocationDetails){
-  //     alert('got locations')
-  //     // dispatch()
-  //   }
-
-  // }, [dispatch, clubLocationDetails]);
-
-
-
+  useEffect(() => {
+    if(areaError){
+      toast.error('error in fetching areas')
+    }else if(gameError) {
+      toast.error('error in fetching games')
+    }
+  }, [areaError, gameError])
 
   return (
     <div>
       <Header location="nav-all" />
+      <Toaster />
       <div className="form-section">
         <form onSubmit={handleSubmit}>
           <div className="check-availability-container-club">
-            {gameloading ? (
+            {gameLoading ? (
               <Loader />
-            ) : gameerror ? (
-              <Message variant="danger">{gameerror}</Message>
+            ) : gameError ? (
+              <Message variant="danger">{gameError}</Message>
             ) : (
               <SelectInput
                 label="game"
@@ -110,10 +122,10 @@ function ClubListScreen() {
               />
             )}
 
-            {arealoading ? (
+            {areaLoading ? (
               <Loader />
-            ) : areaerror ? (
-              <Message variant="danger">{areaerror}</Message>
+            ) : areaError ? (
+              <Message variant="danger">{areaError}</Message>
             ) : (
               <SelectInput
                 label="area"
@@ -135,10 +147,8 @@ function ClubListScreen() {
         </form>
       </div>
       <div className="club-list">
-        {clubloading ? (
-          <Loader />
-        ) : cluberror ? (
-          <Message variant="danger">{cluberror}</Message>
+        {clubFilterLoading ? (
+          <CircularProgress />
         ) : filterClubLocations  && (
           <Club clubs={clubLocationDetails} />
         )}

@@ -13,6 +13,8 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { USER_UPDATE_PROFILE_RESET } from "../constants/constants";
+import OTPInput, { ResendOTP } from "otp-input-react";
+import toast, { Toaster } from 'react-hot-toast';
 
 const style = {
   position: "absolute",
@@ -38,7 +40,7 @@ function UpdateprofileScreen() {
   const { userUpdateSuccess, userUpdateError } = useSelector(
     (state) => state.userUpdate
   );
-  const { otpLoading, otpSuccess } = useSelector((state) => state.generateOtp);
+  const { otpLoading } = useSelector((state) => state.generateOtp);
 
   const [username, setUsername] = useState(userInfo?.username || "");
   const [email, setEmail] = useState(userInfo?.email || "");
@@ -65,6 +67,12 @@ function UpdateprofileScreen() {
     dispatch(generateOTP(email));
   };
 
+  const regenerateOtp = () => {
+    setLoader(true);
+    setOpenForm(true);
+    dispatch(generateOTP(email));
+  }
+
   useEffect(() => {
     if (!otpLoading) {
       setLoader(false);
@@ -86,8 +94,10 @@ function UpdateprofileScreen() {
 
   useEffect(() => {
     if (userUpdateSuccess) {
+      toast.success('user details updated')
       navigate("/profile/");
     } else if (userUpdateError) {
+      toast.error('incorrect OTP')
       setOpenForm(false);
       dispatch({
         type: USER_UPDATE_PROFILE_RESET,
@@ -98,6 +108,7 @@ function UpdateprofileScreen() {
   return (
     <div>
       <Header location="nav-all" />
+      <Toaster />
       <div className="profile-page">
         <div className="profile-form">
           <form onSubmit={otpGenerate}>
@@ -155,15 +166,12 @@ function UpdateprofileScreen() {
                 <Button
                   type="submit"
                   className="btn-check-availability-home"
-                  text="Update"
+                  text="Verify & Update"
                 />
               </div>
             )}
           </form>
 
-          {/* {openForm && (
-            
-          )} */}
           <Modal
             open={openForm}
             onClose={() => setOpenForm(false)}
@@ -173,20 +181,33 @@ function UpdateprofileScreen() {
             {loader ? (
               <Box sx={style} className="otp-loader">
                 <span>sending otp...</span>
-                <CircularProgress/>
+                <CircularProgress />
               </Box>
             ) : (
               <Box sx={style}>
                 <form onSubmit={updateCustomer} className="otp-form">
                   <div className="otp-input">
                     <label>Enter OTP sent to email</label>
-                    <input
+                    {/* <input
                       className="otp"
                       value={otp}
                       type="integer"
                       onChange={(e) => {
                         setOtp(e.target.value);
                       }}
+                    /> */}
+                    <OTPInput
+                      className='otp-input-field'
+                      value={otp}
+                      onChange={setOtp}
+                      autoFocus
+                      OTPLength={4}
+                      otpType="number"
+                      disabled={false}
+                      secure
+                    />
+                    <ResendOTP
+                      onResendClick={regenerateOtp}
                     />
                   </div>
                   <div className="otp-button">

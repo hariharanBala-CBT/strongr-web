@@ -8,8 +8,8 @@ import DateInput from "../components/DateInput";
 import SelectInput from "../components/SelectInput";
 import { useDispatch, useSelector } from "react-redux";
 import { useHomeContext } from "../context/HomeContext";
-import { BOOKING_CREATE_RESET } from '../constants/constants'
-// import SlotPicker from 'slotpicker'; 
+import { BOOKING_CREATE_RESET } from "../constants/constants";
+// import SlotPicker from 'slotpicker';
 import {
   listclubLocation,
   listclubGame,
@@ -91,17 +91,15 @@ function BookingInfoScreen() {
     const storedSelectedCourt = localStorage.getItem("selectedCourt");
     const storedSelectedSlot = localStorage.getItem("selectedSlot");
 
-
     if (storedSelectedGame) setGameName(storedSelectedGame);
     if (storedSelectedArea) setAreaName(storedSelectedArea);
     if (storedSelectedDate) setDate(storedSelectedDate);
     if (storedSelectedCourt) setCourtName(storedSelectedCourt);
     if (storedSelectedSlot) setCourtName(storedSelectedSlot);
-
   }, []);
 
   useEffect(() => {
-    dispatch({type: BOOKING_CREATE_RESET})
+    dispatch({ type: BOOKING_CREATE_RESET });
     const fetchData = async () => {
       dispatch(listclubLocation(id));
       dispatch(listclubGame(id));
@@ -116,9 +114,18 @@ function BookingInfoScreen() {
     const minDate = `${year}-${month < 10 ? "0" + month : month}-${
       day < 10 ? "0" + day : day
     }`;
-    const dtMax = new Date(dtToday.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const maxDate = `${dtMax.getFullYear()}-${(dtMax.getMonth() + 1).toString().padStart(2, '0')}-${dtMax.getDate().toString().padStart(2, '0')}`;
 
+    const dtMax = new Date(
+      dtToday.getFullYear(),
+      dtToday.getMonth() + 1,
+      dtToday.getDate()
+    );
+    const maxYear = dtMax.getFullYear();
+    const maxMonth = dtMax.getMonth() + 1;
+    const maxDay = dtMax.getDate();
+    const maxDate = `${maxYear}-${maxMonth < 10 ? "0" + maxMonth : maxMonth}-${
+      maxDay < 10 ? "0" + maxDay : maxDay
+    }`;
 
     const dateInput = document.getElementById("date");
     if (dateInput) {
@@ -137,23 +144,21 @@ function BookingInfoScreen() {
     }
   }, [date, dispatch, courts]);
 
-  
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if(selectedSlot){
-      alert(selectedSlot)
+    if (selectedSlot) {
+
       const parts = selectedSlot.split("-");
       const court = courts.find((court) => court.name === selectedCourt);
-      console.log(slots)
-      const myslot = slots.find((slot) => slot.start_time === parts[0] && slot.end_time === parts[1]);
-      console.log('slot',myslot)
-  
+      console.log(slots);
+      const myslot = slots.find(
+        (slot) => slot.start_time === parts[0] && slot.end_time === parts[1]
+      );
+      console.log("slot", myslot);
+
       const courtId = court?.id;
       const slotId = myslot?.id;
-      // alert(courtId);
-      alert(slotId);
-  
+
       const formData = {
         id,
         clubLocation,
@@ -167,13 +172,13 @@ function BookingInfoScreen() {
         courtId,
         userInfo,
         slotId,
-        selectedSlot
+        selectedSlot,
       };
-  
+
       const formDataJSON = JSON.stringify(formData);
-  
+
       localStorage.setItem("Bookingdata", formDataJSON);
-  
+
       navigate("/checkout");
     }
   };
@@ -183,15 +188,7 @@ function BookingInfoScreen() {
       setSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
       setSelectedSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
     }
-  }, [slots,setSelectedSlot]);
-
-  // useEffect(() => {
-  //   const storedSelectedSlot = localStorage.getItem("selectedSlot");
-
-  //   if (storedSelectedSlot) {
-  //     setSlot(storedSelectedSlot);
-  //   }
-  // }, [selectedSlot]);
+  }, [slots, setSelectedSlot]);
 
   return (
     <div>

@@ -89,7 +89,9 @@ export const filterLocation =
         type: FILTER_CLUB_SUCCESS,
         payload: data,
       });
+      
     } catch (error) {
+
       dispatch({
         type: FILTER_CLUB_FAIL,
         payload:
@@ -314,7 +316,6 @@ export const login = (username, password) => async (dispatch) => {
 
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
-    alert("error");
     dispatch({
       type: USER_LOGIN_FAIL,
       payload:
@@ -330,7 +331,7 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT });
 };
 
-export const register = (name, email, password, phoneNumber) => async (dispatch) => {
+export const register = (name, email, password, phoneNumber, otp) => async (dispatch) => {
   try {
     dispatch({
       type: USER_REGISTER_REQUEST,
@@ -344,7 +345,7 @@ export const register = (name, email, password, phoneNumber) => async (dispatch)
 
     const { data } = await axios.post(
       "/register/",
-      { name: name, email: email, password: password, phone: phoneNumber },
+      { name: name, email: email, password: password, phone: phoneNumber, otp: otp },
       config
     );
 

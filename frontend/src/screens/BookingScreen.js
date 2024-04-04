@@ -8,6 +8,8 @@ import {
   listclubDetails,
   getSlotDetails,
 } from "../actions/actions";
+import toast, { Toaster } from "react-hot-toast";
+import { BOOKING_CREATE_RESET } from "../constants/constants";
 
 function BookingScreen() {
   const { id } = useParams();
@@ -16,6 +18,7 @@ function BookingScreen() {
   const { court } = useSelector((state) => state.court);
   const { clubdetails } = useSelector((state) => state.clubDetails);
   const { slot } = useSelector((state) => state.slotDetails);
+  const { success } = useSelector((state) => state.bookingCreate)
 
   // const userLogin = useSelector((state) => state.userLogin);
   // const { userInfo } = userLogin;
@@ -37,9 +40,21 @@ function BookingScreen() {
     }
   }, [dispatch, court]);
 
+  useEffect(() => {
+    if(success){
+      toast.success('Booked!')
+      setTimeout(() => {
+        dispatch({
+          type: BOOKING_CREATE_RESET,
+        })
+      },[1000])
+    }
+  },[success, dispatch])
+
   return (
     <div>
       <Header location="nav-all" />
+      <Toaster />
       <div className="title">
         <h1>Booking Summary</h1>
       </div>

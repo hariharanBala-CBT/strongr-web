@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 import "../css/checkoutscreen.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  createBooking,
+  createBooking, listcustomerDetails,
 } from "../actions/actions";
 import { BOOKING_CREATE_RESET } from '../constants/constants'
+import { CircularProgress } from "@mui/material";
+import toast from "react-hot-toast";
 
 // import { useLocation } from 'react-router-dom';
 
@@ -16,10 +18,10 @@ function CheckoutScreen() {
   const dispatch = useDispatch();
 
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  // const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const { success, booking } = useSelector((state) => state.bookingCreate)
+  const { createBookingError, createBookingLoading, success, booking } = useSelector((state) => state.bookingCreate)
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -40,8 +42,8 @@ function CheckoutScreen() {
     placeOrder();
   };
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state) => state.userLogin);
+  const { customerDetails } = useSelector((state) => state.customerDetails);
 
   const bookingDataJSON = localStorage.getItem("Bookingdata");
   const bookingData = JSON.parse(bookingDataJSON);
@@ -53,17 +55,22 @@ function CheckoutScreen() {
       navigate('/login');
     } else {
       setFirstName(userInfo.first_name || "");
-      setLastName(userInfo.lastName || "");
       setEmail(userInfo.email || "");
-      setPhoneNumber(userInfo.phoneNumber || "");
+      setPhoneNumber(customerDetails?.phone_number || "");
     }
-  }, [userInfo, navigate]);
+  }, [userInfo, navigate, dispatch, setFirstName, setEmail, setPhoneNumber, customerDetails]);
+
+  useEffect(() => {
+    dispatch(listcustomerDetails(userInfo?.id))
+  }, [userInfo, dispatch])
   
   useEffect(() =>  {
     if(success && booking){
-      navigate(`/booking/${booking.id}`);
+        navigate(`/booking/${booking.id}`);
+    }else if(createBookingError){
+      toast.error('Something went wrong..')
     }
-  },[success, booking, navigate])
+  },[success, booking, navigate, createBookingError])
 
   return (
     <div>
@@ -82,7 +89,7 @@ function CheckoutScreen() {
             <div className="name">
               <div>
                 <label htmlFor="firstName" className="form-label">
-                  First name
+                  Name
                 </label>
                 <input
                   type="text"
@@ -94,7 +101,7 @@ function CheckoutScreen() {
                   required
                 />
               </div>
-              <div>
+              {/* <div>
                 <label htmlFor="lastName" className="form-label">
                   Last name
                 </label>
@@ -107,7 +114,7 @@ function CheckoutScreen() {
                   onChange={(e) => setLastName(e.target.value)}
                   required
                 />
-              </div>
+              </div> */}
             </div>
 
             <div className="email-input">
@@ -158,13 +165,15 @@ function CheckoutScreen() {
               </label>
             </div>
 
+            {createBookingLoading ? 
+            <CircularProgress /> :
             <div className="button">
               <Button
-                onClick={handleSubmit}
                 className="btn-check-availability-home"
                 text="Proceed to Pay"
               />
             </div>
+            }
           </form>
         </div>
 

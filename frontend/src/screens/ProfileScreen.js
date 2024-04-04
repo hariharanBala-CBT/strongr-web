@@ -40,6 +40,23 @@
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+    function getStatusText(status) {
+      switch (status) {
+        case 1:
+          return 'Yet to Begin';
+        case 2:
+          return 'Initiated';
+        case 3:
+          return 'In Progress';
+        case 4:
+          return 'Success';
+        case 5:
+          return 'Cancelled';
+        default:
+          return 'Unknown';
+      }
+    }
+
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
     };
@@ -165,7 +182,7 @@
                                 {booking.created_at?.slice(0, 10)}
                               </TableCell>
                               <TableCell>{booking.total_price}</TableCell>
-                              <TableCell>{booking.payment_status}</TableCell>
+                              <TableCell>{getStatusText(booking.payment_status)}</TableCell>
                               <TableCell>
                                 <Button
                                   onClick={redirectBooking.bind(null, booking.id)}
