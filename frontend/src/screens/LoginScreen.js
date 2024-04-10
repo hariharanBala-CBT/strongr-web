@@ -21,15 +21,16 @@ function LoginScreen() {
   const userLogin = useSelector((state) => state.userLogin);
   const { error, loading, userInfo } = userLogin;
 
-  useEffect(() => {
-    if (userInfo) {
-      navigate(-1);
-    }
-  }, [navigate, userInfo]);
+    useEffect(() => {
+      if(userInfo){
+        navigate(-1);
+      }
+    }, [navigate, userInfo]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(login(username, password));
+    navigate(-1)
   };
 
   useEffect(() => {
@@ -45,7 +46,6 @@ function LoginScreen() {
       <div className="login-page">
         <div className="login-form">
           <h1 className="login-title">LOGIN</h1>
-          {/* {error && <Message variant="danger">{error}</Message>} */}
           {loading ? <CircularProgress className="loader" /> :
           <form onSubmit={handleSubmit}>
             <label>Username</label>

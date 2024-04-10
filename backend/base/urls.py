@@ -56,7 +56,6 @@ urlpatterns = [
      path('reject/', TemplateView.as_view(template_name = 'reject.html'), name='reject'),
      path('change-password/', ChangePasswordView.as_view(), name='change_password'),
      
-     path('', TemplateView.as_view(template_name = 'cover.html'), name='cover'),
      
      path('signup/', TemplateView.as_view(template_name = 'signup.html'), name='signup'), 
      path ('org-create/', TemplateView.as_view(template_name = 'org_createlocation.html'),name='org_create'),

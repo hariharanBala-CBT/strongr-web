@@ -69,6 +69,9 @@ import {
   GENERATE_OTP_REQUEST,
   GENERATE_OTP_SUCCESS,
   GENERATE_OTP_FAIL,
+  BOOKING_CANCEL_REQUEST,
+  BOOKING_CANCEL_SUCCESS,
+  BOOKING_CANCEL_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -589,7 +592,6 @@ export const getSlotDetails = (id) => async (dispatch) => {
   }
 };
 
-
 export const listcustomerDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: CUSTOMER_DETAILS_REQUEST });
@@ -670,6 +672,29 @@ export const generateOTP = (email) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: GENERATE_OTP_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+
+export const bookingCancel = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: BOOKING_CANCEL_REQUEST });
+
+    const { data } = await axios.put(`/api/booking/cancel/${id}/`);
+
+    dispatch({
+      type: BOOKING_CANCEL_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: BOOKING_CANCEL_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

@@ -71,6 +71,10 @@ import {
   GENERATE_OTP_REQUEST,
   GENERATE_OTP_SUCCESS,
   GENERATE_OTP_FAIL,
+  BOOKING_DETAILS_RESET,
+  BOOKING_CANCEL_REQUEST,
+  BOOKING_CANCEL_SUCCESS,
+  BOOKING_CANCEL_FAIL,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -316,7 +320,8 @@ export const bookingDetailsReducer = (
     case BOOKING_DETAILS_SUCCESS:
       return {
         loading: false,
-        booking: action.payload,
+        bookingDetails: action.payload,
+        bookingDetailsSuccess: true,
       };
 
     case BOOKING_DETAILS_FAIL:
@@ -324,6 +329,9 @@ export const bookingDetailsReducer = (
         loading: false,
         error: action.payload,
       };
+
+    case BOOKING_DETAILS_RESET:
+      return {};
 
     default:
       return state;
@@ -479,6 +487,31 @@ export const generateOtpredeucer = (state = {}, action) => {
       return {
         otpLoading: false,
         otpSuccess: false,
+      };
+
+
+    default:
+      return state;
+  }
+};
+
+export const cancelBookingreducer = (state = {}, action) => {
+  switch (action.type) {
+    case BOOKING_CANCEL_REQUEST:
+      return {
+        cancelBookingLoading: true,
+      };
+
+    case BOOKING_CANCEL_SUCCESS:
+      return {
+        cancelBookingLoading: false,
+        cancelBooking: true,
+      };
+
+    case BOOKING_CANCEL_FAIL:
+      return {
+        cancelBookingLoading: false,
+        cancelBooking: false,
       };
 
 

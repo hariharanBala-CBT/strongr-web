@@ -8,7 +8,7 @@ import DateInput from "../components/DateInput";
 import SelectInput from "../components/SelectInput";
 import { useDispatch, useSelector } from "react-redux";
 import { useHomeContext } from "../context/HomeContext";
-import { BOOKING_CREATE_RESET } from "../constants/constants";
+import { BOOKING_CREATE_RESET, BOOKING_DETAILS_RESET } from "../constants/constants";
 // import SlotPicker from 'slotpicker';
 import {
   listclubLocation,
@@ -84,6 +84,12 @@ function BookingInfoScreen() {
     setDate(selectedDate);
   };
 
+
+  useEffect(() => {
+    dispatch({ type: BOOKING_CREATE_RESET });
+    dispatch({ type: BOOKING_DETAILS_RESET });
+  },[dispatch])
+  
   useEffect(() => {
     const storedSelectedGame = localStorage.getItem("selectedGame");
     const storedSelectedArea = localStorage.getItem("selectedArea");
@@ -99,7 +105,7 @@ function BookingInfoScreen() {
   }, []);
 
   useEffect(() => {
-    dispatch({ type: BOOKING_CREATE_RESET });
+
     const fetchData = async () => {
       dispatch(listclubLocation(id));
       dispatch(listclubGame(id));
@@ -139,15 +145,13 @@ function BookingInfoScreen() {
 
     const sCourt = courts?.find((court) => court.name === storedSelectedCourt);
     const courtId = sCourt?.id;
-    if (date) {
-      dispatch(fetchAvailableSlots(courtId, date));
-    }
-  }, [date, dispatch, courts]);
+    dispatch(fetchAvailableSlots(courtId, date));
+    
+  }, [date, dispatch, courts, courtName]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (selectedSlot) {
-
       const parts = selectedSlot.split("-");
       const court = courts.find((court) => court.name === selectedCourt);
       console.log(slots);
@@ -193,7 +197,7 @@ function BookingInfoScreen() {
   return (
     <div>
       <Header location="nav-all" />
-      <div className="booking-content">
+      <div className="bookinginfo-content">
         <div className="card1">
           <div className="container-title">
             <h2>{clubLocation?.organization?.organization_name}</h2>
@@ -248,7 +252,7 @@ function BookingInfoScreen() {
                 onChange={handleSlotChange}
                 options={slots?.map((slot) => ({
                   id: slot.id,
-                  area_name: `${slot.start_time}-${slot.end_time}-${slot.id}`,
+                  area_name: `${slot.start_time}-${slot.end_time}`,
                 }))}
                 label="slot"
               />

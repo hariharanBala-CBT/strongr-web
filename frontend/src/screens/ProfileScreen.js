@@ -1,141 +1,185 @@
-  import React, { useEffect } from "react";
-  import Header from "../components/Header";
-  import { useDispatch, useSelector } from "react-redux";
-  import Grid from "@mui/material/Grid";
-  import { styled } from "@mui/material/styles";
-  import Paper from "@mui/material/Paper";
-  import Stack from "@mui/material/Stack";
-  import Button from "@mui/material/Button";
-  import Table from "@mui/material/Table";
-  import TableBody from "@mui/material/TableBody";
-  import TableCell from "@mui/material/TableCell";
-  import TableContainer from "@mui/material/TableContainer";
-  import TableHead from "@mui/material/TableHead";
-  import TablePagination from "@mui/material/TablePagination";
-  import TableRow from "@mui/material/TableRow";
-  import "../css/profilescreen.css";
-  import { useNavigate } from "react-router-dom";
-  import { listUserBookings, listcustomerDetails } from "../actions/actions";
-  import { Box } from "@mui/material";
-  import {USER_UPDATE_PROFILE_RESET } from "../constants/constants";
+import React, { useEffect, useState } from "react";
+import Header from "../components/Header";
+import { useDispatch, useSelector } from "react-redux";
+import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import "../css/profilescreen.css";
+import { useNavigate } from "react-router-dom";
+import {
+  bookingCancel,
+  listUserBookings,
+  listcustomerDetails,
+} from "../actions/actions";
+import { Box } from "@mui/material";
+import { USER_UPDATE_PROFILE_RESET } from "../constants/constants";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-  }));
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
-  const Content = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(1),
-    textAlign: "left",
-  }));
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+}));
 
-  function ProfileScreen() {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const userLogin = useSelector((state) => state.userLogin);
-    const { userbookings } = useSelector((state) => state.userBookingsList);
-    const { userInfo } = userLogin;
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+const Content = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(1),
+  textAlign: "left",
+}));
 
-    function getStatusText(status) {
-      switch (status) {
-        case 1:
-          return 'Yet to Begin';
-        case 2:
-          return 'Initiated';
-        case 3:
-          return 'In Progress';
-        case 4:
-          return 'Success';
-        case 5:
-          return 'Cancelled';
-        default:
-          return 'Unknown';
-      }
+function ProfileScreen() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [courtList, setCourtList] = useState([]);
+  const [bookingId, setBookingId] = useState('');
+
+  const { customerDetails } = useSelector((state) => state.customerDetails);
+  const { userInfo } = useSelector((state) => state.userLogin);
+  const { userbookings } = useSelector((state) => state.userBookingsList);
+  const { cancelBooking } = useSelector((state) => state.cancelBooking);
+
+
+  function getPaymentStatusText(status) {
+    switch (status) {
+      case 1:
+        return "Pending";
+      case 2:
+        return "Initiated";
+      case 3:
+        return "In Progress";
+      case 4:
+        return "Success";
+      case 5:
+        return "Cancelled";
+      default:
+        return "Unknown";
     }
+  }
 
-    const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-    };
+  function getBookingStatusText(status) {
+    switch (status) {
+      case 1:
+        return "Pending";
+      case 2:
+        return "Booked";
+      case 3:
+        return "Cancelled";
+      default:
+        return "Unknown";
+    }
+  }
 
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(+event.target.value);
-      setPage(0);
-    };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-    const updateUser = () => {
-      navigate(`/profile/${userInfo.id}`);
-    };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
-    const redirectBooking = (value) => {
-      // console.log(value);
-      navigate(`/booking/${value}`);
-    };
+  const updateUser = () => {
+    navigate(`/profile/${userInfo.id}`);
+  };
 
-    const { customerDetails } = useSelector((state) => state.customerDetails);
+  const redirectBooking = (value) => {
+    navigate(`/booking/${value}`);
+  };
 
-    useEffect(() => {
-      dispatch({
-        type: USER_UPDATE_PROFILE_RESET,
-      });
-      
-      if (userInfo) {
-        dispatch(listUserBookings(userInfo.id));
-        dispatch(listcustomerDetails(userInfo.id));
-      } else {
-        navigate("/");
-      }
-    }, [navigate, userInfo, dispatch]);
+  useEffect(() => {
+    dispatch({
+      type: USER_UPDATE_PROFILE_RESET,
+    });
 
-    return (
-      <div>
-        <Header location="nav-all" />
+    if (userInfo) {
+      dispatch(listUserBookings(userInfo.id));
+      dispatch(listcustomerDetails(userInfo.id));
+    } else {
+      navigate("/");
+    }
+  }, [navigate, userInfo, dispatch, cancelBooking]);
 
-        <Box sx={{ flexGrow: 1, height: "80vh" }} className="user">
-          <Grid
-            container
-            spacing={2}
-            sx={{ flexWrap: "wrap", flexShrink: "inherit", height: "60vh" }}
-          >
-            <Grid item xs={4}>
-              <Item sx={{ height: "76vh" }}>
-                <h2>My Profile</h2>
+  useEffect(() => {
+    if (userbookings && userbookings.length > 0) {
+      const courtList = userbookings.map((booking) => booking.court);
+      setCourtList(courtList);
+      // console.log(courtList)
+    }
+  }, [userbookings]);
 
-                <Stack spacing={4}>
-                  <Content className="details">
-                    <ul>
-                      <strong>username: </strong>
-                      {userInfo?.username}
-                    </ul>
-                    <ul>
-                      <strong>Name: </strong>
-                      {userInfo?.first_name}
-                    </ul>
-                    <ul>
-                      <strong>Email id: </strong>
-                      {userInfo?.email}
-                    </ul>
-                    <ul>
-                      <strong>Phone number: </strong>
-                      {customerDetails?.phone_number}
-                    </ul>
-                  </Content>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    className="update-user-btn"
-                    onClick={updateUser}
-                  >
-                    Update
-                  </Button>
-                </Stack>
-              </Item>
-            </Grid>
+  const [open, setOpen] = React.useState(false);
 
-            {/* {!userbookings ||
+  const handleCancelClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <Header location="nav-all" />
+
+      <Box sx={{ flexGrow: 1, height: "80vh" }} className="user">
+        <Grid
+          container
+          spacing={2}
+          sx={{ flexWrap: "wrap", flexShrink: "inherit", height: "60vh" }}
+        >
+          <Grid item xs={4}>
+            <Item sx={{ height: "76vh" }}>
+              <h2>My Profile</h2>
+
+              <Stack spacing={4}>
+                <Content className="details">
+                  <ul>
+                    <strong>username: </strong>
+                    {userInfo?.username}
+                  </ul>
+                  <ul>
+                    <strong>Name: </strong>
+                    {userInfo?.first_name}
+                  </ul>
+                  <ul>
+                    <strong>Email id: </strong>
+                    {userInfo?.email}
+                  </ul>
+                  <ul>
+                    <strong>Phone number: </strong>
+                    {customerDetails?.phone_number}
+                  </ul>
+                </Content>
+                <Button
+                  variant="contained"
+                  size="small"
+                  className="update-user-btn"
+                  onClick={updateUser}
+                >
+                  Update
+                </Button>
+              </Stack>
+            </Item>
+          </Grid>
+
+          {/* {!userbookings ||
             !userbookings.booking ||
             userbookings.booking.length === 0 ? (
               <Grid item xs={8}>
@@ -145,72 +189,123 @@
                 </Item>
               </Grid>
             ) : ( */}
-              <Grid item xs={8}>
-                <Item sx={{ height: "76vh" }}>
-                  <h2>My Bookings</h2>
-                  <TableContainer sx={{ maxHeight: 440 }}>
-                    <Table stickyHeader aria-label="sticky table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>
-                            <h4> Booking ID</h4>
-                          </TableCell>
-                          <TableCell>
-                            <h4>Date</h4>
-                          </TableCell>
-                          <TableCell>
-                            <h4>Total Price</h4>
-                          </TableCell>
-                          <TableCell>
-                            <h4>Paid</h4>
-                          </TableCell>
-                          <TableCell>
-                            <h4>Details</h4>
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {userbookings
-                          ?.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                          .map((booking) => (
-                            <TableRow key={booking.id}>
-                              <TableCell>{booking.id}</TableCell>
-                              <TableCell>
-                                {booking.created_at?.slice(0, 10)}
-                              </TableCell>
-                              <TableCell>{booking.total_price}</TableCell>
-                              <TableCell>{getStatusText(booking.payment_status)}</TableCell>
-                              <TableCell>
-                                <Button
-                                  onClick={redirectBooking.bind(null, booking.id)}
-                                >
-                                  Details
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <TablePagination
-                    rowsPerPageOptions={[5, 10, 20]}
-                    component="div"
-                    count={userbookings?.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />{" "}
-                </Item>
-              </Grid>
-            {/* )} */}
-          </Grid>
-        </Box>
-      </div>
-    );
-  }
+          <Grid item xs={8}>
+            <Item sx={{ height: "76vh" }}>
+              <h2>My Bookings</h2>
+              <TableContainer sx={{ maxHeight: 440 }}>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        <h4> Booking ID</h4>
+                      </TableCell>
+                      <TableCell>
+                        <h4>Booked Date</h4>
+                      </TableCell>
+                      <TableCell>
+                        <h4>Total Price</h4>
+                      </TableCell>
+                      <TableCell>
+                        <h4>Booking</h4>
+                      </TableCell>
+                      <TableCell>
+                        <h4>Payment</h4>
+                      </TableCell>
+                      <TableCell>
+                        <h4>Details</h4>
+                      </TableCell>
+                      <TableCell>
+                        <h4>Cancel</h4>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {userbookings
+                      ?.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((booking) => {
+                        const bookingDate = new Date(booking.booking_date);
+                        const day = String(bookingDate.getDate()).padStart(
+                          2,
+                          "0"
+                        );
+                        const month = String(
+                          bookingDate.getMonth() + 1
+                        ).padStart(2, "0");
+                        const year = bookingDate.getFullYear();
+                        const formattedDate = `${day}-${month}-${year}`;
 
-  export default ProfileScreen;
+                        return (
+                          <TableRow key={booking.id}>
+                            <TableCell>{booking.id}</TableCell>
+                            <TableCell>{formattedDate}</TableCell>
+                            <TableCell>{booking.total_price}</TableCell>
+                            <TableCell>
+                              {getBookingStatusText(booking.booking_status)}
+                            </TableCell>
+                            <TableCell>
+                              {getPaymentStatusText(booking.payment_status)}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                onClick={redirectBooking.bind(null, booking.id)}
+                              >
+                                Details
+                              </Button>
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                color="error"
+                                onClick={() => {
+                                  setBookingId(booking.id)
+                                  setOpen(true)
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 20]}
+                component="div"
+                count={userbookings?.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />{" "}
+            </Item>
+          </Grid>
+          {/* )} */}
+        </Grid>
+      </Box>
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCancelClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Cancel Booking?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            No Refund against this cancellation.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelClose}>exit</Button>
+          <Button onClick={() => { dispatch(bookingCancel(bookingId)); setOpen(false);  dispatch(listUserBookings(userInfo.id)); }}>confirm</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+export default ProfileScreen;

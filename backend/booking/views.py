@@ -185,6 +185,8 @@ def createBooking(request):
                 slot=slot,
                 tax_price=data['taxPrice'],
                 total_price=data['totalPrice'],
+                booking_status = 2,
+
             )
 
         serializer = BookingSerializer(booking)
@@ -294,4 +296,12 @@ def generateOtp(request):
 
     request.session['otp'] = otp
 
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def cancelBooking(request, pk):
+    booking = Booking.objects.get(id=pk)
+    booking.booking_status = 3
+    booking.save()
+    serializer = BookingSerializer(booking, many=False)
     return Response(serializer.data)

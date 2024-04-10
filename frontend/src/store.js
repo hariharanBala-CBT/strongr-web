@@ -25,6 +25,7 @@ import {
   customerDetailsReducer,
   userUpdateProfileReducer,
   generateOtpredeucer,
+  cancelBookingreducer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -51,6 +52,7 @@ const reducer = combineReducers({
   customerDetails: customerDetailsReducer,
   userUpdate: userUpdateProfileReducer,
   generateOtp: generateOtpredeucer,
+  cancelBooking: cancelBookingreducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

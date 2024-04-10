@@ -3,7 +3,7 @@ import "../css/homescreen.css";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Message from "../components/Message";
-import SearchBar from "../components/SearchBar";
+// import SearchBar from "../components/SearchBar";
 import SelectInput from "../components/SelectInput";
 import DateInput from "../components/DateInput";
 import { useNavigate } from "react-router-dom";
@@ -131,15 +131,15 @@ function HomeScreen() {
           </h1>
         </div>
 
-        <SearchBar placeholder="Area / Clubs / Locations" />
+        {/* <SearchBar placeholder="Area / Clubs / Locations" /> */}
 
-        <div className="lines">
+        {/* <div className="lines">
           <div className="or-line1"></div>
           OR
           <div className="or-line2"></div>
-        </div>
+        </div> */}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{ marginTop : '8rem' }}>
           <div className="check-availability-container-home">
           {gameLoading ? (
               <CircularProgress />

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   createBooking, listcustomerDetails,
 } from "../actions/actions";
-import { BOOKING_CREATE_RESET } from '../constants/constants'
+// import { BOOKING_CREATE_RESET } from '../constants/constants'
 import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
 
@@ -44,13 +44,19 @@ function CheckoutScreen() {
 
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
+  const { bookingDetailsSuccess } = useSelector((state) => state.bookingDetails);
 
   const bookingDataJSON = localStorage.getItem("Bookingdata");
   const bookingData = JSON.parse(bookingDataJSON);
 
   useEffect(() => {
-    dispatch({type: BOOKING_CREATE_RESET})
+    if(bookingDetailsSuccess){
+      navigate('/')
+    }
+  },[navigate, bookingDetailsSuccess])
 
+  useEffect(() => {
+    // dispatch({type: BOOKING_CREATE_RESET})
     if (!userInfo) {
       navigate('/login');
     } else {
@@ -171,6 +177,7 @@ function CheckoutScreen() {
               <Button
                 className="btn-check-availability-home"
                 text="Proceed to Pay"
+                type='submit'
               />
             </div>
             }

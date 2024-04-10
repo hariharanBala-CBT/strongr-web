@@ -22,5 +22,6 @@ urlpatterns = [
     path('clubworking/<str:pk>/', views.getClubWorkingDays, name="club-working-days"),
     path('clubimages/<str:pk>/', views.getClubImages, name="club-images"),
     path('courts/<str:pk>/', views.getCourts, name='get-courts'),
+    path('booking/cancel/<str:pk>/', views.cancelBooking, name='cancel-booking'),
 
 ]
