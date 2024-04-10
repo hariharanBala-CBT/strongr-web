@@ -165,7 +165,7 @@ class OrganizationLocationWorkingDays(models.Model):
         ('Wednesday','Wednesday'),
         ('Thursday','Thursday'),
         ('Friday','Friday'),
-        ('Saturday','Saturday'),
+        ('Saturday','Saturday'), 
     )
 
     organization_location = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)

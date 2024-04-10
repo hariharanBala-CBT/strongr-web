@@ -60,6 +60,10 @@
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                                 Preview
                             </a>
+                            <a class="nav-link" href="{% url 'status' %}">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-building-circle-check"></i></i></div>
+                                Status
+                            </a>
                         
                         </div>
                     </div>
@@ -83,7 +87,7 @@
                                 <div class="card bg-primary text-white mb-4">
                                     <div class="card-body">Confirmed Bookings</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <a class="small text-white stretched-link" href="{% url 'confirmed_bookings' %}">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -92,7 +96,7 @@
                                 <div class="card bg-warning text-white mb-4">
                                     <div class="card-body">Pending Bookings</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <a class="small text-white stretched-link" href="{% url 'pending_bookings' %}">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -102,13 +106,13 @@
                                 <div class="card bg-danger text-white mb-4">
                                     <div class="card-body">Cancelled Bookings</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <a class="small text-white stretched-link" href="{% url 'cancelled_bookings' %}">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-xl-6">
                                 <div class="card mb-4">
                                     <div class="card-header">
@@ -127,11 +131,11 @@
                                     <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Todays Log
+                                Booking Log
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
@@ -139,102 +143,36 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Game</th>
-                                            <th>status<small>(Booking)</small></th>
+                                            <th>Date</th>
                                             <th>Time</th>
-                                            <th>Duration</th>
                                             <th>Amount</th>
                                             <th>status<small>(Amount)</small></th>
+                                            <th>Booking status</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Name</th>
                                             <th>Game</th>
-                                            <th>status<small>(Booking)</small></th>
+                                            <th>Date</th>
                                             <th>Time</th>
-                                            <th>Duration</th>
                                             <th>Amount</th>
                                             <th>status<small>(Amount)</small></th>
+                                            <th>Booking status</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        <tr>
-                                            <td>Rugved</td>
-                                            <td>Badminton</td>
-                                            <td>Confirmed</td>
-                                            <td>09:00 - 10:00</td>
-                                            <td>1 hour</td>
-                                            <td>600</td>
-                                            <td>paid</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Tharun</td>
-                                            <td>Football</td>
-                                            <td>Pending</td>
-                                            <td>18:00 - 20:00</td>
-                                            <td>2 hour</td>
-                                            <td>1500</td>
-                                            <td>--</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ram</td>
-                                            <td>Cricket</td>
-                                            <td>Pending</td>
-                                            <td>15:00 - 16:00</td>
-                                            <td>1 hour</td>
-                                            <td>500</td>
-                                            <td>not paid</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Hari</td>
-                                            <td>Basketball</td>
-                                            <td>Cancelled</td>
-                                            <td>13:00 - 16:00</td>
-                                            <td>3 hour</td>
-                                            <td>2000</td>
-                                            <td>not paid</td>
-                                        </tr>
-                                        <!-- <tr>
-                                            <td>Airi Satou</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>33</td>
-                                            <td>2008/11/28</td>
-                                            <td>$162,700</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Brielle Williamson</td>
-                                            <td>Integration Specialist</td>
-                                            <td>New York</td>
-                                            <td>61</td>
-                                            <td>2012/12/02</td>
-                                            <td>$372,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Herrod Chandler</td>
-                                            <td>Sales Assistant</td>
-                                            <td>San Francisco</td>
-                                            <td>59</td>
-                                            <td>2012/08/06</td>
-                                            <td>$137,500</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Rhona Davidson</td>
-                                            <td>Integration Specialist</td>
-                                            <td>Tokyo</td>
-                                            <td>55</td>
-                                            <td>2010/10/14</td>
-                                            <td>$327,900</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Colleen Hurst</td>
-                                            <td>Javascript Developer</td>
-                                            <td>San Francisco</td>
-                                            <td>39</td>
-                                            <td>2009/09/15</td>
-                                            <td>$205,500</td>
-                                        </tr> -->
-                                        
+                                        {% for booking in bookings %}
+                                            <tr>
+                                                <td>{{ booking.name }}</td>
+                                                <td>{{ booking.court.game }}</td>
+                                                <td>{{ booking.booking_date }}</td>
+                                                <td>{{ booking.slot }}</td>
+                                                <td>{{ booking.total_price }}</td>
+                                                <td>{{ booking.get_payment_status_display }}</td>
+                                                <td>{{ booking.get_booking_status_display }}</td>
+                                            </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>

@@ -69,6 +69,7 @@ function ClubDetailScreen() {
       <div className="club-detail">
         <div className="carousel-container">
           <Carousel
+            className="cc"
             autoPlay
             infiniteLoop
             transition="crossfade"

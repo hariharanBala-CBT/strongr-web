@@ -9,7 +9,12 @@ urlpatterns = [
      path('signup/', OrganizationSignupView.as_view(), name='signup'),
      path('orglogin/', LoginView.as_view(), name='login'),
      path('logout/', LogoutView.as_view(), name='logout'),
+    
      path('organizationpage/',OrganizationHomeView.as_view(), name='organization_page'),
+     path('confirmed_bookings/',ListofConfirmBookingView.as_view(), name='confirmed_bookings'),
+     path('pending_bookings/',ListofPendingBookingView.as_view(), name='pending_bookings'),
+     path('cancelled_bookings/',ListofCancelledBookingView.as_view(), name='cancelled_bookings'),
+    
      path('organizationprofile/<int:pk>/' ,OrganizationProfileView.as_view(), name='organization_profile'),
      path('organizationaddlocation/' ,OrganizationAddLocationView.as_view(), name='organization_addlocation'),
      path('organizationupdatelocation/<int:pk>/' , OrganizationUpdateLocationView.as_view(), name='organization_updatelocation'),
@@ -36,7 +41,13 @@ urlpatterns = [
      path('organizationlocationworkingdays/' , OrganizationWorkingDaysView.as_view(), name='organization_locationworkingdays'),
      path('preview/' ,PreviewView.as_view(), name='preview'),
      path('termsandconditions/' ,TermsandConditionsView.as_view(),name='termsandconditions'),
-     path('user/' ,TemplateView.as_view(template_name = 'tenantuser_page.html'), name='tenant_user'),
+    
+     path('user/' ,TenantEmployeeHomeView.as_view(), name='tenantuser_page'),
+     path('organization_list/' ,OrganizationListView.as_view(),name='organization_list'),
+     path('organization_preview/<int:pk>/', TenantOrganizationPreviewView.as_view(), name='organization_preview'),
+     path('organizations/<int:organization_id>/change_status/<int:new_status>/', ChangeOrganizationStatusView.as_view(), name='change_organization_status'),
+    
+     
      path('approvallist/' ,ApprovalListView.as_view(),name='approval_list'),
      path('verify/<int:pk>/' ,VerifyView.as_view(),name='verify'),
      path('status/' ,StatusView.as_view(), name='status'),
@@ -44,14 +55,12 @@ urlpatterns = [
      path('success/', TemplateView.as_view(template_name = 'success.html'), name='success'),
      path('reject/', TemplateView.as_view(template_name = 'reject.html'), name='reject'),
      path('change-password/', ChangePasswordView.as_view(), name='change_password'),
-     path('login/', TemplateView.as_view(template_name = 'login_signup.html'), name='login_signup'),
+     
      path('', TemplateView.as_view(template_name = 'cover.html'), name='cover'),
-     path('detail/', TemplateView.as_view(template_name = 'detail.html'), name='detail'),
-     path('check-page/', TemplateView.as_view(template_name = 'check.html'), name='check'), 
-     path('home-page/', TemplateView.as_view(template_name = 'home.html'), name='home'),
+     
      path('signup/', TemplateView.as_view(template_name = 'signup.html'), name='signup'), 
-     path('checkout/', TemplateView.as_view(template_name = 'checkout.html'), name='checkout'), 
      path ('org-create/', TemplateView.as_view(template_name = 'org_createlocation.html'),name='org_create'),
+     
      path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
      path('password-reset-confirm/<uidb64>/<token>/',
           auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'),

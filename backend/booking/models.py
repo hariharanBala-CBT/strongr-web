@@ -20,11 +20,11 @@ class Slot(models.Model):
     location = models.ForeignKey(OrganizationLocation,
                                  on_delete=models.CASCADE)
     # date = models.DateField(auto_now=True)
-    days = models.CharField(max_length=10, choices=day_choices)
+    days = models.CharField(max_length=10, choices=day_choices,null=True)
     is_booked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.court} - {self.start_time.strftime('%H:%M')} to {self.end_time.strftime('%H:%M')} - {self.id}"
+        return f"{self.start_time.strftime('%H:%M')} to {self.end_time.strftime('%H:%M')}"
 
 
 class Booking(models.Model):
@@ -40,6 +40,15 @@ class Booking(models.Model):
         (IN_PROGRESS, 'In Progress'),
         (SUCCESS, 'Success'),
         (FAILED, 'Cancelled'),
+    )
+
+    PENDING = 1
+    CONFIRMED = 2
+    CANCELLED = 3
+    booking_status_choices = (
+        (PENDING, 'Pending'),
+        (CONFIRMED, 'Confirmed'),
+        (CANCELLED, 'Cancelled'),
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -58,6 +67,8 @@ class Booking(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     tax_price = models.PositiveBigIntegerField(null=True, blank=True)
     total_price = models.PositiveBigIntegerField(null=True, blank=True)
+
+    booking_status =models.IntegerField(choices=booking_status_choices,default=PENDING)
 
     def __str__(self):
         return f"{self.name}"

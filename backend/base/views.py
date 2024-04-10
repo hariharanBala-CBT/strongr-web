@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 
+from django.db.models import Q
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -61,7 +62,7 @@ def registerUser(request):
 
 
 import os
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from typing import Any, Dict
 from django import http
 from django.contrib import messages
@@ -90,28 +91,20 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.base import TemplateView
 from django.shortcuts import redirect
 from datetime import datetime, timedelta
-from django.db import transaction
-from django.http import JsonResponse
+from django.utils import timezone
 
+# from django.db import transaction
+from django.http import JsonResponse
+from .middleware import FirstLoginMiddleware
 
 @method_decorator(login_required, name='dispatch')
-class HomePageView(TemplateView):
+@method_decorator(FirstLoginMiddleware, name='dispatch')
+class HomePageView(View):
     template_name = 'getstarted.html'
-
+    
     def get(self, request, *args, **kwargs):
-        first_login = request.session.get(
-            'first_login_' + str(request.user.id), False)
-        
-        if not first_login:
-            request.session['first_login_' + str(request.user.id)] = True
-            
-            profile_page_url = reverse(
-                'organization_profile',
-                kwargs={'pk': request.user.organization.pk})
-            
-            return redirect(profile_page_url)
-        
-        return super().get(request, *args, **kwargs)
+        return render(request, self.template_name)
+
 
 
 class OrganizationSignupView(CreateView):
@@ -214,8 +207,8 @@ class LoginView(View):
                     kwargs={'pk': user.organization.pk}
                 )
                 return redirect(profile_page_url)  
-            elif user.groups.filter(name='TenantEmployee').exists():
-                return redirect('tenant_user')
+            elif user.groups.filter(name='Tenant').exists():
+                return redirect('tenantuser_page')
             elif user.groups.filter(name='TenantAdmin').exists():
                 return redirect('admin_page')
         else:
@@ -241,9 +234,97 @@ class OrganizationHomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         organization = Organization.objects.get(user=self.request.user)
-        context = {'organization': organization}
-        print('organization')
+
+        courts = Court.objects.filter(location__organization=organization)
+
+       # Initialize an empty list to store all bookings
+        all_bookings = []
+        
+        for court in courts:
+            # Filter bookings for the current court
+            court_bookings = Booking.objects.filter(court=court)
+            
+            # Extend the all_bookings list with the current court's bookings
+            all_bookings.extend(court_bookings)
+        
+        context = {
+            'organization': organization,
+            'bookings': all_bookings
+        }
+        
         return context
+    
+@method_decorator(login_required, name='dispatch')
+class ListofConfirmBookingView(TemplateView):
+    template_name = 'confirmed_bookings.html'
+
+    def get_context_data(self, **kwargs):
+        organization = Organization.objects.get(user=self.request.user)
+
+        courts = Court.objects.filter(location__organization=organization)
+
+       # Initialize an empty list to store all bookings
+        all_bookings = []
+        
+        for court in courts:
+            court_bookings = Booking.objects.filter(Q(court=court) & Q(booking_status=Booking.CONFIRMED))
+            all_bookings.extend(court_bookings)
+        
+        context = {
+            'organization': organization,
+            'bookings': all_bookings
+        }
+        
+        return context
+    
+@method_decorator(login_required, name='dispatch')
+class ListofPendingBookingView(TemplateView):
+    template_name = 'pending_bookings.html'
+
+    def get_context_data(self, **kwargs):
+        organization = Organization.objects.get(user=self.request.user)
+
+        courts = Court.objects.filter(location__organization=organization)
+
+       # Initialize an empty list to store all bookings
+        all_bookings = []
+        
+        for court in courts:
+            court_bookings = Booking.objects.filter(Q(court=court) & Q(booking_status=Booking.PENDING))
+            all_bookings.extend(court_bookings)
+        
+        context = {
+            'organization': organization,
+            'bookings': all_bookings
+        }
+        
+        return context
+    
+
+@method_decorator(login_required, name='dispatch')
+class ListofCancelledBookingView(TemplateView):
+    template_name = 'cancelled_bookings.html'
+
+    def get_context_data(self, **kwargs):
+        organization = Organization.objects.get(user=self.request.user)
+
+        courts = Court.objects.filter(location__organization=organization)
+
+       # Initialize an empty list to store all bookings
+        all_bookings = []
+        
+        for court in courts:
+            court_bookings = Booking.objects.filter(Q(court=court) & Q(booking_status=Booking.CANCELLED))
+            all_bookings.extend(court_bookings)
+        
+        context = {
+            'organization': organization,
+            'bookings': all_bookings
+        }
+        
+        return context
+    
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -654,8 +735,9 @@ class CourtCreateView(CreateView):
         return super().form_valid(form)
 
 
-class PreviewView(TemplateView):
+class PreviewView(FormView):
     template_name = 'org_preview2.html'
+    form_class = TermsandConditionsForm
     success_url = reverse_lazy('organization_page')
 
     def get_context_data(self):
@@ -680,6 +762,13 @@ class PreviewView(TemplateView):
         profile = Organization.objects.filter(user=self.request.user)
         context['profiles'] = profile
         return context
+    
+    def form_valid(self, form):
+        organization = Organization.objects.get(user=self.request.user)
+        organization.is_terms_and_conditions_agreed = True
+        organization.status = Organization.IN_PROGRESS
+        organization.save()
+        return HttpResponseRedirect(self.success_url)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -691,46 +780,74 @@ class TermsandConditionsView(FormView):
     def get_context_data(self):
         context = super().get_context_data()
         organization = Organization.objects.get(user=self.request.user)
-        context[
-            'terms_and_conditions'] = organization.tenant.sign_up_terms_and_conditions
+        context['terms_and_conditions'] = organization.tenant.sign_up_terms_and_conditions
         print(context)
         return context
-
-    def form_valid(self, form):
-        organization = Organization.objects.get(user=self.request.user)
-        organization.is_terms_and_conditions_agreed = True
-        organization.status = Organization.IN_PROGRESS
-        organization.save()
-        return HttpResponseRedirect(self.success_url)
 
 
 @method_decorator(login_required, name='dispatch')
 class StatusView(TemplateView):
     template_name = 'status.html'
 
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        organizations = Organization.objects.get(user=self.request.user)
-        if organizations.status == Organization.IN_PROGRESS:
-            context['text'] = {
-                'item': 'Your organization status is in progress'
-            }
-        elif organizations.status == Organization.APPROVED:
-            context['text'] = {'item': 'Your organization status is approved'}
-        elif organizations.status == Organization.CANCELLED:
-            context['text'] = {
-                'item':
-                'Your organization status is cancelled. Review the details and apply again for approval'
-            }
-        elif organizations.status == Organization.PENDING:
-            context['text'] = {
-                'item':
-                'Your organization status is Pending.Please fill the details and submit the application'
-            }
-        return context
+    def get_organization(self):
+        try:
+            return Organization.objects.get(user=self.request.user)
+        except Organization.DoesNotExist:
+            return HttpResponseBadRequest("Organization not found")
 
+    def get(self, request, *args, **kwargs):
+        organization = self.get_organization()
+        context = {
+            'organization': organization
+        }
+        return render(request, self.template_name, context)
 
 #FOR TENANT USER:
+
+@method_decorator(login_required, name='dispatch')
+class TenantEmployeeHomeView(ListView):
+    model = Organization
+    template_name = 'tenantuser_page.html'
+    context_object_name = 'organizations'
+
+
+@method_decorator(login_required, name='dispatch')
+class OrganizationListView(ListView):
+    model = Organization
+    template_name = 'organization_list.html'
+    context_object_name = 'organizations'
+
+class TenantOrganizationPreviewView(DetailView):
+    model = Organization
+    template_name = 'tenant_organization_preview.html'
+    context_object_name = 'organization'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        organization = self.object  # Get the organization object aka pk
+
+        # Fetch all locations related to the organization
+        locations = OrganizationLocation.objects.filter(
+            organization=organization)
+
+        # Create a list to store location details
+        locationdetails = []
+
+        for location in locations:
+            context_item = {}
+            context_item['location'] = location
+            context_item['games'] = OrganizationLocationGameType.objects.filter(
+                organization_location=location)
+            context_item['amenities'] = OrganizationLocationAmenities.objects.filter(
+                organization_location=location)
+            context_item['workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
+                organization_location=location)
+            context_item['courts'] = Court.objects.filter(
+                location=location)
+            locationdetails.append(context_item)
+
+        context['all_locations'] = locationdetails
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -742,6 +859,22 @@ class ApprovalListView(ListView):
         return Organization.objects.filter(
             tenant=TenantUser.objects.get(user=self.request.user).tenant,
             status=Organization.IN_PROGRESS)
+
+class ChangeOrganizationStatusView(View):
+    def post(self, request, organization_id, new_status):
+        # Get the organization object using the organization_id
+        organization = get_object_or_404(Organization, id=organization_id)
+
+    # Update the organization's status and save it
+        print(new_status)
+        organization.status = new_status
+        organization.save()
+
+    # add a success message
+        messages.success(request, 'Organization status updated successfully.')
+
+        return redirect('organization_list')
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -817,11 +950,6 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       " If you don't receive an email, " \
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('login')
-
-
-# if not Slot.objects.filter(location=organization_location, days=day).exists():
-# current_datetime = datetime.combine(datetime.today(), start_time)
-# end_datetime = datetime.combine(datetime.today(), end_time)
 
 from django.contrib import messages
 from django.urls import reverse_lazy

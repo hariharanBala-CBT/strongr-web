@@ -14,151 +14,121 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
+        /* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+}
 
-        .container {
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 20px;
-            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-        }
+ul {
+    list-style-type: none;
+    padding: 0;
+}
 
-        .container1 {
-            width: 340px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 20px;
-            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1), 0 5px 5px 0 rgba(0, 0, 0, 0.2);
-        }
+li {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
 
-        .container2 {
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 20px;
-            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1), 0 5px 5px 0 rgba(0, 0, 0, 0.2);
-        }
+li .label {
+    display: inline-block;
+    width: 100px;
+}
 
-        .container3 {
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            width: fit-content;
-            margin-top: 20px;
-            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1), 0 5px 5px 0 rgba(0, 0, 0, 0.2);
-        }
+.buttons {
+    margin: 2rem;
+    display: flex;
+    flex-direction: row;  
+    gap: 10px; align-items: center; 
+    justify-content: center;
+}
 
-        .container4 {
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 40px;
-            margin-bottom: 40px;
-            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.4);
-        }
+#id_description {
+    resize: none;
+    border: none;
+    display: flex;
+    justify-content: center;
+}
 
-        .container5 {
-            display: flex;
-            justify-content: space-between;
-            flex-direction: column;
-            align-items: center;
-        }
+/* Containers */
+.container, .container1, .container2, .container3, .container4, .container5, .container6 {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1), 0 5px 5px 0 rgba(0, 0, 0, 0.2);
+}
 
-        table {
+.container1 {
+    width: 340px;
+}
 
-            border-collapse: collapse;
-            padding: 40px;
-            padding-inline-start: 40px;
-            padding-top: 10px;
-            padding-bottom: 20px;
-            padding-left: 30px;
-            position: relative;
-            width: 500px;
-            text-align: center;
-            margin-right: 200px;
-        }
+.container2, .container3, .container5 {
+    width: fit-content;
+}
 
-        th,
-        td {
+.container4 {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.4);
+}
 
-            padding: 40px;
-            padding-top: 10px;
-            padding-bottom: 20px;
-            padding-left: 30px;
-            padding-inline-start: 40px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
+.container6 {
+    width: 800px;
+}
 
-        th {
-            display: inline-flexbox;
+/* Tables */
+table {
+    border-collapse: collapse;
+    padding: 40px;
+    text-align: center;
+    width: 500px;
+    margin-right: 200px;
+}
 
-        }
+th, td {
+    padding: 40px 30px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
 
-        h1,
-        h2,
-        h3 {
-            text-align: center;
-        }
+/* Navigation */
+.navbar {
+    background-color: #343a40;
+}
 
+/* Popup */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
 
-        .buttons {
-            margin: 2rem;
-        }
+.popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+}
 
-        #id_description {
-            resize: none;
-        }
+/* Responsiveness */
+@media (max-width: 768px) {
+    table {
+        margin-right: 0;
+    }
+}
 
-        .container6 {
-            padding: 20px;
-            width: 800px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 20px;
-            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1), 0 5px 5px 0 rgba(0, 0, 0, 0.2);
-        }
-
-
-        .container-fluid {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .popup-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-            max-width: 80%;
-            max-height: 80%;
-            overflow-y: auto;
-        }
-
-        input[type=time] {
-            border: none;
-            color: #2a2c2d;
-            font-size: 12px;
-        }
     </style>
 </head>
 
@@ -204,6 +174,10 @@
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                             Preview
                         </a>
+                        <a class="nav-link" href="{% url 'status' %}">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-building-circle-check"></i></i></div>
+                            Status
+                        </a>
 
                     </div>
                 </div>
@@ -235,22 +209,13 @@
                                     <ul>
                                         <li>
                                             {% for game in location.games %}
-                                            <strong>{{ game.game_type.game_name}}</strong>
-                                            <ul>
-                                                <li>Pricing: {{ game.pricing }}</li>
-                                                <li>Description:{{game.description}}</li>
-                                            </ul>
-                                            
+                                                <strong>{{ game.game_type.game_name}}</strong>
+                                                <ul>
+                                                    <li><div class="label">Pricing</div>: {{ game.pricing }}</li>
+                                                    <li><div class="label">Description</div>: {{ game.description }}</li>
+                                                </ul>
                                             {% endfor %}
                                         </li>
-                                    </ul>
-                                </div>
-
-                                <div class="container2">
-                                    <strong>Pricing:</strong>
-                                    <ul>
-                                        <li>Weekdays: 500/Hr</li>
-                                        <li>Weekends: 700/Hr</li>
                                     </ul>
                                 </div>
 
@@ -346,21 +311,19 @@
                             <div class="my-4"
                                 style="  display: flex;justify-content: center;align-items: center; flex-direction: column;">
                                 <div>
-                                    <form action="">
-                                        <input type="checkbox" name="terms_and_conditions" required="true"
-                                            id="iid_terms_and_conditions">
-                                        <label for="id_terms_and_conditions">By checking this box you agree to our Terms
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="checkbox" id="agree" name="agree" required>
+                                        <label for="agree">By checking this box you agree to our Terms
                                             of Service</label>
+                                            <a href="{% url 'termsandconditions' %}" id="termsLink">Terms &amp; Conditions</a>
+                                            <div class="buttons">
+                                                <div><a href="{% url 'organization_locationlist' %}" class="btn btn-primary"><i
+                                                            class="fas fa-edit"></i>&nbsp;Edit</a></div>
+                                                <div><button type="submit" href="{% url 'status' %}" class="btn btn-primary">Submit</button></div>
+                                            </div>
                                     </form>
                                 </div>
-                                <div>
-                                    <a href="#" id="termsLink">Terms &amp; Conditions</a>
-                                </div>
-                            </div>
-                            <div class="buttons">
-                                <div><a href="{% url 'organization_locationlist' %}" class="btn btn-primary"><i
-                                            class="fas fa-edit"></i>&nbsp;Edit</a></div>
-                                <div><a href="#" class="btn btn-primary">Submit</a></div>
                             </div>
                         </div>
                     </div>
