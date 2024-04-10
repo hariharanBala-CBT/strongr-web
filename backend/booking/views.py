@@ -217,7 +217,7 @@ def getAvailableSlots(request):
     weekday_name = date_obj.strftime('%A')
 
     current_datetime = datetime.datetime.now().replace(microsecond=0)
-    current_time = (current_datetime + timedelta(hours=2)).time()
+    current_time = (current_datetime + timedelta(hours=1)).time()
 
     print("Current Date and Time:", current_datetime)
 
@@ -236,7 +236,8 @@ def getAvailableSlots(request):
     # Get bookings for the specified date
     bookings = Booking.objects.filter(
         court_id=court,
-        booking_date=date_obj.date()
+        booking_date=date_obj.date(),
+        booking_status = 2
     ).values_list('slot', flat=True)
 
     # Exclude booked slots

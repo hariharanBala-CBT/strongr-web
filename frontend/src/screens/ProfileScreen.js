@@ -262,6 +262,7 @@ function ProfileScreen() {
                                   setBookingId(booking.id)
                                   setOpen(true)
                                 }}
+                                disabled={booking?.booking_status === 3}
                               >
                                 Cancel
                               </Button>
