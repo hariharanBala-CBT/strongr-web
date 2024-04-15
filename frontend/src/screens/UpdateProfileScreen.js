@@ -12,7 +12,7 @@ import {
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import { USER_UPDATE_PROFILE_RESET } from "../constants/constants";
+import { RESET_PASSWORD_RESET, USER_UPDATE_PROFILE_RESET } from "../constants/constants";
 import OTPInput, { ResendOTP } from "otp-input-react";
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -50,6 +50,9 @@ function UpdateprofileScreen() {
 
   useEffect(() => {
     setOpenForm(false);
+    dispatch({
+      type: RESET_PASSWORD_RESET,
+    })
     dispatch(listcustomerDetails(id));
     if (!userInfo) {
       navigate("/");
@@ -170,8 +173,14 @@ function UpdateprofileScreen() {
                 />
               </div>
             )}
-          </form>
+          
+          <span>
+            Want to update your password?&nbsp;
+            <a href="/updatepassword/">Update Password</a>
+          </span>
 
+          </form>
+          
           <Modal
             open={openForm}
             onClose={() => setOpenForm(false)}

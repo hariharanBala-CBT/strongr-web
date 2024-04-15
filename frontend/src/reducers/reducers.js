@@ -75,6 +75,10 @@ import {
   BOOKING_CANCEL_REQUEST,
   BOOKING_CANCEL_SUCCESS,
   BOOKING_CANCEL_FAIL,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAIL,
+  RESET_PASSWORD_RESET,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -86,10 +90,18 @@ export const filterclubReducer = (
       return { ...state, clubFilterLoading: true, clubLocationDetails: [] };
 
     case FILTER_CLUB_SUCCESS:
-      return { ...state, clubFilterLoading: false, clubLocationDetails: action.payload };
+      return {
+        ...state,
+        clubFilterLoading: false,
+        clubLocationDetails: action.payload,
+      };
 
     case FILTER_CLUB_FAIL:
-      return { ...state, clubFilterLoading: false, clubFilterError: action.payload };
+      return {
+        ...state,
+        clubFilterLoading: false,
+        clubFilterError: action.payload,
+      };
 
     default:
       return state;
@@ -246,7 +258,11 @@ export const userLoginReducer = (state = {}, action) => {
       return { loading: true };
 
     case USER_LOGIN_SUCCESS:
-      return { loading: false, userInfo: action.payload };
+      return {
+        loading: false,
+        userInfo: action.payload,
+        userLoginSuccess: true,
+      };
 
     case USER_LOGIN_FAIL:
       return { loading: false, error: action.payload };
@@ -395,7 +411,7 @@ export const availableslotsReducer = (state = { slots: [] }, action) => {
     case AVAILABLE_SLOT_SUCCESS:
       return { loading: false, slots: action.payload };
     case AVAILABLE_SLOT_FAIL:
-      return { loading: false, error: action.payload , slots: []};
+      return { loading: false, error: action.payload, slots: [] };
     default:
       return state;
   }
@@ -408,13 +424,16 @@ export const slotReducer = (state = { slot: [] }, action) => {
     case SLOT_SUCCESS:
       return { loading: false, slot: action.payload };
     case SLOT_FAIL:
-      return { loading: false, error: action.payload , slot: []};
+      return { loading: false, error: action.payload, slot: [] };
     default:
       return state;
   }
 };
 
-export const userBookingListReducer = (state = { userbookings: [] }, action) => {
+export const userBookingListReducer = (
+  state = { userbookings: [] },
+  action
+) => {
   switch (action.type) {
     case USER_BOOKING_LIST_REQUEST:
       return {
@@ -438,7 +457,10 @@ export const userBookingListReducer = (state = { userbookings: [] }, action) => 
   }
 };
 
-export const customerDetailsReducer = (state = { customerDetails: [] }, action) => {
+export const customerDetailsReducer = (
+  state = { customerDetails: [] },
+  action
+) => {
   switch (action.type) {
     case CUSTOMER_DETAILS_REQUEST:
       return { loading: true };
@@ -457,7 +479,11 @@ export const userUpdateProfileReducer = (state = {}, action) => {
       return { loading: true };
 
     case USER_UPDATE_PROFILE_SUCCESS:
-      return { loading: false, userUpdateSuccess: true, userInfo: action.payload };
+      return {
+        loading: false,
+        userUpdateSuccess: true,
+        userInfo: action.payload,
+      };
 
     case USER_UPDATE_PROFILE_FAIL:
       return { loading: false, userUpdateError: action.payload };
@@ -489,7 +515,6 @@ export const generateOtpredeucer = (state = {}, action) => {
         otpSuccess: false,
       };
 
-
     default:
       return state;
   }
@@ -514,6 +539,32 @@ export const cancelBookingreducer = (state = {}, action) => {
         cancelBooking: false,
       };
 
+    default:
+      return state;
+  }
+};
+
+export const resetPasswordreducer = (state = {}, action) => {
+  switch (action.type) {
+    case RESET_PASSWORD_REQUEST:
+      return {
+        resetPasswordLoading: true,
+      };
+
+    case RESET_PASSWORD_SUCCESS:
+      return {
+        resetPasswordLoading: false,
+        resetPsuccess: true,
+      };
+
+    case RESET_PASSWORD_FAIL:
+      return {
+        resetPasswordLoading: false,
+        resetPsuccess: false,
+      };
+
+    case RESET_PASSWORD_RESET:
+      return {};
 
     default:
       return state;

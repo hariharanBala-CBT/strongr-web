@@ -51,31 +51,30 @@ function ProfileScreen() {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [courtList, setCourtList] = useState([]);
-  const [bookingId, setBookingId] = useState('');
+  // const [courtList, setCourtList] = useState([]);
+  const [bookingId, setBookingId] = useState("");
 
   const { customerDetails } = useSelector((state) => state.customerDetails);
   const { userInfo } = useSelector((state) => state.userLogin);
   const { userbookings } = useSelector((state) => state.userBookingsList);
   const { cancelBooking } = useSelector((state) => state.cancelBooking);
 
-
-  function getPaymentStatusText(status) {
-    switch (status) {
-      case 1:
-        return "Pending";
-      case 2:
-        return "Initiated";
-      case 3:
-        return "In Progress";
-      case 4:
-        return "Success";
-      case 5:
-        return "Cancelled";
-      default:
-        return "Unknown";
-    }
-  }
+  // function getPaymentStatusText(status) {
+  //   switch (status) {
+  //     case 1:
+  //       return "Pending";
+  //     case 2:
+  //       return "Initiated";
+  //     case 3:
+  //       return "In Progress";
+  //     case 4:
+  //       return "Success";
+  //     case 5:
+  //       return "Cancelled";
+  //     default:
+  //       return "Unknown";
+  //   }
+  // }
 
   function getBookingStatusText(status) {
     switch (status) {
@@ -120,13 +119,6 @@ function ProfileScreen() {
     }
   }, [navigate, userInfo, dispatch, cancelBooking]);
 
-  useEffect(() => {
-    if (userbookings && userbookings.length > 0) {
-      const courtList = userbookings.map((booking) => booking.court);
-      setCourtList(courtList);
-      // console.log(courtList)
-    }
-  }, [userbookings]);
 
   const [open, setOpen] = React.useState(false);
 
@@ -197,19 +189,22 @@ function ProfileScreen() {
                   <TableHead>
                     <TableRow>
                       <TableCell>
-                        <h4> Booking ID</h4>
+                        <h4>Club</h4>
+                      </TableCell>
+                      <TableCell>
+                        <h4>Game</h4>
                       </TableCell>
                       <TableCell>
                         <h4>Booked Date</h4>
                       </TableCell>
-                      <TableCell>
-                        <h4>Total Price</h4>
-                      </TableCell>
-                      <TableCell>
-                        <h4>Booking</h4>
-                      </TableCell>
-                      <TableCell>
+                      {/* <TableCell>
                         <h4>Payment</h4>
+                      </TableCell> */}
+                      <TableCell>
+                        <h4>Price</h4>
+                      </TableCell>
+                      <TableCell>
+                        <h4>status</h4>
                       </TableCell>
                       <TableCell>
                         <h4>Details</h4>
@@ -225,6 +220,10 @@ function ProfileScreen() {
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
+                      .sort(
+                        (a, b) =>
+                          new Date(b.booking_date) - new Date(a.booking_date)
+                      ) // Sort in descending order based on booking date
                       .map((booking) => {
                         const bookingDate = new Date(booking.booking_date);
                         const day = String(bookingDate.getDate()).padStart(
@@ -239,18 +238,19 @@ function ProfileScreen() {
 
                         return (
                           <TableRow key={booking.id}>
-                            <TableCell>{booking.id}</TableCell>
+                            <TableCell>{booking.organization_name}</TableCell>
+                            <TableCell>{booking.game_type}</TableCell>
                             <TableCell>{formattedDate}</TableCell>
-                            <TableCell>{booking.total_price}</TableCell>
+                            {/* <TableCell>
+                              {getPaymentStatusText(booking.payment_status)}
+                            </TableCell> */}
+                            <TableCell>₹ {booking.total_price}</TableCell>
                             <TableCell>
                               {getBookingStatusText(booking.booking_status)}
                             </TableCell>
                             <TableCell>
-                              {getPaymentStatusText(booking.payment_status)}
-                            </TableCell>
-                            <TableCell>
                               <Button
-                                onClick={redirectBooking.bind(null, booking.id)}
+                                onClick={() => redirectBooking(booking.id)}
                               >
                                 Details
                               </Button>
@@ -259,8 +259,8 @@ function ProfileScreen() {
                               <Button
                                 color="error"
                                 onClick={() => {
-                                  setBookingId(booking.id)
-                                  setOpen(true)
+                                  setBookingId(booking.id);
+                                  setOpen(true);
                                 }}
                                 disabled={booking?.booking_status === 3}
                               >
@@ -302,7 +302,15 @@ function ProfileScreen() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelClose}>exit</Button>
-          <Button onClick={() => { dispatch(bookingCancel(bookingId)); setOpen(false);  dispatch(listUserBookings(userInfo.id)); }}>confirm</Button>
+          <Button
+            onClick={() => {
+              dispatch(bookingCancel(bookingId));
+              setOpen(false);
+              dispatch(listUserBookings(userInfo.id));
+            }}
+          >
+            confirm
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

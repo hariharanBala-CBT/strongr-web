@@ -22,9 +22,7 @@ function ClubListScreen() {
   
   const { areaError, areaLoading, areas } = useSelector((state) => state.areaList);
   const { gameError, gameLoading, games } = useSelector((state) => state.gameList);
-
-  const filterClubLocations = useSelector((state) => state.filterClubLocations);
-  const { clubFilterLoading, clubLocationDetails } = filterClubLocations;
+  const { clubFilterLoading, clubLocationDetails } = useSelector((state) => state.filterClubLocations);
 
   const [gameName, setGameName] = useState(selectedGame);
   const [areaName, setAreaName] = useState(selectedArea);
@@ -137,19 +135,13 @@ function ClubListScreen() {
 
             <DateInput id="date" value={date} onChange={handleDateChange} />
           </div>
-          {/* <div className="availability-btn-class">
-            <Button
-              onClick={handleSubmit}
-              className="btn-check-availability-club"
-              text="Check Availability"
-            />
-          </div> */}
+          
         </form>
       </div>
       <div className="club-list">
         {clubFilterLoading ? (
           <CircularProgress />
-        ) : filterClubLocations  && (
+        ) : clubLocationDetails  && (
           <Club clubs={clubLocationDetails} />
         )}
       </div>

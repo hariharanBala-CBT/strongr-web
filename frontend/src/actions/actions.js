@@ -72,6 +72,9 @@ import {
   BOOKING_CANCEL_REQUEST,
   BOOKING_CANCEL_SUCCESS,
   BOOKING_CANCEL_FAIL,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -421,7 +424,7 @@ export const getBookingDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/booking/${id}`, config);
+    const { data } = await axios.get(`/api/booking/details/${id}/`, config);
 
     dispatch({
       type: BOOKING_DETAILS_SUCCESS,
@@ -658,6 +661,52 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
   }
 };
 
+export const resetUserPassword = (user) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: RESET_PASSWORD_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${userInfo.token} `,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/resetpassword/`,
+      user,
+      config
+    );
+
+    dispatch({
+      type: RESET_PASSWORD_SUCCESS,
+      payload: data,
+    });
+
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    });
+
+    localStorage.setItem("userInfo", JSON.stringify(data));
+
+  } catch (error) {
+    dispatch({
+      type: RESET_PASSWORD_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
 
 export const generateOTP = (email) => async (dispatch) => {
   try {
@@ -702,3 +751,4 @@ export const bookingCancel = (id) => async (dispatch) => {
     });
   }
 };
+

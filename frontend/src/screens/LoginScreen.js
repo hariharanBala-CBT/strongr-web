@@ -19,13 +19,13 @@ function LoginScreen() {
   // const redirect = location.search ? location.search.split("=")[1] : "/";
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { error, loading, userInfo } = userLogin;
+  const { error, loading, userLoginSuccess } = userLogin;
 
     useEffect(() => {
-      if(userInfo){
+      if(userLoginSuccess){
         navigate(-1);
       }
-    }, [navigate, userInfo]);
+    }, [navigate, userLoginSuccess]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

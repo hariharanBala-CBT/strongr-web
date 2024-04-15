@@ -27,8 +27,9 @@ function Club({ clubs }) {
 
           <Card.Img
             variant="top"
-            src="https://source.unsplash.com/Jr5x1CAWySo"
+            src={club.organization_images[0]}
             alt="Image"
+            className="image"
           />
 
           <Card.Body>

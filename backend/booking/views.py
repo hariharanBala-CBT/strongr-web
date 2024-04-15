@@ -2,7 +2,9 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from base.models import *
-from booking.serializers import *
+from base.serializers import *
+from .models import Booking
+from .serializers import *
 from rest_framework import status
 
 from rest_framework.decorators import api_view, permission_classes
@@ -11,15 +13,13 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from dateutil.parser import parse
-from .models import Booking
-from .serializers import BookingSerializer
 import datetime
 from datetime import timedelta
 from django.db import transaction
-from base.serializers import *
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.template.loader import render_to_string
+from django.contrib.auth.hashers import make_password
 
 
 @api_view(['GET'])
@@ -89,9 +89,9 @@ def getClubImages(request, pk):
 
 
 @api_view(['GET'])
-def getBookingDetails(request, pk):
+def getBookingDetails(request,pk):
     booking = Booking.objects.get(id=pk)
-    serializer = BookingSerializer(booking, many=False)
+    serializer = BookingDetailsSerializer(booking)
     return Response(serializer.data)
 
 
@@ -112,7 +112,7 @@ def getSlot(request, pk):
 @api_view(['GET'])
 def getUserBookings(request, pk):
     booking = Booking.objects.filter(user=pk)
-    serializer = BookingSerializer(booking, many=True)
+    serializer = UserBookingsSerializer(booking, many=True)
     return Response(serializer.data)
 
 
@@ -155,7 +155,7 @@ def filterClubs(request):
         org_game_name.organization_location for org_game_name in game_names
     ]
 
-    serializer = ClubLocationSerializer(organizationlocations, many=True)
+    serializer = ClubSerializerWithImages(organizationlocations, many=True)
     return Response(serializer.data)
 
 
@@ -189,7 +189,7 @@ def createBooking(request):
 
             )
 
-        serializer = BookingSerializer(booking)
+        serializer = BookingDetailsSerializer(booking)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     except Exception as e:
@@ -304,5 +304,19 @@ def cancelBooking(request, pk):
     booking = Booking.objects.get(id=pk)
     booking.booking_status = 3
     booking.save()
-    serializer = BookingSerializer(booking, many=False)
+    serializer = BookingDetailsSerializer(booking, many=False)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def resetPassword(request):
+    user = request.user
+    serializer = UserSerializerWithToken(user, many=False)
+
+    data = request.data
+
+    if data['password'] != '':
+        user.password = make_password(data['password'])
+
+    user.save()
+
     return Response(serializer.data)

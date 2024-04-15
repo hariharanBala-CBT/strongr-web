@@ -48,21 +48,13 @@ class ClubSerializer(serializers.ModelSerializer):
 class ClubLocationSerializer(serializers.ModelSerializer):
     organization = ClubSerializer()
     area = AreaSerializer()
-
     class Meta:
         model = OrganizationLocation
         fields = '__all__'
 
-class ClubSerializerWithLocation(serializers.ModelSerializer):
-    organizationlocation_set = ClubLocationSerializer(many=True, read_only=True)
-
+class ClubLocSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Organization
-        fields = '__all__'
-
-class BookingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Booking
+        model = OrganizationLocation
         fields = '__all__'
 
 class CourtSerializer(serializers.ModelSerializer):
@@ -79,3 +71,69 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = '__all__'
+
+class UserBookingsSerializer(serializers.ModelSerializer):
+    organization_name = serializers.SerializerMethodField()
+    game_type = serializers.SerializerMethodField()
+
+    def get_organization_name(self, obj):
+        return obj.court.location.organization.organization_name
+
+    def get_game_type(self, obj):
+        return obj.court.game.game_type.game_name
+
+    class Meta:
+        model = Booking
+        fields = ['id', 'name', 'email', 'phone_number', 'organization_name', 'game_type', 'booking_date', 'total_price', 'booking_status', 'payment_status']
+
+class BookingDetailsSerializer(serializers.ModelSerializer):
+    court = serializers.SerializerMethodField()
+    slot = serializers.SerializerMethodField()
+    organization_name = serializers.SerializerMethodField()
+    organization_location = serializers.SerializerMethodField()
+    game_type = serializers.SerializerMethodField()
+
+    def get_court(self, obj):
+        return CourtSerializer(obj.court).data
+
+    def get_slot(self, obj):
+        return SlotSerializer(obj.slot).data
+
+    def get_organization_name(self, obj):
+        return obj.court.location.organization.organization_name
+
+    def get_organization_location(self, obj):
+        return obj.court.location.address_line_1
+
+    def get_game_type(self, obj):
+        return obj.court.game.game_type.game_name
+
+    class Meta:
+        model = Booking
+        fields = ['id', 'name', 'phone_number', 'booking_date', 'booking_status', 'payment_status', 'tax_price', 'total_price', 'organization_name', 'court', 'slot', 'organization_location', 'game_type']
+
+class ClubSerializerWithLocation(serializers.ModelSerializer):
+    organizationlocation_set = ClubLocationSerializer(many=True, read_only=True)
+    class Meta:
+        model = Organization
+        fields = '__all__'
+
+class ClubSerializerWithImages(serializers.ModelSerializer):
+    organization = ClubSerializer()
+    area = AreaSerializer()
+    organization_images = serializers.SerializerMethodField()
+    address_line_1 = serializers.SerializerMethodField()
+    
+    def get_organization_images(self, obj):
+        images = OrganizationGameImages.objects.filter(organization=obj)
+        return [image.image.url for image in images]
+
+    def get_address_line_1(self, obj):
+        location = obj 
+        return location.address_line_1 if location else None
+
+    class Meta:
+        model = Organization
+        fields = ['id', 'organization', 'area', 'organization_images', 'address_line_1']
+
+

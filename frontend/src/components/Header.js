@@ -25,10 +25,7 @@ function Header({ location }) {
           {userInfo ? (
             <LinkContainer to="/profile">
               <div className="link dropdown">
-                <i className="fas fa-user"></i> {userInfo.first_name}
-              <div class="dropdown-content">
-                <p>Hello World!</p>
-              </div>
+                  <i className="fas fa-user"></i> {userInfo.first_name}                
               </div>
             </LinkContainer>
           ) : (

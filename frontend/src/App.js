@@ -10,6 +10,7 @@ import CheckoutScreen from "./screens/CheckoutScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import UpdateprofileScreen from './screens/UpdateProfileScreen'
 import ProfileScreen from "./screens/ProfileScreen";
+import UpdatePassword from './screens/UpdatePassword'
 import { HomeProvider } from "./context/HomeContext";
 
 
@@ -30,6 +31,7 @@ function App() {
               <Route path="/club/:id" element={<ClubDetailScreen />} />
               <Route path="/bookinginfo/:id" element={<BookingInfoScreen />} />
               <Route path="/booking/:id" element={<BookingScreen />} />
+              <Route path="/updatepassword/" element={<UpdatePassword />} />
             </Routes>
           </Container>
         </HomeProvider>

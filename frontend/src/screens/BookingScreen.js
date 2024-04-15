@@ -4,9 +4,6 @@ import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getBookingDetails,
-  getCourt,
-  listclubDetails,
-  getSlotDetails,
 } from "../actions/actions";
 import toast, { Toaster } from "react-hot-toast";
 import { BOOKING_CREATE_RESET } from "../constants/constants";
@@ -18,13 +15,8 @@ function BookingScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { bookingDetails } = useSelector((state) => state.bookingDetails);
-  const { court } = useSelector((state) => state.court);
-  const { clubdetails } = useSelector((state) => state.clubDetails);
-  const { slot } = useSelector((state) => state.slotDetails);
+  // const { court, slot } = bookingDetails;
   const { success } = useSelector((state) => state.bookingCreate);
-
-  // const userLogin = useSelector((state) => state.userLogin);
-  // const { userInfo } = userLogin;
 
   function getPaymentStatusText(status) {
     switch (status) {
@@ -60,18 +52,18 @@ function BookingScreen() {
     dispatch(getBookingDetails(id));
   }, [dispatch, id]);
 
-  useEffect(() => {
-    if (bookingDetails?.court && bookingDetails?.slot) {
-      dispatch(getCourt(bookingDetails?.court));
-      dispatch(getSlotDetails(bookingDetails?.slot));
-    }
-  }, [dispatch, bookingDetails]);
+  // useEffect(() => {
+  //   if (bookingDetails?.court && bookingDetails?.slot) {
+  //     dispatch(getCourt(bookingDetails?.court));
+  //     dispatch(getSlotDetails(bookingDetails?.slot));
+  //   }
+  // }, [dispatch, bookingDetails]);
 
-  useEffect(() => {
-    if (court) {
-      dispatch(listclubDetails(court?.location));
-    }
-  }, [dispatch, court]);
+  // useEffect(() => {
+  //   if (court) {
+  //     dispatch(listclubDetails(court?.location));
+  //   }
+  // }, [dispatch, court]);
 
   useEffect(() => {
     if (success) {
@@ -90,8 +82,14 @@ function BookingScreen() {
       <Toaster />
 
       <div className="booking-content">
-        <h2 style={{     display: 'flex', flex: 'auto', columnGap: '24rem' }}>
-          <Button onClick={()=>{navigate(-1)}}>Back</Button>
+        <h2 style={{ display: "flex", flex: "auto", columnGap: "24rem" }}>
+          <Button
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Back
+          </Button>
           <span>Booking Number: &nbsp;{bookingDetails?.id}</span>
         </h2>
 
@@ -99,27 +97,24 @@ function BookingScreen() {
           <div className="ul booking">
             <div className="li">
               <div>
-                <h3>{clubdetails?.organization_name}</h3>
+                <h3>{bookingDetails?.organization_name}</h3>
+                <span>{bookingDetails?.organization_location}</span>
+
               </div>
-              <small>{court && court.name}</small>
+              <small>{bookingDetails?.court?.name}</small>
             </div>
             <div className="li">
               <div>
-                <h4>Badminton</h4>
-                <strong>{slot && slot.days}&nbsp;&nbsp;</strong>
+                <h4>{bookingDetails?.game_type}</h4>
               </div>
 
-                {slot && slot.start_time && (
-                  <small>
-                    <small>
-                      {bookingDetails && bookingDetails.booking_date}&nbsp;&nbsp;
-                    </small>
-                    <small>
-                      ({slot?.start_time?.slice(0, 5)}-
-                      {slot?.end_time?.slice(0, 5)})
-                    </small>
-                  </small>
-                )}
+              <small>
+                <small>{bookingDetails?.booking_date}&nbsp;&nbsp;</small>
+                <small>
+                  ({bookingDetails?.slot?.start_time?.slice(0, 5)}-{bookingDetails?.slot?.end_time?.slice(0, 5)}
+                  )
+                </small>
+              </small>
             </div>
             <div className="li">
               <div>
@@ -141,16 +136,20 @@ function BookingScreen() {
           </div>
           <div className="ul booking">
             <div className="li">
-                <h3>{bookingDetails?.name}</h3>
-                <small>{bookingDetails?.phone_number}</small>
+              <h3>{bookingDetails?.name}</h3>
+              <small>{bookingDetails?.phone_number}</small>
             </div>
             <div className="li">
-                <h4>Booking status</h4>
-                <small>{getBookingStatusText(bookingDetails?.booking_status)}</small>
+              <h4>Booking status</h4>
+              <small>
+                {getBookingStatusText(bookingDetails?.booking_status)}
+              </small>
             </div>
             <div className="li">
-                <h4>Payment status</h4>
-                <small>{getPaymentStatusText(bookingDetails?.payment_status)}</small>
+              <h4>Payment status</h4>
+              <small>
+                {getPaymentStatusText(bookingDetails?.payment_status)}
+              </small>
               <span>
                 <i className="fa fa-inr"></i>
                 {bookingDetails?.total_price}
