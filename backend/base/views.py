@@ -1005,3 +1005,91 @@ class CreateMultipleSlotsView(View):
 
         # Redirect or render as needed
         return redirect('court-list')
+
+@method_decorator(login_required, name='dispatch')
+class TenantEmployeeHomeView(ListView):
+    model = Organization
+    template_name = 'tenantuser_page.html'
+    context_object_name = 'organizations'
+
+
+@method_decorator(login_required, name='dispatch')
+class OrganizationListView(ListView):
+    model = Organization
+    template_name = 'organization_list.html'
+    context_object_name = 'organizations'
+
+@method_decorator(login_required, name='dispatch')
+class CancelOrganizationListView(ListView):
+    model = Organization
+    template_name = 'cancelled_organization.html'
+    context_object_name = 'organizations'
+
+@method_decorator(login_required, name='dispatch')
+class PendingOrganizationListView(ListView):
+    model = Organization
+    template_name = 'pending_organization.html'
+    context_object_name = 'organizations'
+
+@method_decorator(login_required, name='dispatch')
+class WaitingOrganizationListView(ListView):
+    model = Organization
+    template_name = 'waiting_organization.html'
+    context_object_name = 'organizations'
+
+
+@method_decorator(login_required, name='dispatch')
+class ConfirmOrganizationListView(ListView):
+    model = Organization
+    template_name = 'confirmed_organization.html'
+    context_object_name = 'organizations'
+
+
+
+class TenantOrganizationPreviewView(DetailView):
+    model = Organization
+    template_name = 'tenant_organization_preview.html'
+    context_object_name = 'organization'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        organization = self.object  # Get the organization object aka pk
+
+        # Fetch all locations related to the organization
+        locations = OrganizationLocation.objects.filter(
+            organization=organization)
+
+        # Create a list to store location details
+        locationdetails = []
+
+        for location in locations:
+            context_item = {}
+            context_item['location'] = location
+            context_item['games'] = OrganizationLocationGameType.objects.filter(
+                organization_location=location)
+            context_item['amenities'] = OrganizationLocationAmenities.objects.filter(
+                organization_location=location)
+            context_item['workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
+                organization_location=location)
+            context_item['courts'] = Court.objects.filter(
+                location=location)
+            locationdetails.append(context_item)
+
+        context['all_locations'] = locationdetails
+        return context
+
+
+class ChangeOrganizationStatusView(View):
+    def post(self, request, organization_id, new_status):
+        # Get the organization object using the organization_id
+        organization = get_object_or_404(Organization, id=organization_id)
+
+    # Update the organization's status and save it
+        print(new_status)
+        organization.status = new_status
+        organization.save()
+
+    # add a success message
+        messages.success(request, 'Organization status updated successfully.')
+
+        return redirect('organization_list')

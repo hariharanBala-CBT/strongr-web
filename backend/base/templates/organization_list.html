@@ -79,6 +79,7 @@
                                             <th>Name</th>
                                             <th>Phone Number</th>
                                             <th>Status</th>
+                                            <th>Approve/Reject</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -86,6 +87,8 @@
                                             <th>Name</th>
                                             <th>Phone Number</th>
                                             <th>Status</th>
+                                            <th>Approve/Reject</th>
+                                            
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -94,6 +97,21 @@
                                                 <td><a href="{% url 'organization_preview' organization.pk %}">{{ organization.organization_name }}</a></td>
                                                 <td>{{ organization.phone_number }}</td>
                                                 <td>{{ organization.get_status_display }}</td>
+                                                <td> <div>
+                                                        {% if organization.status != 1 %}
+                                                            <div class="btn-group" role="group">
+                                                                <form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
+                                                                {% csrf_token %}
+                                                                    <button type="submit" class="btn btn-success me-2"><i class="fa-solid fa-check"></i></button>
+                                                                </form>
+                                                        {% endif %}
+                                                                <form method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
+                                                                {% csrf_token %}
+                                                                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-ban"></i></button>
+                                                                </form>
+                                                            </div>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>

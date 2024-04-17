@@ -24,44 +24,84 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
     <style>
-        /* Navbar */
+        /* Override Bootstrap styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        li .label {
+            display: inline-block;
+            width: 100px;
+        }
+
         .navbar-brand {
             font-weight: 700;
         }
 
-        .navbar-dark .navbar-brand:hover,
-        .navbar-dark .navbar-nav .nav-link:hover {
-            color: #ffffff;
+        .navbar-toggler-icon {
+            color: white;
         }
 
-        /* Cards and Buttons */
         .card {
+            border: none;
             border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .card-header {
             border-radius: 15px 15px 0 0;
         }
 
-        .card-body {
-            padding: 20px;
+        .card-body h5 {
+            color: #333;
         }
 
-        h5 {
+        .card-body p {
+            color: #777;
+        }
+
+        .btn-group {
             margin-top: 20px;
-            margin-bottom: 10px;
         }
 
-        ul {
-            list-style-type: none;
-            padding-left: 0;
+        .btn-success, .btn-danger {
+            border-radius: 30px;
         }
 
-        li {
-            margin-bottom: 10px;
+        .btn-primary {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
         }
 
+        footer {
+            background-color: #fff;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        footer a {
+            color: #333;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        
         .btn-group {
             display: flex;
             justify-content: center;
@@ -97,23 +137,111 @@
             background-color: #c82333;
             border-color: #c82333;
         }
-
-        /* Location Grid */
-        .location-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+        /* Style for Disabled Checkbox */
+        input[type="checkbox"]:disabled {
+            opacity: 0.6; /* Reduce opacity for disabled checkboxes */
+            cursor: not-allowed; /* Change cursor to 'not-allowed' for disabled checkboxes */
         }
 
-        .location-item {
-            border: 1px solid #e0e0e0;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Align Disabled Checkbox in a Straight Vertical Line */
+        /* Style for Disabled Checkbox */
+        input[type="checkbox"]:disabled {
+            opacity: 0.6; /* Reduce opacity for disabled checkboxes */
+            cursor: not-allowed; /* Change cursor to 'not-allowed' for disabled checkboxes */
         }
 
-        .location-item .card-body {
-            padding: 15px;
+        /* Custom Checkbox Style */
+        .checkbox-custom {
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+            cursor: pointer;
         }
+
+        .checkbox-custom input[type="checkbox"] {
+            display: none; /* Hide the default checkbox */
+        }
+
+        .checkbox-custom span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            position: relative;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        /* Checked State Style */
+        .checkbox-custom input[type="checkbox"]:checked + span::after {
+            content: "";
+            display: block;
+            width: 8px;
+            height: 16px;
+            border: solid #007bff;
+            border-width: 0 2px 2px 0;
+            position: absolute;
+            top: 2px;
+            left: 6px;
+            transform: rotate(45deg);
+        }
+
+        /* Align Disabled Checkbox in a Straight Vertical Line */
+        ul.checkbox-list {
+            list-style-type: none; /* Remove default list style */
+            padding-left: 20px; /* Add padding to align checkboxes */
+        }
+
+        ul.checkbox-list li input[type="checkbox"] {
+            margin-right: 10px; /* Add margin right for spacing between checkbox and label */
+        }
+        .status-approved {
+            color: #28a745;
+            background-color: #e6f4ea; /* Light green background */
+            border: 1px solid #28a745; /* Green border */
+            padding: 4px 8px; /* Padding around the text */
+            border-radius: 4px; /* Rounded corners */
+            font-weight: bold; /* Bold text */
+        }
+
+        .status-pending {
+            color: #ffc107;
+            background-color: #fff3cd; /* Light yellow background */
+            border: 1px solid #ffc107; /* Yellow border */
+            padding: 4px 8px; /* Padding around the text */
+            border-radius: 4px; /* Rounded corners */
+            font-weight: bold; /* Bold text */
+        }
+
+        .status-in-progress {
+            color: #007bff;
+            background-color: #d6e4ff; /* Light blue background */
+            border: 1px solid #007bff; /* Blue border */
+            padding: 4px 8px; /* Padding around the text */
+            border-radius: 4px; /* Rounded corners */
+            font-weight: bold; /* Bold text */
+        }
+
+        .status-cancelled {
+            color: #dc3545;
+            background-color: #f8d7da; /* Light red background */
+            border: 1px solid #dc3545; /* Red border */
+            padding: 4px 8px; /* Padding around the text */
+            border-radius: 4px; /* Rounded corners */
+            font-weight: bold; /* Bold text */
+        }
+
+        .status-unknown {
+            color: #6c757d;
+            background-color: #e9ecef; /* Light gray background */
+            border: 1px solid #6c757d; /* Gray border */
+            padding: 4px 8px; /* Padding around the text */
+            border-radius: 4px; /* Rounded corners */
+            font-weight: bold; /* Bold text */
+        }
+
+
     </style>
 </head>
 
@@ -168,113 +296,153 @@
 
         <!-- Main Content -->
         <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <!-- Organization Card -->
-                    <div class="card mb-4">
-                        <div class="card-header bg-primary text-white">
-                            <h2>{{ organization.organization_name }}</h2>
-                        </div>
-                        <div class="card-body">
-                            <!-- Organization Details -->
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5>Organization Name:</h5>
-                                    <p>{{ organization.organization_name }}</p>
-
-                                    <h5>Phone Number:</h5>
-                                    <p>{{ organization.phone_number }}</p>
-
-                                    <h5>Description:</h5>
-                                    <p>{{ organization.description }}</p>
-
-                                    <h5>Status:</h5>
-                                    <p>{{ organization.get_status_display }}</p>
+            <main class="container-fluid mt-4" style="margin-top: 210px;">
+                <!-- Organization Card -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="m-0">{{ organization.organization_name }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- Organization Details -->
+                        <div class="row">
+                        
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><strong>Organization Details</strong></h5>
+                                        <ul>
+                                            <li><div class="label">Name</div>: {{ organization.organization_name }}</li>
+                                            <li><div class="label">Phone</div>: {{ organization.phone_number }}</li>
+                                            <li><div class="label">Description</div>: {{ organization.description }}</li>
+                                            <li><div class="label">Status</div>: 
+                                                {% if organization.status == 1 %}
+                                                    <span class="status-approved">Approved</span>
+                                                {% elif organization.status == 2 %}
+                                                    <span class="status-pending">Pending</span>
+                                                {% elif organization.status == 3 %}
+                                                    <span class="status-in-progress">In Progress</span>
+                                                {% elif organization.status == 4 %}
+                                                    <span class="status-cancelled">Cancelled</span>
+                                                {% else %}
+                                                    <span class="status-unknown">Unknown</span>
+                                                    <p>Please Contact the Service Provider.</p>
+                                                {% endif %}</li>
+                                        </ul>
+                                    </div>
                                 </div>
+                        
+                        
                                 <!-- Locations -->
-                                <div class="col-md-6">
-                                    <h3 class="card-title">Locations</h3>
-                                    <div class="location-grid">
-                                        {% for location_item in all_locations %}
-                                        <div class="location-item">
+                                <h3 class="mb-4">Locations</h3>
+                                <!-- Location Grid -->
+                                <div class="row">
+                                    {% for location_item in all_locations %}
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card">
                                             <div class="card-body">
                                                 <h4 class="card-title">{{ location_item.location.area }}</h4>
                                                 <!-- Location Address -->
-                                                <p class="card-text">
-                                                    <strong>Address:</strong><br>
+                                                <ul><strong>Address:</strong><br>
                                                     {{ location_item.location.address_line_1 }}<br>
                                                     {{ location_item.location.address_line_2 }}<br>
                                                     {{ location_item.location.area }}-{{ location_item.location.pincode }}
-                                                </p>
+                                                </ul>
                                                 <!-- Games -->
                                                 <h5>Games</h5>
                                                 <ul>
                                                     {% for game in location_item.games %}
-                                                    <li>
-                                                        {{ game.game_type }}<br>
-                                                        Pricing: {{ game.pricing }} INR<br>
-                                                        Description: {{ game.description }}
-                                                    </li>
+                                                        <ul>
+                                                            <strong>{{ game.game_type }}</strong>
+                                                            <li><div class="label">Pricing</div>: {{ game.pricing }}</li>
+                                                            <li><div class="label">Description</div>: {{ game.description }}</li>
+                                                        </ul>
                                                     {% endfor %}
                                                 </ul>
                                                 <!-- Amenities -->
-                                                <h5>Amenities</h5>
-                                                <ul>
+                                                <h5><strong>Amenities</strong></h5>
+                                                <ul class="checkbox-list">
                                                     {% for amenity in location_item.amenities %}
                                                     <li>
-                                                        Parking: <input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled><br>
-                                                        Restroom: <input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled><br>
-                                                        Changeroom: <input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled><br>
-                                                        Power Backup: <input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled><br>
-                                                        Beverage: <input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled><br>
-                                                        Coaching: <input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled><br>
-                                                        Description: {{ amenity.description }}
+                                                        <label class="checkbox-custom">
+                                                            <input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled>
+                                                            <span></span> Parking
+                                                        </label><br>
+                                                        
+                                                        <label class="checkbox-custom">
+                                                            <input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled>
+                                                            <span></span> Restroom
+                                                        </label><br>
+                                                        
+                                                        <label class="checkbox-custom">
+                                                            <input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled>
+                                                            <span></span> Changeroom
+                                                        </label><br>
+                                                        
+                                                        <label class="checkbox-custom">
+                                                            <input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled>
+                                                            <span></span> Power Backup
+                                                        </label><br>
+                                                        
+                                                        <label class="checkbox-custom">
+                                                            <input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled>
+                                                            <span></span> Beverage
+                                                        </label><br>
+                                                        
+                                                        <label class="checkbox-custom">
+                                                            <input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled>
+                                                            <span></span> Coaching
+                                                        </label><br>
+                                                        
+                                                        <label>
+                                                            Description: {{ amenity.description }}
+                                                        </label>
                                                     </li>
                                                     {% endfor %}
                                                 </ul>
+
                                                 <!-- Working Times -->
-                                                <h5>Working Times</h5>
+                                                <h5><strong>Working Times</strong></h5>
                                                 <ul>
                                                     {% for workingtime in location_item.workingtimes %}
-                                                    <li>{{ workingtime.get_days_display }}: {{ workingtime.work_from_time }} - {{ workingtime.work_to_time }}</li>
+                                                    <li><div class="label">{{ workingtime.get_days_display }}</div>: {{ workingtime.work_from_time }} - {{ workingtime.work_to_time }}</li>
                                                     {% endfor %}
                                                 </ul>
                                                 <!-- Courts -->
-                                                <h5>Courts</h5>
+                                                <h5><strong>Courts</strong></h5>
                                                 <ul>
                                                     {% for court in location_item.courts %}
-                                                    <li>{{ court.name }}:</li>
+                                                    <li>{{ court.name }}</li>
                                                     {% endfor %}
                                                 </ul>
                                             </div>
                                         </div>
-                                        {% endfor %}
                                     </div>
+                                    {% endfor %}
                                 </div>
-                            </div>
+            
                         </div>
-                    </div>
-
-                    <!-- Organization Status Buttons -->
-                    <div class="text-center">
-                        {% if organization.status != 1 %}
-                        <div class="btn-group" role="group">
-                            <form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-success mr-2">Approve</button>
-                            </form>
-                            <form method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Reject</button>
-                            </form>
-                        </div>
-                        {% endif %}
-                        <!-- Back Button -->
-                        <a href="{% url 'organization_list' %}" class="btn btn-primary mt-4" style="float: right; border-radius: 50%; height: max-content; width: max-content;"><i
-                                class="fa-solid fa-hand-point-left"></i></a>
                     </div>
                 </div>
+
+                <!-- Organization Status Buttons -->
+                <div class="text-center mb-4">
+                    {% if organization.status != 1 %}
+                    <div class="btn-group" role="group">
+                        <form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success me-2">Approve</button>
+                        </form>
+                        <form method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Reject</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    <!-- Back Button -->
+                    <a href="{% url 'organization_list' %}" class="btn btn-primary mt-4" style="border-radius: 50%; height: max-content; width: max-content;"><i
+                            class="fas fa-arrow-left"></i></a>
+                </div>
             </main>
+
             
             <!-- Footer -->
             <footer class="py-4 bg-light mt-auto">

@@ -49,6 +49,14 @@ urlpatterns = [
     
      
      path('approvallist/' ,ApprovalListView.as_view(),name='approval_list'),
+     path('user/' ,TenantEmployeeHomeView.as_view(), name='tenantuser_page'),
+     path('organization_list/' ,OrganizationListView.as_view(),name='organization_list'),
+     path('cancelled_organization_list/' ,CancelOrganizationListView.as_view(),name='cancelled_organization_list'),
+     path('pending_organization_list/' ,PendingOrganizationListView.as_view(),name='pending_organization_list'),
+     path('waiting_organization_list/' ,WaitingOrganizationListView.as_view(),name='waiting_organization_list'),
+     path('confirmed_organization_list/' ,ConfirmOrganizationListView.as_view(),name='confirmed_organization_list'),
+     path('organization_preview/<int:pk>/', TenantOrganizationPreviewView.as_view(), name='organization_preview'),
+     path('organizations/<int:organization_id>/change_status/<int:new_status>/', ChangeOrganizationStatusView.as_view(), name='change_organization_status'),
      path('verify/<int:pk>/' ,VerifyView.as_view(),name='verify'),
      path('status/' ,StatusView.as_view(), name='status'),
      path('response/<str:action>/', ApprovalRejectionView.as_view(), name='response'),
@@ -67,4 +75,6 @@ urlpatterns = [
      path('password-reset-complete/',
           auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),
           name='password_reset_complete'),
+
+
      ]
