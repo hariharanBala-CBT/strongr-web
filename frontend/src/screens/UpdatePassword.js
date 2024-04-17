@@ -28,6 +28,21 @@ function ResetPassword() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{6,}$/;
+
+    if (!password.match(passwordRegex)) {
+      toast.error(
+        "Password must contain minimum 6 characters, one special character, and one number"
+      );
+      return;
+    }
     if (password === confirmPassword) {
       dispatch(
         resetUserPassword({
