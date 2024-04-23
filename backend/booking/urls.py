@@ -11,6 +11,7 @@ urlpatterns = [
     path('booking/create/', views.createBooking, name='create-booking'),
     path('profile/update/', views.updateUserProfile, name="user-profile-update"),
     path('resetpassword/', views.resetPassword, name="reset-password"),
+    path('login/phone/', views.PhoneLoginView, name='phone_login'),
     path('<str:pk>/', views.getClub, name="club"),
     path('slot/<str:pk>/', views.getSlot, name='get-slot'),
     path('court/<str:pk>/', views.getCourt, name='get-court'),
@@ -24,5 +25,7 @@ urlpatterns = [
     path('courts/<str:pk>/', views.getCourts, name='get-courts'),
     path('booking/details/<str:pk>/', views.getBookingDetails, name='booking-details'),
     path('booking/cancel/<str:pk>/', views.cancelBooking, name='cancel-booking'),
+    path('club/reviewslist/<str:pk>/', views.getClubReviews, name='get-reviews'),
+    path('club/reviews/<str:pk>', views.createProductReview, name="club-review"),
 
 ]

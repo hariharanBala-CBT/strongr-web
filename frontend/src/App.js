@@ -11,6 +11,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import UpdateprofileScreen from './screens/UpdateProfileScreen'
 import ProfileScreen from "./screens/ProfileScreen";
 import UpdatePassword from './screens/UpdatePassword'
+import PhoneNumberLoginScreen from './screens/PhoneNumberLoginScreen'
 import { HomeProvider } from "./context/HomeContext";
 
 
@@ -24,6 +25,7 @@ function App() {
               <Route path="/" element={<HomeScreen />} />
               <Route path="/clubs/" element={<ClubListScreen />} />
               <Route path="/login/" element={<LoginScreen />} />
+              <Route path="/phonenumberlogin/" element={<PhoneNumberLoginScreen />} />
               <Route path="/signup/" element={<RegisterScreen />} />
               <Route path="/checkout/" element={<CheckoutScreen />} />
               <Route path="/profile/" element={<ProfileScreen />} />

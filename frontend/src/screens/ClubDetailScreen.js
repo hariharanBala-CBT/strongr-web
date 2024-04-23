@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
+import Rating from "../components/Rating";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import "../css/clubdetailscreen.css";
+import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,27 +16,61 @@ import {
   listclubWorking,
   listClubImages,
   listCourts,
+  createClubReview,
+  listClubReviews,
 } from "../actions/actions";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { useHomeContext } from "../context/HomeContext";
+import toast, { Toaster } from "react-hot-toast";
 
 function ClubDetailScreen() {
   const { id } = useParams();
   const dispatch = useDispatch();
+
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+
   const navigate = useNavigate();
 
   const gameName = localStorage.getItem("selectedGame");
   const { setSelectedCourt } = useHomeContext();
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const clubReviewCreate = useSelector((state) => state.clubReviewCreate);
+  const { clubReviews } = useSelector((state) => state.clubReviews);
+
+  const {
+    loading: loadingclubReview,
+    error: errorclubReview,
+    success: successclubReview,
+  } = clubReviewCreate;
+
   useEffect(() => {
+    if (successclubReview) {
+      setRating(0);
+      setComment("");
+      // toast.success('Review Submitted!')
+    }
+    dispatch(listClubReviews(id));
     dispatch(listclubLocation(id));
     dispatch(listclubGame(id));
     dispatch(listclubAmenities(id));
     dispatch(listclubWorking(id));
     dispatch(listClubImages(id));
     dispatch(listCourts(id, gameName));
+  }, [dispatch, id, gameName, successclubReview]);
 
-  }, [dispatch, id, gameName]);
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(
+      createClubReview(id, {
+        rating: Number(rating),
+        comment,
+      })
+    );
+  };
 
   const [isPopupVisible, setPopupVisible] = useState(false);
 
@@ -54,10 +92,10 @@ function ClubDetailScreen() {
   const { courts } = useSelector((state) => state.courtList);
 
   useEffect(() => {
-    if(courts){
+    if (courts) {
       setSelectedCourt(courts[0]?.name);
     }
-  },[courts,setSelectedCourt])
+  }, [courts, setSelectedCourt]);
 
   const handleClick = () => {
     navigate(`/bookinginfo/${clubLocation.id}`);
@@ -66,6 +104,7 @@ function ClubDetailScreen() {
   return (
     <div>
       <Header location="nav-all" />
+      <Toaster />
       <div className="club-detail">
         <div className="carousel-container">
           <Carousel
@@ -77,9 +116,8 @@ function ClubDetailScreen() {
             showThumbs={false}
           >
             {clubImage?.map((image) => (
-              <div>
+              <div key={image.id}>
                 <img
-                  key={image.id}
                   src={image.image}
                   alt="carousel-img"
                   className="carousel-img"
@@ -106,6 +144,13 @@ function ClubDetailScreen() {
 
         <div className="details">
           <h1>{clubLocation?.organization?.organization_name}</h1>
+          <div className="rating">
+            <Rating
+              value={clubLocation?.rating}
+              text={`${clubLocation?.numRatings} reviews`}
+              color={"#f8e825"}
+            />
+          </div>
           <h3>Games:</h3>
           {clubGame?.map((game) => (
             <span key={game.id}>
@@ -132,7 +177,10 @@ function ClubDetailScreen() {
             {isPopupVisible && (
               <div className="popup-overlay" onClick={handleOverlayClick}>
                 <div className="popup-content">
-                  <IoMdCloseCircleOutline onClick={handlePopupToggle} style={{ float: 'right' }} />
+                  <IoMdCloseCircleOutline
+                    onClick={handlePopupToggle}
+                    style={{ float: "right" }}
+                  />
                   <h4>Working Timings</h4>
                   <table className="table">
                     <thead>
@@ -175,6 +223,75 @@ function ClubDetailScreen() {
           <button onClick={handleClick} className="btn1">
             Book Now
           </button>
+        </div>
+      </div>
+      <div>
+        <div className="review-section">
+          <h4>Reviews</h4>
+          {clubLocation?.numRatings === 0 && <span>No Reviews</span>}
+
+          <div className="review-list">
+            {clubReviews?.map((review) => (
+              <div key={review.id} className="review-item">
+                <strong>{review.name}</strong>
+                <Rating value={review.rating} color="#f8e825" />
+                <p>{review.createdAt.substring(0, 10)}</p>
+                <p>{review.comment}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Write a Review Form */}
+          <div className="write-review">
+            <h4>Write a review</h4>
+
+            {loadingclubReview && <Loader />}
+            {successclubReview && (
+              <Message variant="success">Review Submitted</Message>
+            )}
+            {errorclubReview && (
+              <Message variant="danger">{errorclubReview}</Message>
+            )}
+
+            {userInfo ? (
+              <form onSubmit={submitHandler}>
+                <label htmlFor="rating">Rating</label>
+                <select
+                  className="form-control"
+                  value={rating}
+                  onChange={(e) => setRating(e.target.value)}
+                >
+                  <option value="">Select...</option>
+                  <option value="1">1 - Poor</option>
+                  <option value="2">2 - Fair</option>
+                  <option value="3">3 - Good</option>
+                  <option value="4">4 - Very Good</option>
+                  <option value="5">5 - Excellent</option>
+                </select>
+
+                <label htmlFor="comment">Review</label>
+                <textarea
+                  rows="5"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                ></textarea>
+
+                <div>
+                  <button
+                    disabled={loadingclubReview}
+                    type="submit"
+                    className="btn1"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <span>
+                Please <Link to="/login">login</Link> to write a review
+              </span>
+            )}
+          </div>
         </div>
       </div>
       <div className="similar-clubs">

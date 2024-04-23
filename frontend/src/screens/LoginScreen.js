@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../actions/actions";
 import toast, { Toaster } from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
+// import { USER_LOGIN_RESET } from "../constants/constants";
 
 function LoginScreen() {
   const [username, setUsername] = useState("");
@@ -20,17 +21,26 @@ function LoginScreen() {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { error, loading, userLoginSuccess } = userLogin;
+  const {userInfo} = useSelector((state)=> state.userLogin)
 
-    useEffect(() => {
-      if(userLoginSuccess){
-        navigate(-1);
-      }
-    }, [navigate, userLoginSuccess]);
+  // useEffect(() => {
+  //   dispatch({
+  //     type: USER_LOGIN_RESET,
+  //   })
+  // }, [dispatch]);
+
+  useEffect(() => {
+    if(userLoginSuccess && userInfo){
+      navigate(-1);
+      console.log("userLoginSuccess:", userLoginSuccess);
+    }
+  }, [navigate, userInfo,userLoginSuccess]);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(login(username, password));
-    navigate(-1)
+    // navigate(-1)
   };
 
   useEffect(() => {
@@ -79,6 +89,10 @@ function LoginScreen() {
             </div>
           </form>
           }
+          <span>
+            Login using Phone number?&nbsp;
+            <a href="/phonenumberlogin">login</a>
+          </span>
           <span>
             Dont you have an Account?&nbsp;
             <a href="/signup">SignUp</a>

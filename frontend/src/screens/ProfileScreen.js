@@ -171,16 +171,14 @@ function ProfileScreen() {
             </Item>
           </Grid>
 
-          {/* {!userbookings ||
-            !userbookings.booking ||
-            userbookings.booking.length === 0 ? (
+          {userbookings?.length === 0 ? (
               <Grid item xs={8}>
-                <Item sx={{ height: "100%" }}>
+                <Item sx={{ height: "100%"}}>
                   <h2>My Bookings</h2>
-                  <h4>No bookings yet..</h4>
+                  <h3 className="no-bookings">No bookings yet..</h3>
                 </Item>
               </Grid>
-            ) : ( */}
+            ) : (
           <Grid item xs={8}>
             <Item sx={{ height: "76vh" }}>
               <h2>My Bookings</h2>
@@ -204,13 +202,13 @@ function ProfileScreen() {
                         <h4>Price</h4>
                       </TableCell>
                       <TableCell>
-                        <h4>status</h4>
+                        <h4>Booking status</h4>
                       </TableCell>
                       <TableCell>
                         <h4>Details</h4>
                       </TableCell>
                       <TableCell>
-                        <h4>Cancel</h4>
+                        <h4>Action</h4>
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -264,7 +262,7 @@ function ProfileScreen() {
                                 }}
                                 disabled={booking?.booking_status === 3}
                               >
-                                Cancel
+                                <i class="fa-regular fa-rectangle-xmark"></i>
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -284,7 +282,7 @@ function ProfileScreen() {
               />{" "}
             </Item>
           </Grid>
-          {/* )} */}
+          )}
         </Grid>
       </Box>
       <Dialog

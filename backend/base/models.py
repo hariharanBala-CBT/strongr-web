@@ -89,19 +89,36 @@ class Organization(models.Model):
     def __str__(self):
         return self.organization_name
 
+
 class OrganizationLocation(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     address_line_1 = models.TextField()
     address_line_2 = models.TextField()
-    area = models.ForeignKey(Area,on_delete=models.PROTECT)
+    area = models.ForeignKey(Area, on_delete=models.PROTECT)
     pincode = models.IntegerField()
     phone_number = models.PositiveBigIntegerField()
-    join_date = models.DateField(null=True,blank=True)
+    rating = models.DecimalField(max_digits=7,
+                                 decimal_places=2,
+                                 null=True,
+                                 blank=True)
+    numRatings = models.IntegerField(null=True, blank=True, default=0)
+    join_date = models.DateField(null=True, blank=True)
     created_date_time = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.address_line_1
+
+class Review(models.Model):
+    organization_location = models.ForeignKey(OrganizationLocation, on_delete=models.SET_NULL, null=True)
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    rating = models.IntegerField(null=True, blank=True, default=0)
+    comment = models.TextField(null=True, blank=True)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return str(self.rating)
 
 
 class OrganizationLocationAmenities(models.Model):
@@ -112,7 +129,7 @@ class OrganizationLocationAmenities(models.Model):
     is_powerbackup = models.BooleanField(default=False)
     is_beverages_facility = models.BooleanField(default=False)
     is_coaching_facilities = models.BooleanField(default=False)
-    description = models.TextField()
+    description = models.TextField(default=None,blank=True,null=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -149,10 +166,10 @@ class OrganizationLocationGameType(models.Model):
                                               on_delete=models.CASCADE)
     game_type = models.ForeignKey(GameType, on_delete=models.PROTECT)
     pricing = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField()
+    description = models.TextField(default=None,blank=True,null=True)
     is_active = models.BooleanField(default=True)
     number_of_courts = models.IntegerField(choices = court_number_choices, default = one)
-    
+
     def __str__(self):
         return f"{self.game_type}"
 
@@ -165,7 +182,7 @@ class OrganizationLocationWorkingDays(models.Model):
         ('Wednesday','Wednesday'),
         ('Thursday','Thursday'),
         ('Friday','Friday'),
-        ('Saturday','Saturday'), 
+        ('Saturday','Saturday'),
     )
 
     organization_location = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)
@@ -185,13 +202,13 @@ def get_organization_image_upload_path(instance, filename):
 class OrganizationGameImages(models.Model):
     organization = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=get_organization_image_upload_path, null=True, blank=True)
-    is_active = models.BooleanField(default = True) 
+    is_active = models.BooleanField(default = True)
 
 class Court(models.Model):
     name = models.CharField(max_length=100)
     location = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)
     game = models.ForeignKey(OrganizationLocationGameType, on_delete=models.CASCADE)
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField(default=None,blank=True,null=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):

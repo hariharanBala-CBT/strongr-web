@@ -75,6 +75,10 @@
 .booking-content h1, h2, h3, h4 {
     margin: 0;
 }
+
+.no-bookings {
+    margin-top: 5rem;
+}
  
 /* .booking-content .card-2 .booking-form{
     padding: 1.5rem;

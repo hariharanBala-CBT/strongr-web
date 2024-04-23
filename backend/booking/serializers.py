@@ -136,4 +136,43 @@ class ClubSerializerWithImages(serializers.ModelSerializer):
         model = Organization
         fields = ['id', 'organization', 'area', 'organization_images', 'address_line_1']
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+class ClubSerializerWithLocation(serializers.ModelSerializer):
+    organizationlocation_set = ClubLocationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Organization
+        fields = '__all__'
+
+class ClubSerializerWithImages(serializers.ModelSerializer):
+    organization = ClubSerializer()
+    area = AreaSerializer()
+    # review = ReviewSerializer(read_only=True)
+    organization_images = serializers.SerializerMethodField()
+    address_line_1 = serializers.SerializerMethodField()
+    rating = serializers.DecimalField(max_digits=7, decimal_places=2, read_only=True)
+    numRatings = serializers.IntegerField(read_only=True)
+    reviews = serializers.SerializerMethodField(read_only=True)
+    
+    def get_organization_images(self, obj):
+        images = OrganizationGameImages.objects.filter(organization=obj)
+        return [image.image.url for image in images]
+
+    def get_address_line_1(self, obj):
+        location = obj 
+        return location.address_line_1 if location else None
+    
+    def get_reviews(self, obj):
+        reviews = obj.review_set.all()
+        serializer = ReviewSerializer(reviews, many=True)
+        return serializer.data
+
+
+    class Meta:
+        model = Organization
+        fields = ['id', 'organization', 'area', 'organization_images', 'address_line_1','rating', 'numRatings','reviews']
 

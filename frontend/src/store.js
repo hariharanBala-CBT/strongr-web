@@ -27,6 +27,9 @@ import {
   generateOtpredeucer,
   cancelBookingreducer,
   resetPasswordreducer,
+  clubreviewlistreducer,
+  clubReviewCreateReducer,
+  phoneLoginReducer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -55,6 +58,9 @@ const reducer = combineReducers({
   generateOtp: generateOtpredeucer,
   cancelBooking: cancelBookingreducer,
   resetUserPassword: resetPasswordreducer,
+  clubReviews: clubreviewlistreducer,
+  clubReviewCreate: clubReviewCreateReducer,
+  otp: phoneLoginReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

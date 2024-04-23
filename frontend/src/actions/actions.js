@@ -75,6 +75,12 @@ import {
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAIL,
+  CLUB_CREATE_REVIEW_REQUEST,
+  CLUB_CREATE_REVIEW_SUCCESS,
+  CLUB_CREATE_REVIEW_FAIL,
+  CLUB_REVIEW_REQUEST,
+  CLUB_REVIEW_SUCCESS,
+  CLUB_REVIEW_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -752,3 +758,98 @@ export const bookingCancel = (id) => async (dispatch) => {
   }
 };
 
+export const createClubReview = (id, review) => async (dispatch, getState) => {
+  try {
+      dispatch({
+          type: CLUB_CREATE_REVIEW_REQUEST
+      })
+
+      const {
+          userLogin: { userInfo },
+      } = getState()
+
+      const config = {
+          headers: {
+              'Content-type': 'application/json',
+              Authorization: `Bearer ${userInfo.token}`
+          }
+      }
+
+      const { data } = await axios.post(
+          `/api/club/reviews//${id}`,
+          review, 
+          config
+      )
+      dispatch({
+          type: CLUB_CREATE_REVIEW_SUCCESS,
+          payload: data,
+      })
+
+
+
+  } catch (error) {
+      dispatch({
+          type: CLUB_CREATE_REVIEW_FAIL,
+          payload: error.response && error.response.data.detail
+              ? error.response.data.detail
+              : error.message,
+      })
+  }
+}
+
+export const listClubReviews = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CLUB_REVIEW_REQUEST });
+
+    const { data } = await axios.get(`/api/club/reviewslist/${id}/`);
+
+    dispatch({
+      type: CLUB_REVIEW_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CLUB_REVIEW_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+
+export const loginPhoneNumber = (phoneNumber) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_LOGIN_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    const { data } = await axios.post(
+      "/api/login/phone/",
+      { phone_number: phoneNumber }, 
+      config
+    );
+
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    });
+
+    localStorage.setItem("userInfo", JSON.stringify(data));
+  } catch (error) {
+    dispatch({
+      type: USER_LOGIN_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};

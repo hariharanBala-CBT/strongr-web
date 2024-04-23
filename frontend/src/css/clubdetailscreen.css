@@ -191,3 +191,78 @@ padding: 1px;
         height: 100px;
     }
   }
+
+/* Reviews Section */
+.review-section {
+  margin-left: 30px;
+  margin-top: 30px;
+}
+
+.review-section h4 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.review-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.review-item {
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.review-item strong {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.review-item p {
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+/* Write a Review Form */
+.write-review {
+  margin-top: 30px;
+}
+
+.write-review h4 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.write-review form label {
+  width: fit-content;
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.write-review form select,
+.write-review form textarea {
+  width: 50%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.write-review form button {
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.write-review form button:hover {
+  background-color: #0056b3;
+}

@@ -2,8 +2,9 @@
   position: relative;
   margin: 20px;
   display: flex;
+  flex-direction: column;
   padding: 0.75rem;
-  width: 22%;
+  width: min-content;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -30,8 +31,8 @@
 }
 
 .card img {
-  width: 100%;
-  height: 70%;
+  width: 260px;
+  height: 11rem;
   border-radius: 8px;
 }
 

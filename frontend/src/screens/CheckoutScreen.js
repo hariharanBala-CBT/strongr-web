@@ -56,19 +56,19 @@ function CheckoutScreen() {
   },[navigate, bookingDetailsSuccess])
 
   useEffect(() => {
-    // dispatch({type: BOOKING_CREATE_RESET})
-    if (!userInfo) {
-      navigate('/login');
-    } else {
+    dispatch(listcustomerDetails(userInfo?.id))
+  }, [userInfo, dispatch])
+  
+  useEffect(() => {
+    if (userInfo) {
       setFirstName(userInfo.first_name || "");
       setEmail(userInfo.email || "");
       setPhoneNumber(customerDetails?.phone_number || "");
+    } else {
+      navigate(-1);
     }
-  }, [userInfo, navigate, dispatch, setFirstName, setEmail, setPhoneNumber, customerDetails]);
+  }, [userInfo, navigate, setFirstName, setEmail, setPhoneNumber, customerDetails]);
 
-  useEffect(() => {
-    dispatch(listcustomerDetails(userInfo?.id))
-  }, [userInfo, dispatch])
   
   useEffect(() =>  {
     if(success && booking){

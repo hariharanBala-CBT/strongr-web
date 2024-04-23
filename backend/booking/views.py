@@ -1,4 +1,5 @@
 # Create your views here.from django.shortcuts import render
+from django.db import IntegrityError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from base.models import *
@@ -138,7 +139,7 @@ def filterClubs(request):
     time = datetime.datetime.strptime(date, '%Y-%m-%d')
     day = time.strftime('%A')
 
-    areas = OrganizationLocation.objects.filter(area=selected_area_obj)
+    areas = OrganizationLocation.objects.filter(area=selected_area_obj, organization__status = 1)
 
     game_names = []
     for location in areas:
@@ -220,30 +221,31 @@ def getAvailableSlots(request):
     current_time = (current_datetime + timedelta(hours=1)).time()
 
     print("Current Date and Time:", current_datetime)
+    slots = Slot.objects.all()
+    print('all slots', slots)
+    print(court)
+    print(weekday_name)
+    
 
-    # Get all slots for the specified court and weekday
-    slots = Slot.objects.filter(
-        court_id=court,
-        days__contains=weekday_name,
-        is_booked=False
-    )
+    slots = Slot.objects.filter(court_id=court,
+                                days=weekday_name,
+                                is_booked=False)
 
-    # If date_str is today's date, apply the current time filter
+    print('filter 1', slots)
+
     if date_obj.date() == datetime.datetime.today().date():
-        # Filter slots where start time is greater than or equal to the current time
         slots = slots.filter(start_time__gte=current_time)
 
-    # Get bookings for the specified date
-    bookings = Booking.objects.filter(
-        court_id=court,
-        booking_date=date_obj.date(),
-        booking_status = 2
-    ).values_list('slot', flat=True)
+    bookings = Booking.objects.filter(court_id=court,
+                                      booking_date=date_obj.date(),
+                                      booking_status=2).values_list('slot',
+                                                                    flat=True)
 
     # Exclude booked slots
     slots = slots.exclude(id__in=bookings)
-
     serializer = SlotSerializer(slots, many=True)
+    print(serializer.data, 'filtered slots')
+
     return Response(serializer.data)
 
 
@@ -320,3 +322,90 @@ def resetPassword(request):
     user.save()
 
     return Response(serializer.data)
+
+@api_view(['GET'])
+def getClubReviews(request, pk):
+    reviews = Review.objects.filter(organization_location=pk)
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createProductReview(request, pk):
+    user = request.user
+
+    try:
+        organization_location = OrganizationLocation.objects.get(pk=pk)
+    except OrganizationLocation.DoesNotExist:
+        content = {'detail': 'OrganizationLocation not found'}
+        return Response(content, status=status.HTTP_404_NOT_FOUND)
+
+    data = request.data
+
+    # Check if rating is provided and not 0
+    rating = data.get('rating')
+    if rating is None or rating == 0:
+        content = {'detail': 'Please provide a valid rating'}
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+    # Fetch or create Customer instance
+    try:
+        customer = Customer.objects.get(user=user)
+    except Customer.DoesNotExist:
+        try:
+            customer = Customer.objects.create(
+                tenant=user.tenant,
+                user=user,
+                phone_number=None  # You can update this as needed
+            )
+        except IntegrityError:
+            # Handle the IntegrityError, e.g., if there's a unique constraint violation
+            return Response({'detail': 'Error creating Customer'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Create review
+    review = Review.objects.create(
+        customer=customer,
+        organization_location=organization_location,
+        name=user.first_name,
+        rating=rating,
+        comment=data.get('comment', ''),  # Use get to provide a default value
+    )
+
+    # Update organization_location's rating and numRatings
+    reviews = organization_location.review_set.all()
+    organization_location.numRatings = len(reviews)
+
+    total = sum(review.rating for review in reviews)
+    organization_location.rating = total / len(reviews)
+
+    organization_location.save()
+    serializer = ReviewSerializer(review, many=False)
+
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])  # Change to POST method
+def PhoneLoginView(request):
+    data = request.data
+
+    try: 
+        phone = data['phone_number']
+        print('phone', phone)
+        message = {'success': 'logged in successfully'}
+        customer = Customer.objects.get(phone_number = phone[2:12])
+        print('customer', customer)
+        user = User.objects.get(id = customer.user_id)
+        print('user', user)
+
+        serializer = UserSerializerWithToken(user, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        # return Response(message) 
+        
+    except Customer.DoesNotExist:
+        return Response({'error': 'User not registered'}, status=status.HTTP_404_NOT_FOUND)
+
+    except KeyError:  # Handle specific exception
+        message = {'error': 'phone_number is required'}  # Provide an appropriate error message
+        return Response(message, status=status.HTTP_400_BAD_REQUEST)

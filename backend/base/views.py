@@ -22,7 +22,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         for k, v in serializer.items():
             data[k] = v
-
+            
         return data
 
 
@@ -535,6 +535,15 @@ class OrganizationUpdateLocationImageView(UpdateView):
     form_class = OrganizationGameImagesForm
     success_url = reverse_lazy('organization_imageslist')
 
+    def form_valid(self, form):
+            clear_image = self.request.POST.get('image-clear', False)
+            
+            if clear_image:
+                if self.object.image:
+                    self.object.image.delete()
+                form.instance.image = None
+            
+            return super().form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationDeleteLocationImageView(DeleteView):

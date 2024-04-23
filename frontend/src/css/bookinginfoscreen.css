@@ -202,3 +202,76 @@
         }
     
       }
+
+
+      
+      .login-form .login-title{
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        flex-grow: inherit;
+        flex-shrink: inherit;
+      }
+      
+     .login-form {
+        display: flex;
+        flex-direction: column;
+        margin-top: 3rem;
+        flex-wrap: wrap;
+        flex-grow: inherit;
+        flex-shrink: inherit;
+      }
+      
+      @media (max-width: 770px) {
+        .login-form {
+          box-shadow: 0;
+        }
+      }
+      
+      .login-form form {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        flex-grow: inherit;
+        flex-shrink: inherit;
+      }
+      
+      .login-form input{
+        padding: 0.5rem;
+        margin: 1rem;
+        margin-top: 0;
+        display: flex;
+        flex-wrap: wrap;
+        flex-grow: inherit;
+        flex-shrink: inherit;
+      }
+      
+      .login-form form label {
+        margin: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        flex-grow: inherit;
+        flex-shrink: inherit;
+      }
+      
+      .login-form button {
+        width: fit-content;
+        margin: 1.5rem;
+      }
+      
+      .login-form .login-button {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+      }
+      
+      .login-form span{
+        display: flex;
+        justify-content: center;
+      }
+      
+      .login-form .loader{
+        align-self: center;
+        margin: 2rem;
+      }

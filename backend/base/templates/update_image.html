@@ -128,9 +128,18 @@
             <div class="profile-card">
               <h1 class="my-4">Update Image</h1>
               <div>
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
                   {% csrf_token %}
-                  {{ form.image }}
+                  <div class="mb-3">
+                      <label for="id_image" class="form-label">Image</label>
+                      {{ form.image }}
+                      {% if form.instance.image %}
+                          <img src="{{ form.instance.image.url }}" alt="Current Image" class="mt-3" style="max-width: 300px;">
+                      {% else %}
+                          <p>Upload a new image</p>
+                      {% endif %}
+                  </div>
+                  
                   <div class="buttons px-4 py-4" style="margin-left: 20%">
                       <a href="{% url 'organization_imageslist' %}" class="btn btn-secondary">Back</a>
                       <button type="submit" class="btn btn-primary">Next</button>
@@ -201,14 +210,23 @@
     </script>
          <script>
           function validateForm() {
-              // Check if an image is selected
-              var imageInput = document.getElementById("id_image");
-              if (!imageInput.files.length) {
-                  alert("Please select an image.");
-                  return false;
-              }
-              return true;
-          }
+      // Check if the "Clear Image" checkbox is checked
+      var clearImageCheckbox = document.getElementById("image-clear_id");
+      
+      if (clearImageCheckbox.checked) {
+          // Clear the file input
+          var imageInput = document.getElementById("id_image");
+          imageInput.value = null;
+      }
+      
+      // Check if an image is selected
+      var imageInput = document.getElementById("id_image");
+      if (!imageInput.files.length && !clearImageCheckbox.checked) {
+          alert("Please select an image or check 'Clear Image'.");
+          return false;
+      }
+      return true;
+}
       </script>
   </body>
 </html>

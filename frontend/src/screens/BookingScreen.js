@@ -88,7 +88,7 @@ function BookingScreen() {
               navigate(-1);
             }}
           >
-            Back
+            <i class="fa-regular fa-circle-left" ></i>
           </Button>
           <span>Booking Number: &nbsp;{bookingDetails?.id}</span>
         </h2>

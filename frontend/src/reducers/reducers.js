@@ -79,6 +79,14 @@ import {
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAIL,
   RESET_PASSWORD_RESET,
+  USER_LOGIN_RESET,
+  CLUB_CREATE_REVIEW_REQUEST,
+  CLUB_CREATE_REVIEW_SUCCESS,
+  CLUB_CREATE_REVIEW_FAIL,
+  CLUB_CREATE_REVIEW_RESET,
+  CLUB_REVIEW_REQUEST,
+  CLUB_REVIEW_SUCCESS,
+  CLUB_REVIEW_FAIL,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -266,6 +274,10 @@ export const userLoginReducer = (state = {}, action) => {
 
     case USER_LOGIN_FAIL:
       return { loading: false, error: action.payload };
+    
+    case USER_LOGIN_RESET:
+      return {};
+      
 
     case USER_LOGOUT:
       return {};
@@ -564,6 +576,60 @@ export const resetPasswordreducer = (state = {}, action) => {
       };
 
     case RESET_PASSWORD_RESET:
+      return {};
+
+    default:
+      return state;
+  }
+};
+
+export const clubReviewCreateReducer = (state = { review: [] }, action) => {
+  switch (action.type) {
+      case CLUB_CREATE_REVIEW_REQUEST:
+          return { loading: true }
+
+      case CLUB_CREATE_REVIEW_SUCCESS:
+          return { loading: false, review: action.payload, success:true }
+
+      case CLUB_CREATE_REVIEW_FAIL:
+          return { loading: false, error: action.payload }
+
+      case CLUB_CREATE_REVIEW_RESET:
+          return {}
+
+      default:
+          return state
+  }
+}
+
+export const clubreviewlistreducer = (
+  state = { clubReviews: [] },
+  action
+) => {
+  switch (action.type) {
+    case CLUB_REVIEW_REQUEST:
+      return { loading: true };
+    case CLUB_REVIEW_SUCCESS:
+      return { loading: false, clubReviews: action.payload };
+    case CLUB_REVIEW_FAIL:
+      return { loading: false, error: action.payload, clubReviews: [] };
+    default:
+      return state;
+  }
+};
+
+export const phoneLoginReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_LOGIN_REQUEST:
+      return { loading: true };
+
+    case USER_LOGIN_SUCCESS:
+      return { loading: false, userInfo: action.payload };
+
+    case USER_LOGIN_FAIL:
+      return { loading: false, error: action.payload };
+
+    case USER_LOGOUT:
       return {};
 
     default:

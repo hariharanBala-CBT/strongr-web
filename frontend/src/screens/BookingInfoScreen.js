@@ -8,15 +8,32 @@ import DateInput from "../components/DateInput";
 import SelectInput from "../components/SelectInput";
 import { useDispatch, useSelector } from "react-redux";
 import { useHomeContext } from "../context/HomeContext";
-import { BOOKING_CREATE_RESET, BOOKING_DETAILS_RESET } from "../constants/constants";
-// import SlotPicker from 'slotpicker';
+import {
+  BOOKING_CREATE_RESET,
+  BOOKING_DETAILS_RESET,
+} from "../constants/constants";
 import {
   listclubLocation,
   listclubGame,
   listCourts,
   // createBooking,
   fetchAvailableSlots,
+  login,
 } from "../actions/actions";
+import { Box, CircularProgress, Modal } from "@mui/material";
+import toast, { Toaster } from "react-hot-toast";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 function BookingInfoScreen() {
   const {
@@ -42,6 +59,16 @@ function BookingInfoScreen() {
   const [gameName, setGameName] = useState(selectedGame);
   const [date, setDate] = useState(selectedDate);
   const [courtName, setCourtName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [openForm, setOpenForm] = useState(false);
+  const [loader, setLoader] = useState(false);
+
+  useEffect(() => {
+    if (courts?.length > 0) {
+      setCourtName(courts[0].name);
+    }
+  }, [courts]);
 
   const handleAreaChange = (value) => {
     setAreaName(value);
@@ -68,8 +95,7 @@ function BookingInfoScreen() {
     return Number(selectedGame?.pricing).toFixed(0);
   };
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state) => state.userLogin);
 
   const clubPrice = Number(getSelectedGamePricing()).toFixed(0);
   const taxPrice = (Number(clubPrice) * 0.05).toFixed(0);
@@ -84,12 +110,11 @@ function BookingInfoScreen() {
     setDate(selectedDate);
   };
 
-
   useEffect(() => {
     dispatch({ type: BOOKING_CREATE_RESET });
     dispatch({ type: BOOKING_DETAILS_RESET });
-  },[dispatch])
-  
+  }, [dispatch]);
+
   useEffect(() => {
     const storedSelectedGame = localStorage.getItem("selectedGame");
     const storedSelectedArea = localStorage.getItem("selectedArea");
@@ -105,7 +130,6 @@ function BookingInfoScreen() {
   }, []);
 
   useEffect(() => {
-
     const fetchData = async () => {
       dispatch(listclubLocation(id));
       dispatch(listclubGame(id));
@@ -146,7 +170,6 @@ function BookingInfoScreen() {
     const sCourt = courts?.find((court) => court.name === storedSelectedCourt);
     const courtId = sCourt?.id;
     dispatch(fetchAvailableSlots(courtId, date));
-    
   }, [date, dispatch, courts, courtName]);
 
   const handleSubmit = async (event) => {
@@ -154,15 +177,11 @@ function BookingInfoScreen() {
     if (selectedSlot) {
       const parts = selectedSlot.split("-");
       const court = courts.find((court) => court.name === selectedCourt);
-      console.log(slots);
       const myslot = slots.find(
         (slot) => slot.start_time === parts[0] && slot.end_time === parts[1]
       );
-      console.log("slot", myslot);
-
       const courtId = court?.id;
       const slotId = myslot?.id;
-
       const formData = {
         id,
         clubLocation,
@@ -178,14 +197,31 @@ function BookingInfoScreen() {
         slotId,
         selectedSlot,
       };
-
       const formDataJSON = JSON.stringify(formData);
-
       localStorage.setItem("Bookingdata", formDataJSON);
-
-      navigate("/checkout");
+      
+      if(userInfo){
+        setLoader(false);
+        navigate("/checkout");
+      }else{
+        setLoader(false);
+        setOpenForm(true);
+      }
     }
   };
+
+  const loginAndRedirect = (e) => {
+    e.preventDefault();
+    setLoader(true);
+    dispatch(login(username, password));
+    setUsername('')
+    setPassword('')
+    setLoader(true)
+    setTimeout(() => {
+      setLoader(false)
+      setOpenForm(false)
+    },1000)
+  }
 
   useEffect(() => {
     if (slots) {
@@ -194,9 +230,11 @@ function BookingInfoScreen() {
     }
   }, [slots, setSelectedSlot]);
 
+
   return (
     <div>
       <Header location="nav-all" />
+      <Toaster />
       <div className="bookinginfo-content">
         <div className="card1">
           <div className="container-title">
@@ -306,34 +344,68 @@ function BookingInfoScreen() {
               </strong>
             </div>
           </div>
-          <div className="button">
-            <Button
-              disabled={totalPrice < 60}
-              onClick={handleSubmit}
-              className="btn-check-availability-home"
-              text="Book Now"
-            />
-          </div>
+
+          {!openForm && (
+            <div className="button">
+              <Button
+                disabled={totalPrice < 60 || !(userInfo && userInfo.length > 0)}
+                onClick={handleSubmit}
+                className="btn-check-availability-home"
+                text={userInfo ? 'Book now' : 'Login to Book'}
+              />
+            </div>
+          )}
+          
         </div>
       </div>
-      {/* <SlotPicker
-        // Required, interval between two slots in minutes, 30 = 30 min
-        interval={60}
-        // Required, when user selects a time slot, you will get the 'from' selected value
-        onSelectTime={(from) => console.log(from)}
-        // Optional, array of unavailable time slots
-        unAvailableSlots={["10:00", "15:30"]}
-        // Optional, 8AM the start of the slots
-        from={"08:00"}
-        // Optional, 09:00PM the end of the slots
-        to={"21:00"}
-        // Optional, 01:00 PM, will be selected by default
-        defaultSelectedTime={"13:00"}
-        // Optional, selected slot color
-        selectedSlotColor="#F00948"
-        // Optional, language of the displayed text, default is english (en)
-        lang="en"
-      /> */}
+
+      <Modal
+        open={openForm}
+        onClose={() => setOpenForm(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        {loader ? (
+          <Box sx={style} className="otp-loader">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Box sx={style}>
+            <form onSubmit={loginAndRedirect} className="login-form">
+            <h3 className="login-title">Login to continue Booking</h3>
+              <label>Username</label>
+              <input
+                required
+                type="text"
+                placeholder="Enter username"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+              />
+
+              <label>Password</label>
+              <input
+                required
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+
+              <div className="login-button">
+                <Button
+                  type="submit"
+                  className="btn-check-availability-home"
+                  text="Login"
+                />
+              </div>
+            </form>
+          </Box>
+        )}
+      </Modal>
     </div>
   );
 }
