@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
-import Message from "../components/Message";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import "../css/clubdetailscreen.css";
@@ -22,6 +21,7 @@ import {
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { useHomeContext } from "../context/HomeContext";
 import toast, { Toaster } from "react-hot-toast";
+import { CLUB_CREATE_REVIEW_RESET } from "../constants/constants";
 
 function ClubDetailScreen() {
   const { id } = useParams();
@@ -43,24 +43,27 @@ function ClubDetailScreen() {
 
   const {
     loading: loadingclubReview,
-    error: errorclubReview,
+    // error: errorclubReview,
     success: successclubReview,
   } = clubReviewCreate;
 
   useEffect(() => {
-    if (successclubReview) {
-      setRating(0);
-      setComment("");
-      // toast.success('Review Submitted!')
+    if (id) {
+      dispatch(listClubReviews(id));
+      dispatch(listclubLocation(id));
+      dispatch(listclubGame(id));
+      dispatch(listclubAmenities(id));
+      dispatch(listclubWorking(id));
+      dispatch(listClubImages(id));
+      dispatch(listCourts(id, gameName));
     }
-    dispatch(listClubReviews(id));
-    dispatch(listclubLocation(id));
-    dispatch(listclubGame(id));
-    dispatch(listclubAmenities(id));
-    dispatch(listclubWorking(id));
-    dispatch(listClubImages(id));
-    dispatch(listCourts(id, gameName));
   }, [dispatch, id, gameName, successclubReview]);
+
+  useEffect(() => {
+    if(successclubReview){
+      toast.success('Review submitted')
+    }
+  },[successclubReview])
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -69,7 +72,13 @@ function ClubDetailScreen() {
         rating: Number(rating),
         comment,
       })
-    );
+    ).then(() => {
+        setRating(0);
+        setComment("");
+        dispatch({
+          type: CLUB_CREATE_REVIEW_RESET,
+        })
+      })
   };
 
   const [isPopupVisible, setPopupVisible] = useState(false);
@@ -246,12 +255,6 @@ function ClubDetailScreen() {
             <h4>Write a review</h4>
 
             {loadingclubReview && <Loader />}
-            {successclubReview && (
-              <Message variant="success">Review Submitted</Message>
-            )}
-            {errorclubReview && (
-              <Message variant="danger">{errorclubReview}</Message>
-            )}
 
             {userInfo ? (
               <form onSubmit={submitHandler}>
@@ -274,6 +277,7 @@ function ClubDetailScreen() {
                   rows="5"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
+                  required
                 ></textarea>
 
                 <div>

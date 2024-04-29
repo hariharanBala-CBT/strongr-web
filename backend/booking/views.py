@@ -194,7 +194,6 @@ def createBooking(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     except Exception as e:
-        print(e, 'exception')
         return Response({'detail': 'Booking not created'},
                         status=status.HTTP_400_BAD_REQUEST)
 
@@ -220,18 +219,13 @@ def getAvailableSlots(request):
     current_datetime = datetime.datetime.now().replace(microsecond=0)
     current_time = (current_datetime + timedelta(hours=1)).time()
 
-    print("Current Date and Time:", current_datetime)
     slots = Slot.objects.all()
-    print('all slots', slots)
-    print(court)
-    print(weekday_name)
     
 
     slots = Slot.objects.filter(court_id=court,
                                 days=weekday_name,
                                 is_booked=False)
 
-    print('filter 1', slots)
 
     if date_obj.date() == datetime.datetime.today().date():
         slots = slots.filter(start_time__gte=current_time)
@@ -244,7 +238,6 @@ def getAvailableSlots(request):
     # Exclude booked slots
     slots = slots.exclude(id__in=bookings)
     serializer = SlotSerializer(slots, many=True)
-    print(serializer.data, 'filtered slots')
 
     return Response(serializer.data)
 
@@ -389,23 +382,18 @@ def createProductReview(request, pk):
 @api_view(['POST'])  # Change to POST method
 def PhoneLoginView(request):
     data = request.data
+    phone = data['phone_number']
 
     try: 
-        phone = data['phone_number']
-        print('phone', phone)
-        message = {'success': 'logged in successfully'}
         customer = Customer.objects.get(phone_number = phone[2:12])
-        print('customer', customer)
         user = User.objects.get(id = customer.user_id)
-        print('user', user)
 
         serializer = UserSerializerWithToken(user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        # return Response(message) 
         
     except Customer.DoesNotExist:
-        return Response({'error': 'User not registered'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'No active user credentials found. Please sign up to login.'}, status=status.HTTP_404_NOT_FOUND)
 
-    except KeyError:  # Handle specific exception
-        message = {'error': 'phone_number is required'}  # Provide an appropriate error message
+    except KeyError:
+        message = {'phone_number is required'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)

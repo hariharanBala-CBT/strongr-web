@@ -20,6 +20,8 @@
                 box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
                 border-radius: 2%;
                 padding: 20px;
+                display: flex;
+                flex-direction: column;
             }
             table {
                 position: relative;
@@ -43,7 +45,10 @@
                 height: 80px; 
                 width: 250px;
             }
-
+            
+            .u-button{
+                align-self: center;
+            }
         </style>
 
     </head>
@@ -76,7 +81,7 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
-                            <a class="nav-link" href="{% url 'organization_profile' organization.pk %}">
+                            <a class="nav-link" href="{% url 'organization_profile' organization.pk %}" style="color: white; background-color: rgb(68, 68, 68);">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                                 Profile
                             </a>
@@ -105,7 +110,7 @@
                     <div class="container-fluid px-4 m">
                         <div class="profile-card"> 
                             <h1 class="my-4">Profile</h1>
-                            <div>                          
+                            <div style="display: flex;">                          
                                 <form method="post">
                                     {% csrf_token %}
                                     <div class="table-responsive">
@@ -154,7 +159,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="px-4 py-4">
+                                    <div class="px-4 py-4 u-button">
                                         <button type="submit" class="btn btn-primary">Update</button>
                                     </div>
                                 </form>

@@ -20,8 +20,8 @@ import {
   fetchAvailableSlots,
   login,
 } from "../actions/actions";
-import { Box, CircularProgress, Modal } from "@mui/material";
-import toast, { Toaster } from "react-hot-toast";
+import { Alert, Box, CircularProgress, Modal } from "@mui/material";
+import { Toaster } from "react-hot-toast";
 
 const style = {
   position: "absolute",
@@ -199,11 +199,11 @@ function BookingInfoScreen() {
       };
       const formDataJSON = JSON.stringify(formData);
       localStorage.setItem("Bookingdata", formDataJSON);
-      
-      if(userInfo){
+
+      if (userInfo) {
         setLoader(false);
         navigate("/checkout");
-      }else{
+      } else {
         setLoader(false);
         setOpenForm(true);
       }
@@ -214,14 +214,14 @@ function BookingInfoScreen() {
     e.preventDefault();
     setLoader(true);
     dispatch(login(username, password));
-    setUsername('')
-    setPassword('')
-    setLoader(true)
+    setUsername("");
+    setPassword("");
+    setLoader(true);
     setTimeout(() => {
-      setLoader(false)
-      setOpenForm(false)
-    },1000)
-  }
+      setLoader(false);
+      setOpenForm(false);
+    }, 1000);
+  };
 
   useEffect(() => {
     if (slots) {
@@ -229,7 +229,6 @@ function BookingInfoScreen() {
       setSelectedSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
     }
   }, [slots, setSelectedSlot]);
-
 
   return (
     <div>
@@ -284,16 +283,20 @@ function BookingInfoScreen() {
                 label="Court"
               />
 
-              <SelectInput
-                id="slot"
-                value={slot}
-                onChange={handleSlotChange}
-                options={slots?.map((slot) => ({
-                  id: slot.id,
-                  area_name: `${slot.start_time}-${slot.end_time}`,
-                }))}
-                label="slot"
-              />
+              {slots?.length === 0 ? (
+                <Alert severity="error">No slots available..</Alert>
+              ) : (
+                <SelectInput
+                  id="slot"
+                  value={slot}
+                  onChange={handleSlotChange}
+                  options={slots?.map((slot) => ({
+                    id: slot.id,
+                    area_name: `${slot.start_time}-${slot.end_time}`,
+                  }))}
+                  label="slot"
+                />
+              )}
             </div>
           </form>
         </div>
@@ -351,11 +354,10 @@ function BookingInfoScreen() {
                 disabled={totalPrice < 60 || !(userInfo && userInfo.length > 0)}
                 onClick={handleSubmit}
                 className="btn-check-availability-home"
-                text={userInfo ? 'Book now' : 'Login to Book'}
+                text="Book now"
               />
             </div>
           )}
-          
         </div>
       </div>
 
@@ -371,8 +373,10 @@ function BookingInfoScreen() {
           </Box>
         ) : (
           <Box sx={style}>
+            <Alert severity="info">You are one step away from booking</Alert>
             <form onSubmit={loginAndRedirect} className="login-form">
-            <h3 className="login-title">Login to continue Booking</h3>
+              <h2 className="login-title">Login</h2>
+
               <label>Username</label>
               <input
                 required

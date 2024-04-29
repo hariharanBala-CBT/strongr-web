@@ -12,6 +12,7 @@ import { auth } from "../firebase.config";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { toast, Toaster } from "react-hot-toast";
 import OTPInput from "react-otp-input";
+import { CircularProgress } from "@mui/material";
 
 function PhoneNumberScreen() {
   const [showOTPInput, setShowOTPInput] = useState(false);
@@ -27,7 +28,7 @@ function PhoneNumberScreen() {
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { error, loading: loginLoading, userInfo } = userLogin;
+  const { error, userInfo } = userLogin;
 
   useEffect(() => {
     if (userInfo) {
@@ -84,45 +85,64 @@ function PhoneNumberScreen() {
     }
   }
 
-  function onSignup() {
+  function onSignup(e) {
+    e.preventDefault();
+    if (ph.length < 10) {
+      alert("Please enter a phone number!");
+      return;
+    }
     setLoading(true);
     onCaptchVerify();
-    setShowOTPInput(true);
+    // setShowOTPInput(true);
     const appVerifier = window.recaptchaVerifier;  
     const formatPh = "+" + ph;
     signInWithPhoneNumber(auth, formatPh, appVerifier)
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
+        toast.success("OTP Sent Successfully");
         setLoading(false);
         setShowOTPInput(true);
-        toast.success("OTP Sent Successfully");
       })
       .catch((error) => {
         console.log("otp error is : ",error);
-        setLoading(false);
+        // setLoading(false);
         // setTimeout(()=>{
         //   toast.error("OTP not Sent");
         // },5000)
       });
   }
 
+  const dispatchLogin = () => {
+    dispatch(loginPhoneNumber(ph))
+    setTimeout(() => {
+      if(error){
+        toast.error('User not registered');
+      }
+    },1000)
+
+  };
+  
+
 function onOTPVerify(e) {
   e.preventDefault();
+  setOTP('');
+  setShowOTPInput(false)
   setLoading(true);
   window.confirmationResult
     .confirm(otp)
     .then(async (res) => {
       console.log(res);
-      toast.success("Success! Logging in...");
       setLoading(false);
-      dispatch(loginPhoneNumber(ph));
+      dispatchLogin();
     })
     .catch((err) => {
+      showOTPInput(false)
       console.log(err);
       toast.error("Incorrect OTP. Please try again.");
       setLoading(false);
     });
 }
+
 
   return (
     <div>
@@ -159,6 +179,8 @@ function onOTPVerify(e) {
                 />
               </div>
             )}
+
+            {loading && <CircularProgress className="loader"/>}
             {!showOTPInput && (
               <button className="generate-btn" onClick={onSignup}>
                 Generate OTP

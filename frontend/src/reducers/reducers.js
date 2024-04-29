@@ -277,7 +277,6 @@ export const userLoginReducer = (state = {}, action) => {
     
     case USER_LOGIN_RESET:
       return {};
-      
 
     case USER_LOGOUT:
       return {};

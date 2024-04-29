@@ -16,3 +16,15 @@
 .user  .update-user-btn{
     align-self: center;
 }
+
+.booked-status{
+    color: green;
+}
+
+.pending-status{
+    color: orange;
+}
+
+.cancelled-status {
+    color: rgb(214, 10, 10);
+}

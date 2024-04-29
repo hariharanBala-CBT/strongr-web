@@ -2,6 +2,8 @@ import "../css/header.css";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/actions";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
 
 function Header({ location }) {
   const dispatch = useDispatch();
@@ -17,7 +19,11 @@ function Header({ location }) {
       <nav className={location}>
         <LinkContainer to="/">
           <div className="logo">
-            <i className="fas fa-bolt"></i> Strongr.
+            <Tooltip title="Strongr" className="logo-icon">
+              <IconButton className="title">
+                <i className="fas fa-bolt icon-button" ></i> Strongr.
+              </IconButton>
+            </Tooltip>
           </div>
         </LinkContainer>
 
@@ -25,13 +31,13 @@ function Header({ location }) {
           {userInfo ? (
             <LinkContainer to="/profile">
               <div className="link dropdown">
-                  <i className="fas fa-user"></i> {userInfo.first_name}                
+                <i className="fas fa-user icon-button"></i> {userInfo.first_name}
               </div>
             </LinkContainer>
           ) : (
             <LinkContainer to="/login">
               <div className="link">
-                <i className="fas fa-user"></i> Login
+                <i className="fas fa-user icon-button"></i> Login
               </div>
             </LinkContainer>
           )}
@@ -44,7 +50,11 @@ function Header({ location }) {
 
           {userInfo && (
             <div className="link" onClick={logoutHandler}>
-              <i className="fas fa-sign-out-alt"></i>
+              <Tooltip title="Logout" className="logout-icon">
+                <IconButton>
+                  <i className="fas fa-sign-out-alt icon-button"></i>
+                </IconButton>
+              </Tooltip>
             </div>
           )}
         </div>

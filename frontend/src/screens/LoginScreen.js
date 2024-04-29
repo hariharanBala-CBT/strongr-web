@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../actions/actions";
 import toast, { Toaster } from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
+import { USER_LOGIN_RESET } from "../constants/constants";
 // import { USER_LOGIN_RESET } from "../constants/constants";
 
 function LoginScreen() {
@@ -20,8 +21,8 @@ function LoginScreen() {
   // const redirect = location.search ? location.search.split("=")[1] : "/";
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { error, loading, userLoginSuccess } = userLogin;
-  const {userInfo} = useSelector((state)=> state.userLogin)
+  const { error, loading } = userLogin;
+  const { userInfo } = useSelector((state) => state.userLogin);
 
   // useEffect(() => {
   //   dispatch({
@@ -30,24 +31,31 @@ function LoginScreen() {
   // }, [dispatch]);
 
   useEffect(() => {
-    if(userLoginSuccess && userInfo){
+    if (userInfo) {
       navigate(-1);
-      console.log("userLoginSuccess:", userLoginSuccess);
+      toast.success('logged in successfully')
     }
-  }, [navigate, userInfo,userLoginSuccess]);
-  
+    else if(error){
+      toast.error('Invalid Credentials')
+      dispatch({
+        type: USER_LOGIN_RESET,
+      })
+    }
+  }, [navigate, userInfo, dispatch, error]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(login(username, password));
-    // navigate(-1)
+    dispatch(login(username, password))
+      // .then(() => {
+      //   navigate(-1);
+      //   toast.success("Logged in successfully");
+      //   console.log("User logged in successfully");
+      // })
+      // .catch((error) => {
+      //   toast.error("Error during login");
+      //   console.error("Error:", error);
+      // });
   };
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-  }, [error]);
 
   return (
     <div>
@@ -56,39 +64,41 @@ function LoginScreen() {
       <div className="login-page">
         <div className="login-form">
           <h1 className="login-title">LOGIN</h1>
-          {loading ? <CircularProgress className="loader" /> :
-          <form onSubmit={handleSubmit}>
-            <label>Username</label>
-            <input
-              required
-              type="text"
-              placeholder="Enter username"
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value);
-              }}
-            />
-
-            <label>Password</label>
-            <input
-              required
-              type="password"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
-
-            <div className="login-button">
-              <Button
-                type="submit"
-                className="btn-check-availability-home"
-                text="Login"
+          {loading ? (
+            <CircularProgress className="loader" />
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <label>Username</label>
+              <input
+                required
+                type="text"
+                placeholder="Enter username"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
               />
-            </div>
-          </form>
-          }
+
+              <label>Password</label>
+              <input
+                required
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+
+              <div className="login-button">
+                <Button
+                  type="submit"
+                  className="btn-check-availability-home"
+                  text="Login"
+                />
+              </div>
+            </form>
+          )}
           <span>
             Login using Phone number?&nbsp;
             <a href="/phonenumberlogin">login</a>

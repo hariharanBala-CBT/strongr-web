@@ -91,3 +91,7 @@
   align-self: center;
   margin: 2rem;
 }
+
+.logins-page .loader {
+  align-self: center;
+}

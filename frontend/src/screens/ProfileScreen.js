@@ -143,7 +143,7 @@ function ProfileScreen() {
               <Stack spacing={4}>
                 <Content className="details">
                   <ul>
-                    <strong>username: </strong>
+                    <strong>Username: </strong>
                     {userInfo?.username}
                   </ul>
                   <ul>
@@ -221,7 +221,7 @@ function ProfileScreen() {
                       .sort(
                         (a, b) =>
                           new Date(b.booking_date) - new Date(a.booking_date)
-                      ) // Sort in descending order based on booking date
+                      ) 
                       .map((booking) => {
                         const bookingDate = new Date(booking.booking_date);
                         const day = String(bookingDate.getDate()).padStart(
@@ -244,7 +244,7 @@ function ProfileScreen() {
                             </TableCell> */}
                             <TableCell>₹ {booking.total_price}</TableCell>
                             <TableCell>
-                              {getBookingStatusText(booking.booking_status)}
+                              <span className={booking.booking_status === 1 ? "pending-status" : booking.booking_status === 2 ? "booked-status" : booking.booking_status === 3 && "cancelled-status" }>{getBookingStatusText(booking.booking_status)}</span>
                             </TableCell>
                             <TableCell>
                               <Button
@@ -299,7 +299,7 @@ function ProfileScreen() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelClose}>exit</Button>
+          <Button onClick={handleCancelClose}>no</Button>
           <Button
             onClick={() => {
               dispatch(bookingCancel(bookingId));
