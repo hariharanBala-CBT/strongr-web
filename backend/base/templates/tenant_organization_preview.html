@@ -348,129 +348,131 @@
                         <!-- Tab Navigation -->
                         <ul class="nav nav-tabs" id="locationTabs" role="tablist">
                             {% for location_item in all_locations %}
-                                <li class="nav-item" role="presentation">
-                                    {% if location_item.location.status != 2 %}
+                                {% if location_item.location.status != 2 %}
+                                    <li class="nav-item" role="presentation">
                                         <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" type="button" role="tab" aria-controls="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">{{ location_item.location.area }}</button>
-                                    {% endif %}
-                                </li>
+                                    </li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
 
                         <!-- Tab Content -->
                         <div class="tab-content" id="locationTabsContent">
                             {% for location_item in all_locations %}
-                                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}-tab">
-                                    <div class="row">
-                                        <div class="card mb-4">
-                                            <div class="card-body">
-                                                <li style="list-style: none;">
-                                                    <div class="label">Status</div>:&nbsp; 
-                                                    {% if location_item.location.status == 1 %}
-                                                        <span class="status-approved">Approved</span>
-                                                    {% elif location_item.location.status == 2 %}
-                                                        <span class="status-pending">Pending</span>
-                                                    {% elif location_item.location.status == 3 %}
-                                                        <span class="status-in-progress">In Progress</span>
-                                                    {% elif location_item.location.status == 4 %}
-                                                        <span class="status-cancelled">Cancelled</span>
-                                                    {% else %}
-                                                        <span class="status-unknown">Unknown</span>
-                                                        <p>Please Contact the Service Provider.</p>
-                                                    {% endif %}
-                                                </li>
-
-
-                                                <!-- Location Address -->
-                                                <ul><strong>Address:</strong><br>
-                                                    {{ location_item.location.address_line_1 }}<br>
-                                                    {{ location_item.location.address_line_2 }}<br>
-                                                    {{ location_item.location.area }}-{{ location_item.location.pincode }}
-                                                </ul>
-                                                <!-- Games -->
-                                                <h5>Games</h5>
-                                                <ul>
-                                                    {% for game in location_item.games %}
-                                                        <ul>
-                                                            <strong>{{ game.game_type }}</strong>
-                                                            <li><div class="label">Pricing</div>: {{ game.pricing }}</li>
-                                                            <li><div class="label">Description</div>: {{ game.description }}</li>
-                                                        </ul>
-                                                    {% endfor %}
-                                                </ul>
-                                                <!-- Amenities -->
-                                                <h5><strong>Amenities</strong></h5>
-                                                <ul class="checkbox-list">
-                                                    {% for amenity in location_item.amenities %}
-                                                    <li>
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled>
-                                                            <span></span> Parking
-                                                        </label><br>
-                                                        
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled>
-                                                            <span></span> Restroom
-                                                        </label><br>
-                                                        
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled>
-                                                            <span></span> Changeroom
-                                                        </label><br>
-                                                        
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled>
-                                                            <span></span> Power Backup
-                                                        </label><br>
-                                                        
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled>
-                                                            <span></span> Beverage
-                                                        </label><br>
-                                                        
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled>
-                                                            <span></span> Coaching
-                                                        </label><br>
-                                                        
-                                                        <label>
-                                                            Description: {{ amenity.description }}
-                                                        </label>
+                                {% if location_item.location.status != 2 %}
+                                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}-tab">
+                                        <div class="row">
+                                            <div class="card mb-4">
+                                                <div class="card-body">
+                                                    <li style="list-style: none;">
+                                                        <div class="label">Status</div>:&nbsp; 
+                                                        {% if location_item.location.status == 1 %}
+                                                            <span class="status-approved">Approved</span>
+                                                        {% elif location_item.location.status == 2 %}
+                                                            <span class="status-pending">Pending</span>
+                                                        {% elif location_item.location.status == 3 %}
+                                                            <span class="status-in-progress">In Progress</span>
+                                                        {% elif location_item.location.status == 4 %}
+                                                            <span class="status-cancelled">Cancelled</span>
+                                                        {% else %}
+                                                            <span class="status-unknown">Unknown</span>
+                                                            <p>Please Contact the Service Provider.</p>
+                                                        {% endif %}
                                                     </li>
-                                                    {% endfor %}
-                                                </ul>
 
-                                                <!-- Working Times -->
-                                                <h5><strong>Working Times</strong></h5>
-                                                <ul>
-                                                    {% for workingtime in location_item.workingtimes %}
-                                                    <li><div class="label">{{ workingtime.get_days_display }}</div>: {{ workingtime.work_from_time }} - {{ workingtime.work_to_time }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <!-- Courts -->
-                                                <h5><strong>Courts</strong></h5>
-                                                <ul>
-                                                    {% for court in location_item.courts %}
-                                                    <li>{{ court.name }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <div class="text-center mb-4">
-                                                    {% if location_item.location.status != 1 %}
-                                                    <div class="btn-group" role="group">
-                                                        <form method="post" action="{% url 'change_location_status' location_item.location.id '1' %}">
-                                                            {% csrf_token %}
-                                                            <button type="submit" class="btn btn-success me-2">Approve</button>
-                                                        </form>
-                                                        <form method="post" action="{% url 'change_location_status' location_item.location.id '4' %}">
-                                                            {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger">Reject</button>
-                                                        </form>
-                                                    </div>
-                                                    {% endif %}
-                                                </div>   
+
+                                                    <!-- Location Address -->
+                                                    <ul><strong>Address:</strong><br>
+                                                        {{ location_item.location.address_line_1 }}<br>
+                                                        {{ location_item.location.address_line_2 }}<br>
+                                                        {{ location_item.location.area }}-{{ location_item.location.pincode }}
+                                                    </ul>
+                                                    <!-- Games -->
+                                                    <h5>Games</h5>
+                                                    <ul>
+                                                        {% for game in location_item.games %}
+                                                            <ul>
+                                                                <strong>{{ game.game_type }}</strong>
+                                                                <li><div class="label">Pricing</div>: {{ game.pricing }}</li>
+                                                                <li><div class="label">Description</div>: {{ game.description }}</li>
+                                                            </ul>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <!-- Amenities -->
+                                                    <h5><strong>Amenities</strong></h5>
+                                                    <ul class="checkbox-list">
+                                                        {% for amenity in location_item.amenities %}
+                                                        <li>
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled>
+                                                                <span></span> Parking
+                                                            </label><br>
+                                                            
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled>
+                                                                <span></span> Restroom
+                                                            </label><br>
+                                                            
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled>
+                                                                <span></span> Changeroom
+                                                            </label><br>
+                                                            
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled>
+                                                                <span></span> Power Backup
+                                                            </label><br>
+                                                            
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled>
+                                                                <span></span> Beverage
+                                                            </label><br>
+                                                            
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled>
+                                                                <span></span> Coaching
+                                                            </label><br>
+                                                            
+                                                            <label>
+                                                                Description: {{ amenity.description }}
+                                                            </label>
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+
+                                                    <!-- Working Times -->
+                                                    <h5><strong>Working Times</strong></h5>
+                                                    <ul>
+                                                        {% for workingtime in location_item.workingtimes %}
+                                                        <li><div class="label">{{ workingtime.get_days_display }}</div>: {{ workingtime.work_from_time }} - {{ workingtime.work_to_time }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <!-- Courts -->
+                                                    <h5><strong>Courts</strong></h5>
+                                                    <ul>
+                                                        {% for court in location_item.courts %}
+                                                        <li>{{ court.name }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <div class="text-center mb-4">
+                                                        {% if location_item.location.status != 1 %}
+                                                        <div class="btn-group" role="group">
+                                                            <form method="post" action="{% url 'change_location_status' location_item.location.id '1' %}">
+                                                                {% csrf_token %}
+                                                                <button type="submit" class="btn btn-success me-2">Approve</button>
+                                                            </form>
+                                                            <form method="post" action="{% url 'change_location_status' location_item.location.id '4' %}">
+                                                                {% csrf_token %}
+                                                                <button type="submit" class="btn btn-danger">Reject</button>
+                                                            </form>
+                                                        </div>
+                                                        {% endif %}
+                                                    </div>   
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div> 
+                                    </div>                                        
+                                {% endif %}     
                             {% endfor %}
             
                         </div>

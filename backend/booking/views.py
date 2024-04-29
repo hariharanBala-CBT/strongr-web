@@ -139,7 +139,7 @@ def filterClubs(request):
     time = datetime.datetime.strptime(date, '%Y-%m-%d')
     day = time.strftime('%A')
 
-    areas = OrganizationLocation.objects.filter(area=selected_area_obj, organization__status = 1)
+    areas = OrganizationLocation.objects.filter(area=selected_area_obj,status = 1, organization__status = 1)
 
     game_names = []
     for location in areas:
