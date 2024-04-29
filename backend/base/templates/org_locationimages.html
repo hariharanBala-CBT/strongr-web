@@ -131,19 +131,29 @@
                                         <tbody>
                                             {% for image in images %}
                                                 <tr>
-                                                    <td>
-                                                        {% if image.image %}
-                                                            <img src="{{ image.image.url }}" alt="Image" width="70" height="70">
-                                                        {% else %}
-                                                            No Image
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>
-                                                        <a href="{% url 'organization_updateimages' pk=image.pk %}" class="btn btn-primary">Update</a>
-                                                    </td>
-                                                    <td>
-                                                        <a href="{% url 'organization_deleteimage' pk=image.pk %}" class="btn btn-danger delete-image-btn">Delete</a>
-                                                    </td>
+                                                    
+                                                        <td>
+                                                            {% if image.image %}
+                                                                <img src="{{ image.image.url }}" alt="Image" width="70" height="70">
+                                                            {% else %}
+                                                                No Image
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            {% if image.image %}
+                                                                <a href="{% url 'organization_updateimages' pk=image.pk %}" class="btn btn-primary">Update</a>
+                                                            {% else %}
+                                                                <a href="{% url 'organization_updateimages' pk=image.pk %}" class="btn btn-primary">Add</a>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            {% if image.image %}
+                                                                <a href="{% url 'organization_deleteimage' pk=image.pk %}" class="btn btn-danger delete-image-btn">Delete</a>
+                                                            {% else %}
+                                                            <a href="{% url 'organization_deleteimage' pk=image.pk %}"  class="btn btn-danger delete-image-btn disabled">Delete</a>
+                                                            {% endif %}
+                                                        </td>
+                                                        
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
@@ -194,6 +204,15 @@
                 });
             }
 
+        });
+
+        var deleteImageLink = document.getElementById('delete-image-link');
+
+    
+        deleteImageLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            deleteImageLink.classList.add('disabled');
+            console.log('Delete action is disabled.');
         });
 
     </script>

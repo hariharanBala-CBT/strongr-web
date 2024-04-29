@@ -29,6 +29,26 @@
             margin-left: auto;
         }
 
+        .card{
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            margin-top: 10px;
+            margin-right: 15px; 
+            width: 600px;
+            height: 200px;
+        }
+
+        .card2{
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            margin-top: 10px;
+            margin-right: 15px; 
+            /* width: 450px;
+            height: 200px; */
+        }
+
         .navbar-brand {
             font-weight: 700;
         }
@@ -42,67 +62,6 @@
             opacity: 0.8;
         }
 
-        .status-approved {
-            color: #28a745;
-        }
-
-        .status-pending {
-            color: #ffc107;
-        }
-
-        .status-in-progress {
-            color: #007bff;
-        }
-
-        .status-cancelled {
-            color: #dc3545;
-        }
-
-        .status-unknown {
-            color: #6c757d;
-        }
-
-        .table-responsive {
-            margin-top: 20px;
-        }
-
-        /* Sidebar styling */
-        #layoutSidenav_nav {
-            background-color: #343a40;
-            color: #ffffff;
-        }
-
-        .sb-sidenav-menu-heading {
-            font-weight: 700;
-            color: #adb5bd;
-        }
-
-        .sb-sidenav-menu .nav-link {
-            color: #ffffff;
-        }
-
-        .sb-sidenav-menu .nav-link:hover {
-            background-color: #495057;
-        }
-
-        .sb-sidenav-footer {
-            background-color: #343a40;
-            color: #ffffff;
-        }
-
-        /* Footer styling */
-        footer {
-            background-color: #ffffff;
-            border-top: 1px solid #e3e6f0;
-        }
-
-        footer a {
-            color: #6c757d;
-        }
-
-        footer a:hover {
-            color: #495057;
-        }
         .status-approved {
             color: #28a745;
             background-color: #e6f4ea; /* Light green background */
@@ -147,6 +106,50 @@
             border-radius: 4px; /* Rounded corners */
             font-weight: bold; /* Bold text */
         }
+
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        /* Sidebar styling */
+        #layoutSidenav_nav {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .sb-sidenav-menu-heading {
+            font-weight: 700;
+            color: #adb5bd;
+        }
+
+        .sb-sidenav-menu .nav-link {
+            color: #ffffff;
+        }
+
+        .sb-sidenav-menu .nav-link:hover {
+            background-color: #495057;
+        }
+
+        .sb-sidenav-footer {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid #e3e6f0;
+        }
+
+        footer a {
+            color: #6c757d;
+        }
+
+        footer a:hover {
+            color: #495057;
+        }
+
         </style>
 
     </head>
@@ -206,7 +209,7 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container" style="display: flex; justify-content: center; align-items: center; margin-top: 100px;">
-                                              <div class="card">
+                                              <div class="card2">
                                                 <div class="card-body">
                                                   <p><strong>Logged-in Organization:</strong> {{ organization.organization_name }}</p>
                                                   <p><strong>Status:</strong> 
@@ -228,6 +231,48 @@
                                                 </div>
                                               </div>
                     </div>
+                    <div class="container" style="margin-top: 10px; margin-bottom: 10px; margin-left: 200px; margin-right: 20px; width: 70%;">
+                        <!-- Tab Navigation -->
+                        <ul class="nav nav-tabs" id="locationTabs" role="tablist">
+                            {% for location in locations %}
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {% if forloop.first %}active{% endif %}" id="locationTab{{ location.id }}" data-bs-toggle="tab" data-bs-target="#location{{ location.id }}" type="button" role="tab" aria-controls="location{{ location.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">Location {{ forloop.counter }}</button>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="locationTabsContent">
+                            {% for location in locations %}
+                                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="location{{ location.id }}" role="tabpanel" aria-labelledby="locationTab{{ location.id }}">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p><strong>Location:</strong> {{ location.address_line_1 }}</p>
+                                            <p><strong>Status:</strong> 
+                                            {% if location.status == 1 %}
+                                                <span class="status-approved">Approved</span>
+                                            {% elif location.status == 2 %}
+                                                <span class="status-pending">Pending</span>
+                                                <p>Submit the required data to proceed</p>
+                                            {% elif location.status == 3 %}
+                                                <span class="status-in-progress">In Progress</span>
+                                                <p>The Process is ongoing. Service Provider will Contact you after info verification</p>
+                                            {% elif location.status == 4 %}
+                                                <span class="status-cancelled">Cancelled</span>
+                                                <p>Cancelled due to insufficient/wrong info. Contact Service Provider</p>
+                                            {% else %}
+                                                <span class="status-unknown">Unknown</span>
+                                                <p>Please Contact the Service Provider.</p>
+                                            {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+
                 </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">

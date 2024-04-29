@@ -151,6 +151,7 @@
         }
 
         /* Custom Checkbox Style */
+        
         .checkbox-custom {
             display: inline-block;
             vertical-align: middle;
@@ -179,11 +180,12 @@
             display: block;
             width: 8px;
             height: 16px;
-            border: solid #007bff;
-            border-width: 0 2px 2px 0;
+            border:solid #007bff;
+            border-width: 0 4px 4px 0;
             position: absolute;
-            top: 2px;
-            left: 6px;
+            top: 0;
+            margin-left: 5px;
+            margin-bottom: 5px;
             transform: rotate(45deg);
         }
 
@@ -280,9 +282,18 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
+                        <a class="nav-link" href="{% url 'booking_list'  %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
+                            Bookings
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Approvals</div>
                         <a class="nav-link" href="{% url 'organization_list'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
-                            Approvals
+                            Organizations
+                        </a>
+                        <a class="nav-link" href="{% url 'location_list'  %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
+                            Locations
                         </a>
                     </div>
                 </div>
@@ -305,41 +316,70 @@
                     <div class="card-body">
                         <!-- Organization Details -->
                         <div class="row">
+                
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><strong>Organization Details</strong></h5>
+                                <ul>
+                                    <li><div class="label">Name</div>: {{ organization.organization_name }}</li>
+                                    <li><div class="label">Phone</div>: {{ organization.phone_number }}</li>
+                                    <li><div class="label">Description</div>: {{ organization.description }}</li>
+                                    <li><div class="label">Status</div>: 
+                                        {% if organization.status == 1 %}
+                                            <span class="status-approved"style="margin: left 10px;" >Approved</span>
+                                        {% elif organization.status == 2 %}
+                                            <span class="status-pending">Pending</span>
+                                        {% elif organization.status == 3 %}
+                                            <span class="status-in-progress">In Progress</span>
+                                        {% elif organization.status == 4 %}
+                                            <span class="status-cancelled">Cancelled</span>
+                                        {% else %}
+                                            <span class="status-unknown">Unknown</span>
+                                            <p>Please Contact the Service Provider.</p>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                
+                        <!-- Locations -->
+                        <h3 class="mb-4">Locations</h3>
                         
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><strong>Organization Details</strong></h5>
-                                        <ul>
-                                            <li><div class="label">Name</div>: {{ organization.organization_name }}</li>
-                                            <li><div class="label">Phone</div>: {{ organization.phone_number }}</li>
-                                            <li><div class="label">Description</div>: {{ organization.description }}</li>
-                                            <li><div class="label">Status</div>: 
-                                                {% if organization.status == 1 %}
-                                                    <span class="status-approved">Approved</span>
-                                                {% elif organization.status == 2 %}
-                                                    <span class="status-pending">Pending</span>
-                                                {% elif organization.status == 3 %}
-                                                    <span class="status-in-progress">In Progress</span>
-                                                {% elif organization.status == 4 %}
-                                                    <span class="status-cancelled">Cancelled</span>
-                                                {% else %}
-                                                    <span class="status-unknown">Unknown</span>
-                                                    <p>Please Contact the Service Provider.</p>
-                                                {% endif %}</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                        
-                        
-                                <!-- Locations -->
-                                <h3 class="mb-4">Locations</h3>
-                                <!-- Location Grid -->
-                                <div class="row">
-                                    {% for location_item in all_locations %}
-                                    <div class="col-md-6 mb-4">
-                                        <div class="card">
+                        <!-- Tab Navigation -->
+                        <ul class="nav nav-tabs" id="locationTabs" role="tablist">
+                            {% for location_item in all_locations %}
+                                <li class="nav-item" role="presentation">
+                                    {% if location_item.location.status != 2 %}
+                                        <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" type="button" role="tab" aria-controls="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">{{ location_item.location.area }}</button>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="locationTabsContent">
+                            {% for location_item in all_locations %}
+                                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}-tab">
+                                    <div class="row">
+                                        <div class="card mb-4">
                                             <div class="card-body">
-                                                <h4 class="card-title">{{ location_item.location.area }}</h4>
+                                                <li style="list-style: none;">
+                                                    <div class="label">Status</div>:&nbsp; 
+                                                    {% if location_item.location.status == 1 %}
+                                                        <span class="status-approved">Approved</span>
+                                                    {% elif location_item.location.status == 2 %}
+                                                        <span class="status-pending">Pending</span>
+                                                    {% elif location_item.location.status == 3 %}
+                                                        <span class="status-in-progress">In Progress</span>
+                                                    {% elif location_item.location.status == 4 %}
+                                                        <span class="status-cancelled">Cancelled</span>
+                                                    {% else %}
+                                                        <span class="status-unknown">Unknown</span>
+                                                        <p>Please Contact the Service Provider.</p>
+                                                    {% endif %}
+                                                </li>
+
+
                                                 <!-- Location Address -->
                                                 <ul><strong>Address:</strong><br>
                                                     {{ location_item.location.address_line_1 }}<br>
@@ -413,11 +453,25 @@
                                                     <li>{{ court.name }}</li>
                                                     {% endfor %}
                                                 </ul>
+                                                <div class="text-center mb-4">
+                                                    {% if location_item.location.status != 1 %}
+                                                    <div class="btn-group" role="group">
+                                                        <form method="post" action="{% url 'change_location_status' location_item.location.id '1' %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-success me-2">Approve</button>
+                                                        </form>
+                                                        <form method="post" action="{% url 'change_location_status' location_item.location.id '4' %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger">Reject</button>
+                                                        </form>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>   
                                             </div>
                                         </div>
                                     </div>
-                                    {% endfor %}
-                                </div>
+                                </div> 
+                            {% endfor %}
             
                         </div>
                     </div>

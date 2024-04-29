@@ -146,6 +146,13 @@ form {
                         <h3 class="my-4">Courts:</h3>
                         <h6 class="mb-5">Add Available Courts to your Location</h6>
 
+                        {% if error %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ error }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+
                         <form id="slot-form" method="post">
                             {% csrf_token %}
                             <div class="form-group">

@@ -47,10 +47,18 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
+                            <a class="nav-link" href="{% url 'booking_list'  %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
+                                Bookings
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Approvals</div>
                             <a class="nav-link" href="{% url 'organization_list'  %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
-                                Approvals
-
+                                Organizations
+                            </a>
+                            <a class="nav-link" href="{% url 'location_list'  %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
+                                Locations
                             </a>
                         </div>
                     </div>
@@ -93,26 +101,28 @@
                                     </tfoot>
                                     <tbody>
                                         {% for organization in organizations %}
-                                            <tr>
-                                                <td><a href="{% url 'organization_preview' organization.pk %}">{{ organization.organization_name }}</a></td>
-                                                <td>{{ organization.phone_number }}</td>
-                                                <td>{{ organization.get_status_display }}</td>
-                                                <td> <div>
-                                                        {% if organization.status != 1 %}
-                                                            <div class="btn-group" role="group">
-                                                                <form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
-                                                                {% csrf_token %}
-                                                                    <button type="submit" class="btn btn-success me-2"><i class="fa-solid fa-check"></i></button>
-                                                                </form>
-                                                        {% endif %}
-                                                                <form method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
-                                                                {% csrf_token %}
-                                                                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-ban"></i></button>
-                                                                </form>
+                                            {% if organization.status != 2 %}
+                                                <tr>
+                                                    <td><a href="{% url 'organization_preview' organization.pk %}">{{ organization.organization_name }}</a></td>
+                                                    <td>{{ organization.phone_number }}</td>
+                                                    <td>{{ organization.get_status_display }}</td>
+                                                    <td> <div>
+                                                            {% if organization.status != 1 and organization.status != 4 %}
+                                                                <div class="btn-group" role="group">
+                                                                    <form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
+                                                                    {% csrf_token %}
+                                                                        <button type="submit" class="btn btn-success me-2">Accept</i></button>
+                                                                    </form>
+                                                                    <form method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
+                                                                        {% csrf_token %}
+                                                                        <button type="submit" class="btn btn-danger">Reject</i></button>
+                                                                    </form>
+                                                                </div>
+                                                            {% endif %}
                                                             </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
                                         {% endfor %}
                                     </tbody>
                                 </table>

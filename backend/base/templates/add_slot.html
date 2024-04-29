@@ -136,6 +136,12 @@ form {
                     <div class="profile-card">
                         <h3 class="my-4">Slots:</h3>
                         <h6 class="mb-5">Add your Slots here</h6>
+                        {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </div>
+                        {% endif %}
+            
                         <form id="slot-form" method="post">
                             {% csrf_token %}
                             <div class="form-group">

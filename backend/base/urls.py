@@ -44,8 +44,11 @@ urlpatterns = [
     
      path('user/' ,TenantEmployeeHomeView.as_view(), name='tenantuser_page'),
      path('organization_list/' ,OrganizationListView.as_view(),name='organization_list'),
+     path('location_list/' ,LocationListView.as_view(),name='location_list'),
      path('organization_preview/<int:pk>/', TenantOrganizationPreviewView.as_view(), name='organization_preview'),
      path('organizations/<int:organization_id>/change_status/<int:new_status>/', ChangeOrganizationStatusView.as_view(), name='change_organization_status'),
+     path('organizationlocation/<int:location_id>/change_status/<int:new_status>/', ChangeOrganizationLocationStatusView.as_view(), name='change_location_status'),
+     path('booking_list/' ,BookingListView.as_view(),name='booking_list'),
     
      
      path('approvallist/' ,ApprovalListView.as_view(),name='approval_list'),
@@ -57,9 +60,8 @@ urlpatterns = [
      path('confirmed_organization_list/' ,ConfirmOrganizationListView.as_view(),name='confirmed_organization_list'),
      path('organization_preview/<int:pk>/', TenantOrganizationPreviewView.as_view(), name='organization_preview'),
      path('organizations/<int:organization_id>/change_status/<int:new_status>/', ChangeOrganizationStatusView.as_view(), name='change_organization_status'),
-     path('verify/<int:pk>/' ,VerifyView.as_view(),name='verify'),
      path('status/' ,StatusView.as_view(), name='status'),
-     path('response/<str:action>/', ApprovalRejectionView.as_view(), name='response'),
+
      path('success/', TemplateView.as_view(template_name = 'success.html'), name='success'),
      path('reject/', TemplateView.as_view(template_name = 'reject.html'), name='reject'),
      path('change-password/', ChangePasswordView.as_view(), name='change_password'),

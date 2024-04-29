@@ -22,7 +22,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         for k, v in serializer.items():
             data[k] = v
-            
+
         return data
 
 
@@ -390,7 +390,7 @@ class OrganizationAddLocationView(CreateView):
             workingdays = OrganizationLocationWorkingDays.objects.create(
                 days=day,
                 organization_location=form.instance,
-            )            
+            )
             workingdays.save()        
 
         return HttpResponseRedirect(self.success_url)
@@ -681,24 +681,40 @@ class SlotCreateView(CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         location_pk = self.kwargs.get('location_pk')
-        # working_days = OrganizationLocationWorkingDays.objects.filter(organization_location_id=location_pk, is_active=True)
         kwargs['request'] = self.request
-        # kwargs['working_days'] = working_days
         return kwargs
 
     def form_invalid(self, form):
-        errors = form.errors.as_json()
-        return JsonResponse({'error': errors}, status=400)
+        return self.render_to_response(self.get_context_data(form=form, error=form.errors.as_text()))
 
     def form_valid(self, form):
         try:
             pk = self.request.session['location_pk']
             location = OrganizationLocation.objects.get(pk=pk)
             form.instance.location = location
+            # Get the selected day from the form
+            selected_day = form.cleaned_data.get('days')
+            # Get the working days object for the selected day
+            working_day = OrganizationLocationWorkingDays.objects.get(
+                organization_location=location, 
+                days=selected_day
+            )
+            
+            if not working_day.is_active:
+                return self.render_to_response(self.get_context_data(form=form, error='Selected working day is not active'))
+
+            # Set the start and end time for the slot based on the working day
+            if (form.instance.start_time < working_day.work_from_time):
+                error_message = 'Selected start time is before working day time given'
+                return self.render_to_response(self.get_context_data(form=form, error=error_message))
+        
+            if (form.instance.end_time > working_day.work_to_time):
+                error_message = 'Selected end time is after working day time given'
+                return self.render_to_response(self.get_context_data(form=form, error=error_message))
+
             return super().form_valid(form)
         except KeyError:
-            return JsonResponse({'error': 'Location PK not found in session'},
-                                status=400)
+            return self.render_to_response(self.get_context_data(form=form, error='Location PK not found in session'))
 
 
 class SlotUpdateView(UpdateView):
@@ -708,12 +724,32 @@ class SlotUpdateView(UpdateView):
     success_url = reverse_lazy('slot-list')
 
     def form_invalid(self, form):
-        errors = form.errors.as_json()
-        return JsonResponse({'error': errors}, status=400)
+        return self.render_to_response(self.get_context_data(form=form, error=form.errors.as_text()))
 
     def form_valid(self, form):
-        return super().form_valid(form)
+        # Get the selected day from the form
+        selected_day = form.cleaned_data.get('days')
+        # Get the working days object for the selected day
+        working_day = OrganizationLocationWorkingDays.objects.get(
+            organization_location=self.object.location, 
+            days=selected_day
+        )
 
+        print("working_day.work_from_time is:",working_day.work_from_time)
+        
+        if not working_day.is_active:
+            return self.render_to_response(self.get_context_data(form=form, error='Selected working day is not active'))
+
+        # Set the start and end time for the slot based on the working day
+        if (form.instance.start_time < working_day.work_from_time):
+            error_message = 'Selected start time is before working day time given'
+            return self.render_to_response(self.get_context_data(form=form, error=error_message))
+        
+        if (form.instance.end_time > working_day.work_to_time):
+            error_message = 'Selected start time is before working day time given'
+            return self.render_to_response(self.get_context_data(form=form, error=error_message))
+
+        return super().form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
 class SlotDeleteView(DeleteView):
@@ -803,11 +839,20 @@ class StatusView(TemplateView):
             return Organization.objects.get(user=self.request.user)
         except Organization.DoesNotExist:
             return HttpResponseBadRequest("Organization not found")
+    
+    def get_organization_location(self):
+        try:
+            org = Organization.objects.get(user=self.request.user)
+            return OrganizationLocation.objects.filter(organization=org)
+        except OrganizationLocation.DoesNotExist:
+            return HttpResponseBadRequest("Organization Location not found")
 
     def get(self, request, *args, **kwargs):
         organization = self.get_organization()
+        location = self.get_organization_location()
         context = {
-            'organization': organization
+            'organization': organization,
+            'locations':location
         }
         return render(request, self.template_name, context)
 
@@ -884,55 +929,18 @@ class ChangeOrganizationStatusView(View):
 
         return redirect('organization_list')
 
+class ChangeOrganizationLocationStatusView(View):
+    def post(self, request, location_id, new_status):
+        # Get the organization object using the organization_id
+        organizationLocation = get_object_or_404(OrganizationLocation, id=location_id)
 
+    # Update the organization's status and save it
+        print(new_status)
+        organizationLocation.status = new_status
+        organizationLocation.save()
 
-@method_decorator(login_required, name='dispatch')
-class VerifyView(DetailView):
-    model = Organization
-    template_name = 'verify.html'
-    success_url = 'approval_reject'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        locations = OrganizationLocation.objects.filter(
-            organization=self.get_object())
-        self.request.session['organizationpk'] = self.get_object().pk
-        locationdetails = []
-        for location in locations:
-            context_item = {}
-            context_item['location'] = location
-            context_item[
-                'games'] = OrganizationLocationGameType.objects.filter(
-                    organization_location=location)
-            context_item[
-                'amenities'] = OrganizationLocationAmenities.objects.filter(
-                    organization_location=location)
-            context_item[
-                'workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
-                    organization_location=location)
-            locationdetails.append(context_item)
-        context['all_locations'] = locationdetails
-        return context
-
-
-@method_decorator(login_required, name='dispatch')
-class ApprovalRejectionView(RedirectView):
-
-    def get_redirect_url(self, **kwargs):
-        action = kwargs['action']
-        print('action is ', action)
-        print(action)
-        organizationpk = self.request.session.get('organizationpk')
-        organization = Organization.objects.get(pk=organizationpk)
-        print(organization)
-        if action == 'reject':
-            organization.status = Organization.CANCELLED
-            organization.save()
-            return reverse_lazy('reject')
-        elif action == 'approved':
-            organization.status = Organization.APPROVED
-            organization.save()
-            return reverse_lazy('success')
+    # add a success message
+        messages.success(request, 'Organization Location status updated successfully.')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -963,7 +971,7 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-# from .models import OrganizationLocation, Slot, OrganizationLocationWorkingDays
+
 
 
 
@@ -986,25 +994,35 @@ class CreateMultipleSlotsView(View):
         court = get_object_or_404(Court, pk=court_pk, location_id=request.session.get('location_pk'))
 
         # Get all active days for the organization location
-        active_days = OrganizationLocationWorkingDays.objects.filter(organization_location=request.session.get('location_pk'), is_active=True)
+        active_days = OrganizationLocationWorkingDays.objects.filter(
+            organization_location=request.session.get('location_pk'), 
+            is_active=True
+        )
+
+        # Delete existing slots associated with outdated working days
+        Slot.objects.filter(
+            court=court,
+            location=OrganizationLocation.objects.get(pk=request.session.get('location_pk')),
+            days__in=[day.days for day in active_days]
+        ).delete()
 
         # Iterate over active days
         for day in active_days:
-            # Get start and end time for the day
+            # Get start and end time for the day from updated working days
             work_from_time = day.work_from_time
             work_to_time = day.work_to_time
 
             # Set current time to the starting work time
             current_datetime = datetime.combine(datetime.now().date(), work_from_time)
 
-            # Create slots for each hour within the time range
+            # Create slots for each hour within the updated time range
             while current_datetime < datetime.combine(datetime.now().date(), work_to_time):
                 # Create a new slot for the current hour and court
                 Slot.objects.create(
                     start_time=current_datetime.time(),
                     end_time=(current_datetime + timedelta(hours=1)).time(),
                     court=court,
-                    location=OrganizationLocation.objects.get(pk=request.session.get('location_pk')),  # Assuming you are passing location data via POST
+                    location=OrganizationLocation.objects.get(pk=request.session.get('location_pk')),
                     days=day.days, 
                     is_booked=False  # Assuming slots are initially not booked
                 )
@@ -1021,12 +1039,24 @@ class TenantEmployeeHomeView(ListView):
     template_name = 'tenantuser_page.html'
     context_object_name = 'organizations'
 
+@method_decorator(login_required, name='dispatch')
+class BookingListView(ListView):
+    model = Booking
+    template_name = 'bookings_list.html'
+    context_object_name = 'bookings'
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationListView(ListView):
     model = Organization
     template_name = 'organization_list.html'
     context_object_name = 'organizations'
+
+@method_decorator(login_required, name='dispatch')
+class LocationListView(ListView):
+    model = Organization
+    template_name = 'tenant_location_list.html'
+    context_object_name = 'organizations'
+
 
 @method_decorator(login_required, name='dispatch')
 class CancelOrganizationListView(ListView):
@@ -1086,19 +1116,3 @@ class TenantOrganizationPreviewView(DetailView):
 
         context['all_locations'] = locationdetails
         return context
-
-
-class ChangeOrganizationStatusView(View):
-    def post(self, request, organization_id, new_status):
-        # Get the organization object using the organization_id
-        organization = get_object_or_404(Organization, id=organization_id)
-
-    # Update the organization's status and save it
-        print(new_status)
-        organization.status = new_status
-        organization.save()
-
-    # add a success message
-        messages.success(request, 'Organization status updated successfully.')
-
-        return redirect('organization_list')
