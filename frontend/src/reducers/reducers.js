@@ -87,6 +87,12 @@ import {
   CLUB_REVIEW_REQUEST,
   CLUB_REVIEW_SUCCESS,
   CLUB_REVIEW_FAIL,
+  SEARCH_ORGANIZATIONS_REQUEST,
+  SEARCH_ORGANIZATIONS_SUCCESS,
+  SEARCH_ORGANIZATIONS_FAIL,
+  RECENT_SEARCH_REQUEST,
+  RECENT_SEARCH_SUCCESS,
+  RECENT_SEARCH_FAIL,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -113,7 +119,7 @@ export const filterclubReducer = (
 
     default:
       return state;
-  }
+  } 
 };
 
 export const clubListReducer = (state = { clubs: [] }, action) => {
@@ -428,6 +434,29 @@ export const availableslotsReducer = (state = { slots: [] }, action) => {
   }
 };
 
+
+export const phoneLoginReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_LOGIN_REQUEST:
+      return { loading: true };
+
+    case USER_LOGIN_SUCCESS:
+      
+      return { loading: false, userInfo: action.payload };
+
+    case USER_LOGIN_FAIL:
+      return { loading: false, error: action.payload };
+
+    case USER_LOGOUT:
+      return {};
+
+    default:
+      return state;
+  }
+};
+
+
+
 export const slotReducer = (state = { slot: [] }, action) => {
   switch (action.type) {
     case SLOT_REQUEST:
@@ -617,20 +646,31 @@ export const clubreviewlistreducer = (
   }
 };
 
-export const phoneLoginReducer = (state = {}, action) => {
+
+export const searchOrganizationListReducer = (
+  state = { filteredClubLocations: [] },
+  action
+) => {
   switch (action.type) {
-    case USER_LOGIN_REQUEST:
-      return { loading: true };
-
-    case USER_LOGIN_SUCCESS:
-      return { loading: false, userInfo: action.payload };
-
-    case USER_LOGIN_FAIL:
+    case SEARCH_ORGANIZATIONS_REQUEST:
+      return { loading: true, filteredClubLocations: [] };
+    case SEARCH_ORGANIZATIONS_SUCCESS:
+      return { loading: false, filteredClubLocations: action.payload, searchSuccess: true };
+    case SEARCH_ORGANIZATIONS_FAIL:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
 
-    case USER_LOGOUT:
-      return {};
-
+export const RecentSearchReducer = (state = { filteredData: [] }, action) => {
+  switch (action.type) {
+    case RECENT_SEARCH_REQUEST:
+      return { loading: true, filteredData: [] };
+    case RECENT_SEARCH_SUCCESS:
+      return { loading: false, filteredData: action.payload };
+    case RECENT_SEARCH_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

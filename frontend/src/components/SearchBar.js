@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
+import { Button, Form } from "react-bootstrap";
+import axios from "axios";
 
-function SearchBar({ placeholder }) {
+function SearchBox({   }) {
+
   return (
-    <div className="search-bar-container">
-      <input
-        type="text"
-        className="search-bar"
-        placeholder={placeholder}
-      />
+    <div>
+
     </div>
   );
-};
+}
 
-export default SearchBar;
+export default SearchBox;

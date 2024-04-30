@@ -5,6 +5,8 @@ urlpatterns = [
     path('areas/', views.getAreas, name='areas'),
     path('games/', views.getGameTypes, name='games'),
     path('clubs/', views.getClubs, name='clubs'),
+    path('search/', views.search, name='search'),
+    path('recentsearch/', views.recentSearch, name='recent_search'),
     path('filterclubs/',views.filterClubs, name='filter-clubs'),
     path('sendotp/', views.generateOtp, name="generate-otp"),
     path('slots/', views.getAvailableSlots, name='get-slots'),
@@ -28,4 +30,4 @@ urlpatterns = [
     path('club/reviewslist/<str:pk>/', views.getClubReviews, name='get-reviews'),
     path('club/reviews/<str:pk>', views.createProductReview, name="club-review"),
 
-]
+]                                                                        

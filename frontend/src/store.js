@@ -30,6 +30,8 @@ import {
   clubreviewlistreducer,
   clubReviewCreateReducer,
   phoneLoginReducer,
+  searchOrganizationListReducer,
+  RecentSearchReducer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -61,6 +63,8 @@ const reducer = combineReducers({
   clubReviews: clubreviewlistreducer,
   clubReviewCreate: clubReviewCreateReducer,
   otp: phoneLoginReducer,
+  listOrganizations:searchOrganizationListReducer,
+  RecentSearch:RecentSearchReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

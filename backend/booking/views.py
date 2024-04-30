@@ -22,6 +22,33 @@ from django.utils.crypto import get_random_string
 from django.template.loader import render_to_string
 from django.contrib.auth.hashers import make_password
 
+@api_view(['GET'])
+def search(request):
+    query = request.GET.get('keyword')
+    organizations = Organization.objects.all()
+
+    if query:
+        organizations = organizations.filter(organization_name__icontains=query)
+
+    serializer = ClubSerializer(organizations, many=True)
+    serialized_data = serializer.data
+    return Response(serialized_data)
+
+@api_view(['GET'])
+def recentSearch(request):
+    stored_keywords = request.GET.getlist('storedKeywords[]')
+    print("Stored Keywords:", stored_keywords)
+    
+    filtered_organizations = Organization.objects.none()
+    for keyword in stored_keywords:
+        organizations = Organization.objects.filter(organization_name__icontains=keyword)
+        filtered_organizations |= organizations
+    
+    serializer = ClubSerializer(filtered_organizations, many=True)
+    serialized_data = serializer.data
+    print("Serialized Data:", serialized_data)
+    
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def getAreas(request):
@@ -196,7 +223,6 @@ def createBooking(request):
     except Exception as e:
         return Response({'detail': 'Booking not created'},
                         status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['GET'])
 def getCourts(request, pk):

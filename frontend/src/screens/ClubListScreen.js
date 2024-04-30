@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHomeContext } from '../context/HomeContext'
 import { CircularProgress } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
+import { useLocation } from "react-router-dom";
+
 
 function ClubListScreen() {
 
@@ -28,7 +30,9 @@ function ClubListScreen() {
   const [areaName, setAreaName] = useState(selectedArea);
   const [date, setDate] = useState(selectedDate);
 
-  
+  const location = useLocation();
+  // const organizations = location.state.organizations;
+
   const handleSubmit = (event) => {
     event.preventDefault();
     
@@ -150,7 +154,6 @@ function ClubListScreen() {
         <h2>No clubs available :(</h2>
       }  
       </div>
-        
     </div>
   );
 }

@@ -115,7 +115,8 @@
                                                 <td>{{location.address_line_1}}</td>
                                                 <td>{{location.area}}</td>
                                                 <td>Chennai</td>
-                                                <td><a href="{% url 'organization_updatelocation' pk=location.pk %}" class="btn btn-primary">update</a></td>
+                                                <td><a href="{% url 'organization_updatelocation' pk=location.pk %}" class="btn btn-outline-primary"><i class="fa-regular fa-pen-to-square "></i>
+                                                </a></td>
                                             </tr>
                                             {% endfor%}
                                         </tbody>
@@ -126,7 +127,7 @@
                     </div>
                     <div class="text-end mt-3 preview">
                         <a href="{% url 'preview' %}" class="btn btn-primary"
-                          >Proceed to Preview</a
+                          >Proceed to Preview &ensp; <i class="fa-solid fa-angles-right"></i></a
                         >
                     </div>
                 </main>

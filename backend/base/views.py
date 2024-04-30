@@ -1,8 +1,9 @@
+import random
 from django.contrib.auth.models import User
 
-from django.db.models import Q
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.http import JsonResponse
+from pydantic import SerializeAsAny
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -12,23 +13,49 @@ from base.serializers import UserSerializerWithToken
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
+        print('attrs', attrs)
         data = super().validate(attrs)
-
+        print('user', self.user)
+        print(data)
+        print('self',self.user)
         serializer = UserSerializerWithToken(self.user).data
-
+        print('serializer items', serializer.items())
         for k, v in serializer.items():
+            # print('k&V', k,v)
             data[k] = v
 
         return data
 
-
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+        
+# class PhoneLoginView(TokenObtainPairView):
+@api_view(['POST'])  # Change to POST method
+def PhoneLoginView(request):
+    data = request.data
 
+    try: 
+        phone = data['phone_number']
+        print('phone', phone)
+        message = {'success': 'logged in successfully'}
+        customer = Customer.objects.get(phone_number = phone[2:12])
+        print('customer', customer)
+        user = User.objects.get(id = customer.user_id)
+        print('user', user)
+
+        serializer = UserSerializerWithToken(user, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        # return Response(message) 
+        
+    except Customer.DoesNotExist:
+        return Response({'error': 'User not registered'}, status=status.HTTP_404_NOT_FOUND)
+
+    except KeyError:  # Handle specific exception
+        message = {'error': 'phone_number is required'}  # Provide an appropriate error message
+        return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def registerUser(request):
@@ -50,7 +77,7 @@ def registerUser(request):
         customer = Customer.objects.create(
             tenant=Tenant.objects.get(id=1),
             user=user,
-            phone_number=data['phone'],
+            phone_number=data['phoneNumber'],
         )
 
         serializer = UserSerializerWithToken(user, many=False)
@@ -60,11 +87,9 @@ def registerUser(request):
         message = {'detail': 'User with this email already exists'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-
 import os
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from typing import Any, Dict
-from django import http
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.http.response import Http404
@@ -92,7 +117,7 @@ from django.views.generic.base import TemplateView
 from django.shortcuts import redirect
 from datetime import datetime, timedelta
 from django.utils import timezone
-
+from django.db.models import Q
 # from django.db import transaction
 from django.http import JsonResponse
 from .middleware import FirstLoginMiddleware
@@ -103,9 +128,19 @@ class HomePageView(View):
     template_name = 'getstarted.html'
     
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-
+        first_login = request.session.get(
+            'first_login_' + str(request.user.id), False)
+        
+        if not first_login:
+            request.session['first_login_' + str(request.user.id)] = True
+            
+            profile_page_url = reverse(
+                'organization_profile',
+                kwargs={'pk': request.user.organization.pk})
+            
+            return redirect(profile_page_url)
+        
+        return super().get(request, *args, **kwargs)
 
 class OrganizationSignupView(CreateView):
     form_class = OrganizationSignupForm
@@ -357,7 +392,8 @@ class OrganizationProfileView(UpdateView):
                 form.add_error('alt_number',
                                'Alternate number must be at least 10 digits')
                 return self.form_invalid(form)
-
+            
+        messages.success(self.request, 'Profile updated successfully.')
         return super().form_valid(form)
 
     def is_valid_number(self, number):
@@ -1116,3 +1152,4 @@ class TenantOrganizationPreviewView(DetailView):
 
         context['all_locations'] = locationdetails
         return context
+

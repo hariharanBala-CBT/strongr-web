@@ -13,6 +13,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import UpdatePassword from './screens/UpdatePassword'
 import PhoneNumberLoginScreen from './screens/PhoneNumberLoginScreen'
 import { HomeProvider } from "./context/HomeContext";
+import ClubSearchScreen from "./screens/clubSearchScreen";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomeScreen />} />
               <Route path="/clubs/" element={<ClubListScreen />} />
+              <Route path="/clubsearch/" element={<ClubSearchScreen/>} />
               <Route path="/login/" element={<LoginScreen />} />
               <Route path="/phonenumberlogin/" element={<PhoneNumberLoginScreen />} />
               <Route path="/signup/" element={<RegisterScreen />} />

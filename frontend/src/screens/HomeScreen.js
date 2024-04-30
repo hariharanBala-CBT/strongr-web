@@ -3,7 +3,7 @@ import "../css/homescreen.css";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Message from "../components/Message";
-// import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/SearchBar";
 import SelectInput from "../components/SelectInput";
 import DateInput from "../components/DateInput";
 import { useNavigate } from "react-router-dom";
@@ -12,46 +12,56 @@ import {
   listAreas,
   listGames,
   filterLocation,
+  listOrganizations,
 } from "../actions/actions";
-import { useHomeContext } from '../context/HomeContext'
+import { useHomeContext } from "../context/HomeContext";
 import { CircularProgress } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button as BootstrapButton, Form } from "react-bootstrap";
+import axios from "axios";
 
-
-function HomeScreen() {
+function HomeScreen(history) {
   const dispatch = useDispatch();
   const sectionRef = useRef(null);
   const navigate = useNavigate();
-  const { setSelectedDate, setSelectedArea, setSelectedGame  } = useHomeContext();
-
+  const { setSelectedDate, setSelectedArea, setSelectedGame } =
+    useHomeContext();
 
   const handleClick = () => {
     sectionRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  const { areaError, areaLoading, areas } = useSelector((state) => state.areaList);
-  const { gameError, gameLoading, games } = useSelector((state) => state.gameList);
-  
+  const { areaError, areaLoading, areas } = useSelector(
+    (state) => state.areaList
+  );
+  const { gameError, gameLoading, games } = useSelector(
+    (state) => state.gameList
+  );
+
   const handleSubmit = (event) => {
     // event.preventDefault();
     dispatch(filterLocation(areaName, gameName, date));
     navigate("/clubs");
   };
+  const { keyword, setKeyword  } = useHomeContext();
 
   const [gameName, setGameName] = useState(games[0]?.game_name);
   const [areaName, setAreaName] = useState(areas[0]?.area_name);
   const [date, setDate] = useState();
 
   const changeGame = (value) => {
-    setGameName(value)
-  }
+    setGameName(value);
+  };
   const changeArea = (value) => {
-    setAreaName(value)
-  }
+    setAreaName(value);
+  };
   const changeGate = (value) => {
-    setDate(value)
-  }
-  
+    setDate(value);
+  };
+
+  const { searchSuccess } = useSelector((state) => state.listOrganizations);
+
   useEffect(() => {
     dispatch(listGames());
     dispatch(listAreas());
@@ -85,23 +95,43 @@ function HomeScreen() {
   }, [dispatch]);
 
   useEffect(() => {
-    setAreaName(areas[0]?.area_name)
-    setGameName(games[0]?.game_name)
+    setAreaName(areas[0]?.area_name);
+    setGameName(games[0]?.game_name);
   }, [games, areas]);
-  
-  useEffect(() => {
-    setSelectedGame(gameName)
-    setSelectedArea(areaName)
-    setSelectedDate(date)
-  }, [gameName, areaName, date, setSelectedGame, setSelectedArea, setSelectedDate]);
 
   useEffect(() => {
-    if(areaError){
-      toast.error('error in fetching areas')
-    }else if(gameError) {
-      toast.error('error in fetching games')
+    setSelectedGame(gameName);
+    setSelectedArea(areaName);
+    setSelectedDate(date);
+  }, [
+    gameName,
+    areaName,
+    date,
+    setSelectedGame,
+    setSelectedArea,
+    setSelectedDate,
+  ]);
+
+  useEffect(() => {
+    if (areaError) {
+      toast.error("error in fetching areas");
+    } else if (gameError) {
+      toast.error("error in fetching games");
     }
-  }, [areaError, gameError])
+  }, [areaError, gameError]);
+
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      if (keyword) {
+        dispatch(listOrganizations(keyword));
+      }
+    } catch (error) {
+      console.error("Error searching:", error);
+    }
+    navigate("/clubsearch/");
+  };
 
   return (
     <div className="home">
@@ -130,18 +160,29 @@ function HomeScreen() {
             with <span style={{ color: "midnightblue" }}>best deals.</span>
           </h1>
         </div>
-
-        {/* <SearchBar placeholder="Area / Clubs / Locations" /> */}
-
-        {/* <div className="lines">
-          <div className="or-line1"></div>
-          OR
-          <div className="or-line2"></div>
-        </div> */}
-
-        <form onSubmit={handleSubmit} style={{ marginTop : '8rem' }}>
+        <div className="form-section">
+          <Form onSubmit={submitHandler} inline>
+            <div className="search-bar-container">
+              <FontAwesomeIcon className="search-icon" />
+              <Form.Control
+                type="text"
+                name="q"
+                onChange={(e) => setKeyword(e.target.value)}
+                className="mr-sm-2 ml-sm-2 search-input"
+                placeholder="Search..."
+                // required
+              />
+            </div>
+          </Form>
+          <div className="lines">
+            <div className="or-line1"></div>
+            OR
+            <div className="or-line2"></div>
+          </div>
+        </div>
+        <form onSubmit={handleSubmit} style={{ marginTop: "8rem" }}>
           <div className="check-availability-container-home">
-          {gameLoading ? (
+            {gameLoading ? (
               <CircularProgress />
             ) : gameError ? (
               <Message variant="danger">{gameError}</Message>
@@ -152,26 +193,31 @@ function HomeScreen() {
                 value={gameName}
                 onChange={changeGame}
                 options={games}
-                required='required'
+                required="required"
               />
             )}
-            
+
             {areaLoading ? (
               <CircularProgress />
             ) : areaError ? (
               <Message variant="danger">{areaError}</Message>
             ) : (
-            <SelectInput
-              label="area"
-              id="areaName"
-              value={areaName}
-              onChange={changeArea}
-              options={areas}
-              required='required'
-            />)}
+              <SelectInput
+                label="area"
+                id="areaName"
+                value={areaName}
+                onChange={changeArea}
+                options={areas}
+                required="required"
+              />
+            )}
 
-            <DateInput id="date" required='required' value={date} onChange={changeGate} />
-
+            <DateInput
+              id="date"
+              required="required"
+              value={date}
+              onChange={changeGate}
+            />
           </div>
           <div className="availability-btn-class">
             <Button

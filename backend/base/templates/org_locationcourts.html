@@ -29,7 +29,7 @@
 
         th,
         td {
-            text-align: left;
+            text-align: center;
             padding: 15px;
         }
 
@@ -42,6 +42,10 @@
         /* .datatable-top {
             visibility: hidden;
         } */
+        .update-icon{
+            display: flex;
+            justify-content: center;
+        }
     </style>
 
 </head>
@@ -122,7 +126,7 @@
                                 <div class="location-card card-header">
                                     <div>
                                         Court</div>
-                                    <div><a href= "{% url 'add-court' %}" class="btn btn-success align-self-end">Add Court</a>
+                                    <div><a href= "{% url 'add-court' %}" class="btn btn-success align-self-end"><i class="fa-solid fa-plus"></i></a>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -141,14 +145,20 @@
                                             {% for court in courts %}
                                                 <tr>
                                                     <td>{{ court.name }}</td>
-                                                    <td>
-                                                        <a href="{% url 'update-court' court.pk %}" class="btn btn-primary">Update</a>
-                                                    </td>
-                                                    <td>
-                                                        <a href="{% url 'delete-court' court.pk %}" class="btn btn-danger">Delete</a>
-                                                    <td>
-                                                        <a href="{% url 'multiple-slot' court.pk %}" class="btn btn-success">Create/Update slot</a>
-                                                    </td>
+                                                        <td>
+                                                            <div class="update-icon">
+                                                                <a href="{% url 'update-court' court.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="update-icon">
+                                                                <a href="{% url 'delete-court' court.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                                            </div>
+                                                        <td>
+                                                            <div class="update-icon">
+                                                                <a href="{% url 'multiple-slot' court.pk %}" class="btn btn-success">Create slot</a>
+                                                            </div>
+                                                        </td>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -159,8 +169,8 @@
                         </div>
                     </div>
                     <div class="buttons px-4 py-4" style="margin-left: 40%;">
-                        <div><a href="{% url 'organization_imageslist' %}" class="btn btn-secondary">Back</a></div>
-                        <div><a href="{% url 'slot-list' %}" type="submit" class="btn btn-primary">Next</a></div>
+                        <div><a href="{% url 'organization_imageslist' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i></a></div>
+                        <div><a href="{% url 'slot-list' %}" type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right-long"></i></a></div>
                     </div>
             </main>
             <footer class="py-4 bg-light mt-auto">

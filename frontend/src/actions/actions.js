@@ -81,6 +81,12 @@ import {
   CLUB_REVIEW_REQUEST,
   CLUB_REVIEW_SUCCESS,
   CLUB_REVIEW_FAIL,
+  SEARCH_ORGANIZATIONS_REQUEST,
+  SEARCH_ORGANIZATIONS_SUCCESS,
+  SEARCH_ORGANIZATIONS_FAIL,
+  RECENT_SEARCH_REQUEST,
+  RECENT_SEARCH_SUCCESS,
+  RECENT_SEARCH_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -95,15 +101,13 @@ export const filterLocation =
           game: gameName,
           date: date,
         },
-      });
+      }); 
 
       dispatch({
         type: FILTER_CLUB_SUCCESS,
         payload: data,
       });
-      
     } catch (error) {
-
       dispatch({
         type: FILTER_CLUB_FAIL,
         payload:
@@ -303,7 +307,7 @@ export const listGames = () => async (dispatch) => {
   }
 };
 
-export const login = (username, password) => async (dispatch) => {
+export const login = (username, password, phoneNumber) => async (dispatch) => {
   try {
     dispatch({
       type: USER_LOGIN_REQUEST,
@@ -317,7 +321,7 @@ export const login = (username, password) => async (dispatch) => {
 
     const { data } = await axios.post(
       "/login/",
-      { username: username, password: password },
+      { username: username, password: password, phoneNumber: phoneNumber },
       config
     );
 
@@ -343,45 +347,52 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT });
 };
 
-export const register = (name, email, password, phoneNumber, otp) => async (dispatch) => {
-  try {
-    dispatch({
-      type: USER_REGISTER_REQUEST,
-    });
+export const register =
+  (name, email, password, phoneNumber, otp) => async (dispatch) => {
+    try {
+      dispatch({
+        type: USER_REGISTER_REQUEST,
+      });
 
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
-    };
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
 
-    const { data } = await axios.post(
-      "/register/",
-      { name: name, email: email, password: password, phone: phoneNumber, otp: otp },
-      config
-    );
+      const { data } = await axios.post(
+        "/register/",
+        {
+          name: name,
+          email: email,
+          password: password,
+          phone: phoneNumber,
+          otp: otp,
+        },
+        config
+      );
 
-    dispatch({
-      type: USER_REGISTER_SUCCESS,
-      payload: data,
-    });
+      dispatch({
+        type: USER_REGISTER_SUCCESS,
+        payload: data,
+      });
 
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      payload: data,
-    });
+      dispatch({
+        type: USER_LOGIN_SUCCESS,
+        payload: data,
+      });
 
-    localStorage.setItem("userInfo", JSON.stringify(data));
-  } catch (error) {
-    dispatch({
-      type: USER_REGISTER_FAIL,
-      payload:
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message,
-    });
-  }
-};
+      localStorage.setItem("userInfo", JSON.stringify(data));
+    } catch (error) {
+      dispatch({
+        type: USER_REGISTER_FAIL,
+        payload:
+          error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+      });
+    }
+  };
 
 export const createBooking = (booking) => async (dispatch, getState) => {
   try {
@@ -398,13 +409,12 @@ export const createBooking = (booking) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.post(`/api/booking/create/`,booking, config);
+    const { data } = await axios.post(`/api/booking/create/`, booking, config);
 
     dispatch({
       type: BOOKING_CREATE_SUCCESS,
       payload: data,
     });
-    
   } catch (error) {
     dispatch({
       type: BOOKING_CREATE_FAIL,
@@ -513,7 +523,9 @@ export const listCourts = (id, gameName) => async (dispatch) => {
   try {
     dispatch({ type: COURT_LIST_REQUEST });
 
-    const { data } = await axios.get(`/api/courts/${id}/`, { params: { game: gameName } });
+    const { data } = await axios.get(`/api/courts/${id}/`, {
+      params: { game: gameName },
+    });
 
     dispatch({
       type: COURT_LIST_SUCCESS,
@@ -551,19 +563,19 @@ export const getCourt = (id) => async (dispatch) => {
   }
 };
 
-
 export const fetchAvailableSlots = (courtId, date) => async (dispatch) => {
   try {
     dispatch({ type: AVAILABLE_SLOT_REQUEST });
 
-    const { data } = await axios.get(`/api/slots/`, { params: { courtId : courtId , date: date}});
+    const { data } = await axios.get(`/api/slots/`, {
+      params: { courtId: courtId, date: date },
+    });
 
     dispatch({
       type: AVAILABLE_SLOT_SUCCESS,
       payload: data,
     });
   } catch (error) {
-
     console.error("Error fetching available slots:", error);
 
     dispatch({
@@ -576,6 +588,30 @@ export const fetchAvailableSlots = (courtId, date) => async (dispatch) => {
   }
 };
 
+export const listOrganizations = (keyword) => async (dispatch) => {
+  try {
+    dispatch({ type: SEARCH_ORGANIZATIONS_REQUEST });
+
+    const { data } = await axios.get("/api/search/", {
+      params: { keyword: keyword },
+    });
+
+
+    dispatch({
+      type: SEARCH_ORGANIZATIONS_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: SEARCH_ORGANIZATIONS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
 
 export const getSlotDetails = (id) => async (dispatch) => {
   try {
@@ -588,7 +624,6 @@ export const getSlotDetails = (id) => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-
     console.error("Error fetching available slots:", error);
 
     dispatch({
@@ -621,7 +656,7 @@ export const listcustomerDetails = (id) => async (dispatch) => {
     });
   }
 };
-
+ 
 export const updateUserProfile = (user) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -639,11 +674,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.put(
-      `/api/profile/update/`,
-      user,
-      config
-    );
+    const { data } = await axios.put(`/api/profile/update/`, user, config);
 
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
@@ -718,7 +749,9 @@ export const generateOTP = (email) => async (dispatch) => {
   try {
     dispatch({ type: GENERATE_OTP_REQUEST });
 
-    const { data } = await axios.get(`/api/sendotp/`, {params: { email: email }});
+    const { data } = await axios.get(`/api/sendotp/`, {
+      params: { email: email },
+    });
 
     dispatch({
       type: GENERATE_OTP_SUCCESS,
@@ -735,7 +768,6 @@ export const generateOTP = (email) => async (dispatch) => {
   }
 };
 
-
 export const bookingCancel = (id) => async (dispatch) => {
   try {
     dispatch({ type: BOOKING_CANCEL_REQUEST });
@@ -746,7 +778,6 @@ export const bookingCancel = (id) => async (dispatch) => {
       type: BOOKING_CANCEL_SUCCESS,
       payload: data,
     });
-
   } catch (error) {
     dispatch({
       type: BOOKING_CANCEL_FAIL,
@@ -853,3 +884,29 @@ export const loginPhoneNumber = (phoneNumber) => async (dispatch) => {
     });
   }
 };
+
+export const RecentSearch = (storedKeywords) => async (dispatch) => {
+  try {
+    dispatch({ type: RECENT_SEARCH_REQUEST });
+    
+    const { data } = await axios.get("/api/recentsearch/", {
+      params: {
+        storedKeywords: storedKeywords,
+      },
+    });
+
+    dispatch({
+      type: RECENT_SEARCH_SUCCESS,
+      payload: data,
+    });
+    
+  } catch (error) {
+    dispatch({
+      type: RECENT_SEARCH_FAIL,
+      payload: error.response && error.response.data.detail
+        ? error.response.data.detail
+        : error.message,
+    });
+  }
+};
+

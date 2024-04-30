@@ -104,6 +104,11 @@ function LoginScreen() {
             <a href="/phonenumberlogin">login</a>
           </span>
           <span>
+            Login through Phone number&nbsp;
+            <a href="/phonenumber">Login</a>
+          </span>
+          
+          <span>
             Dont you have an Account?&nbsp;
             <a href="/signup">SignUp</a>
           </span>

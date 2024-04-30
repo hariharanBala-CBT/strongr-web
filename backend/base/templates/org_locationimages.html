@@ -29,7 +29,7 @@
 
         th,
         td {
-            text-align: left;
+            text-align: center;
             padding: 15px;
         }
 
@@ -39,7 +39,10 @@
             box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
         }
 
-
+        .update-icon{
+            display: flex;
+            justify-content: center;
+        }
     </style>
 
 </head>
@@ -113,47 +116,42 @@
                                 <div class="location-card card-header">
                                     <div>
                                         Image</div>
-                                    <div><a href= "{% url 'organization_images' %}" class="btn btn-success align-self-end">Add Image</a>
+                                    <div><a href= "{% url 'organization_images' %}" class="btn btn-success align-self-end"><i class="fa-solid fa-plus"></i></a>
                                     </div>
                                 </div>
                                 <div class="card-body">
                                     <table class="table-bordered">
                                         <thead>
                                             <tr>
-                                           
-                                                <th>Images</th>
+                                                <th>Pictures</th>
                                                 <th>Edit</th>
                                                 <th>Delete</th>
-
                                             </tr>
                                         </thead>
+                                        
                                         
                                         <tbody>
                                             {% for image in images %}
                                                 <tr>
-                                                    
-                                                        <td>
-                                                            {% if image.image %}
-                                                                <img src="{{ image.image.url }}" alt="Image" width="70" height="70">
-                                                            {% else %}
-                                                                No Image
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if image.image %}
-                                                                <a href="{% url 'organization_updateimages' pk=image.pk %}" class="btn btn-primary">Update</a>
-                                                            {% else %}
-                                                                <a href="{% url 'organization_updateimages' pk=image.pk %}" class="btn btn-primary">Add</a>
-                                                            {% endif %}
-                                                        </td>
-                                                        <td>
-                                                            {% if image.image %}
-                                                                <a href="{% url 'organization_deleteimage' pk=image.pk %}" class="btn btn-danger delete-image-btn">Delete</a>
-                                                            {% else %}
-                                                            <a href="{% url 'organization_deleteimage' pk=image.pk %}"  class="btn btn-danger delete-image-btn disabled">Delete</a>
-                                                            {% endif %}
-                                                        </td>
-                                                        
+                                                    <td>
+                                                        <div class="update-icon">
+                                                        {% if image.image %}
+                                                            <img src="{{ image.image.url }}" alt="Image" width="70" height="70">
+                                                        {% else %}
+                                                            No Image
+                                                        {% endif %}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                           <div class="update-icon">
+                                                        <a href="{% url 'organization_updateimages' pk=image.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
+                                                           </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="update-icon">
+                                                        <a href="{% url 'organization_deleteimage' pk=image.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                                                        </div>
+                                                    </td>                                                     
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
@@ -164,8 +162,8 @@
                         </div>
                     </div>
                     <div class="buttons px-4 py-4" style="margin-left: 40%;">
-                        <div><a href="{% url 'organization_locationgamelist' %}" class="btn btn-secondary">Back</a></div>
-                        <div><a href="{% url 'court-list' %}" type="submit" class="btn btn-primary">Next</a></div>
+                        <div><a href="{% url 'organization_locationgamelist' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i></a></div>
+                        <div><a href="{% url 'court-list' %}" type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right-long"></i></a></div>
                     </div>
             </main>
             <footer class="py-4 bg-light mt-auto">

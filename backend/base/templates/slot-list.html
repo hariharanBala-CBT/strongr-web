@@ -30,7 +30,7 @@
             background-color: #ffffff !important;
         }
         th, td {
-        
+            
             padding: 1rem;
         }
         th {
@@ -129,7 +129,7 @@
                         <div class="location-card card-header">
                             <div>Slots</div>
                             <div>
-                                <a href="{% url 'add-slot' %}" class="btn btn-success align-self-end">Add Slot</a>
+                                <a href="{% url 'add-slot' %}" class="btn btn-success align-self-end"><i class="fa-solid fa-plus"></i></a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -155,10 +155,10 @@
                                             <tr>
                                                 <td>{{ slot.court.name }} ({{ slot.get_days_display }} -- {{ slot.start_time }} - {{ slot.end_time }})</td>
                                                 <td>
-                                                    <a href="{% url 'update-slot' slot.pk %}" class="btn btn-primary">Update</a>
+                                                    <a href="{% url 'update-slot' slot.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
                                                 </td>
                                                 <td>
-                                                    <a href="{% url 'delete-slot' slot.pk %}" class="btn btn-danger">Delete</a>
+                                                    <a href="{% url 'delete-slot' slot.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -169,8 +169,8 @@
                     </div>
                 </div>
                 <div class="buttons px-4 py-4" style="margin-left: 40%;">
-                    <div><a href="{% url 'court-list' %}" class="btn btn-secondary">Back</a></div>
-                    <div><a href="{% url 'organization_locationamenities' %}" type="submit" class="btn btn-primary">Next</a></div>
+                    <div><a href="{% url 'court-list' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i></a></div>
+                    <div><a href="{% url 'organization_locationamenities' %}" type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right-long"></i></a></div>
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">

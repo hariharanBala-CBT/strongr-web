@@ -4,7 +4,9 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
      path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+     path('login/phone/', PhoneLoginView, name='phone_login'),
      path('register/', registerUser, name='register'),
+     # path('generate_otp/', generate_otp, name='generate_otp'),
      path('home/', HomePageView.as_view(),name='home_page'),
      path('signup/', OrganizationSignupView.as_view(), name='signup'),
      path('orglogin/', LoginView.as_view(), name='login'),
