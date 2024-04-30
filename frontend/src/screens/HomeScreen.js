@@ -3,7 +3,6 @@ import "../css/homescreen.css";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Message from "../components/Message";
-import SearchBar from "../components/SearchBar";
 import SelectInput from "../components/SelectInput";
 import DateInput from "../components/DateInput";
 import { useNavigate } from "react-router-dom";
@@ -18,8 +17,7 @@ import { useHomeContext } from "../context/HomeContext";
 import { CircularProgress } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button as BootstrapButton, Form } from "react-bootstrap";
-import axios from "axios";
+import { Form } from "react-bootstrap";
 
 function HomeScreen(history) {
   const dispatch = useDispatch();
@@ -59,8 +57,6 @@ function HomeScreen(history) {
   const changeGate = (value) => {
     setDate(value);
   };
-
-  const { searchSuccess } = useSelector((state) => state.listOrganizations);
 
   useEffect(() => {
     dispatch(listGames());
@@ -180,7 +176,7 @@ function HomeScreen(history) {
             <div className="or-line2"></div>
           </div>
         </div>
-        <form onSubmit={handleSubmit} style={{ marginTop: "8rem" }}>
+        <form onSubmit={handleSubmit}>
           <div className="check-availability-container-home">
             {gameLoading ? (
               <CircularProgress />

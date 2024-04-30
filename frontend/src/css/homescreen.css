@@ -76,8 +76,8 @@
 }
 
 .search-bar-container {
-  margin-top: 4rem;
-  margin-bottom: 4rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
   text-align: center;
 }
 
@@ -86,6 +86,7 @@
   justify-content: center;
   column-gap: 10rem;
   margin: 3rem;
+  margin-top: 5rem;
   font-size: 16px;
   align-items: center;
   flex-grow: inherit;
@@ -141,7 +142,7 @@
 .or-line2 {
   border-top: 2px solid #ccc;
   width: 80%;
-  margin: 1rem auto;
+  margin: 0.5rem auto;
   margin-right: 40px;
   margin-left: 40px;
 }

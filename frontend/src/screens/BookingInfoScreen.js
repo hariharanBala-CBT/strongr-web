@@ -16,7 +16,6 @@ import {
   listclubLocation,
   listclubGame,
   listCourts,
-  // createBooking,
   fetchAvailableSlots,
   login,
 } from "../actions/actions";
@@ -63,12 +62,7 @@ function BookingInfoScreen() {
   const [password, setPassword] = useState("");
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
-
-  useEffect(() => {
-    if (courts?.length > 0) {
-      setCourtName(courts[0].name);
-    }
-  }, [courts]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
 
   const handleAreaChange = (value) => {
     setAreaName(value);
@@ -88,55 +82,32 @@ function BookingInfoScreen() {
     setSelectedCourt(value);
   };
 
-  const getSelectedGamePricing = () => {
-    const selectedGame = clubGame?.find(
-      (game) => game.game_type.game_name === gameName
-    );
-    return Number(selectedGame?.pricing).toFixed(0);
-  };
-
-  const { userInfo } = useSelector((state) => state.userLogin);
-
-  const clubPrice = Number(getSelectedGamePricing()).toFixed(0);
-  const taxPrice = (Number(clubPrice) * 0.05).toFixed(0);
-  const bookingFee = 10;
-  const totalPrice = (
-    Number(clubPrice) +
-    Number(taxPrice) +
-    Number(bookingFee)
-  ).toFixed(0);
-
   const handleDateChange = (selectedDate) => {
     setDate(selectedDate);
   };
-
+  
   useEffect(() => {
     dispatch({ type: BOOKING_CREATE_RESET });
     dispatch({ type: BOOKING_DETAILS_RESET });
-  }, [dispatch]);
-
-  useEffect(() => {
     const storedSelectedGame = localStorage.getItem("selectedGame");
     const storedSelectedArea = localStorage.getItem("selectedArea");
     const storedSelectedDate = localStorage.getItem("selectedDate");
     const storedSelectedCourt = localStorage.getItem("selectedCourt");
     const storedSelectedSlot = localStorage.getItem("selectedSlot");
-
+  
     if (storedSelectedGame) setGameName(storedSelectedGame);
     if (storedSelectedArea) setAreaName(storedSelectedArea);
     if (storedSelectedDate) setDate(storedSelectedDate);
     if (storedSelectedCourt) setCourtName(storedSelectedCourt);
     if (storedSelectedSlot) setCourtName(storedSelectedSlot);
-  }, []);
-
-  useEffect(() => {
+  
     const fetchData = async () => {
       dispatch(listclubLocation(id));
       dispatch(listclubGame(id));
       dispatch(listCourts(id, gameName));
     };
     fetchData();
-
+  
     const dtToday = new Date();
     const month = dtToday.getMonth() + 1;
     const day = dtToday.getDate();
@@ -144,7 +115,7 @@ function BookingInfoScreen() {
     const minDate = `${year}-${month < 10 ? "0" + month : month}-${
       day < 10 ? "0" + day : day
     }`;
-
+  
     const dtMax = new Date(
       dtToday.getFullYear(),
       dtToday.getMonth() + 1,
@@ -156,22 +127,31 @@ function BookingInfoScreen() {
     const maxDate = `${maxYear}-${maxMonth < 10 ? "0" + maxMonth : maxMonth}-${
       maxDay < 10 ? "0" + maxDay : maxDay
     }`;
-
+  
     const dateInput = document.getElementById("date");
     if (dateInput) {
       dateInput.setAttribute("min", minDate);
       dateInput.setAttribute("max", maxDate);
     }
   }, [dispatch, gameName, id]);
-
+  
   useEffect(() => {
     const storedSelectedCourt = localStorage.getItem("selectedCourt");
-
-    const sCourt = courts?.find((court) => court.name === storedSelectedCourt);
-    const courtId = sCourt?.id;
-    dispatch(fetchAvailableSlots(courtId, date));
+  
+    if (courts?.length > 0 && courtName === '') {
+      setCourtName(storedSelectedCourt || courts[0].name); // Set the default court to stored selected court or the first court if not available
+    }
+  
+    const selectedCourt = courts?.find((court) => court.name === courtName);
+    const courtId = selectedCourt?.id;
+  
+    if (courtId && date) {
+      setLoadingSlots(true);
+  
+      dispatch(fetchAvailableSlots(courtId, date)).then(() => setLoadingSlots(false));
+    }
   }, [date, dispatch, courts, courtName]);
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (selectedSlot) {
@@ -230,6 +210,24 @@ function BookingInfoScreen() {
     }
   }, [slots, setSelectedSlot]);
 
+  const { userInfo } = useSelector((state) => state.userLogin);
+
+  const getSelectedGamePricing = () => {
+    const selectedGame = clubGame?.find(
+      (game) => game.game_type.game_name === gameName
+    );
+    return Number(selectedGame?.pricing).toFixed(0);
+  };
+
+  const clubPrice = Number(getSelectedGamePricing()).toFixed(0);
+  const taxPrice = (Number(clubPrice) * 0.05).toFixed(0);
+  const bookingFee = 10;
+  const totalPrice = (
+    Number(clubPrice) +
+    Number(taxPrice) +
+    Number(bookingFee)
+  ).toFixed(0);
+
   return (
     <div>
       <Header location="nav-all" />
@@ -283,7 +281,9 @@ function BookingInfoScreen() {
                 label="Court"
               />
 
-              {slots?.length === 0 ? (
+              {loadingSlots ? (
+                <div>Loading slots...</div>
+              ) : slots?.length === 0 ? (
                 <Alert severity="error">No slots available..</Alert>
               ) : (
                 <SelectInput
