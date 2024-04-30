@@ -12,6 +12,7 @@ from base.serializers import UserSerializerWithToken
 
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
@@ -821,28 +822,30 @@ class PreviewView(FormView):
     form_class = TermsandConditionsForm
     success_url = reverse_lazy('organization_page')
 
-    def get_context_data(self):
-        context = {}
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         locationdetails = []
         locations = OrganizationLocation.objects.filter(
             organization__user=self.request.user)
         for location in locations:
             context_item = {}
             context_item['location'] = location
-            context_item[
-                'games'] = OrganizationLocationGameType.objects.filter(
-                    organization_location=location)
-            context_item[
-                'amenities'] = OrganizationLocationAmenities.objects.filter(
-                    organization_location=location)
-            context_item[
-                'workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
-                    organization_location=location)
+            context_item['games'] = OrganizationLocationGameType.objects.filter(
+                organization_location=location)
+            context_item['amenities'] = OrganizationLocationAmenities.objects.filter(
+                organization_location=location)
+            context_item['workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
+                organization_location=location)
+            context_item['courts'] = Court.objects.filter(
+                location=location)
+            context_item['images'] = OrganizationGameImages.objects.filter(
+                organization=location)
             locationdetails.append(context_item)
         context['all_locations'] = locationdetails
         profile = Organization.objects.filter(user=self.request.user)
         context['profiles'] = profile
         return context
+
     
     def form_valid(self, form):
         organization = Organization.objects.get(user=self.request.user)
@@ -907,37 +910,37 @@ class OrganizationListView(ListView):
     template_name = 'organization_list.html'
     context_object_name = 'organizations'
 
-class TenantOrganizationPreviewView(DetailView):
-    model = Organization
-    template_name = 'tenant_organization_preview.html'
-    context_object_name = 'organization'
+# class TenantOrganizationPreviewView(DetailView):
+#     model = Organization
+#     template_name = 'tenant_organization_preview.html'
+#     context_object_name = 'organization'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        organization = self.object  # Get the organization object aka pk
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         organization = self.object  # Get the organization object aka pk
 
-        # Fetch all locations related to the organization
-        locations = OrganizationLocation.objects.filter(
-            organization=organization)
+#         # Fetch all locations related to the organization
+#         locations = OrganizationLocation.objects.filter(
+#             organization=organization)
 
-        # Create a list to store location details
-        locationdetails = []
+#         # Create a list to store location details
+#         locationdetails = []
 
-        for location in locations:
-            context_item = {}
-            context_item['location'] = location
-            context_item['games'] = OrganizationLocationGameType.objects.filter(
-                organization_location=location)
-            context_item['amenities'] = OrganizationLocationAmenities.objects.filter(
-                organization_location=location)
-            context_item['workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
-                organization_location=location)
-            context_item['courts'] = Court.objects.filter(
-                location=location)
-            locationdetails.append(context_item)
+#         for location in locations:
+#             context_item = {}
+#             context_item['location'] = location
+#             context_item['games'] = OrganizationLocationGameType.objects.filter(
+#                 organization_location=location)
+#             context_item['amenities'] = OrganizationLocationAmenities.objects.filter(
+#                 organization_location=location)
+#             context_item['workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
+#                 organization_location=location)
+#             context_item['courts'] = Court.objects.filter(
+#                 location=location)
+#             locationdetails.append(context_item)
 
-        context['all_locations'] = locationdetails
-        return context
+#         context['all_locations'] = locationdetails
+#         return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -950,6 +953,8 @@ class ApprovalListView(ListView):
             tenant=TenantUser.objects.get(user=self.request.user).tenant,
             status=Organization.IN_PROGRESS)
 
+@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class ChangeOrganizationStatusView(View):
     def post(self, request, organization_id, new_status):
         # Get the organization object using the organization_id
@@ -959,6 +964,30 @@ class ChangeOrganizationStatusView(View):
         print(new_status)
         organization.status = new_status
         organization.save()
+
+        if new_status == '1':
+            status_text = 'Approved'
+        elif new_status == '4':
+            status_text = 'Cancelled'
+        else:
+            status_text = 'Unknown'  # Default status text
+
+    
+    #send mail:
+        subject = 'Organization status'
+        message = render_to_string(
+            'status_mail.html', {
+                'user': organization.user,
+                'status': status_text
+            })
+        from_email = 'testgamefront@gmail.com'
+        recipient_list = [organization.user.email]
+        send_mail(subject,
+                    message,
+                    from_email,
+                    recipient_list,
+                    fail_silently=False)
+        print(organization.user.email)
 
     # add a success message
         messages.success(request, 'Organization status updated successfully.')
@@ -978,6 +1007,14 @@ class ChangeOrganizationLocationStatusView(View):
     # add a success message
         messages.success(request, 'Organization Location status updated successfully.')
 
+        user = request.user
+        if user.groups.filter(name='Organization').exists():
+            return redirect('preview')
+        elif user.groups.filter(name='Tenant').exists():
+            page_url = reverse('organization_preview', kwargs={'pk': organizationLocation.organization.pk})
+            return redirect(page_url)
+        elif user.groups.filter(name='Customer').exists():
+            return redirect('error-url')
 
 @method_decorator(login_required, name='dispatch')
 class ChangePasswordView(PasswordChangeView):
@@ -1125,6 +1162,7 @@ class TenantOrganizationPreviewView(DetailView):
     model = Organization
     template_name = 'tenant_organization_preview.html'
     context_object_name = 'organization'
+    success_url = reverse_lazy('organization_preview')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1148,6 +1186,9 @@ class TenantOrganizationPreviewView(DetailView):
                 organization_location=location)
             context_item['courts'] = Court.objects.filter(
                 location=location)
+            context_item['images'] = OrganizationGameImages.objects.filter(
+                organization=location)
+
             locationdetails.append(context_item)
 
         context['all_locations'] = locationdetails

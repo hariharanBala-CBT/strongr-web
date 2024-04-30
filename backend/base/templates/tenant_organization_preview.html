@@ -339,6 +339,18 @@
                                         {% endif %}
                                     </li>
                                 </ul>
+                                {% if organization.status != 1 %}
+                                    <div class="btn-group" role="group">
+                                        <form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-success me-2">Approve</button>
+                                        </form>
+                                        <form method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Reject</button>
+                                        </form>
+                                    </div>
+                                 {% endif %}
                             </div>
                         </div>
                 
@@ -481,20 +493,9 @@
 
                 <!-- Organization Status Buttons -->
                 <div class="text-center mb-4">
-                    {% if organization.status != 1 %}
-                    <div class="btn-group" role="group">
-                        <form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-success me-2">Approve</button>
-                        </form>
-                        <form method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Reject</button>
-                        </form>
-                    </div>
-                    {% endif %}
+                    
                     <!-- Back Button -->
-                    <a href="{% url 'organization_list' %}" class="btn btn-primary mt-4" style="border-radius: 50%; height: max-content; width: max-content;"><i
+                    <a href="{% url 'organization_list' %}" class="btn btn-primary mt-4 text mb-4" style="border-radius: 50%; height: max-content; width: max-content;"><i
                             class="fas fa-arrow-left"></i></a>
                 </div>
             </main>

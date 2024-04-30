@@ -454,10 +454,22 @@
                                                     </table>
                                                 </form>
                                                 <!-- Courts -->
-                                                <h5><strong>Courts</strong></h5>
+                                                <h5><strong>Courts:</strong></h5>
                                                 <ul>
                                                     {% for court in location_item.courts %}
-                                                    <li>{{ court.name }}</li>
+                                                        
+                                                            <li>{{ court.name }}</li>
+                                                       
+                                                    {% endfor %}
+                                                </ul>
+                                                <h5><strong>Images:</strong></h5>
+                                                <ul>
+                                                    {% for image in location_item.images %}
+                                                        {% if image.image %}
+                                                            <img src="{{ image.image.url }}" alt="Image" width="70" height="70">
+                                                        {% else %}
+                                                            No Image
+                                                        {% endif %}
                                                     {% endfor %}
                                                 </ul>
                                                 <div class="text-center mb-4">
@@ -482,7 +494,7 @@
                     </div>
                 </div>
                 {% for profile in profiles %}
-                    {% if profile.status == 1 and profile.status == 3 %}
+                    {% if profile.status != 1 and profile.status != 3 %}
                         <hr style="height:2px;border-width:0;color:gray;background-color:gray">
                         <div class="my-4"
                             style="  display: flex;justify-content: center;align-items: center; flex-direction: row;">
