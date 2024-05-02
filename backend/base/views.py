@@ -140,8 +140,7 @@ class HomePageView(View):
                 kwargs={'pk': request.user.organization.pk})
             
             return redirect(profile_page_url)
-        
-        return super().get(request, *args, **kwargs)
+        return render(request, self.template_name)
 
 class OrganizationSignupView(CreateView):
     form_class = OrganizationSignupForm
@@ -868,6 +867,12 @@ class TermsandConditionsView(FormView):
         print(context)
         return context
 
+@method_decorator(login_required, name='dispatch')
+class TenantTermsandConditionsView(FormView):
+    template_name = 'terms.html'
+    form_class = TermsandConditionsForm
+    # success_url = reverse_lazy('organization_page')
+
 
 @method_decorator(login_required, name='dispatch')
 class StatusView(TemplateView):
@@ -965,9 +970,9 @@ class ChangeOrganizationStatusView(View):
         organization.status = new_status
         organization.save()
 
-        if new_status == '1':
+        if new_status == 1:
             status_text = 'Approved'
-        elif new_status == '4':
+        elif new_status == 4:
             status_text = 'Cancelled'
         else:
             status_text = 'Unknown'  # Default status text
@@ -1124,11 +1129,17 @@ class OrganizationListView(ListView):
     template_name = 'organization_list.html'
     context_object_name = 'organizations'
 
+# @method_decorator(login_required, name='dispatch')
+# class LocationListView(ListView):
+#     model = Organization
+#     template_name = 'tenant_location_list.html'
+#     context_object_name = 'organizations'
+
 @method_decorator(login_required, name='dispatch')
 class LocationListView(ListView):
-    model = Organization
-    template_name = 'tenant_location_list.html'
-    context_object_name = 'organizations'
+    model = OrganizationLocation
+    template_name = 'tenant_location_list2.html'
+    context_object_name = 'organizationlocations'
 
 
 @method_decorator(login_required, name='dispatch')

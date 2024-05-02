@@ -74,17 +74,19 @@
                 <main>
                     <div class="container-fluid px-4">
                         <h1 class="mt-4 mb-4" style="margin-left: 35%;">Location List</h1>
-                    
+                        <p style="margin-left: 30%;"><small>Note: Only approved organization locations appear here</small></p>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Organization List
+                                Location List
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
+                                            <th>Location</th>
+                                            <th>Area</th>
                                             <th>Phone Number</th>
                                             <th>Status</th>
                                         </tr>
@@ -92,18 +94,22 @@
                                     <tfoot>
                                         <tr>
                                             <th>Name</th>
+                                            <th>Location</th>
+                                            <th>Area</th>
                                             <th>Phone Number</th>
                                             <th>Status</th>
                                             
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        {% for organization in organizations %}
-                                            {% if organization.status == 1 %}
+                                        {% for location in organizationlocations %}
+                                            {% if location.organization.status == 1 %}
                                                 <tr>
-                                                    <td><a href="{% url 'organization_preview' organization.pk %}">{{ organization.organization_name }}</a></td>
-                                                    <td>{{ organization.phone_number }}</td>
-                                                    <td>{{ organization.get_status_display }}</td>
+                                                    <td><a href="{% url 'organization_preview' location.organization.pk %}">{{ location.organization.organization_name }}</a></td>
+                                                    <td>{{ location.address_line_1 }}</td>
+                                                    <td>{{ location.area }}</td>
+                                                    <td>{{ location.organization.phone_number }}</td>
+                                                    <td>{{ location.get_status_display }}</td>
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}

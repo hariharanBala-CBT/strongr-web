@@ -43,7 +43,8 @@ urlpatterns = [
      path('organizationlocationworkingdays/' , OrganizationWorkingDaysView.as_view(), name='organization_locationworkingdays'),
      path('preview/' ,PreviewView.as_view(), name='preview'),
      path('termsandconditions/' ,TermsandConditionsView.as_view(),name='termsandconditions'),
-    
+    path('terms-conditions/' ,TenantTermsandConditionsView.as_view(),name='termsconditions'),
+
      path('user/' ,TenantEmployeeHomeView.as_view(), name='tenantuser_page'),
      path('organization_list/' ,OrganizationListView.as_view(),name='organization_list'),
      path('location_list/' ,LocationListView.as_view(),name='location_list'),

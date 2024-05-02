@@ -287,7 +287,7 @@
                             Bookings
                         </a>
                         <div class="sb-sidenav-menu-heading">Approvals</div>
-                        <a class="nav-link" href="{% url 'organization_list'  %}">
+                        <a class="nav-link" href="{% url 'organization_list'  %}" style="color: white; background-color: rgb(68, 68, 68);">
                             <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                             Organizations
                         </a>
@@ -308,6 +308,7 @@
         <!-- Main Content -->
         <div id="layoutSidenav_content">
             <main class="container-fluid mt-4" style="margin-top: 210px;">
+                <h1 class="mt-1 mb-4" style="margin-left: 35%;">Organization Details</h1>
                 <!-- Organization Card -->
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">
@@ -507,9 +508,9 @@
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; Your Website 2023</div>
                         <div>
-                            <a href="#">Privacy Policy</a>
+                            <a href="{% url 'termsconditions' %}">Privacy Policy</a>
                             &middot;
-                            <a href="{% url 'termsandconditions' %}">Terms &amp; Conditions</a>
+                            <a href="{% url 'termsconditions' %}">Terms &amp; Conditions</a>
                         </div>
                     </div>
                 </div>

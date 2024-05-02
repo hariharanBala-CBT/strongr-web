@@ -43,7 +43,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="{% url 'tenantuser_page' %}">
+                            <a class="nav-link" href="{% url 'tenantuser_page' %}" style="color: white; background-color: rgb(68, 68, 68);">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
@@ -73,7 +73,7 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">{{user.username}}</h1>
+                        <h1 class="mt-4 mb-4" style="margin-left: 30%;">Cancelled Organization List</h1>
                         
                         <div class="card mb-4">
                             <div class="card-header">
@@ -119,9 +119,9 @@
                         <div class="d-flex align-items-center justify-content-between small">
                             <div class="text-muted">Copyright &copy; Your Website 2023</div>
                             <div>
-                                <a href="{% url 'termsandconditions' %}">Privacy Policy</a>
+                                <a href="{% url 'termsconditions' %}">Privacy Policy</a>
                                 &middot;
-                                <a href="{% url 'termsandconditions' %}">Terms &amp; Conditions</a>
+                                <a href="{% url 'termsconditions' %}">Terms &amp; Conditions</a>
                             </div>
                         </div>
                     </div>
