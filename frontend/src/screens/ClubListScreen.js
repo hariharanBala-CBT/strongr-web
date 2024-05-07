@@ -45,7 +45,12 @@ function ClubListScreen() {
   const { clubFilterLoading, clubLocationDetails } = useSelector(
     (state) => state.filterClubLocations
   );
-  const { suggestedClubList } = useSelector((state) => state.suggestedClubs);
+  const { suggestedClubList } = useSelector(
+    (state) => state.suggestedClubs
+  );
+  const { suggestedClubGameList } = useSelector(
+    (state) => state.suggestedClubsGame
+  );
   // const organizations = location.state.organizations;
 
   const handleSubmit = (event) => {
@@ -117,7 +122,7 @@ function ClubListScreen() {
     if (areaName === undefined) {
       setAreaName(areas[0]?.area_name);
     }
-  },[areaName, areas])
+  }, [areaName, areas]);
 
   useEffect(() => {
     if (areaError) {
@@ -130,15 +135,14 @@ function ClubListScreen() {
   useEffect(() => {
     if (clubLocationDetails?.length === 0 && areaName !== undefined) {
       dispatch(listSuggestedClub(areaName));
-    } 
+    }
   }, [clubLocationDetails, dispatch, areaName, areas]);
 
   useEffect(() => {
     if (suggestedClubList?.length === 0 && gameName !== undefined) {
       dispatch(listSuggestedClubGame(gameName));
-    } 
+    }
   }, [suggestedClubList, dispatch, games, gameName]);
-
 
   return (
     <div>
@@ -184,21 +188,33 @@ function ClubListScreen() {
           clubLocationDetails && <Club clubs={clubLocationDetails} />
         )}
       </div>
-      <div >
-        {clubLocationDetails.length === 0 && (
+      {clubLocationDetails?.length === 0 && suggestedClubList?.length > 0 && (
+        <div>
           <div>
             <div className="clubs-error">
               <h2>No clubs available</h2>
             </div>
 
             <div className="suggested-clubs">
-              <h3>Suggested Clubs</h3>
+              <h3>Suggested Clubs in {areaName}</h3>
               <Club clubs={suggestedClubList} />
             </div>
           </div>
-        )}
-      </div>
-      
+        </div>
+      )}
+      {suggestedClubList?.length === 0 && (
+        <div>
+          <div>
+            <div className="clubs-error">
+              <h2>No clubs available</h2>
+            </div>
+            <div className="suggested-clubs">
+              <h3>Suggested Clubs for {gameName}</h3>
+              <Club clubs={suggestedClubGameList} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

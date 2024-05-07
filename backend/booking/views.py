@@ -200,20 +200,22 @@ def getSuggestedClub(request):
         return Response({'error': f'Area {selected_area} not found'},
                         status=status.HTTP_404_NOT_FOUND)
 
-
 @api_view(['GET'])
 def getSuggestedClubGame(request):
     selected_game = request.query_params.get('game')
 
     try:
         selected_game_obj = GameType.objects.get(game_name=selected_game)
-        organizationlocations = OrganizationLocationGameType.objects.filter(game_type=selected_game_obj, is_active=True)
-        serializer = OrganizationLocationGameTypeSerializer(organizationlocations, many=True)  # Assuming you have a serializer for OrganizationLocationGameType
+        organization_location_game_types = OrganizationLocationGameType.objects.filter(game_type=selected_game_obj, is_active=True)
+        
+        organization_locations = [ogt.organization_location for ogt in organization_location_game_types]
+        
+        serializer = ClubSerializerWithImages(organization_locations, many=True)
+        
         return Response(serializer.data)
 
     except GameType.DoesNotExist:
-        return Response({'error': f'Game {selected_game} not found'},
-                        status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': f'Game {selected_game} not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 

@@ -79,7 +79,7 @@ function ClubSearchScreen() {
       </section>
       <div className="club-list">
         {filteredClubLocations && (
-          <Club clubs={filteredClubLocations} onClubClick={handleClubClick} />
+          <Club clubs={filteredClubLocations} onClick={handleClubClick} />
         )}
       </div>
       <div className="clubs-error">
@@ -90,7 +90,7 @@ function ClubSearchScreen() {
           <h2>Recently Searched:</h2>
           <Club
             clubs={filteredData} 
-            onClubClick={handleClubClick}
+            onClick={handleClubClick}
           />
         </div>
       )}

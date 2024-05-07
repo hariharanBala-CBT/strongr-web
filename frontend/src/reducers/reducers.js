@@ -693,7 +693,7 @@ export const suggestedClubListReducer = (
     case SUGGESTED_CLUB_SUCCESS:
       return { loading: false, suggestedClubList: action.payload};
     case SUGGESTED_CLUB_FAIL:
-      return { loading: false, error: action.payload };
+      return { loading: false, suggestedClubListerror: action.payload };
     default:
       return state;
   }
