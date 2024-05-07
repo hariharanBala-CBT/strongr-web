@@ -82,6 +82,7 @@ class Organization(models.Model):
     phone_number = models.PositiveBigIntegerField(default=None,blank=True,null=True)
     alt_number = models.PositiveBigIntegerField(default=None,blank=True,null=True)
     description = models.TextField(default=None,blank=True,null=True)
+    status_description = models.TextField(default=None,blank=True,null=True)
     is_terms_and_conditions_agreed = models.BooleanField(default = False)
     status = models.IntegerField(choices = status_choices, default = PENDING)
     is_active = models.BooleanField(default=True)
@@ -109,6 +110,7 @@ class OrganizationLocation(models.Model):
     pincode = models.IntegerField()
     phone_number = models.PositiveBigIntegerField()
     status = models.IntegerField(choices = status_choices, default = PENDING)
+    status_description = models.TextField(default=None,blank=True,null=True)
     rating = models.DecimalField(
         max_digits=7, decimal_places=2, null=True, blank=True)
     numRatings = models.IntegerField(null=True, blank=True, default=0)

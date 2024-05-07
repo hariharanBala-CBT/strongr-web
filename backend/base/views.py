@@ -111,6 +111,9 @@ from django.shortcuts import redirect
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models import Q
+# from django.db import transaction
+from django.http import JsonResponse
+from .middleware import FirstLoginMiddleware
 
 class OrganizationSignupView(CreateView):
     form_class = OrganizationSignupForm
@@ -709,14 +712,26 @@ class SlotCreateView(CreateView):
             if not working_day.is_active:
                 return self.render_to_response(self.get_context_data(form=form, error='Selected working day is not active'))
 
-            # Set the start and end time for the slot based on the working day
-            if (form.instance.start_time < working_day.work_from_time):
-                error_message = 'Selected start time is before working day time given'
-                return self.render_to_response(self.get_context_data(form=form, error=error_message))
+            # # Set the start and end time for the slot based on the working day
+            # if (form.instance.start_time < working_day.work_from_time):
+            #     error_message = 'Selected start time is before working day time given'
+            #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
         
-            if (form.instance.end_time > working_day.work_to_time):
-                error_message = 'Selected end time is after working day time given'
+            # if (form.instance.end_time > working_day.work_to_time):
+            #     error_message = 'Selected end time is after working day time given'
+            #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
+
+            start_time = form.cleaned_data.get('start_time')
+            end_time = form.cleaned_data.get('end_time')
+
+            # Calculate the difference between start and end time
+            time_diff = end_time - start_time
+
+            # Check if the difference is exactly one hour
+            if time_diff != timedelta(hours=1):
+                error_message = 'The difference between start and end time must be exactly one hour.'
                 return self.render_to_response(self.get_context_data(form=form, error=error_message))
+
 
             return super().form_valid(form)
         except KeyError:
@@ -745,15 +760,27 @@ class SlotUpdateView(UpdateView):
         
         if not working_day.is_active:
             return self.render_to_response(self.get_context_data(form=form, error='Selected working day is not active'))
-
-        # Set the start and end time for the slot based on the working day
-        if (form.instance.start_time < working_day.work_from_time):
-            error_message = 'Selected start time is before working day time given'
-            return self.render_to_response(self.get_context_data(form=form, error=error_message))
         
-        if (form.instance.end_time > working_day.work_to_time):
-            error_message = 'Selected start time is before working day time given'
+        start_time = form.cleaned_data.get('start_time')
+        end_time = form.cleaned_data.get('end_time')
+
+        # Calculate the difference between start and end time
+        time_diff = end_time - start_time
+
+        # Check if the difference is exactly one hour
+        if time_diff != timedelta(hours=1):
+            error_message = 'The difference between start and end time must be exactly one hour.'
             return self.render_to_response(self.get_context_data(form=form, error=error_message))
+
+
+        # # Set the start and end time for the slot based on the working day
+        # if (form.instance.start_time < working_day.work_from_time):
+        #     error_message = 'Selected start time is before working day time given'
+        #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
+        
+        # if (form.instance.end_time > working_day.work_to_time):
+        #     error_message = 'Selected start time is before working day time given'
+        #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
 
         return super().form_valid(form)
 
@@ -844,6 +871,8 @@ class TenantTermsandConditionsView(FormView):
     # success_url = reverse_lazy('organization_page')
 
 
+from collections import defaultdict
+
 @method_decorator(login_required, name='dispatch')
 class StatusView(TemplateView):
     template_name = 'status.html'
@@ -852,23 +881,49 @@ class StatusView(TemplateView):
         try:
             return Organization.objects.get(user=self.request.user)
         except Organization.DoesNotExist:
-            return HttpResponseBadRequest("Organization not found")
-    
-    def get_organization_location(self):
+            raise Http404("Organization not found")
+
+    def get_organization_location(self, organization):
         try:
-            org = Organization.objects.get(user=self.request.user)
-            return OrganizationLocation.objects.filter(organization=org)
+            return OrganizationLocation.objects.filter(organization=organization)
         except OrganizationLocation.DoesNotExist:
-            return HttpResponseBadRequest("Organization Location not found")
+            raise Http404("Organization Location not found")
+
+    # def get_latest_cancellation_message(self, recipient):
+    #     try:
+    #         return Message.objects.filter(recipient=recipient, subject="Organization Cancellation").latest('timestamp')
+    #     except Message.DoesNotExist:
+    #         return None
+    
+    # def get_location_cancellation_messages(self, recipient, location):
+    #     try:
+    #         return Message.objects.filter(recipient=recipient, subject=f"Location Cancellation")
+    #     except Message.DoesNotExist:
+    #         return []
 
     def get(self, request, *args, **kwargs):
-        organization = self.get_organization()
-        location = self.get_organization_location()
-        context = {
-            'organization': organization,
-            'locations':location
-        }
-        return render(request, self.template_name, context)
+        try:
+            organization = self.get_organization()
+            locations = self.get_organization_location(organization)
+
+            # organization_cancellation_message = None
+           
+            # if organization.status == Organization.CANCELLED:
+            #     organization_cancellation_message = self.get_latest_cancellation_message(request.user)
+
+            # for location in locations:
+            #     if location.status == OrganizationLocation.CANCELLED:
+            #         cancellation_messages = self.get_location_cancellation_messages(request.user, location)
+                    
+            context = {
+                'organization': organization,
+                'locations': locations,
+                # 'organization_cancellation_message': organization_cancellation_message,
+                # 'location_cancellation_messages': cancellation_messages,
+            }
+            return render(request, self.template_name, context)
+        except Http404 as e:
+            return render(request, self.template_name, {'error_message': str(e)})
 
 #FOR TENANT USER:
 
@@ -935,18 +990,26 @@ class ChangeOrganizationStatusView(View):
         # Get the organization object using the organization_id
         organization = get_object_or_404(Organization, id=organization_id)
 
-    # Update the organization's status and save it
-        print(new_status)
-        organization.status = new_status
-        organization.save()
+        reason_for_cancellation = request.POST.get('reason_for_cancellation', '')
 
         if new_status == 1:
             status_text = 'Approved'
         elif new_status == 4:
             status_text = 'Cancelled'
+            # Message.objects.create(
+            #     sender=request.user,
+            #     recipient=organization.user,
+            #     subject="Organization Cancellation",
+            #     body=reason_for_cancellation,
+            #     is_read=False
+            # )
+            organization.status_description = reason_for_cancellation
         else:
             status_text = 'Unknown'  # Default status text
 
+    # Update the organization's status and save it
+        organization.status = new_status
+        organization.save()
     
     #send mail:
         subject = 'Organization status'
@@ -962,7 +1025,6 @@ class ChangeOrganizationStatusView(View):
                     from_email,
                     recipient_list,
                     fail_silently=False)
-        print(organization.user.email)
 
     # add a success message
         messages.success(request, 'Organization status updated successfully.')
@@ -971,18 +1033,47 @@ class ChangeOrganizationStatusView(View):
 
 class ChangeOrganizationLocationStatusView(View):
     def post(self, request, location_id, new_status):
-        # Get the organization object using the organization_id
         organizationLocation = get_object_or_404(OrganizationLocation, id=location_id)
 
-    # Update the organization's status and save it
-        print(new_status)
+        reason_for_cancellation = request.POST.get('reason_for_cancellation', '')
+
+        if new_status == 1:
+            status_text = 'Approved'
+        elif new_status == 4:
+            status_text = 'Cancelled'
+            # Message.objects.create(
+            #     sender=request.user,
+            #     recipient=organizationLocation.organization.user,
+            #     subject=f"Location Cancellation {organizationLocation}",
+            #     body=reason_for_cancellation,
+            #     is_read=False
+            # )
+            organizationLocation.status_description=reason_for_cancellation
+        else:
+            status_text = 'Unknown'
+        
         organizationLocation.status = new_status
         organizationLocation.save()
 
-    # add a success message
         messages.success(request, 'Organization Location status updated successfully.')
 
         user = request.user
+
+        #send mail:
+        subject = 'Location status'
+        message = render_to_string(
+            'status_mail.html', {
+                'user': user,
+                'status': status_text
+            })
+        from_email = 'testgamefront@gmail.com'
+        recipient_list = [user.email]
+        send_mail(subject,
+                    message,
+                    from_email,
+                    recipient_list,
+                    fail_silently=False)
+        
         if user.groups.filter(name='Organization').exists():
             return redirect('preview')
         elif user.groups.filter(name='Tenant').exists():
