@@ -13,6 +13,7 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { toast, Toaster } from "react-hot-toast";
 import OTPInput from "react-otp-input";
 import { CircularProgress } from "@mui/material";
+import { LinkContainer } from "react-router-bootstrap";
 
 function PhoneNumberScreen() {
   const [showOTPInput, setShowOTPInput] = useState(false);
@@ -194,11 +195,11 @@ function onOTPVerify(e) {
           </form>
           <span>
             Login through username &nbsp;
-            <a href="/login">Login</a>
+          <LinkContainer to="/login" style={{textDecoration: 'underline', color : 'purple'}}><span>login</span></LinkContainer>
           </span>
           <span>
             Don't have an Account?&nbsp;
-            <a href="/signup">SignUp</a>
+            <LinkContainer to="/signup" style={{textDecoration: 'underline', color : 'purple'}}><span>signup</span></LinkContainer>
           </span>
         </div>
       </div>

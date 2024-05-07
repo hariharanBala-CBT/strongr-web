@@ -10,6 +10,7 @@ import { Box, CircularProgress, Modal } from "@mui/material";
 import OTPInput, { ResendOTP } from "otp-input-react";
 import { USER_LOGOUT } from "../constants/constants";
 import toast, { Toaster } from "react-hot-toast";
+import { LinkContainer } from "react-router-bootstrap";
 
 const style = {
   position: "absolute",
@@ -94,7 +95,7 @@ function RegisterScreen() {
       <Toaster />
       <div className="signup-page">
         <div className="signup-form">
-          <h1 className="signup-title">SIGN IN</h1>
+          <h1 className="signup-title">SIGN UP</h1>
 
           <form onSubmit={otpGenerate} method="post">
             <div className="div-div">
@@ -212,8 +213,10 @@ function RegisterScreen() {
           </Modal>
 
           <span>
-            Already have an Account?&nbsp; <a href="/login"> Login</a>
+            Already have an Account?
+            <LinkContainer to="/login" style={{textDecoration: 'underline', color : 'purple'}}><span> login</span></LinkContainer>
           </span>
+
         </div>
       </div>
     </div>

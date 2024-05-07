@@ -9,6 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { CircularProgress } from "@mui/material";
 import { USER_LOGIN_RESET } from "../constants/constants";
 // import { USER_LOGIN_RESET } from "../constants/constants";
+import { LinkContainer } from "react-router-bootstrap";
 
 function LoginScreen() {
   const [username, setUsername] = useState("");
@@ -101,16 +102,12 @@ function LoginScreen() {
           )}
           <span>
             Login using Phone number?&nbsp;
-            <a href="/phonenumberlogin">login</a>
-          </span>
-          <span>
-            Login through Phone number&nbsp;
-            <a href="/phonenumber">Login</a>
+          <LinkContainer to="/phonenumberlogin" style={{textDecoration: 'underline', color : 'purple'}}><span>login</span></LinkContainer>
           </span>
           
           <span>
             Dont you have an Account?&nbsp;
-            <a href="/signup">SignUp</a>
+            <LinkContainer to="/signup" style={{textDecoration: 'underline', color : 'purple'}}><span>signup</span></LinkContainer>
           </span>
         </div>
       </div>

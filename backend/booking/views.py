@@ -30,24 +30,24 @@ def search(request):
     if query:
         organizations = organizations.filter(organization_name__icontains=query)
 
-    serializer = ClubSerializer(organizations, many=True)
+    organization_locations = OrganizationLocation.objects.filter(
+        organization__in=organizations,status = 1, organization__status = 1
+    )
+
+    serializer = ClubSerializerWithImages(organization_locations, many=True)
     serialized_data = serializer.data
     return Response(serialized_data)
+
 
 @api_view(['GET'])
 def recentSearch(request):
     stored_keywords = request.GET.getlist('storedKeywords[]')
-    print("Stored Keywords:", stored_keywords)
     
-    filtered_organizations = Organization.objects.none()
-    for keyword in stored_keywords:
-        organizations = Organization.objects.filter(organization_name__icontains=keyword)
-        filtered_organizations |= organizations
-    
-    serializer = ClubSerializer(filtered_organizations, many=True)
-    serialized_data = serializer.data
-    print("Serialized Data:", serialized_data)
-    
+    organization_locations = OrganizationLocation.objects.filter(
+        id__in=stored_keywords
+    )
+
+    serializer = ClubSerializerWithImages(organization_locations, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -186,6 +186,36 @@ def filterClubs(request):
     serializer = ClubSerializerWithImages(organizationlocations, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getSuggestedClub(request):
+    selected_area = request.query_params.get('area')
+
+    try:
+        selected_area_obj = Area.objects.get(area_name=selected_area)
+        organizationlocations = OrganizationLocation.objects.filter(area=selected_area_obj,status = 1, organization__status = 1)
+        serializer = ClubSerializerWithImages(organizationlocations, many=True)
+        return Response(serializer.data)
+
+    except Area.DoesNotExist:
+        return Response({'error': f'Area {selected_area} not found'},
+                        status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def getSuggestedClubGame(request):
+    selected_game = request.query_params.get('game')
+
+    try:
+        selected_game_obj = GameType.objects.get(game_name=selected_game)
+        organizationlocations = OrganizationLocationGameType.objects.filter(game_type=selected_game_obj, is_active=True)
+        serializer = OrganizationLocationGameTypeSerializer(organizationlocations, many=True)  # Assuming you have a serializer for OrganizationLocationGameType
+        return Response(serializer.data)
+
+    except GameType.DoesNotExist:
+        return Response({'error': f'Game {selected_game} not found'},
+                        status=status.HTTP_404_NOT_FOUND)
+
+
 
 @api_view(['POST'])
 # @permission_classes([IsAuthenticated])
@@ -264,7 +294,6 @@ def getAvailableSlots(request):
     # Exclude booked slots
     slots = slots.exclude(id__in=bookings)
     serializer = SlotSerializer(slots, many=True)
-
     return Response(serializer.data)
 
 

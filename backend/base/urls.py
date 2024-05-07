@@ -6,17 +6,15 @@ urlpatterns = [
      path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
      path('login/phone/', PhoneLoginView, name='phone_login'),
      path('register/', registerUser, name='register'),
-     # path('generate_otp/', generate_otp, name='generate_otp'),
-     path('home/', HomePageView.as_view(),name='home_page'),
+     path('home/', TemplateView.as_view(template_name = 'getstarted.html'), name='home_page'), 
      path('signup/', OrganizationSignupView.as_view(), name='signup'),
      path('orglogin/', LoginView.as_view(), name='login'),
      path('logout/', LogoutView.as_view(), name='logout'),
-    
      path('organizationpage/',OrganizationHomeView.as_view(), name='organization_page'),
      path('confirmed_bookings/',ListofConfirmBookingView.as_view(), name='confirmed_bookings'),
      path('pending_bookings/',ListofPendingBookingView.as_view(), name='pending_bookings'),
      path('cancelled_bookings/',ListofCancelledBookingView.as_view(), name='cancelled_bookings'),
-    
+
      path('organizationprofile/<int:pk>/' ,OrganizationProfileView.as_view(), name='organization_profile'),
      path('organizationaddlocation/' ,OrganizationAddLocationView.as_view(), name='organization_addlocation'),
      path('organizationupdatelocation/<int:pk>/' , OrganizationUpdateLocationView.as_view(), name='organization_updatelocation'),
@@ -65,13 +63,12 @@ urlpatterns = [
      path('organizations/<int:organization_id>/change_status/<int:new_status>/', ChangeOrganizationStatusView.as_view(), name='change_organization_status'),
      path('status/' ,StatusView.as_view(), name='status'),
 
-     path('success/', TemplateView.as_view(template_name = 'success.html'), name='success'),
-     path('reject/', TemplateView.as_view(template_name = 'reject.html'), name='reject'),
+     # path('success/', TemplateView.as_view(template_name = 'success.html'), name='success'),
+     # path('reject/', TemplateView.as_view(template_name = 'reject.html'), name='reject'),
      path('change-password/', ChangePasswordView.as_view(), name='change_password'),
      
-     
-     path('signup/', TemplateView.as_view(template_name = 'signup.html'), name='signup'), 
-     path ('org-create/', TemplateView.as_view(template_name = 'org_createlocation.html'),name='org_create'),
+     # path('signup/', TemplateView.as_view(template_name = 'signup.html'), name='signup'), 
+     # path ('org-create/', TemplateView.as_view(template_name = 'org_createlocation.html'),name='org_create'),
      
      path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
      path('password-reset-confirm/<uidb64>/<token>/',

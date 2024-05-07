@@ -8,7 +8,7 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 import { BOOKING_CREATE_RESET } from "../constants/constants";
 import "../css/bookingscreen.css";
-import { Button } from "@mui/material";
+import { IconButton } from "@mui/material";
 
 function BookingScreen() {
   const { id } = useParams();
@@ -83,13 +83,13 @@ function BookingScreen() {
 
       <div className="booking-content">
         <h2 style={{ display: "flex", flex: "auto", columnGap: "24rem" }}>
-          <Button
+          <IconButton
             onClick={() => {
               navigate(-1);
             }}
           >
             <i class="fa-regular fa-circle-left" ></i>
-          </Button>
+          </IconButton>
           <span>Booking Number: &nbsp;{bookingDetails?.id}</span>
         </h2>
 

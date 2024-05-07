@@ -1,7 +1,6 @@
 import React from "react";
 
 function Rating({ value, text, color }) {
-  console.log("Rating Value:", value);
   return (
     <div className="rating">
       <span>

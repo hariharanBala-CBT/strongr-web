@@ -1,8 +1,4 @@
-import random
 from django.contrib.auth.models import User
-
-from django.http import JsonResponse
-from pydantic import SerializeAsAny
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -13,28 +9,24 @@ from base.serializers import UserSerializerWithToken
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import serializers
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
-        print('attrs', attrs)
-        data = super().validate(attrs)
-        print('user', self.user)
-        print(data)
-        print('self',self.user)
-        serializer = UserSerializerWithToken(self.user).data
-        print('serializer items', serializer.items())
-        for k, v in serializer.items():
-            # print('k&V', k,v)
-            data[k] = v
-
-        return data
+            data = super().validate(attrs)
+            user = self.user
+            if not user:
+                raise serializers.ValidationError("Username does not exist.")
+            serializer = UserSerializerWithToken(user).data
+            for k, v in serializer.items():
+                data[k] = v
+            return data
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
         
-# class PhoneLoginView(TokenObtainPairView):
-@api_view(['POST'])  # Change to POST method
+@api_view(['POST']) 
 def PhoneLoginView(request):
     data = request.data
 
@@ -119,28 +111,6 @@ from django.shortcuts import redirect
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models import Q
-# from django.db import transaction
-from django.http import JsonResponse
-from .middleware import FirstLoginMiddleware
-
-@method_decorator(login_required, name='dispatch')
-@method_decorator(FirstLoginMiddleware, name='dispatch')
-class HomePageView(View):
-    template_name = 'getstarted.html'
-    
-    def get(self, request, *args, **kwargs):
-        first_login = request.session.get(
-            'first_login_' + str(request.user.id), False)
-        
-        if not first_login:
-            request.session['first_login_' + str(request.user.id)] = True
-            
-            profile_page_url = reverse(
-                'organization_profile',
-                kwargs={'pk': request.user.organization.pk})
-            
-            return redirect(profile_page_url)
-        return render(request, self.template_name)
 
 class OrganizationSignupView(CreateView):
     form_class = OrganizationSignupForm

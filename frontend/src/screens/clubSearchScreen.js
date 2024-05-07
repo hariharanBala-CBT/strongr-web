@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import "../css/clubsearchscreen.css";
 import Header from "../components/Header";
-import { useNavigate } from "react-router-dom";
-import SearchClub from "../components/SearchClub";
 import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { Form } from "react-bootstrap";
 import { listOrganizations, RecentSearch } from "../actions/actions"; // Import RecentSearch
 import { useHomeContext } from "../context/HomeContext";
+import Club  from '../components/Club'
 
 function ClubSearchScreen() {
   const { keyword, setKeyword } = useHomeContext();
@@ -50,14 +47,14 @@ function ClubSearchScreen() {
     dispatch(RecentSearch(recentlySearchedKeywords)); // Dispatch RecentSearch when component mounts
   }, [dispatch, recentlySearchedKeywords]);
 
-  const handleClubClick = (clubName) => {
+  const handleClubClick = (clubId) => {
     const updatedKeywords = [
-      clubName,
-      ...recentlySearchedKeywords.filter((k) => k !== clubName).slice(0, 3),
+      clubId,
+      ...recentlySearchedKeywords.filter((k) => k !== clubId).slice(0, 3),
     ];
     setRecentlySearchedKeywords(updatedKeywords);
     localStorage.setItem("recentlySearchedKeywords", JSON.stringify(updatedKeywords));
-    dispatch(listOrganizations(clubName));
+    dispatch(listOrganizations(clubId));
   };
 
   return (
@@ -82,17 +79,17 @@ function ClubSearchScreen() {
       </section>
       <div className="club-list">
         {filteredClubLocations && (
-          <SearchClub clubs={filteredClubLocations} onClubClick={handleClubClick} />
+          <Club clubs={filteredClubLocations} onClubClick={handleClubClick} />
         )}
       </div>
       <div className="clubs-error">
-        {filteredClubLocations.length === 0 && <h2>No clubs available :(</h2>}
+        {filteredClubLocations?.length === 0 && <h2>No clubs available :(</h2>}
       </div>
-      {filteredData.length > 0 && (
+      {filteredData?.length > 0 && (
         <div className="recently-searched">
           <h2>Recently Searched:</h2>
-          <SearchClub
-            clubs={filteredData}
+          <Club
+            clubs={filteredData} 
             onClubClick={handleClubClick}
           />
         </div>

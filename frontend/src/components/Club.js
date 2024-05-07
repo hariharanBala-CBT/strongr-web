@@ -5,7 +5,7 @@ import Card from "react-bootstrap/Card";
 import { LinkContainer } from "react-router-bootstrap";
 import Rating from "./Rating";
 
-function Club({ clubs }) {
+function Club({ clubs, onClubClick }) {
   const [isButtonVisible, setButtonVisibility] = useState(false);
 
   const showButton = () => {
@@ -14,6 +14,10 @@ function Club({ clubs }) {
 
   const hideButton = () => {
     setButtonVisibility(false);
+  };
+
+  const handleViewDetails = (club) => {
+    onClubClick(club.id);
   };
 
   return (
@@ -27,7 +31,7 @@ function Club({ clubs }) {
           >
             {isButtonVisible && (
               <LinkContainer to={`/club/${club.id}`}>
-                <Button variant="outline-dark">View Details</Button>
+                <Button variant="outline-dark" onClick={() => handleViewDetails(club)}>View Details</Button>
               </LinkContainer>
             )}
 

@@ -93,6 +93,12 @@ import {
   RECENT_SEARCH_REQUEST,
   RECENT_SEARCH_SUCCESS,
   RECENT_SEARCH_FAIL,
+  SUGGESTED_CLUB_REQUEST,
+  SUGGESTED_CLUB_SUCCESS,
+  SUGGESTED_CLUB_FAIL,
+  SUGGESTED_CLUBGAME_REQUEST,
+  SUGGESTED_CLUBGAME_SUCCESS,
+  SUGGESTED_CLUBGAME_FAIL,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -428,7 +434,7 @@ export const availableslotsReducer = (state = { slots: [] }, action) => {
     case AVAILABLE_SLOT_SUCCESS:
       return { loading: false, slots: action.payload };
     case AVAILABLE_SLOT_FAIL:
-      return { loading: false, error: action.payload, slots: [] };
+      return { loading: false, error: action.payload };
     default:
       return state;
   }
@@ -670,6 +676,39 @@ export const RecentSearchReducer = (state = { filteredData: [] }, action) => {
     case RECENT_SEARCH_SUCCESS:
       return { loading: false, filteredData: action.payload };
     case RECENT_SEARCH_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+
+export const suggestedClubListReducer = (
+  state = { suggestedClubList: [] },
+  action
+) => {
+  switch (action.type) {
+    case SUGGESTED_CLUB_REQUEST:
+      return { loading: true, suggestedClubList: [] };
+    case SUGGESTED_CLUB_SUCCESS:
+      return { loading: false, suggestedClubList: action.payload};
+    case SUGGESTED_CLUB_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const suggestedClubGameListReducer = (
+  state = { suggestedClubGameList: [] },
+  action
+) => {
+  switch (action.type) {
+    case SUGGESTED_CLUBGAME_REQUEST:
+      return { loading: true, suggestedClubGameList: [] };
+    case SUGGESTED_CLUBGAME_SUCCESS:
+      return { loading: false, suggestedClubGameList: action.payload};
+    case SUGGESTED_CLUBGAME_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

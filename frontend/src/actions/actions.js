@@ -87,6 +87,12 @@ import {
   RECENT_SEARCH_REQUEST,
   RECENT_SEARCH_SUCCESS,
   RECENT_SEARCH_FAIL,
+  SUGGESTED_CLUB_REQUEST,
+  SUGGESTED_CLUB_SUCCESS,
+  SUGGESTED_CLUB_FAIL,
+  SUGGESTED_CLUBGAME_REQUEST,
+  SUGGESTED_CLUBGAME_SUCCESS,
+  SUGGESTED_CLUBGAME_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -910,3 +916,56 @@ export const RecentSearch = (storedKeywords) => async (dispatch) => {
   }
 };
 
+export const listSuggestedClub = (areaName) => async (dispatch) => {
+  try {
+    dispatch({ type: SUGGESTED_CLUB_REQUEST });
+
+    const { data } = await axios.get("/api/club/suggested/", {
+      params: { 
+        area: areaName,
+       },
+    });
+
+
+    dispatch({
+      type: SUGGESTED_CLUB_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: SUGGESTED_CLUB_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listSuggestedClubGame = (gameName) => async (dispatch) => {
+  try {
+    dispatch({ type: SUGGESTED_CLUBGAME_REQUEST });
+
+    const { data } = await axios.get("/api/club/suggestedgame/", {
+      params: { 
+        game: gameName,
+       },
+    });
+
+
+    dispatch({
+      type: SUGGESTED_CLUBGAME_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: SUGGESTED_CLUBGAME_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};

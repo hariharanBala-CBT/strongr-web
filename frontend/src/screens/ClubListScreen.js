@@ -8,34 +8,49 @@ import { useNavigate } from "react-router-dom";
 import Club from "../components/Club";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { listAreas, listGames, filterLocation } from "../actions/actions";
+import {
+  listAreas,
+  listGames,
+  filterLocation,
+  listSuggestedClub,
+  listSuggestedClubGame,
+} from "../actions/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { useHomeContext } from '../context/HomeContext'
+import { useHomeContext } from "../context/HomeContext";
 import { CircularProgress } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
-// import { useLocation } from "react-router-dom";
-
 
 function ClubListScreen() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { selectedDate, selectedArea, selectedGame, setSelectedDate, setSelectedArea, setSelectedGame  } = useHomeContext();
-  
-  const { areaError, areaLoading, areas } = useSelector((state) => state.areaList);
-  const { gameError, gameLoading, games } = useSelector((state) => state.gameList);
-  const { clubFilterLoading, clubLocationDetails } = useSelector((state) => state.filterClubLocations);
+  const {
+    selectedDate,
+    selectedArea,
+    selectedGame,
+    setSelectedDate,
+    setSelectedArea,
+    setSelectedGame,
+  } = useHomeContext();
 
   const [gameName, setGameName] = useState(selectedGame);
   const [areaName, setAreaName] = useState(selectedArea);
   const [date, setDate] = useState(selectedDate);
 
-  // const location = useLocation();
+  const { areaError, areaLoading, areas } = useSelector(
+    (state) => state.areaList
+  );
+  const { gameError, gameLoading, games } = useSelector(
+    (state) => state.gameList
+  );
+  const { clubFilterLoading, clubLocationDetails } = useSelector(
+    (state) => state.filterClubLocations
+  );
+  const { suggestedClubList } = useSelector((state) => state.suggestedClubs);
   // const organizations = location.state.organizations;
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
     dispatch(filterLocation(areaName, gameName, date));
     navigate("/clubs");
   };
@@ -45,9 +60,17 @@ function ClubListScreen() {
   };
 
   useEffect(() => {
+    const storedSelectedGame = localStorage.getItem("selectedGame");
+    const storedSelectedArea = localStorage.getItem("selectedArea");
+    const storedSelectedDate = localStorage.getItem("selectedDate");
+
+    if (storedSelectedGame) setGameName(storedSelectedGame);
+    if (storedSelectedArea) setAreaName(storedSelectedArea);
+    if (storedSelectedDate) setDate(storedSelectedDate);
+
     dispatch(listGames());
     dispatch(listAreas());
-    
+
     const dtToday = new Date();
     const month = dtToday.getMonth() + 1;
     const day = dtToday.getDate();
@@ -76,33 +99,46 @@ function ClubListScreen() {
   }, [dispatch]);
 
   useEffect(() => {
-    const storedSelectedGame = localStorage.getItem("selectedGame");
-    const storedSelectedArea = localStorage.getItem("selectedArea");
-    const storedSelectedDate = localStorage.getItem("selectedDate");
-
-
-    if (storedSelectedGame) setGameName(storedSelectedGame);
-    if (storedSelectedArea) setAreaName(storedSelectedArea);
-    if (storedSelectedDate) setDate(storedSelectedDate);
-
-  }, []);
-  
-
-  useEffect(() => {
-    setSelectedArea(areaName)
-    setSelectedGame(gameName)
-    setSelectedDate(date)
+    setSelectedArea(areaName);
+    setSelectedGame(gameName);
+    setSelectedDate(date);
     dispatch(filterLocation(areaName, gameName, date));
-
-  }, [areaName,gameName,date, setSelectedArea, setSelectedGame, setSelectedDate, dispatch]);
+  }, [
+    areaName,
+    gameName,
+    date,
+    setSelectedArea,
+    setSelectedGame,
+    setSelectedDate,
+    dispatch,
+  ]);
 
   useEffect(() => {
-    if(areaError){
-      toast.error('error in fetching areas')
-    }else if(gameError) {
-      toast.error('error in fetching games')
+    if (areaName === undefined) {
+      setAreaName(areas[0]?.area_name);
     }
-  }, [areaError, gameError])
+  },[areaName, areas])
+
+  useEffect(() => {
+    if (areaError) {
+      toast.error("error in fetching areas");
+    } else if (gameError) {
+      toast.error("error in fetching games");
+    }
+  }, [areaError, gameError]);
+
+  useEffect(() => {
+    if (clubLocationDetails?.length === 0 && areaName !== undefined) {
+      dispatch(listSuggestedClub(areaName));
+    } 
+  }, [clubLocationDetails, dispatch, areaName, areas]);
+
+  useEffect(() => {
+    if (suggestedClubList?.length === 0 && gameName !== undefined) {
+      dispatch(listSuggestedClubGame(gameName));
+    } 
+  }, [suggestedClubList, dispatch, games, gameName]);
+
 
   return (
     <div>
@@ -139,21 +175,30 @@ function ClubListScreen() {
 
             <DateInput id="date" value={date} onChange={handleDateChange} />
           </div>
-          
         </form>
       </div>
       <div className="club-list">
         {clubFilterLoading ? (
           <CircularProgress />
-        ) : clubLocationDetails  && (
-          <Club clubs={clubLocationDetails} />
+        ) : (
+          clubLocationDetails && <Club clubs={clubLocationDetails} />
         )}
       </div>
-      <div className="clubs-error">
-      {clubLocationDetails.length === 0 &&
-        <h2>No clubs available :(</h2>
-      }  
+      <div >
+        {clubLocationDetails.length === 0 && (
+          <div>
+            <div className="clubs-error">
+              <h2>No clubs available</h2>
+            </div>
+
+            <div className="suggested-clubs">
+              <h3>Suggested Clubs</h3>
+              <Club clubs={suggestedClubList} />
+            </div>
+          </div>
+        )}
       </div>
+      
     </div>
   );
 }

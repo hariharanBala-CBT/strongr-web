@@ -12,7 +12,7 @@
     <link href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" rel="stylesheet">
     <link href="{% static 'styles.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <style>
+    <!-- <style>
         .location-card {
             display: flex;
             justify-content: space-between;
@@ -62,7 +62,7 @@
         .footer-text {
             color: #6c757d;
         }
-    </style>
+    </style> -->
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -155,7 +155,7 @@
                                             <tr>
                                                 <td>{{ slot.court.name }} ({{ slot.get_days_display }} -- {{ slot.start_time }} - {{ slot.end_time }})</td>
                                                 <td>
-                                                    <a href="{% url 'update-slot' slot.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
+                                                    <a href="{% url 'update-slot' slot.pk %}" class="btn btn-primary"><i class="fas fa-pen-to-square"></i></a>
                                                 </td>
                                                 <td>
                                                     <a href="{% url 'delete-slot' slot.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>

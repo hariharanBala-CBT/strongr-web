@@ -22,6 +22,9 @@
           display: flex;
           justify-content: center;
         }
+        td{
+            align-items: center;
+        }
       </style>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -115,7 +118,7 @@
                                                 <td>{{location.address_line_1}}</td>
                                                 <td>{{location.area}}</td>
                                                 <td>Chennai</td>
-                                                <td><a href="{% url 'organization_updatelocation' pk=location.pk %}" class="btn btn-outline-primary"><i class="fa-regular fa-pen-to-square "></i>
+                                                <td><a href="{% url 'organization_updatelocation' pk=location.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i>
                                                 </a></td>
                                             </tr>
                                             {% endfor%}

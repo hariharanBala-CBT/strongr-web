@@ -20,7 +20,7 @@ import {
   login,
 } from "../actions/actions";
 import { Alert, Box, CircularProgress, Modal } from "@mui/material";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const style = {
   position: "absolute",
@@ -43,6 +43,9 @@ function BookingInfoScreen() {
     setSelectedCourt,
     selectedSlot,
     setSelectedSlot,
+    setSelectedGame,
+    setSelectedArea,
+    setSelectedDate,
   } = useHomeContext();
 
   const dispatch = useDispatch();
@@ -52,6 +55,7 @@ function BookingInfoScreen() {
   const { clubGame } = useSelector((state) => state.clubGame);
   const { courts } = useSelector((state) => state.courtList);
   const { slots } = useSelector((state) => state.slot);
+  const { userInfo } = useSelector((state) => state.userLogin);
 
   const [slot, setSlot] = useState("");
   const [areaName, setAreaName] = useState(selectedArea);
@@ -62,7 +66,23 @@ function BookingInfoScreen() {
   const [password, setPassword] = useState("");
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const getSelectedGamePricing = () => {
+    const selectedGame = clubGame?.find(
+      (game) => game.game_type.game_name === gameName
+    );
+    return Number(selectedGame?.pricing).toFixed(0);
+  };
+
+  const clubPrice = Number(getSelectedGamePricing()).toFixed(0);
+  const taxPrice = (Number(clubPrice) * 0.05).toFixed(0);
+  const bookingFee = 10;
+  const totalPrice = (
+    Number(clubPrice) +
+    Number(taxPrice) +
+    Number(bookingFee)
+  ).toFixed(0);
 
   const handleAreaChange = (value) => {
     setAreaName(value);
@@ -74,40 +94,27 @@ function BookingInfoScreen() {
 
   const handleSlotChange = (value) => {
     setSlot(value);
-    setSelectedSlot(value);
   };
 
   const handleCourtChange = (value) => {
     setCourtName(value);
-    setSelectedCourt(value);
   };
 
-  const handleDateChange = (selectedDate) => {
-    setDate(selectedDate);
+  const handleDateChange = (value) => {
+    setDate(value);
   };
-  
+
   useEffect(() => {
     dispatch({ type: BOOKING_CREATE_RESET });
     dispatch({ type: BOOKING_DETAILS_RESET });
-    const storedSelectedGame = localStorage.getItem("selectedGame");
-    const storedSelectedArea = localStorage.getItem("selectedArea");
-    const storedSelectedDate = localStorage.getItem("selectedDate");
-    const storedSelectedCourt = localStorage.getItem("selectedCourt");
-    const storedSelectedSlot = localStorage.getItem("selectedSlot");
-  
-    if (storedSelectedGame) setGameName(storedSelectedGame);
-    if (storedSelectedArea) setAreaName(storedSelectedArea);
-    if (storedSelectedDate) setDate(storedSelectedDate);
-    if (storedSelectedCourt) setCourtName(storedSelectedCourt);
-    if (storedSelectedSlot) setCourtName(storedSelectedSlot);
-  
+
     const fetchData = async () => {
       dispatch(listclubLocation(id));
       dispatch(listclubGame(id));
       dispatch(listCourts(id, gameName));
     };
     fetchData();
-  
+
     const dtToday = new Date();
     const month = dtToday.getMonth() + 1;
     const day = dtToday.getDate();
@@ -115,7 +122,7 @@ function BookingInfoScreen() {
     const minDate = `${year}-${month < 10 ? "0" + month : month}-${
       day < 10 ? "0" + day : day
     }`;
-  
+
     const dtMax = new Date(
       dtToday.getFullYear(),
       dtToday.getMonth() + 1,
@@ -127,31 +134,67 @@ function BookingInfoScreen() {
     const maxDate = `${maxYear}-${maxMonth < 10 ? "0" + maxMonth : maxMonth}-${
       maxDay < 10 ? "0" + maxDay : maxDay
     }`;
-  
+
     const dateInput = document.getElementById("date");
     if (dateInput) {
       dateInput.setAttribute("min", minDate);
       dateInput.setAttribute("max", maxDate);
     }
   }, [dispatch, gameName, id]);
-  
+
   useEffect(() => {
-    const storedSelectedCourt = localStorage.getItem("selectedCourt");
-  
-    if (courts?.length > 0 && courtName === '') {
-      setCourtName(storedSelectedCourt || courts[0].name); // Set the default court to stored selected court or the first court if not available
+    if(courts?.length > 0 && courtName === ''){
+      setCourtName(courts[0]?.name)
     }
-  
-    const selectedCourt = courts?.find((court) => court.name === courtName);
-    const courtId = selectedCourt?.id;
-  
-    if (courtId && date) {
-      setLoadingSlots(true);
-  
-      dispatch(fetchAvailableSlots(courtId, date)).then(() => setLoadingSlots(false));
+  },[courts, courtName])
+
+  useEffect(() => {
+    if (courtName && date) {
+      setLoading(true);
+      const theCourt = courts?.find((court) => court.name === courtName);
+      const courtId = theCourt?.id
+      dispatch(fetchAvailableSlots(courtId, date)).then(() =>
+        setLoading(false)
+      );
     }
-  }, [date, dispatch, courts, courtName]);
-  
+  }, [courtName, date, dispatch, courts]);
+
+  useEffect(() => {
+    const storedSelectedGame = localStorage.getItem("selectedGame");
+    const storedSelectedArea = localStorage.getItem("selectedArea");
+    const storedSelectedDate = localStorage.getItem("selectedDate");
+
+    const matchingGame = clubGame?.find(
+      (game) => game.game_type.game_name === storedSelectedGame
+    );
+
+    if (storedSelectedArea){
+      setAreaName(storedSelectedArea);
+    } else {
+      setAreaName(clubLocation?.area?.area_name)
+    }
+    if (courts) {
+      setCourtName(courts && courts[0]?.name);
+    }
+
+    if (matchingGame) {
+      setGameName(storedSelectedGame);
+    } else if (clubGame?.length > 0) {
+      setGameName(clubGame[0]?.game_type?.game_name);
+    }
+
+    if (storedSelectedDate) {
+      setDate(storedSelectedDate);
+    } else {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const day = String(today.getDate()).padStart(2, "0");
+      const todayFormatted = `${year}-${month}-${day}`;
+      setDate(todayFormatted);
+    }
+  }, [clubGame, clubLocation, courts]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (selectedSlot) {
@@ -180,12 +223,14 @@ function BookingInfoScreen() {
       const formDataJSON = JSON.stringify(formData);
       localStorage.setItem("Bookingdata", formDataJSON);
 
-      if (userInfo) {
+      if (userInfo && slots?.length !== 0) {
         setLoader(false);
         navigate("/checkout");
-      } else {
+      } else if (!userInfo) {
         setLoader(false);
         setOpenForm(true);
+      } else if (slots?.length === 0) {
+        toast.error("select a slot before proceeding to book");
       }
     }
   };
@@ -208,25 +253,26 @@ function BookingInfoScreen() {
       setSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
       setSelectedSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
     }
-  }, [slots, setSelectedSlot]);
+  }, [slots, setSelectedSlot, courts]);
 
-  const { userInfo } = useSelector((state) => state.userLogin);
-
-  const getSelectedGamePricing = () => {
-    const selectedGame = clubGame?.find(
-      (game) => game.game_type.game_name === gameName
-    );
-    return Number(selectedGame?.pricing).toFixed(0);
-  };
-
-  const clubPrice = Number(getSelectedGamePricing()).toFixed(0);
-  const taxPrice = (Number(clubPrice) * 0.05).toFixed(0);
-  const bookingFee = 10;
-  const totalPrice = (
-    Number(clubPrice) +
-    Number(taxPrice) +
-    Number(bookingFee)
-  ).toFixed(0);
+  useEffect(() => {
+    setSelectedArea(areaName);
+    setSelectedGame(gameName);
+    setSelectedDate(date);
+    setSelectedCourt(courtName);
+    setSelectedSlot(slot)
+  }, [
+    areaName,
+    gameName,
+    date,
+    courtName,
+    slot,
+    setSelectedArea,
+    setSelectedGame,
+    setSelectedDate,
+    setSelectedCourt,
+    setSelectedSlot,
+  ]);
 
   return (
     <div>
@@ -259,33 +305,35 @@ function BookingInfoScreen() {
               <SelectInput
                 id="game"
                 value={gameName}
-                disabled
+                // disabled
                 onChange={handleGameChange}
                 options={clubGame?.map((game) => ({
-                  id: game.id,
-                  game_name: game.game_type.game_name,
+                  id: game?.id,
+                  game_name: game?.game_type?.game_name,
                 }))}
                 label="Game"
               />
 
               <DateInput id="date" value={date} onChange={handleDateChange} />
 
-              <SelectInput
-                id="court"
-                value={courtName}
-                onChange={handleCourtChange}
-                options={courts?.map((court) => ({
-                  id: court.id,
-                  area_name: court.name,
-                }))}
-                label="Court"
-              />
-
-              {loadingSlots ? (
-                <div>Loading slots...</div>
-              ) : slots?.length === 0 ? (
-                <Alert severity="error">No slots available..</Alert>
+              {loading ? (
+                <CircularProgress />
               ) : (
+                <SelectInput
+                  id="court"
+                  value={courtName}
+                  onChange={handleCourtChange}
+                  options={courts?.map((court) => ({
+                    id: court.id,
+                    area_name: court.name,
+                  }))}
+                  label="Court"
+                />
+              )}
+
+              {loading ? (
+                <div>Loading slots...</div>
+              ) : slots?.length !== 0 ? (
                 <SelectInput
                   id="slot"
                   value={slot}
@@ -296,7 +344,12 @@ function BookingInfoScreen() {
                   }))}
                   label="slot"
                 />
+              ) : (
+                <Alert severity="error">
+                  No slots available in {courtName}
+                </Alert>
               )}
+              
             </div>
           </form>
         </div>
