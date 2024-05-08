@@ -4,8 +4,10 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { LinkContainer } from "react-router-bootstrap";
 import Rating from "./Rating";
+import { useNavigate } from "react-router-dom";
 
-function Club({ clubs, onClick }) {
+function Club({ clubs }) {
+  const navigate = useNavigate();
   const [isButtonVisible, setButtonVisibility] = useState(false);
 
   const showButton = () => {
@@ -17,7 +19,7 @@ function Club({ clubs, onClick }) {
   };
 
   const handleViewDetails = (club) => {
-    onClick(club.id);
+    navigate(`/club/${club.id}`);
   };
 
   return (
