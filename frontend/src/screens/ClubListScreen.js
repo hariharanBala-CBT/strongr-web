@@ -133,16 +133,11 @@ function ClubListScreen() {
   }, [areaError, gameError]);
 
   useEffect(() => {
-    if (clubLocationDetails?.length === 0 && areaName !== undefined) {
+    if (clubLocationDetails?.length === 0 && areaName !== undefined && gameName !== undefined) {
       dispatch(listSuggestedClub(areaName));
-    }
-  }, [clubLocationDetails, dispatch, areaName, areas]);
-
-  useEffect(() => {
-    if (suggestedClubList?.length === 0 && gameName !== undefined) {
       dispatch(listSuggestedClubGame(gameName));
     }
-  }, [suggestedClubList, dispatch, games, gameName]);
+  }, [clubLocationDetails, dispatch, areaName, areas, games, gameName]);
 
   return (
     <div>

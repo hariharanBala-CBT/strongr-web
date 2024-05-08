@@ -11,44 +11,58 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import serializers
 
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
+        # try:
             data = super().validate(attrs)
-            user = self.user
+            username = attrs.get('username')
+            user = User.objects.filter(username=username).first()
             if not user:
-                raise serializers.ValidationError("Username does not exist.")
+                return Response({'Incorrect username'}, status=status.HTTP_401_UNAUTHORIZED)
             serializer = UserSerializerWithToken(user).data
             for k, v in serializer.items():
                 data[k] = v
             return data
 
+        # except:
+        #     username = attrs.get('username')
+        #     user = User.objects.filter(username=username).first()
+        #     if not user:
+        #         return Response({'Incorrect username'}, status=status.HTTP_401_UNAUTHORIZED)
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
-        
-@api_view(['POST']) 
+
+
+@api_view(['POST'])
 def PhoneLoginView(request):
     data = request.data
 
-    try: 
+    try:
         phone = data['phone_number']
         print('phone', phone)
         message = {'success': 'logged in successfully'}
-        customer = Customer.objects.get(phone_number = phone[2:12])
+        customer = Customer.objects.get(phone_number=phone[2:12])
         print('customer', customer)
-        user = User.objects.get(id = customer.user_id)
+        user = User.objects.get(id=customer.user_id)
         print('user', user)
 
         serializer = UserSerializerWithToken(user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        # return Response(message) 
-        
+        # return Response(message)
+
     except Customer.DoesNotExist:
-        return Response({'error': 'User not registered'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'User not registered'},
+                        status=status.HTTP_404_NOT_FOUND)
 
     except KeyError:  # Handle specific exception
-        message = {'error': 'phone_number is required'}  # Provide an appropriate error message
+        message = {
+            'error': 'phone_number is required'
+        }  # Provide an appropriate error message
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def registerUser(request):
@@ -79,6 +93,7 @@ def registerUser(request):
     except:
         message = {'detail': 'User with this email already exists'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
 
 import os
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
@@ -114,6 +129,7 @@ from django.db.models import Q
 # from django.db import transaction
 from django.http import JsonResponse
 from .middleware import FirstLoginMiddleware
+
 
 class OrganizationSignupView(CreateView):
     form_class = OrganizationSignupForm
@@ -202,7 +218,7 @@ class LoginView(View):
 
         if user is not None:
             login(request, user)
-            
+
             # minutes_since_joined = (timezone.now() - user.date_joined).total_seconds() / 60
             if (timezone.now() - user.date_joined).total_seconds() < 30:
                 return redirect('home_page')
@@ -210,11 +226,9 @@ class LoginView(View):
             if user.groups.filter(name='Customer').exists():
                 return redirect('home_page')
             elif user.groups.filter(name='Organization').exists():
-                profile_page_url = reverse(
-                    'organization_profile',
-                    kwargs={'pk': user.organization.pk}
-                )
-                return redirect(profile_page_url)  
+                profile_page_url = reverse('organization_profile',
+                                           kwargs={'pk': user.organization.pk})
+                return redirect(profile_page_url)
             elif user.groups.filter(name='Tenant').exists():
                 return redirect('tenantuser_page')
             elif user.groups.filter(name='TenantAdmin').exists():
@@ -245,23 +259,21 @@ class OrganizationHomeView(TemplateView):
 
         courts = Court.objects.filter(location__organization=organization)
 
-       # Initialize an empty list to store all bookings
+        # Initialize an empty list to store all bookings
         all_bookings = []
-        
+
         for court in courts:
             # Filter bookings for the current court
             court_bookings = Booking.objects.filter(court=court)
-            
+
             # Extend the all_bookings list with the current court's bookings
             all_bookings.extend(court_bookings)
-        
-        context = {
-            'organization': organization,
-            'bookings': all_bookings
-        }
-        
+
+        context = {'organization': organization, 'bookings': all_bookings}
+
         return context
-    
+
+
 @method_decorator(login_required, name='dispatch')
 class ListofConfirmBookingView(TemplateView):
     template_name = 'confirmed_bookings.html'
@@ -271,20 +283,19 @@ class ListofConfirmBookingView(TemplateView):
 
         courts = Court.objects.filter(location__organization=organization)
 
-       # Initialize an empty list to store all bookings
+        # Initialize an empty list to store all bookings
         all_bookings = []
-        
+
         for court in courts:
-            court_bookings = Booking.objects.filter(Q(court=court) & Q(booking_status=Booking.CONFIRMED))
+            court_bookings = Booking.objects.filter(
+                Q(court=court) & Q(booking_status=Booking.CONFIRMED))
             all_bookings.extend(court_bookings)
-        
-        context = {
-            'organization': organization,
-            'bookings': all_bookings
-        }
-        
+
+        context = {'organization': organization, 'bookings': all_bookings}
+
         return context
-    
+
+
 @method_decorator(login_required, name='dispatch')
 class ListofPendingBookingView(TemplateView):
     template_name = 'pending_bookings.html'
@@ -294,20 +305,18 @@ class ListofPendingBookingView(TemplateView):
 
         courts = Court.objects.filter(location__organization=organization)
 
-       # Initialize an empty list to store all bookings
+        # Initialize an empty list to store all bookings
         all_bookings = []
-        
+
         for court in courts:
-            court_bookings = Booking.objects.filter(Q(court=court) & Q(booking_status=Booking.PENDING))
+            court_bookings = Booking.objects.filter(
+                Q(court=court) & Q(booking_status=Booking.PENDING))
             all_bookings.extend(court_bookings)
-        
-        context = {
-            'organization': organization,
-            'bookings': all_bookings
-        }
-        
+
+        context = {'organization': organization, 'bookings': all_bookings}
+
         return context
-    
+
 
 @method_decorator(login_required, name='dispatch')
 class ListofCancelledBookingView(TemplateView):
@@ -318,21 +327,17 @@ class ListofCancelledBookingView(TemplateView):
 
         courts = Court.objects.filter(location__organization=organization)
 
-       # Initialize an empty list to store all bookings
+        # Initialize an empty list to store all bookings
         all_bookings = []
-        
-        for court in courts:
-            court_bookings = Booking.objects.filter(Q(court=court) & Q(booking_status=Booking.CANCELLED))
-            all_bookings.extend(court_bookings)
-        
-        context = {
-            'organization': organization,
-            'bookings': all_bookings
-        }
-        
-        return context
-    
 
+        for court in courts:
+            court_bookings = Booking.objects.filter(
+                Q(court=court) & Q(booking_status=Booking.CANCELLED))
+            all_bookings.extend(court_bookings)
+
+        context = {'organization': organization, 'bookings': all_bookings}
+
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -365,7 +370,7 @@ class OrganizationProfileView(UpdateView):
                 form.add_error('alt_number',
                                'Alternate number must be at least 10 digits')
                 return self.form_invalid(form)
-            
+
         messages.success(self.request, 'Profile updated successfully.')
         return super().form_valid(form)
 
@@ -377,21 +382,27 @@ class OrganizationProfileView(UpdateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationAddLocationView(CreateView):   
-    model = OrganizationLocation    
-    template_name = 'org_createlocation.html'    
-    form_class = OrganizationLocationForm    
+class OrganizationAddLocationView(CreateView):
+    model = OrganizationLocation
+    template_name = 'org_createlocation.html'
+    form_class = OrganizationLocationForm
     success_url = reverse_lazy('organization_locationworkingdays')
 
-    def form_valid(self, form):       
-        organization = get_object_or_404(Organization, user=self.request.user)        
-        form.instance.organization = organization        
-        form.save()        
-        self.request.session['location_pk'] = form.instance.pk   
+    def form_valid(self, form):
+        organization = get_object_or_404(Organization, user=self.request.user)
+        form.instance.organization = organization
+        form.save()
+        self.request.session['location_pk'] = form.instance.pk
 
-        days_order = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-        
-        days_index_map = {day: index for index, day in enumerate(days_order, start=1)}
+        days_order = [
+            'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
+            'Saturday'
+        ]
+
+        days_index_map = {
+            day: index
+            for index, day in enumerate(days_order, start=1)
+        }
 
         sorted_days = sorted(days_order, key=lambda x: days_index_map[x])
 
@@ -400,7 +411,7 @@ class OrganizationAddLocationView(CreateView):
                 days=day,
                 organization_location=form.instance,
             )
-            workingdays.save()        
+            workingdays.save()
 
         return HttpResponseRedirect(self.success_url)
 
@@ -545,14 +556,15 @@ class OrganizationUpdateLocationImageView(UpdateView):
     success_url = reverse_lazy('organization_imageslist')
 
     def form_valid(self, form):
-            clear_image = self.request.POST.get('image-clear', False)
-            
-            if clear_image:
-                if self.object.image:
-                    self.object.image.delete()
-                form.instance.image = None
-            
-            return super().form_valid(form)
+        clear_image = self.request.POST.get('image-clear', False)
+
+        if clear_image:
+            if self.object.image:
+                self.object.image.delete()
+            form.instance.image = None
+
+        return super().form_valid(form)
+
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationDeleteLocationImageView(DeleteView):
@@ -694,7 +706,8 @@ class SlotCreateView(CreateView):
         return kwargs
 
     def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form, error=form.errors.as_text()))
+        return self.render_to_response(
+            self.get_context_data(form=form, error=form.errors.as_text()))
 
     def form_valid(self, form):
         try:
@@ -705,18 +718,18 @@ class SlotCreateView(CreateView):
             selected_day = form.cleaned_data.get('days')
             # Get the working days object for the selected day
             working_day = OrganizationLocationWorkingDays.objects.get(
-                organization_location=location, 
-                days=selected_day
-            )
-            
+                organization_location=location, days=selected_day)
+
             if not working_day.is_active:
-                return self.render_to_response(self.get_context_data(form=form, error='Selected working day is not active'))
+                return self.render_to_response(
+                    self.get_context_data(
+                        form=form, error='Selected working day is not active'))
 
             # # Set the start and end time for the slot based on the working day
             # if (form.instance.start_time < working_day.work_from_time):
             #     error_message = 'Selected start time is before working day time given'
             #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
-        
+
             # if (form.instance.end_time > working_day.work_to_time):
             #     error_message = 'Selected end time is after working day time given'
             #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
@@ -730,12 +743,14 @@ class SlotCreateView(CreateView):
             # Check if the difference is exactly one hour
             if time_diff != timedelta(hours=1):
                 error_message = 'The difference between start and end time must be exactly one hour.'
-                return self.render_to_response(self.get_context_data(form=form, error=error_message))
-
+                return self.render_to_response(
+                    self.get_context_data(form=form, error=error_message))
 
             return super().form_valid(form)
         except KeyError:
-            return self.render_to_response(self.get_context_data(form=form, error='Location PK not found in session'))
+            return self.render_to_response(
+                self.get_context_data(
+                    form=form, error='Location PK not found in session'))
 
 
 class SlotUpdateView(UpdateView):
@@ -745,22 +760,23 @@ class SlotUpdateView(UpdateView):
     success_url = reverse_lazy('slot-list')
 
     def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form, error=form.errors.as_text()))
+        return self.render_to_response(
+            self.get_context_data(form=form, error=form.errors.as_text()))
 
     def form_valid(self, form):
         # Get the selected day from the form
         selected_day = form.cleaned_data.get('days')
         # Get the working days object for the selected day
         working_day = OrganizationLocationWorkingDays.objects.get(
-            organization_location=self.object.location, 
-            days=selected_day
-        )
+            organization_location=self.object.location, days=selected_day)
 
-        print("working_day.work_from_time is:",working_day.work_from_time)
-        
+        print("working_day.work_from_time is:", working_day.work_from_time)
+
         if not working_day.is_active:
-            return self.render_to_response(self.get_context_data(form=form, error='Selected working day is not active'))
-        
+            return self.render_to_response(
+                self.get_context_data(
+                    form=form, error='Selected working day is not active'))
+
         start_time = form.cleaned_data.get('start_time')
         end_time = form.cleaned_data.get('end_time')
 
@@ -770,19 +786,20 @@ class SlotUpdateView(UpdateView):
         # Check if the difference is exactly one hour
         if time_diff != timedelta(hours=1):
             error_message = 'The difference between start and end time must be exactly one hour.'
-            return self.render_to_response(self.get_context_data(form=form, error=error_message))
-
+            return self.render_to_response(
+                self.get_context_data(form=form, error=error_message))
 
         # # Set the start and end time for the slot based on the working day
         # if (form.instance.start_time < working_day.work_from_time):
         #     error_message = 'Selected start time is before working day time given'
         #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
-        
+
         # if (form.instance.end_time > working_day.work_to_time):
         #     error_message = 'Selected start time is before working day time given'
         #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
 
         return super().form_valid(form)
+
 
 @method_decorator(login_required, name='dispatch')
 class SlotDeleteView(DeleteView):
@@ -826,14 +843,16 @@ class PreviewView(FormView):
         for location in locations:
             context_item = {}
             context_item['location'] = location
-            context_item['games'] = OrganizationLocationGameType.objects.filter(
-                organization_location=location)
-            context_item['amenities'] = OrganizationLocationAmenities.objects.filter(
-                organization_location=location)
-            context_item['workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
-                organization_location=location)
-            context_item['courts'] = Court.objects.filter(
-                location=location)
+            context_item[
+                'games'] = OrganizationLocationGameType.objects.filter(
+                    organization_location=location)
+            context_item[
+                'amenities'] = OrganizationLocationAmenities.objects.filter(
+                    organization_location=location)
+            context_item[
+                'workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
+                    organization_location=location)
+            context_item['courts'] = Court.objects.filter(location=location)
             context_item['images'] = OrganizationGameImages.objects.filter(
                 organization=location)
             locationdetails.append(context_item)
@@ -842,7 +861,6 @@ class PreviewView(FormView):
         context['profiles'] = profile
         return context
 
-    
     def form_valid(self, form):
         organization = Organization.objects.get(user=self.request.user)
         organization.is_terms_and_conditions_agreed = True
@@ -860,9 +878,11 @@ class TermsandConditionsView(FormView):
     def get_context_data(self):
         context = super().get_context_data()
         organization = Organization.objects.get(user=self.request.user)
-        context['terms_and_conditions'] = organization.tenant.sign_up_terms_and_conditions
+        context[
+            'terms_and_conditions'] = organization.tenant.sign_up_terms_and_conditions
         print(context)
         return context
+
 
 @method_decorator(login_required, name='dispatch')
 class TenantTermsandConditionsView(FormView):
@@ -872,6 +892,7 @@ class TenantTermsandConditionsView(FormView):
 
 
 from collections import defaultdict
+
 
 @method_decorator(login_required, name='dispatch')
 class StatusView(TemplateView):
@@ -885,7 +906,8 @@ class StatusView(TemplateView):
 
     def get_organization_location(self, organization):
         try:
-            return OrganizationLocation.objects.filter(organization=organization)
+            return OrganizationLocation.objects.filter(
+                organization=organization)
         except OrganizationLocation.DoesNotExist:
             raise Http404("Organization Location not found")
 
@@ -894,7 +916,7 @@ class StatusView(TemplateView):
     #         return Message.objects.filter(recipient=recipient, subject="Organization Cancellation").latest('timestamp')
     #     except Message.DoesNotExist:
     #         return None
-    
+
     # def get_location_cancellation_messages(self, recipient, location):
     #     try:
     #         return Message.objects.filter(recipient=recipient, subject=f"Location Cancellation")
@@ -907,14 +929,14 @@ class StatusView(TemplateView):
             locations = self.get_organization_location(organization)
 
             # organization_cancellation_message = None
-           
+
             # if organization.status == Organization.CANCELLED:
             #     organization_cancellation_message = self.get_latest_cancellation_message(request.user)
 
             # for location in locations:
             #     if location.status == OrganizationLocation.CANCELLED:
             #         cancellation_messages = self.get_location_cancellation_messages(request.user, location)
-                    
+
             context = {
                 'organization': organization,
                 'locations': locations,
@@ -923,9 +945,12 @@ class StatusView(TemplateView):
             }
             return render(request, self.template_name, context)
         except Http404 as e:
-            return render(request, self.template_name, {'error_message': str(e)})
+            return render(request, self.template_name,
+                          {'error_message': str(e)})
+
 
 #FOR TENANT USER:
+
 
 @method_decorator(login_required, name='dispatch')
 class TenantEmployeeHomeView(ListView):
@@ -939,6 +964,7 @@ class OrganizationListView(ListView):
     model = Organization
     template_name = 'organization_list.html'
     context_object_name = 'organizations'
+
 
 # class TenantOrganizationPreviewView(DetailView):
 #     model = Organization
@@ -983,14 +1009,17 @@ class ApprovalListView(ListView):
             tenant=TenantUser.objects.get(user=self.request.user).tenant,
             status=Organization.IN_PROGRESS)
 
+
 @method_decorator(csrf_exempt, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ChangeOrganizationStatusView(View):
+
     def post(self, request, organization_id, new_status):
         # Get the organization object using the organization_id
         organization = get_object_or_404(Organization, id=organization_id)
 
-        reason_for_cancellation = request.POST.get('reason_for_cancellation', '')
+        reason_for_cancellation = request.POST.get('reason_for_cancellation',
+                                                   '')
 
         if new_status == 1:
             status_text = 'Approved'
@@ -1010,32 +1039,35 @@ class ChangeOrganizationStatusView(View):
     # Update the organization's status and save it
         organization.status = new_status
         organization.save()
-    
-    #send mail:
+
+        #send mail:
         subject = 'Organization status'
-        message = render_to_string(
-            'status_mail.html', {
-                'user': organization.user,
-                'status': status_text
-            })
+        message = render_to_string('status_mail.html', {
+            'user': organization.user,
+            'status': status_text
+        })
         from_email = 'testgamefront@gmail.com'
         recipient_list = [organization.user.email]
         send_mail(subject,
-                    message,
-                    from_email,
-                    recipient_list,
-                    fail_silently=False)
+                  message,
+                  from_email,
+                  recipient_list,
+                  fail_silently=False)
 
-    # add a success message
+        # add a success message
         messages.success(request, 'Organization status updated successfully.')
 
         return redirect('organization_list')
 
-class ChangeOrganizationLocationStatusView(View):
-    def post(self, request, location_id, new_status):
-        organizationLocation = get_object_or_404(OrganizationLocation, id=location_id)
 
-        reason_for_cancellation = request.POST.get('reason_for_cancellation', '')
+class ChangeOrganizationLocationStatusView(View):
+
+    def post(self, request, location_id, new_status):
+        organizationLocation = get_object_or_404(OrganizationLocation,
+                                                 id=location_id)
+
+        reason_for_cancellation = request.POST.get('reason_for_cancellation',
+                                                   '')
 
         if new_status == 1:
             status_text = 'Approved'
@@ -1048,39 +1080,42 @@ class ChangeOrganizationLocationStatusView(View):
             #     body=reason_for_cancellation,
             #     is_read=False
             # )
-            organizationLocation.status_description=reason_for_cancellation
+            organizationLocation.status_description = reason_for_cancellation
         else:
             status_text = 'Unknown'
-        
+
         organizationLocation.status = new_status
         organizationLocation.save()
 
-        messages.success(request, 'Organization Location status updated successfully.')
+        messages.success(request,
+                         'Organization Location status updated successfully.')
 
         user = request.user
 
         #send mail:
         subject = 'Location status'
-        message = render_to_string(
-            'status_mail.html', {
-                'user': user,
-                'status': status_text
-            })
+        message = render_to_string('status_mail.html', {
+            'user': user,
+            'status': status_text
+        })
         from_email = 'testgamefront@gmail.com'
         recipient_list = [user.email]
         send_mail(subject,
-                    message,
-                    from_email,
-                    recipient_list,
-                    fail_silently=False)
-        
+                  message,
+                  from_email,
+                  recipient_list,
+                  fail_silently=False)
+
         if user.groups.filter(name='Organization').exists():
             return redirect('preview')
         elif user.groups.filter(name='Tenant').exists():
-            page_url = reverse('organization_preview', kwargs={'pk': organizationLocation.organization.pk})
+            page_url = reverse(
+                'organization_preview',
+                kwargs={'pk': organizationLocation.organization.pk})
             return redirect(page_url)
         elif user.groups.filter(name='Customer').exists():
             return redirect('error-url')
+
 
 @method_decorator(login_required, name='dispatch')
 class ChangePasswordView(PasswordChangeView):
@@ -1107,14 +1142,14 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('login')
 
+
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 
-
-
 class CreateMultipleSlotsView(View):
+
     def get(self, request, *args, **kwargs):
         pk = request.session.get('location_pk')
         courts = Court.objects.filter(location_id=pk)
@@ -1124,26 +1159,26 @@ class CreateMultipleSlotsView(View):
             'form': form,  # Pass the form to the template context
         }
         return render(request, 'ml.html', context)
-        
+
     def post(self, request, *args, **kwargs):
         # Get the court_pk from URL parameters
         court_pk = kwargs.get('court_pk')
-        
+
         # Retrieve the court object corresponding to court_pk
-        court = get_object_or_404(Court, pk=court_pk, location_id=request.session.get('location_pk'))
+        court = get_object_or_404(
+            Court, pk=court_pk, location_id=request.session.get('location_pk'))
 
         # Get all active days for the organization location
         active_days = OrganizationLocationWorkingDays.objects.filter(
-            organization_location=request.session.get('location_pk'), 
-            is_active=True
-        )
+            organization_location=request.session.get('location_pk'),
+            is_active=True)
 
         # Delete existing slots associated with outdated working days
-        Slot.objects.filter(
-            court=court,
-            location=OrganizationLocation.objects.get(pk=request.session.get('location_pk')),
-            days__in=[day.days for day in active_days]
-        ).delete()
+        Slot.objects.filter(court=court,
+                            location=OrganizationLocation.objects.get(
+                                pk=request.session.get('location_pk')),
+                            days__in=[day.days
+                                      for day in active_days]).delete()
 
         # Iterate over active days
         for day in active_days:
@@ -1152,25 +1187,29 @@ class CreateMultipleSlotsView(View):
             work_to_time = day.work_to_time
 
             # Set current time to the starting work time
-            current_datetime = datetime.combine(datetime.now().date(), work_from_time)
+            current_datetime = datetime.combine(datetime.now().date(),
+                                                work_from_time)
 
             # Create slots for each hour within the updated time range
-            while current_datetime < datetime.combine(datetime.now().date(), work_to_time):
+            while current_datetime < datetime.combine(datetime.now().date(),
+                                                      work_to_time):
                 # Create a new slot for the current hour and court
                 Slot.objects.create(
                     start_time=current_datetime.time(),
                     end_time=(current_datetime + timedelta(hours=1)).time(),
                     court=court,
-                    location=OrganizationLocation.objects.get(pk=request.session.get('location_pk')),
-                    days=day.days, 
+                    location=OrganizationLocation.objects.get(
+                        pk=request.session.get('location_pk')),
+                    days=day.days,
                     is_booked=False  # Assuming slots are initially not booked
                 )
-                
+
                 # Move to the next hour
                 current_datetime += timedelta(hours=1)
 
         # Redirect or render as needed
         return redirect('court-list')
+
 
 @method_decorator(login_required, name='dispatch')
 class TenantEmployeeHomeView(ListView):
@@ -1178,11 +1217,13 @@ class TenantEmployeeHomeView(ListView):
     template_name = 'tenantuser_page.html'
     context_object_name = 'organizations'
 
+
 @method_decorator(login_required, name='dispatch')
 class BookingListView(ListView):
     model = Booking
     template_name = 'bookings_list.html'
     context_object_name = 'bookings'
+
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationListView(ListView):
@@ -1190,11 +1231,13 @@ class OrganizationListView(ListView):
     template_name = 'organization_list.html'
     context_object_name = 'organizations'
 
+
 # @method_decorator(login_required, name='dispatch')
 # class LocationListView(ListView):
 #     model = Organization
 #     template_name = 'tenant_location_list.html'
 #     context_object_name = 'organizations'
+
 
 @method_decorator(login_required, name='dispatch')
 class LocationListView(ListView):
@@ -1209,11 +1252,13 @@ class CancelOrganizationListView(ListView):
     template_name = 'cancelled_organization.html'
     context_object_name = 'organizations'
 
+
 @method_decorator(login_required, name='dispatch')
 class PendingOrganizationListView(ListView):
     model = Organization
     template_name = 'pending_organization.html'
     context_object_name = 'organizations'
+
 
 @method_decorator(login_required, name='dispatch')
 class WaitingOrganizationListView(ListView):
@@ -1227,7 +1272,6 @@ class ConfirmOrganizationListView(ListView):
     model = Organization
     template_name = 'confirmed_organization.html'
     context_object_name = 'organizations'
-
 
 
 class TenantOrganizationPreviewView(DetailView):
@@ -1250,14 +1294,16 @@ class TenantOrganizationPreviewView(DetailView):
         for location in locations:
             context_item = {}
             context_item['location'] = location
-            context_item['games'] = OrganizationLocationGameType.objects.filter(
-                organization_location=location)
-            context_item['amenities'] = OrganizationLocationAmenities.objects.filter(
-                organization_location=location)
-            context_item['workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
-                organization_location=location)
-            context_item['courts'] = Court.objects.filter(
-                location=location)
+            context_item[
+                'games'] = OrganizationLocationGameType.objects.filter(
+                    organization_location=location)
+            context_item[
+                'amenities'] = OrganizationLocationAmenities.objects.filter(
+                    organization_location=location)
+            context_item[
+                'workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
+                    organization_location=location)
+            context_item['courts'] = Court.objects.filter(location=location)
             context_item['images'] = OrganizationGameImages.objects.filter(
                 organization=location)
 
@@ -1265,4 +1311,3 @@ class TenantOrganizationPreviewView(DetailView):
 
         context['all_locations'] = locationdetails
         return context
-

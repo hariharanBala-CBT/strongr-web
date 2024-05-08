@@ -14,6 +14,7 @@ import UpdatePassword from './screens/UpdatePassword'
 import PhoneNumberLoginScreen from './screens/PhoneNumberLoginScreen'
 import { HomeProvider } from "./context/HomeContext";
 import ClubSearchScreen from "./screens/clubSearchScreen";
+import ErrorScreen from "./screens/ErrorScreen";
 
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
         <HomeProvider>
           <Container>
             <Routes>
+              <Route path="/error/" element={<ErrorScreen />} />
+
               <Route path="/" element={<HomeScreen />} />
               <Route path="/clubs/" element={<ClubListScreen />} />
               <Route path="/clubsearch/" element={<ClubSearchScreen/>} />

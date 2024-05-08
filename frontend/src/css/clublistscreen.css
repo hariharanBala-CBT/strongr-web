@@ -69,6 +69,8 @@
 .clubs-display{
   display: flex;
   flex-direction: row;
+  column-gap: 1.5rem;
+  row-gap: 1.5rem;
 }
 
 .clubs-error{
