@@ -46,7 +46,21 @@ class OrganizationSignupForm(forms.Form):
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'placeholder':'username'}))
-    password = forms.CharField(max_length=100, widget=forms.PasswordInput(attrs={'placeholder': 'password'}))  
+    password = forms.CharField(max_length=100, widget=forms.PasswordInput(attrs={'placeholder': 'password'}))
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if not User.objects.filter(username=username).exists():
+            raise ValidationError("Username does not exist.")
+        return username
+
+    def clean_password(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        user = User.objects.filter(username=username).first()
+        if user and not user.check_password(password):
+            raise ValidationError("Password is incorrect.")
+        return password  
 
 class OrganizationProfileForm(forms.ModelForm):
     organization_name = forms.CharField(max_length=50,disabled=True)

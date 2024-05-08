@@ -189,6 +189,7 @@ def filterClubs(request):
 @api_view(['GET'])
 def getSuggestedClub(request):
     selected_area = request.query_params.get('area')
+    print(selected_area)
 
     try:
         selected_area_obj = Area.objects.get(area_name=selected_area)

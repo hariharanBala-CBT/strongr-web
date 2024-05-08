@@ -60,7 +60,7 @@
                                 Profile
                             </a>
                             <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-location-pin"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
                             </a>
                             <a class="nav-link" href="{% url 'preview' %}">
@@ -68,7 +68,7 @@
                                 Preview
                             </a>
                             <a class="nav-link" href="{% url 'status' %}">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-building-circle-check"></i></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
                                 Status
                             </a>
                         </div>
@@ -82,13 +82,17 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4 mt-4">
+                        {% if messages %}
+                            <div class="alert alert-success" role="alert" id="successAlert">
+                                {% for message in messages %}
+                                <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                         <h1 class="mt-4 mb-4" style="margin-left: 40%;">Location List</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">{{ user.username }}</li>
-                        </ol>
                         <div class="card mb-4">
                             <div class="location-card card-header">
-                                <div><i class="fa-solid fa-location-pin"></i>
+                                <div><i class="fas fa-map-marker-alt"></i>
                                 Locations</div>
                                 <div><a href="{% url 'organization_addlocation' %}" class="btn btn-success align-self-end">Add locations</a></div>
                             </div>
@@ -178,6 +182,16 @@
           }
 
           });
+        </script>
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                const successAlert = document.getElementById('successAlert');
+                if (successAlert) {
+                    setTimeout(() => {
+                        successAlert.style.display = 'none';
+                    }, 2500); // Hide after 5000ms or 5 seconds
+                }
+            });
         </script>
     </body>
 </html>

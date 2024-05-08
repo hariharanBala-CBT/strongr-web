@@ -24,10 +24,89 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
     <style>
-        /* Override Bootstrap styles */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f4f6f9;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #004085;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 8px 8px 0 0;
+            padding: 10px 15px;
+        }
+
+        .card-body {
+            padding: 20px;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .status-label {
+            padding: 5px 10px;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .status-approved { background-color: #28a745; }
+        .status-pending { background-color: #ffc107; }
+        .status-in-progress { background-color: #17a2b8; }
+        .status-cancelled { background-color: #dc3545; }
+        .status-unknown { background-color: #6c757d; }
+
+        footer {
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        footer a {
+            color: #007bff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .nav-tabs .nav-link {
+            border: 1px solid transparent;
+            border-top-left-radius: 0.25rem;
+            border-top-right-radius: 0.25rem;
+            color: #007bff;
+        }
+
+        .nav-tabs .nav-link:hover {
+            border-color: #e0e0e0 #e0e0e0 #fff;
         }
 
         ul {
@@ -51,56 +130,6 @@
 
         .navbar-toggler-icon {
             color: white;
-        }
-
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            border-radius: 15px 15px 0 0;
-        }
-
-        .card-body h5 {
-            color: #333;
-        }
-
-        .card-body p {
-            color: #777;
-        }
-
-        .btn-group {
-            margin-top: 20px;
-        }
-
-        .btn-success, .btn-danger {
-            border-radius: 30px;
-        }
-
-
-        footer {
-            background-color: #fff;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        footer a {
-            color: #333;
-            text-decoration: none;
-            margin-left: 10px;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        .buttons {
-            margin: 2rem;
-            display: flex;
-            flex-direction: row;  
-            gap: 10px; align-items: center; 
-            justify-content: center;
         }
 
         /* Style for Disabled Checkbox */
@@ -243,7 +272,7 @@
                 <!-- Sidebar Content -->
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Main</div>
+                        <div class="sb-sidenav-menu-heading">Core</div>
                         <a class="nav-link" href="{% url 'organization_page' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
@@ -277,11 +306,10 @@
         <!-- Main Content -->
         <div id="layoutSidenav_content">
             <main class="container-fluid mt-4" style="margin-top: 210px;">
-                <h1 class="mt-4 mb-4" style="margin-left: 40%;">Preview</h1>
                 <!-- Organization Card -->
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">
-                        <h2 class="m-0">Preview of {{ user.first_name }}</h2>
+                        <h2 class="m-0">{{ user.first_name }}</h2>
                     </div>
                     <div class="card-body">
                         <!-- Organization Details -->
@@ -294,7 +322,6 @@
                                     {% for profile in profiles %}
 
                                         <li><div class="label">Name</div>:&nbsp; {{profile.organization_name}}</li>
-                                        <li><div class="label">Email</div>:&nbsp; {{profile.user.email}}</li>
                                         <li><div class="label">Phone</div>:&nbsp; {{profile.phone_number}}</li>
                                         {% if profile.alt_number %}
                                             <li><div class="label"> Alternate Phone</div>:&nbsp; {{profile.alt_number}}</li>
@@ -456,22 +483,10 @@
                                                     </table>
                                                 </form>
                                                 <!-- Courts -->
-                                                <h5><strong>Courts:</strong></h5>
+                                                <h5><strong>Courts</strong></h5>
                                                 <ul>
                                                     {% for court in location_item.courts %}
-                                                        
-                                                            <li>{{ court.name }}</li>
-                                                       
-                                                    {% endfor %}
-                                                </ul>
-                                                <h5><strong>Images:</strong></h5>
-                                                <ul>
-                                                    {% for image in location_item.images %}
-                                                        {% if image.image %}
-                                                            <img src="{{ image.image.url }}" alt="Image" width="70" height="70">
-                                                        {% else %}
-                                                            No Image
-                                                        {% endif %}
+                                                    <li>{{ court.name }}</li>
                                                     {% endfor %}
                                                 </ul>
                                                 <div class="text-center mb-4">
@@ -496,7 +511,7 @@
                     </div>
                 </div>
                 {% for profile in profiles %}
-                    {% if profile.status != 1 and profile.status != 3 %}
+                    {% if profile.status == 1 and profile.status == 3 %}
                         <hr style="height:2px;border-width:0;color:gray;background-color:gray">
                         <div class="my-4"
                             style="  display: flex;justify-content: center;align-items: center; flex-direction: row;">
@@ -559,19 +574,19 @@
             }
         }
 
-     
+        // When the user clicks on the button, scroll to the top of the document
         function topFunction() {
-            document.body.scrollTop = 0; 
-            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         }
         window.addEventListener('DOMContentLoaded', event => {
-         
+            // Simple-DataTables
             const datatablesSimple = document.getElementById('datatablesSimple');
             if (datatablesSimple) {
                 new simpleDatatables.DataTable(datatablesSimple);
             }
 
-         
+            // Toggle the side navigation
             const sidebarToggle = document.body.querySelector('#sidebarToggle');
             if (sidebarToggle) {
                 sidebarToggle.addEventListener('click', event => {

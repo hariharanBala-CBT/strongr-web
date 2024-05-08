@@ -207,14 +207,14 @@ class LoginView(View):
 
     def get(self, request):
         form = LoginForm()
-        context = {'form': form}
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(request, username=username, password=password)
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
@@ -223,19 +223,22 @@ class LoginView(View):
             if (timezone.now() - user.date_joined).total_seconds() < 30:
                 return redirect('home_page')
 
-            if user.groups.filter(name='Customer').exists():
-                return redirect('home_page')
-            elif user.groups.filter(name='Organization').exists():
-                profile_page_url = reverse('organization_profile',
-                                           kwargs={'pk': user.organization.pk})
-                return redirect(profile_page_url)
-            elif user.groups.filter(name='Tenant').exists():
-                return redirect('tenantuser_page')
-            elif user.groups.filter(name='TenantAdmin').exists():
-                return redirect('admin_page')
+                # Redirect users based on their group
+                if user.groups.filter(name='Customer').exists():
+                    return redirect('home_page')
+                elif user.groups.filter(name='Organization').exists():
+                    profile_page_url = reverse('organization_profile', kwargs={'pk': user.organization.pk})
+                    return redirect(profile_page_url)
+                elif user.groups.filter(name='Tenant').exists():
+                    return redirect('tenantuser_page')
+                elif user.groups.filter(name='TenantAdmin').exists():
+                    return redirect('admin_page')
+            else:
+                messages.error(request, 'Invalid username or password')
+                return redirect('login')
         else:
-            messages.info(request, 'Invalid username or password')
-            return redirect('login')
+            # If the form is not valid, re-render the page with existing data and errors
+            return render(request, self.template_name, {'form': form})
 
         return HttpResponse("Unexpected error occurred. Please try again.")
 
