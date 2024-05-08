@@ -219,20 +219,17 @@ class LoginView(View):
         if user is not None:
             login(request, user)
 
-            # minutes_since_joined = (timezone.now() - user.date_joined).total_seconds() / 60
-            if (timezone.now() - user.date_joined).total_seconds() < 30:
+            # Redirect users based on their group
+            if user.groups.filter(name='Customer').exists():
                 return redirect('home_page')
-
-                # Redirect users based on their group
-                if user.groups.filter(name='Customer').exists():
-                    return redirect('home_page')
-                elif user.groups.filter(name='Organization').exists():
-                    profile_page_url = reverse('organization_profile', kwargs={'pk': user.organization.pk})
-                    return redirect(profile_page_url)
-                elif user.groups.filter(name='Tenant').exists():
-                    return redirect('tenantuser_page')
-                elif user.groups.filter(name='TenantAdmin').exists():
-                    return redirect('admin_page')
+            elif user.groups.filter(name='Organization').exists():
+                profile_page_url = reverse('organization_profile', kwargs={'pk': user.organization.pk})
+                return redirect(profile_page_url)
+            elif user.groups.filter(name='Tenant').exists():
+                return redirect('tenantuser_page')
+            elif user.groups.filter(name='TenantAdmin').exists():
+                return redirect('admin_page')
+            
             else:
                 messages.error(request, 'Invalid username or password')
                 return redirect('login')

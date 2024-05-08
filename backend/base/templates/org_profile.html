@@ -183,13 +183,13 @@
                     <div class="profile-card">
                         <h1 class="my-4">Profile</h1>
                         <div style="display: flex;">
-                            {% if messages %}
+                            <!-- {% if messages %}
                                 <div class="alert alert-success" role="alert">
                                     {% for message in messages %}
                                     <p>{{ message }}</p>
                                     {% endfor %}
                                 </div>
-                            {% endif %}
+                            {% endif %} -->
                             <form method="post" id="updateForm">
                                 {% csrf_token %}
                                 <div class="table-responsive">
