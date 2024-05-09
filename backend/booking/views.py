@@ -23,6 +23,24 @@ from django.template.loader import render_to_string
 from django.contrib.auth.hashers import make_password
 
 @api_view(['GET'])
+def ValidateUser(request):
+    username = request.GET.get('username')
+
+    try:
+        if not username:
+            return Response({'detail': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.filter(username=username).first()
+        if not user:
+            return Response({'detail': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'detail': 'User exists'}, status=status.HTTP_200_OK)
+    # except Exception as e:
+    #     return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        return Response({'detail': 'User cannot be validated'},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
 def search(request):
     query = request.GET.get('keyword')
     organizations = Organization.objects.all()

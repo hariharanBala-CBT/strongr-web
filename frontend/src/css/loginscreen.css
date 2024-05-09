@@ -41,8 +41,6 @@
 }
 
 .login-page input{
-  padding: 0.5rem;
-  margin: .65rem;
   margin-top: 0;
   display: flex;
   flex-wrap: wrap;

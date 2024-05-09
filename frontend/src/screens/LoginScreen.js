@@ -4,10 +4,10 @@ import Header from "../components/Header";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../actions/actions";
+import { login, validateUser } from "../actions/actions";
 import toast, { Toaster } from "react-hot-toast";
-import { CircularProgress } from "@mui/material";
-import { USER_LOGIN_RESET } from "../constants/constants";
+import { CircularProgress, TextField } from "@mui/material";
+import { USER_LOGIN_RESET, USER_VALIDATE_RESET } from "../constants/constants";
 // import { USER_LOGIN_RESET } from "../constants/constants";
 import { LinkContainer } from "react-router-bootstrap";
 
@@ -20,42 +20,39 @@ function LoginScreen() {
   const navigate = useNavigate();
 
   // const redirect = location.search ? location.search.split("=")[1] : "/";
+  const { userInfo, error, loading } = useSelector((state) => state.userLogin);
+  const { userValidate } = useSelector((state) => state.userValidator);
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { error, loading } = userLogin;
-  const { userInfo } = useSelector((state) => state.userLogin);
-
-  // useEffect(() => {
-  //   dispatch({
-  //     type: USER_LOGIN_RESET,
-  //   })
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch({
+      type: USER_VALIDATE_RESET,
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     if (userInfo) {
       navigate(-1);
-      toast.success('logged in successfully')
-    }
-    else if(error){
-      toast.error('Invalid Credentials')
+      toast.success("logged in successfully");
+    } else if (error) {
+      toast.error("Incorrect password");
       dispatch({
         type: USER_LOGIN_RESET,
-      })
+      });
     }
   }, [navigate, userInfo, dispatch, error]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(login(username, password))
-      // .then(() => {
-      //   navigate(-1);
-      //   toast.success("Logged in successfully");
-      //   console.log("User logged in successfully");
-      // })
-      // .catch((error) => {
-      //   toast.error("Error during login");
-      //   console.error("Error:", error);
-      // });
+    dispatch(login(username, password));
+  };
+
+  const handleUsername = (e) => {
+    setUsername(e.target.value);
+    dispatch(validateUser(e.target.value));
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
   };
 
   return (
@@ -70,25 +67,29 @@ function LoginScreen() {
           ) : (
             <form onSubmit={handleSubmit}>
               <label>Username</label>
-              <input
+
+              <TextField
+                error={username.length > 0 && Boolean(userValidate === false)}
+                helperText={
+                  username.length > 0 &&
+                  userValidate === false &&
+                  "Invalid username"
+                }
                 required
                 type="text"
                 placeholder="Enter username"
                 value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                }}
+                onChange={handleUsername}
+                color={userValidate && "success"}
               />
 
               <label>Password</label>
-              <input
+              <TextField
                 required
                 type="password"
                 placeholder="Enter password"
                 value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
+                onChange={handlePassword}
               />
 
               <div className="login-button">
@@ -102,12 +103,22 @@ function LoginScreen() {
           )}
           <span>
             Login using Phone number?&nbsp;
-          <LinkContainer to="/phonenumberlogin" style={{textDecoration: 'underline', color : 'purple'}}><span>login</span></LinkContainer>
+            <LinkContainer
+              to="/phonenumberlogin"
+              style={{ textDecoration: "underline", color: "purple" }}
+            >
+              <span>login</span>
+            </LinkContainer>
           </span>
-          
+
           <span>
             Dont you have an Account?&nbsp;
-            <LinkContainer to="/signup" style={{textDecoration: 'underline', color : 'purple'}}><span>signup</span></LinkContainer>
+            <LinkContainer
+              to="/signup"
+              style={{ textDecoration: "underline", color: "purple" }}
+            >
+              <span>signup</span>
+            </LinkContainer>
           </span>
         </div>
       </div>

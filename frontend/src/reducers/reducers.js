@@ -99,6 +99,10 @@ import {
   SUGGESTED_CLUBGAME_REQUEST,
   SUGGESTED_CLUBGAME_SUCCESS,
   SUGGESTED_CLUBGAME_FAIL,
+  USER_VALIDATE_REQUEST,
+  USER_VALIDATE_SUCCESS,
+  USER_VALIDATE_FAIL,
+  USER_VALIDATE_RESET,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -125,7 +129,7 @@ export const filterclubReducer = (
 
     default:
       return state;
-  } 
+  }
 };
 
 export const clubListReducer = (state = { clubs: [] }, action) => {
@@ -286,7 +290,7 @@ export const userLoginReducer = (state = {}, action) => {
 
     case USER_LOGIN_FAIL:
       return { loading: false, error: action.payload };
-    
+
     case USER_LOGIN_RESET:
       return {};
 
@@ -440,14 +444,12 @@ export const availableslotsReducer = (state = { slots: [] }, action) => {
   }
 };
 
-
 export const phoneLoginReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
       return { loading: true };
 
     case USER_LOGIN_SUCCESS:
-      
       return { loading: false, userInfo: action.payload };
 
     case USER_LOGIN_FAIL:
@@ -460,8 +462,6 @@ export const phoneLoginReducer = (state = {}, action) => {
       return state;
   }
 };
-
-
 
 export const slotReducer = (state = { slot: [] }, action) => {
   switch (action.type) {
@@ -619,27 +619,24 @@ export const resetPasswordreducer = (state = {}, action) => {
 
 export const clubReviewCreateReducer = (state = { review: [] }, action) => {
   switch (action.type) {
-      case CLUB_CREATE_REVIEW_REQUEST:
-          return { loading: true }
+    case CLUB_CREATE_REVIEW_REQUEST:
+      return { loading: true };
 
-      case CLUB_CREATE_REVIEW_SUCCESS:
-          return { loading: false, review: action.payload, success:true }
+    case CLUB_CREATE_REVIEW_SUCCESS:
+      return { loading: false, review: action.payload, success: true };
 
-      case CLUB_CREATE_REVIEW_FAIL:
-          return { loading: false, error: action.payload }
+    case CLUB_CREATE_REVIEW_FAIL:
+      return { loading: false, error: action.payload };
 
-      case CLUB_CREATE_REVIEW_RESET:
-          return {}
+    case CLUB_CREATE_REVIEW_RESET:
+      return {};
 
-      default:
-          return state
+    default:
+      return state;
   }
-}
+};
 
-export const clubreviewlistreducer = (
-  state = { clubReviews: [] },
-  action
-) => {
+export const clubreviewlistreducer = (state = { clubReviews: [] }, action) => {
   switch (action.type) {
     case CLUB_REVIEW_REQUEST:
       return { loading: true };
@@ -652,7 +649,6 @@ export const clubreviewlistreducer = (
   }
 };
 
-
 export const searchOrganizationListReducer = (
   state = { filteredClubLocations: [] },
   action
@@ -661,7 +657,11 @@ export const searchOrganizationListReducer = (
     case SEARCH_ORGANIZATIONS_REQUEST:
       return { loading: true, filteredClubLocations: [] };
     case SEARCH_ORGANIZATIONS_SUCCESS:
-      return { loading: false, filteredClubLocations: action.payload, searchSuccess: true };
+      return {
+        loading: false,
+        filteredClubLocations: action.payload,
+        searchSuccess: true,
+      };
     case SEARCH_ORGANIZATIONS_FAIL:
       return { loading: false, error: action.payload };
     default:
@@ -682,7 +682,6 @@ export const RecentSearchReducer = (state = { filteredData: [] }, action) => {
   }
 };
 
-
 export const suggestedClubListReducer = (
   state = { suggestedClubList: [] },
   action
@@ -691,7 +690,7 @@ export const suggestedClubListReducer = (
     case SUGGESTED_CLUB_REQUEST:
       return { loading: true, suggestedClubList: [] };
     case SUGGESTED_CLUB_SUCCESS:
-      return { loading: false, suggestedClubList: action.payload};
+      return { loading: false, suggestedClubList: action.payload };
     case SUGGESTED_CLUB_FAIL:
       return { loading: false, suggestedClubListerror: action.payload };
     default:
@@ -700,16 +699,31 @@ export const suggestedClubListReducer = (
 };
 
 export const suggestedClubGameListReducer = (
-  state = { suggestedClubGameList: [] },
+  state = { userValidate: [] },
   action
 ) => {
   switch (action.type) {
     case SUGGESTED_CLUBGAME_REQUEST:
-      return { loading: true, suggestedClubGameList: [] };
+      return { loading: true, userValidate: [] };
     case SUGGESTED_CLUBGAME_SUCCESS:
-      return { loading: false, suggestedClubGameList: action.payload};
+      return { loading: false, userValidate: action.payload };
     case SUGGESTED_CLUBGAME_FAIL:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const validateUserReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_VALIDATE_REQUEST:
+      return { loading: true };
+    case USER_VALIDATE_SUCCESS:
+      return { loading: false, userValidate: true };
+    case USER_VALIDATE_FAIL:
+      return { loading: false, userValidate: false };
+    case USER_VALIDATE_RESET:
+      return { };
     default:
       return state;
   }

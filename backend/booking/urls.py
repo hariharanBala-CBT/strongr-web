@@ -14,6 +14,7 @@ urlpatterns = [
     path('profile/update/', views.updateUserProfile, name="user-profile-update"),
     path('resetpassword/', views.resetPassword, name="reset-password"),
     path('login/phone/', views.PhoneLoginView, name='phone_login'),
+    path('username/validate/', views.ValidateUser, name='user-validate'),
     path('<str:pk>/', views.getClub, name="club"),
     path('slot/<str:pk>/', views.getSlot, name='get-slot'),
     path('court/<str:pk>/', views.getCourt, name='get-court'),

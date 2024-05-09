@@ -427,7 +427,7 @@ function BookingInfoScreen() {
         ) : (
           <Box sx={style}>
             <Alert severity="info">You are one step away from booking</Alert>
-            <form onSubmit={loginAndRedirect} className="login-form">
+            <form onSubmit={loginAndRedirect} className="booking-login-form">
               <h2 className="login-title">Login</h2>
 
               <label>Username</label>

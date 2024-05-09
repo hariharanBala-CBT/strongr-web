@@ -11,26 +11,50 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import serializers
 
+import os
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.contrib import messages
+from django.contrib.sites.shortcuts import get_current_site
+from django.http.response import Http404
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.urls import reverse_lazy
+from django.urls import reverse
+from django.views.generic import DetailView, ListView, TemplateView, RedirectView
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
+from base.forms import *
+from django.contrib.auth.models import Group
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponseRedirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views import View
+from .models import *
+from booking.models import *
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic.base import TemplateView
+from django.shortcuts import redirect
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.db.models import Q
+# from django.db import transaction
+# from django.http import JsonResponse
+# from .middleware import FirstLoginMiddleware
 
+
+#FOR CUSTOMER ------------
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-
     def validate(self, attrs):
-        # try:
-            data = super().validate(attrs)
-            username = attrs.get('username')
-            user = User.objects.filter(username=username).first()
-            if not user:
-                return Response({'Incorrect username'}, status=status.HTTP_401_UNAUTHORIZED)
-            serializer = UserSerializerWithToken(user).data
-            for k, v in serializer.items():
-                data[k] = v
-            return data
+        data = super().validate(attrs)
+        serializer = UserSerializerWithToken(self.user).data
+        for k, v in serializer.items():
+            data[k] = v
+        return data
 
-        # except:
-        #     username = attrs.get('username')
-        #     user = User.objects.filter(username=username).first()
-        #     if not user:
-        #         return Response({'Incorrect username'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -95,40 +119,7 @@ def registerUser(request):
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
-import os
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
-from typing import Any, Dict
-from django.contrib import messages
-from django.contrib.sites.shortcuts import get_current_site
-from django.http.response import Http404
-from django.template.loader import render_to_string
-from django.core.mail import send_mail
-from django.urls import reverse_lazy
-from django.urls import reverse
-from django.views.generic import DetailView, ListView, TemplateView, RedirectView
-from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
-from base.forms import *
-from django.contrib.auth.models import Group
-from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views import View
-from .models import *
-from booking.models import *
-from django.contrib.auth.views import PasswordChangeView
-from django.urls import reverse_lazy
-from django.contrib.auth.views import PasswordResetView
-from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic.base import TemplateView
-from django.shortcuts import redirect
-from datetime import datetime, timedelta
-from django.utils import timezone
-from django.db.models import Q
-# from django.db import transaction
-from django.http import JsonResponse
-from .middleware import FirstLoginMiddleware
+#FOR ORGANIZATION ------------
 
 
 class OrganizationSignupView(CreateView):
@@ -245,10 +236,6 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('login')
-
-
-#FOR ORGANIZATION ------------
-
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationHomeView(TemplateView):
@@ -371,7 +358,7 @@ class OrganizationProfileView(UpdateView):
                                'Alternate number must be at least 10 digits')
                 return self.form_invalid(form)
 
-        messages.success(self.request, 'Profile updated successfully.')
+        messages.success(self.request, 'Profile updated successfully.', extra_tags='profile_update')
         return super().form_valid(form)
 
     def is_valid_number(self, number):

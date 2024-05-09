@@ -34,6 +34,7 @@ import {
   RecentSearchReducer,
   suggestedClubListReducer,
   suggestedClubGameListReducer,
+  validateUserReducer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -69,6 +70,7 @@ const reducer = combineReducers({
   RecentSearch:RecentSearchReducer,
   suggestedClubs: suggestedClubListReducer,
   suggestedClubsGame : suggestedClubGameListReducer,
+  userValidator : validateUserReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

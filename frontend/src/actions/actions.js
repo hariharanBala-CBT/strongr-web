@@ -93,6 +93,9 @@ import {
   SUGGESTED_CLUBGAME_REQUEST,
   SUGGESTED_CLUBGAME_SUCCESS,
   SUGGESTED_CLUBGAME_FAIL,
+  USER_VALIDATE_REQUEST,
+  USER_VALIDATE_SUCCESS,
+  USER_VALIDATE_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -962,6 +965,33 @@ export const listSuggestedClubGame = (gameName) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: SUGGESTED_CLUBGAME_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const validateUser = (username) => async (dispatch) => {
+  try {
+    dispatch({ type: USER_VALIDATE_REQUEST });
+
+    const { data } = await axios.get("/api/username/validate/", {
+      params: { 
+        username: username,
+       },
+    });
+
+
+    dispatch({
+      type: USER_VALIDATE_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: USER_VALIDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
