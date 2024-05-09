@@ -24,12 +24,6 @@ function LoginScreen() {
   const { userValidate } = useSelector((state) => state.userValidator);
 
   useEffect(() => {
-    dispatch({
-      type: USER_VALIDATE_RESET,
-    });
-  }, [dispatch]);
-
-  useEffect(() => {
     if (userInfo) {
       navigate(-1);
       toast.success("logged in successfully");
@@ -43,12 +37,17 @@ function LoginScreen() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(login(username, password));
+    dispatch(validateUser(username));
   };
+  
+  useEffect(() => {
+    if(userValidate){
+      dispatch(login(username, password));
+    }
+  },[dispatch, userValidate])
 
   const handleUsername = (e) => {
     setUsername(e.target.value);
-    dispatch(validateUser(e.target.value));
   };
 
   const handlePassword = (e) => {
