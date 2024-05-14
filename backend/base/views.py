@@ -207,28 +207,26 @@ class LoginView(View):
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
 
-        if user is not None:
-            login(request, user)
+            if user is not None:
+                login(request, user)
 
-            # Redirect users based on their group
-            if user.groups.filter(name='Customer').exists():
-                return redirect('home_page')
-            elif user.groups.filter(name='Organization').exists():
-                profile_page_url = reverse('organization_profile', kwargs={'pk': user.organization.pk})
-                return redirect(profile_page_url)
-            elif user.groups.filter(name='Tenant').exists():
-                return redirect('tenantuser_page')
-            elif user.groups.filter(name='TenantAdmin').exists():
-                return redirect('admin_page')
-            
-            else:
-                messages.error(request, 'Invalid username or password')
-                return redirect('login')
+                # Redirect users based on their group
+                if user.groups.filter(name='Customer').exists():
+                    return redirect('home_page')
+                elif user.groups.filter(name='Organization').exists():
+                    profile_page_url = reverse('organization_profile', kwargs={'pk': user.organization.pk})
+                    return redirect(profile_page_url)
+                elif user.groups.filter(name='Tenant').exists():
+                    return redirect('tenantuser_page')
+                elif user.groups.filter(name='TenantAdmin').exists():
+                    return redirect('admin_page')
+                else:
+                    messages.error(request, 'user exist without group')
+                    return redirect('login')
         else:
             # If the form is not valid, re-render the page with existing data and errors
             return render(request, self.template_name, {'form': form})
 
-        return HttpResponse("Unexpected error occurred. Please try again.")
 
 
 class LogoutView(View):
@@ -326,7 +324,6 @@ class ListofCancelledBookingView(TemplateView):
 
         return context
 
-
 @method_decorator(login_required, name='dispatch')
 class OrganizationProfileView(UpdateView):
     model = Organization
@@ -338,28 +335,43 @@ class OrganizationProfileView(UpdateView):
         phone_number = form.cleaned_data.get('phone_number')
         alt_number = form.cleaned_data.get('alt_number')
 
-        if not self.is_valid_number(phone_number):
+        # Validate phone number
+        if phone_number and not self.is_valid_number(phone_number):
             if len(str(phone_number)) > 10:
-                form.add_error('phone_number',
-                               'Phone number exceeds 10 digits')
-                return self.form_invalid(form)
+                form.add_error('phone_number', 'Phone number exceeds 10 digits')
             elif len(str(phone_number)) < 10:
-                form.add_error('phone_number',
-                               'Phone number must be at least 10 digits')
-                return self.form_invalid(form)
+                form.add_error('phone_number', 'Phone number must be at least 10 digits')
+            return self.form_invalid(form)
 
+        # Validate alternate number
         if alt_number and not self.is_valid_number(alt_number):
             if len(str(alt_number)) > 10:
-                form.add_error('alt_number',
-                               'Alternate number exceeds 10 digits')
-                return self.form_invalid(form)
+                form.add_error('alt_number', 'Alternate number exceeds 10 digits')
             elif len(str(alt_number)) < 10:
-                form.add_error('alt_number',
-                               'Alternate number must be at least 10 digits')
-                return self.form_invalid(form)
+                form.add_error('alt_number', 'Alternate number must be at least 10 digits')
+            return self.form_invalid(form)
 
-        messages.success(self.request, 'Profile updated successfully.', extra_tags='profile_update')
-        return super().form_valid(form)
+        # If all validations pass
+        response = super().form_valid(form)
+        if self.is_ajax_request():
+            return JsonResponse({'status': 'success', 'message': 'Profile updated successfully.'}, status=200)
+        return response
+
+    def form_invalid(self, form):
+    # Collect all form errors
+        errors = {field: [str(e) for e in form.errors[field]] for field in form.errors}
+
+        if self.is_ajax_request():
+            # Return JSON response with errors for AJAX requests
+            return JsonResponse({'status': 'error', 'errors': errors}, status=400)
+        else:
+            # Use Django's messages framework to add error messages for non-AJAX requests
+            for field, error_messages in errors.items():
+                for error_message in error_messages:
+                    messages.error(self.request, f"{form.fields[field].label}: {error_message}")
+
+            # Return the default form invalid handling which re-renders the form
+            return super().form_invalid(form)
 
     def is_valid_number(self, number):
         return len(str(number)) == 10
@@ -367,6 +379,8 @@ class OrganizationProfileView(UpdateView):
     def get_object(self):
         return Organization.objects.get(user=self.request.user)
 
+    def is_ajax_request(self):
+        return self.request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationAddLocationView(CreateView):
@@ -617,15 +631,16 @@ class OrganizationWorkingDaysView(UpdateView):
         return context
 
     def post(self, request, **kwargs):
-        queryset = self.get_object()
-        formset = OrganizationLocationWorkingDaysFormSet(request.POST,
-                                                         queryset=queryset)
-        if formset.is_valid():
-            formset.save()
-            return HttpResponseRedirect(self.success_url)
-        else:
-            return HttpResponseRedirect(request, self.template_name,
-                                        {'formset': formset})
+        try:
+            queryset = self.get_object()
+            formset = OrganizationLocationWorkingDaysFormSet(request.POST, queryset=queryset)
+            if formset.is_valid():
+                formset.save()
+                return JsonResponse({'status': 'success', 'message': 'Working days updated successfully.'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Form validation failed.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
 class CourtUpdateView(UpdateView):
@@ -721,18 +736,6 @@ class SlotCreateView(CreateView):
             #     error_message = 'Selected end time is after working day time given'
             #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
 
-            start_time = form.cleaned_data.get('start_time')
-            end_time = form.cleaned_data.get('end_time')
-
-            # Calculate the difference between start and end time
-            time_diff = end_time - start_time
-
-            # Check if the difference is exactly one hour
-            if time_diff != timedelta(hours=1):
-                error_message = 'The difference between start and end time must be exactly one hour.'
-                return self.render_to_response(
-                    self.get_context_data(form=form, error=error_message))
-
             return super().form_valid(form)
         except KeyError:
             return self.render_to_response(
@@ -767,14 +770,6 @@ class SlotUpdateView(UpdateView):
         start_time = form.cleaned_data.get('start_time')
         end_time = form.cleaned_data.get('end_time')
 
-        # Calculate the difference between start and end time
-        time_diff = end_time - start_time
-
-        # Check if the difference is exactly one hour
-        if time_diff != timedelta(hours=1):
-            error_message = 'The difference between start and end time must be exactly one hour.'
-            return self.render_to_response(
-                self.get_context_data(form=form, error=error_message))
 
         # # Set the start and end time for the slot based on the working day
         # if (form.instance.start_time < working_day.work_from_time):
@@ -1129,10 +1124,6 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('login')
 
-
-from django.contrib import messages
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
 
 
 class CreateMultipleSlotsView(View):

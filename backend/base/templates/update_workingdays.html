@@ -50,6 +50,68 @@
                 height: 80px; 
                 width: 300px;
             }
+            .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 39%;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+            border-radius: 0.3rem;
+            background-color: #fefefe;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            margin-bottom: 10px;
+        }
+
+        .modal-content button {
+            display: flex;
+            width: 40%;
+            padding: 5px 10px;;
+            margin-right: 40px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            background: #007BFF;
+            text-align: center;
+            font-size: 16px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .modal-content button:hover {
+            background: #0056b3;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1050;
+            display: none;
+        }
 
         </style>
 
@@ -113,7 +175,7 @@
                         <div class="container-fluid my-4">
                             <div class="profile-card">     
                                 <h1>Working Days</h1>
-                                <form method="post">
+                                <form method="post" id="workingdays_form">
                                     {% csrf_token %}
                                     {{ formset.management_form }}
                                     <table>
@@ -160,6 +222,83 @@
                 </footer>
             </div>
         </div>
+        <div class="modal" id="confirmationModal">
+            <div class="modal-content">
+                <h2>Confirm Update</h2>
+                <p>Are you sure you want to update the working day details?</p>
+                <div style="display: flex;">
+                    <button id="cancelButton">Cancel</button>
+                    <button id="confirmButton">Confirm</button>
+                </div>
+            </div>
+        </div>
+    
+        <div class="toast" id="successToast"></div>
+    
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('workingdays_form');
+                const modal = document.getElementById('confirmationModal');
+                const confirmButton = document.getElementById('confirmButton');
+                const cancelButton = document.getElementById('cancelButton');
+                const toast = document.getElementById('successToast');
+    
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    modal.style.display = "block";
+                });
+    
+                confirmButton.addEventListener('click', function() {
+                    modal.style.display = "none";
+                    submitFormData();
+                });
+    
+                cancelButton.addEventListener('click', function() {
+                    modal.style.display = "none";
+                });
+    
+                function submitFormData() {
+                    const formData = new FormData(form);
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok: ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.status === 'success') {
+                            showToast(data.message);
+                            setTimeout(() => {
+                                window.location.href = "{% url 'organization_locationgamelist' %}";
+                            }, 2000);
+                        } else {
+                            showToast(data.message || 'Error updating working days.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('Error submitting form. ' + error.message);
+                    });
+                }
+    
+                function showToast(message) {
+                    toast.textContent = message;
+                    toast.style.display = 'block';
+                    setTimeout(() => {
+                        toast.style.display = 'none';
+                    }, 2000); // Hide toast after 2 seconds
+                }
+            });
+        </script>
+    
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
          
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>

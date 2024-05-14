@@ -51,7 +51,7 @@
                                         <div class="form-group">
                                             {{ form.username }}
                                             {% if form.username.errors %}
-                                                <div role="alert" aria-live="assertive" class="alert alert-danger">
+                                                <div role="alert" aria-live="assertive" class="alert alert-danger" id="errors">
                                                     {{ form.username.errors }}
                                                 </div>
                                             {% endif %}
@@ -59,7 +59,7 @@
                                         <div class="form-group">
                                             {{ form.password }}
                                             {% if form.password.errors %}
-                                                <div role="alert" aria-live="assertive" class="alert alert-danger">
+                                                <div role="alert" aria-live="assertive" class="alert alert-danger" id="errors">
                                                     {{ form.password.errors }}
                                                 </div>
                                             {% endif %}
@@ -99,5 +99,16 @@
     <!-- Scripts -->
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="./js/sb-admin-2.min.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const Alert = document.getElementById('errors');
+            if (Alert) {
+                setTimeout(() => {
+                    Alert.style.display = 'none';
+                }, 2000); //2 seconds
+            }
+        });
+    </script>
+
 </body>
 </html>

@@ -3,6 +3,22 @@ from django.db import models
 from base.models import *
 from django.contrib.auth.models import User
 
+class AdditionalSlot(models.Model):
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    date = models.DateField()
+    location = models.ForeignKey(OrganizationLocation,on_delete=models.CASCADE)
+    court = models.ForeignKey(Court, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=False)
+
+class UnavailableSlot(models.Model):
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    date = models.DateField()
+    location = models.ForeignKey(OrganizationLocation,on_delete=models.CASCADE)
+    court = models.ForeignKey(Court, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=False)
+
 class Slot(models.Model):
     day_choices = (
         ('Sunday', 'Sunday'),
@@ -45,10 +61,12 @@ class Booking(models.Model):
     PENDING = 1
     CONFIRMED = 2
     CANCELLED = 3
+    COMPLETED = 4
     booking_status_choices = (
         (PENDING, 'Pending'),
         (CONFIRMED, 'Confirmed'),
         (CANCELLED, 'Cancelled'),
+        (COMPLETED, 'Completed'),
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)

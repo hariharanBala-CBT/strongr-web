@@ -1,7 +1,10 @@
 /venv
-\backend\base\__pycache__
-\backend\base\migrations
-\backend\base\migrations\__pycache__
-\backend\booking\__pycache__
-\backend\booking\migrations
-\backend\booking\migrations\__pycache__
+/backend/backend/__pycache__
+/backend/backend/migrations
+/backend/base/__pycache__
+/backend/base/migrations
+/backend/base/migrations/__pycache__
+/backend/booking/__pycache__
+/backend/booking/migrations
+/backend/booking/migrations/__pycache__
+backend/static/images/

@@ -305,6 +305,7 @@
 
         <!-- Main Content -->
         <div id="layoutSidenav_content">
+            <h1 class="mt-4 mb-4" style="margin-left: 40%;">Preview</h1>
             <main class="container-fluid mt-4" style="margin-top: 210px;">
                 <!-- Organization Card -->
                 <div class="card mb-4">
@@ -490,16 +491,21 @@
                                                     {% endfor %}
                                                 </ul>
                                                 <div class="text-center mb-4">
-                                                    {% if location_item.location.status != 1 and location_item.location.status != 3 %}
-
-                                                        <div class="btn-group" role="group">
-                                                            <form method="post" action="{% url 'change_location_status' location_item.location.id '3' %}">
-                                                                {% csrf_token %}
-                                                                <button type="submit" class="btn btn-success me-2">Submit</button>
-                                                            </form>
-                                                        
-                                                        </div>
-                                                    {% endif %}
+                                                    {% for profile in profiles %}
+                                                        {% if profile.status == 1 %}
+                                                            {% if location_item.location.status != 1 and location_item.location.status != 3 %}
+                                                                <div class="btn-group" role="group">
+                                                                    <form method="post" action="{% url 'change_location_status' location_item.location.id '3' %}">
+                                                                        {% csrf_token %}
+                                                                        <button type="submit" class="btn btn-success me-2">Submit</button>
+                                                                    </form>
+                                                                
+                                                                </div>
+                                                            {% endif %}
+                                                        {% elif profile.status != 1 %}
+                                                                <p>Note: can submit only if organization status is active !!!</p>
+                                                        {% endif %}
+                                                    {% endfor %}
                                                 </div>   
                                             </div>
                                         </div>
@@ -511,7 +517,7 @@
                     </div>
                 </div>
                 {% for profile in profiles %}
-                    {% if profile.status == 1 and profile.status == 3 %}
+                    {% if profile.status == 2 %}
                         <hr style="height:2px;border-width:0;color:gray;background-color:gray">
                         <div class="my-4"
                             style="  display: flex;justify-content: center;align-items: center; flex-direction: row;">
@@ -522,7 +528,7 @@
                                     <label for="agree">By checking this box you agree to our Terms
                                         of Service</label>
                                         <a href="{% url 'termsandconditions' %}" id="termsLink">Terms &amp; Conditions</a>
-                                        <div class="buttons">
+                                        <div class="buttons" style="margin-left: 30%; margin-top: 20px;">
                                             <div><a href="{% url 'organization_locationlist' %}" class="btn btn-primary"><i
                                                         class="fas fa-edit"></i>&nbsp;Edit</a></div>
                                             <div><button type="submit" href="{% url 'status' %}" class="btn btn-primary">Submit</button></div>
