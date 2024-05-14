@@ -885,8 +885,11 @@ class TenantTermsandConditionsView(FormView):
     form_class = TermsandConditionsForm
     # success_url = reverse_lazy('organization_page')
 
-
-from collections import defaultdict
+@method_decorator(login_required, name='dispatch')
+class PrivacyPolicyView(TemplateView):
+    template_name = 'privacy_policy.html'
+    
+# from collections import defaultdict
 
 
 @method_decorator(login_required, name='dispatch')

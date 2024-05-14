@@ -109,13 +109,13 @@
                                 {% endfor %}
                             </div>
                         {% endif %}
-                        <!-- {% if messages %}
+                        {% if messages %}
                             <div class="alert alert-success" role="alert" id="successAlert">
                                 {% for message in messages %}
                                 <p>{{ message }}</p>
                                 {% endfor %}
                             </div>
-                        {% endif %} -->
+                        {% endif %}
                         <h1 class="mt-4 mb-4" style="margin-left: 40%;">Location List</h1>
                         <div class="card mb-4">
                             <div class="location-card card-header">
@@ -176,9 +176,9 @@
                         <div class="d-flex align-items-center justify-content-between small">
                             <div class="text-muted">Copyright &copy; Your Website 2023</div>
                             <div>
-                                  <a href="{% url 'termsandconditions' %}">Privacy Policy</a>
+                                  <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
                                 &middot;
-                                <a href="{% url 'termsandconditions' %}">Terms &amp; Conditions</a>
+                                <a href="{% url 'termsconditions' %}">Terms &amp; Conditions</a>
                             </div>
                         </div>
                     </div>

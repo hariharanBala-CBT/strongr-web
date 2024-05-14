@@ -41,6 +41,7 @@ urlpatterns = [
      path('preview/' ,PreviewView.as_view(), name='preview'),
      path('termsandconditions/' ,TermsandConditionsView.as_view(),name='termsandconditions'),
     path('terms-conditions/' ,TenantTermsandConditionsView.as_view(),name='termsconditions'),
+     path('privacy-policy/' ,PrivacyPolicyView.as_view(), name='privacypolicy'),
 
      path('user/' ,TenantEmployeeHomeView.as_view(), name='tenantuser_page'),
      path('organization_list/' ,OrganizationListView.as_view(),name='organization_list'),
