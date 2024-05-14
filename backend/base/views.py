@@ -413,6 +413,7 @@ class OrganizationAddLocationView(CreateView):
                 organization_location=form.instance,
             )
             workingdays.save()
+        messages.success(self.request, 'Location created successfully.')
 
         return HttpResponseRedirect(self.success_url)
 
@@ -440,7 +441,8 @@ class OrganizationUpdateLocationView(UpdateView):
                 form.add_error('phone_number',
                                'Phone number must be at least 10 digits')
                 return self.form_invalid(form)
-
+            
+        messages.success(self.request, 'Location updated successfully.')
         return super().form_valid(form)
 
     def is_valid_number(self, number):
@@ -498,7 +500,7 @@ class OrganizationLocationGameTypeView(CreateView):
                 game=game_type,
                 description=f"description for court {i+1}",
                 is_active=True)
-
+        messages.success(self.request, 'Game created successfully.')
         return HttpResponseRedirect(self.success_url)
 
 
@@ -514,6 +516,7 @@ class OrganizationUpdateLocationGameTypeView(UpdateView):
         pk = self.request.session.get('location_pk')
         form.organization_location = OrganizationLocation.objects.get(pk=pk)
         form.save()
+        messages.success(self.request, 'Game updated successfully.')
         return HttpResponseRedirect(self.success_url)
 
 
@@ -545,7 +548,7 @@ class OrganizationLocationImageView(CreateView):
         pk = self.request.session.get('location_pk')
         form_instance.organization = OrganizationLocation.objects.get(pk=pk)
         form_instance.save()
-
+        messages.success(self.request, 'Image created successfully.')
         return HttpResponseRedirect(self.success_url)
 
 
@@ -563,7 +566,7 @@ class OrganizationUpdateLocationImageView(UpdateView):
             if self.object.image:
                 self.object.image.delete()
             form.instance.image = None
-
+        messages.success(self.request, 'Image updated successfully.')
         return super().form_valid(form)
 
 
@@ -606,6 +609,7 @@ class OrganizationLocationAmenitiesView(UpdateView):
         pk = self.request.session.get('location_pk')
         form.organization_location = OrganizationLocation.objects.get(pk=pk)
         form.save()
+        messages.success(self.request, 'Amenities updated successfully.')
         return HttpResponseRedirect(self.success_url)
 
 
@@ -655,6 +659,7 @@ class CourtUpdateView(UpdateView):
         instance.organization_location = OrganizationLocation.objects.get(
             pk=pk)
         instance.save()
+        messages.success(self.request, 'Court updated successfully!')
         return HttpResponseRedirect(self.success_url)
 
 
@@ -678,6 +683,10 @@ class CourtDeleteView(DeleteView):
     model = Court
     template_name = 'delete_court.html'
     success_url = reverse_lazy('court-list')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request,'Court deleted successfully.')  
+        return super().delete(request, *args, **kwargs)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -767,8 +776,8 @@ class SlotUpdateView(UpdateView):
                 self.get_context_data(
                     form=form, error='Selected working day is not active'))
 
-        start_time = form.cleaned_data.get('start_time')
-        end_time = form.cleaned_data.get('end_time')
+        # start_time = form.cleaned_data.get('start_time')
+        # end_time = form.cleaned_data.get('end_time')
 
 
         # # Set the start and end time for the slot based on the working day
@@ -779,7 +788,7 @@ class SlotUpdateView(UpdateView):
         # if (form.instance.end_time > working_day.work_to_time):
         #     error_message = 'Selected start time is before working day time given'
         #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
-
+        messages.success(self.request, 'Slot updated successfully.')
         return super().form_valid(form)
 
 
@@ -789,6 +798,9 @@ class SlotDeleteView(DeleteView):
     template_name = 'delete_slot.html'
     success_url = reverse_lazy('slot-list')
 
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request,'Slot deleted successfully.')  
+        return super().delete(request, *args, **kwargs)
 
 class CourtCreateView(CreateView):
     template_name = 'add_court.html'
@@ -807,7 +819,7 @@ class CourtCreateView(CreateView):
             form.instance.location = location
         except KeyError:
             return HttpResponseRedirect(reverse_lazy('error-url'))
-
+        messages.success(self.request, 'Court created successfully.')
         # Save the form
         return super().form_valid(form)
 
@@ -848,6 +860,7 @@ class PreviewView(FormView):
         organization.is_terms_and_conditions_agreed = True
         organization.status = Organization.IN_PROGRESS
         organization.save()
+        messages.success(self.request, 'Preview submitted successfully.')
         return HttpResponseRedirect(self.success_url)
 
 

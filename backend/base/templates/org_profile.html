@@ -371,7 +371,7 @@
                     if (data.status === 'success') {
                         showToast(data.message);
                         setTimeout(() => {
-                            window.location.href = "{% url 'organization_locationgamelist' %}";
+                            window.location.href = "{% url 'organization_locationlist' %}";
                         }, 2000);
                     }
                 })

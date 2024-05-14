@@ -71,7 +71,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Main</div>
-                            <a class="nav-link" href="{% url 'organization_page' %}">
+                            <a class="nav-link" href="{% url 'organization_page' %}" style="color: white; background-color: rgb(68, 68, 68);">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
@@ -79,16 +79,19 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                                 Profile
                             </a>
+                            
                             <a class="nav-link" href="{% url 'organization_locationlist'  %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
                             </a>
-                            <a class="nav-link" href="{% url 'preview' %}" style="color: white; background-color: rgb(68, 68, 68);">
+                            <a class="nav-link" href="{% url 'preview' %}">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                                 Preview
                             </a>
-                            
-
+                            <a class="nav-link" href="{% url 'status' %}">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-building-circle-check"></i></i></div>
+                                Status
+                            </a>
                         
                         </div>
                     </div>

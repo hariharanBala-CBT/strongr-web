@@ -43,6 +43,21 @@
             display: flex;
             justify-content: center;
         }
+        #successAlert {
+            position: fixed;
+            top: 70px; 
+            left: 85%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            width: 90%; 
+            max-width: 400px;
+            height: 60px;
+        }
+
+        #successAlert p {
+            text-align: center;
+            margin: 0;
+        }
     </style>
 
 </head>
@@ -107,6 +122,13 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4 m">
+                    {% if messages %}
+                        <div class="alert alert-success" role="alert" id="successAlert">
+                            {% for message in messages %}
+                            <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     <div class="profile-card">
                         <h3 class="my-4">Images:</h3>
                         <h6 class="mb-5">Add Available Images to your Location</h6>
@@ -214,6 +236,16 @@
         });
 
     </script>
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                const successAlert = document.getElementById('successAlert');
+                if (successAlert) {
+                    setTimeout(() => {
+                        successAlert.style.display = 'none';
+                    }, 2500); // Hide after 5000ms or 5 seconds
+                }
+            });
+        </script>
 </body>
 
 </html>
