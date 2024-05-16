@@ -34,11 +34,6 @@ class OrganizationLocationWorkingDaysSerializer(serializers.ModelSerializer):
         model = OrganizationLocationWorkingDays
         fields = '__all__'
 
-class OrganizationGameImagesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrganizationGameImages
-        fields = '__all__'
-
 class ClubSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -67,6 +62,16 @@ class SlotSerializer(serializers.ModelSerializer):
         model = Slot
         fields = '__all__'
 
+class AdditionalSlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdditionalSlot
+        fields = '__all__'
+
+class UnAvailableSlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UnavailableSlot
+        fields = '__all__'
+
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
@@ -92,6 +97,7 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
     organization_name = serializers.SerializerMethodField()
     organization_location = serializers.SerializerMethodField()
     game_type = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
 
     def get_court(self, obj):
         return CourtSerializer(obj.court).data
@@ -107,10 +113,21 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
 
     def get_game_type(self, obj):
         return obj.court.game.game_type.game_name
+    
+    def get_image(self, obj):
+        try:
+            organization_location = obj.court.location
+            organization_game_images = OrganizationGameImages.objects.filter(organization=organization_location).first()
+            if organization_game_images:
+                return organization_game_images.image.url
+        except Exception as e:
+            # Handle exceptions appropriately
+            pass
+        return None
 
     class Meta:
         model = Booking
-        fields = ['id', 'name', 'phone_number', 'booking_date', 'booking_status', 'payment_status', 'tax_price', 'total_price', 'organization_name', 'court', 'slot', 'organization_location', 'game_type']
+        fields = ['id', 'name', 'phone_number', 'booking_date', 'booking_status', 'payment_status', 'tax_price', 'total_price', 'organization_name', 'court', 'slot', 'organization_location', 'game_type','image']
 
 class ClubSerializerWithLocation(serializers.ModelSerializer):
     organizationlocation_set = ClubLocationSerializer(many=True, read_only=True)

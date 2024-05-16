@@ -152,10 +152,14 @@ function ClubListScreen() {
               <Message variant="danger">{gameError}</Message>
             ) : (
               <SelectInput
-                label="game"
+                id="game"
+                label="Game"
                 value={gameName}
                 onChange={(value) => setGameName(value)}
-                options={games}
+                options={games?.map((game) => ({
+                  id: game?.id,
+                  name: game?.game_name,
+                }))}
               />
             )}
 
@@ -165,14 +169,18 @@ function ClubListScreen() {
               <Message variant="danger">{areaError}</Message>
             ) : (
               <SelectInput
-                label="area"
+                id="area"
+                label="Area"
                 value={areaName}
                 onChange={(value) => setAreaName(value)}
-                options={areas}
+                options={areas?.map((area) => ({
+                  id: area?.id,
+                  name: area?.area_name,
+                }))}
               />
             )}
 
-            <DateInput id="date" value={date} onChange={handleDateChange} />
+            <DateInput id="date" label="Date" value={date} onChange={handleDateChange} />
           </div>
         </form>
       </div>

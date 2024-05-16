@@ -18,9 +18,13 @@ import {
   listCourts,
   fetchAvailableSlots,
   login,
+  listclubWorking,
+  fetchAdditionalSlots,
+  fetchUnAvailableSlots,
 } from "../actions/actions";
 import { Alert, Box, CircularProgress, Modal } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
+// import SlotPicker from "slotpicker";
 
 const style = {
   position: "absolute",
@@ -54,7 +58,10 @@ function BookingInfoScreen() {
   const { clubLocation } = useSelector((state) => state.Location);
   const { clubGame } = useSelector((state) => state.clubGame);
   const { courts } = useSelector((state) => state.courtList);
+  const { clubWorking } = useSelector((state) => state.clubWorking);
   const { slots } = useSelector((state) => state.slot);
+  const { additionalSlots } = useSelector((state) => state.additionalSlot);
+  const { unavailableSlots } = useSelector((state) => state.unavailableSlot);
   const { userInfo } = useSelector((state) => state.userLogin);
 
   const [slot, setSlot] = useState("");
@@ -67,6 +74,9 @@ function BookingInfoScreen() {
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(false);
+  // const [selectedTime, setSelectedTime] = useState(0);
+  // const [openingTime, setOpeningTime] = useState(0);
+  // const [closingTime, setClosingTime] = useState(0);
 
   const getSelectedGamePricing = () => {
     const selectedGame = clubGame?.find(
@@ -112,6 +122,7 @@ function BookingInfoScreen() {
       dispatch(listclubLocation(id));
       dispatch(listclubGame(id));
       dispatch(listCourts(id, gameName));
+      dispatch(listclubWorking(id));
     };
     fetchData();
 
@@ -143,21 +154,36 @@ function BookingInfoScreen() {
   }, [dispatch, gameName, id]);
 
   useEffect(() => {
-    if(courts?.length > 0 && courtName === ''){
-      setCourtName(courts[0]?.name)
+    if (courts?.length > 0 && courtName === "") {
+      setCourtName(courts[0]?.name);
     }
-  },[courts, courtName])
+  }, [courts, courtName]);
 
   useEffect(() => {
     if (courtName && date) {
       setLoading(true);
       const theCourt = courts?.find((court) => court.name === courtName);
-      const courtId = theCourt?.id
+      const courtId = theCourt?.id;
+
+      const selectedDate = new Date(date);
+      const selectedWeekday = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+      console.log(selectedWeekday)
+
+      // const Timings = () => {
+      //   const day = clubWorking?.find((day) => day.days === selectedWeekday)
+      //   setOpeningTime(day?.work_from_time)
+      //   setClosingTime(day?.work_to_time)
+      // };
+
+      // Timings();
+
       dispatch(fetchAvailableSlots(courtId, date)).then(() =>
         setLoading(false)
       );
+      dispatch(fetchAdditionalSlots(courtId, date));
+      dispatch(fetchUnAvailableSlots(courtId, date));
     }
-  }, [courtName, date, dispatch, courts]);
+  }, [courtName, date, dispatch, courts, clubWorking]);
 
   useEffect(() => {
     const storedSelectedGame = localStorage.getItem("selectedGame");
@@ -168,10 +194,10 @@ function BookingInfoScreen() {
       (game) => game.game_type.game_name === storedSelectedGame
     );
 
-    if (storedSelectedArea){
+    if (storedSelectedArea) {
       setAreaName(storedSelectedArea);
     } else {
-      setAreaName(clubLocation?.area?.area_name)
+      setAreaName(clubLocation?.area?.area_name);
     }
     if (courts) {
       setCourtName(courts && courts[0]?.name);
@@ -252,6 +278,8 @@ function BookingInfoScreen() {
     if (slots) {
       setSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
       setSelectedSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
+      setLoading(false)
+
     }
   }, [slots, setSelectedSlot, courts]);
 
@@ -260,7 +288,7 @@ function BookingInfoScreen() {
     setSelectedGame(gameName);
     setSelectedDate(date);
     setSelectedCourt(courtName);
-    setSelectedSlot(slot)
+    setSelectedSlot(slot);
   }, [
     areaName,
     gameName,
@@ -296,12 +324,11 @@ function BookingInfoScreen() {
                 options={[
                   {
                     id: clubLocation?.area?.id,
-                    area_name: clubLocation?.area?.area_name,
+                    name: clubLocation?.area?.area_name,
                   },
                 ]}
                 label="Area"
               />
-
               <SelectInput
                 id="game"
                 value={gameName}
@@ -309,13 +336,11 @@ function BookingInfoScreen() {
                 onChange={handleGameChange}
                 options={clubGame?.map((game) => ({
                   id: game?.id,
-                  game_name: game?.game_type?.game_name,
+                  name: game?.game_type?.game_name,
                 }))}
                 label="Game"
               />
-
               <DateInput id="date" value={date} onChange={handleDateChange} />
-
               {loading ? (
                 <CircularProgress />
               ) : (
@@ -325,12 +350,11 @@ function BookingInfoScreen() {
                   onChange={handleCourtChange}
                   options={courts?.map((court) => ({
                     id: court.id,
-                    area_name: court.name,
+                    name: court.name,
                   }))}
                   label="Court"
                 />
               )}
-
               {loading ? (
                 <div>Loading slots...</div>
               ) : slots?.length !== 0 ? (
@@ -340,18 +364,35 @@ function BookingInfoScreen() {
                   onChange={handleSlotChange}
                   options={slots?.map((slot) => ({
                     id: slot.id,
-                    area_name: `${slot.start_time}-${slot.end_time}`,
+                    name: `${slot.start_time}-${slot.end_time}`,
                   }))}
                   label="slot"
+                  addSlots = {additionalSlots?.map((slot) => ({
+                    id: slot.id,
+                    name: `${slot.start_time}-${slot.end_time}`,
+                  }))}
+                  removeSlots =  {unavailableSlots?.map((slot) => ({
+                    id: slot.id,
+                    name: `${slot.start_time}-${slot.end_time}`,
+                  }))}
                 />
               ) : (
                 <Alert severity="error">
                   No slots available in {courtName}
                 </Alert>
               )}
-              
             </div>
           </form>
+          {/* <SlotPicker
+            interval={60}
+            onSelectTime={(s) => setSelectedTime(s)}
+            unAvailableSlots={[closingTime,openingTime]}
+            from={openingTime}
+            to={closingTime}
+            defaultSelectedTime={openingTime}
+            selectedSlotColor="blue"
+            lang="en"
+          /> */}
         </div>
         <div className="card2">
           <h2>

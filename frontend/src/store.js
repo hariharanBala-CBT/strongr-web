@@ -35,6 +35,8 @@ import {
   suggestedClubListReducer,
   suggestedClubGameListReducer,
   validateUserReducer,
+  additionalslotsReducer,
+  unavailableslotsReducer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -57,6 +59,8 @@ const reducer = combineReducers({
   courtList: courtListReducer,
   court: courtDetailsReducer,
   slot: availableslotsReducer,
+  additionalSlot: additionalslotsReducer,
+  unavailableSlot: unavailableslotsReducer,
   slotDetails: slotReducer,
   customerDetails: customerDetailsReducer,
   userUpdate: userUpdateProfileReducer,

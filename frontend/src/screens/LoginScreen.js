@@ -5,15 +5,16 @@ import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, validateUser } from "../actions/actions";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { CircularProgress, TextField } from "@mui/material";
-import { USER_LOGIN_RESET, USER_VALIDATE_RESET } from "../constants/constants";
+import { USER_LOGIN_RESET } from "../constants/constants";
 // import { USER_LOGIN_RESET } from "../constants/constants";
 import { LinkContainer } from "react-router-bootstrap";
 
 function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   // const location = useLocation();
   const dispatch = useDispatch();
@@ -23,15 +24,21 @@ function LoginScreen() {
   const { userInfo, error, loading } = useSelector((state) => state.userLogin);
   const { userValidate } = useSelector((state) => state.userValidator);
 
+
   useEffect(() => {
-    if (userInfo) {
-      navigate(-1);
-      toast.success("logged in successfully");
-    } else if (error) {
-      toast.error("Incorrect password");
       dispatch({
         type: USER_LOGIN_RESET,
       });
+  },[dispatch])
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(-1);
+      // toast.success("logged in successfully");
+      setErrorMessage("")
+    } else if(!userInfo && error && password.length > 0){
+      setErrorMessage("Incorrect Password")
+      setPassword("")
     }
   }, [navigate, userInfo, dispatch, error]);
 
@@ -52,6 +59,7 @@ function LoginScreen() {
 
   const handlePassword = (e) => {
     setPassword(e.target.value);
+    setErrorMessage("")
   };
 
   return (
@@ -84,6 +92,8 @@ function LoginScreen() {
 
               <label>Password</label>
               <TextField
+                error = {error && errorMessage.length > 0}
+                helperText={ errorMessage.length > 0 && error && errorMessage }
                 required
                 type="password"
                 placeholder="Enter password"

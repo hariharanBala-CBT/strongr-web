@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getBookingDetails,
-} from "../actions/actions";
+import { getBookingDetails } from "../actions/actions";
 import toast, { Toaster } from "react-hot-toast";
 import { BOOKING_CREATE_RESET } from "../constants/constants";
 import "../css/bookingscreen.css";
@@ -82,24 +80,24 @@ function BookingScreen() {
       <Toaster />
 
       <div className="booking-content">
-        <h2 style={{ display: "flex", flex: "auto", columnGap: "24rem" }}>
-          <IconButton
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
-            <i class="fa-regular fa-circle-left" ></i>
-          </IconButton>
-          <span>Booking Number: &nbsp;{bookingDetails?.id}</span>
+        <IconButton
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          <i class="fa-regular fa-circle-left"></i>
+        </IconButton>
+        <h2 style={{ display: "flex", flex: "auto", justifyContent: "center" }}>
+          <span>Booking : &nbsp;{bookingDetails?.id}</span>
         </h2>
 
         <div className="card-1">
-          <div className="ul booking">
-            <div className="li">
+          <div className="ul booking booking-details">
+            <h3 className="heading">Booking Details</h3>
+            <div className="li ">
               <div>
                 <h3>{bookingDetails?.organization_name}</h3>
                 <span>{bookingDetails?.organization_location}</span>
-
               </div>
               <small>{bookingDetails?.court?.name}</small>
             </div>
@@ -109,11 +107,14 @@ function BookingScreen() {
               </div>
 
               <small>
-                <small>{bookingDetails?.booking_date}&nbsp;&nbsp;</small>
-                <small>
-                  ({bookingDetails?.slot?.start_time?.slice(0, 5)}-{bookingDetails?.slot?.end_time?.slice(0, 5)}
-                  )
-                </small>
+                <strong>Date: </strong>
+                <span>{bookingDetails?.booking_date}</span>
+                <br />
+                <strong>Time: </strong>
+                <span>
+                  ({bookingDetails?.slot?.start_time?.slice(0, 5)}-
+                  {bookingDetails?.slot?.end_time?.slice(0, 5)})
+                </span>
               </small>
             </div>
             <div className="li">
@@ -134,26 +135,53 @@ function BookingScreen() {
               </strong>
             </div>
           </div>
-          <div className="ul booking">
+          <div className="ul booking-image">
+            <div className="li">
+              <img
+                src={bookingDetails?.image}
+                alt="booked-courts-images"
+                className="image"
+              />
+            </div>
+          </div>
+
+          <div className="ul booking user-details">
+            <h3 className="heading">User Details</h3>
             <div className="li">
               <h3>{bookingDetails?.name}</h3>
-              <small>{bookingDetails?.phone_number}</small>
+              <small><strong>phone: </strong><span>{bookingDetails?.phone_number}</span></small>
             </div>
             <div className="li">
               <h4>Booking status</h4>
-              <small>
+              <small
+                className={
+                  bookingDetails?.booking_status === 1
+                    ? "pending-status"
+                    : bookingDetails?.booking_status === 2
+                    ? "booked-status"
+                    : bookingDetails?.booking_status === 3 && "cancelled-status"
+                }
+              >
                 {getBookingStatusText(bookingDetails?.booking_status)}
               </small>
             </div>
             <div className="li">
               <h4>Payment status</h4>
-              <small>
+              <small
+                className={
+                  bookingDetails?.payment_status === 1
+                    ? "pending-status"
+                    : bookingDetails?.payment_status === 2
+                    ? "booked-status"
+                    : bookingDetails?.payment_status === 3 && "cancelled-status"
+                }
+              >
                 {getPaymentStatusText(bookingDetails?.payment_status)}
               </small>
-              <span>
+              <strong>
                 <i className="fa fa-inr"></i>
                 {bookingDetails?.total_price}
-              </span>
+              </strong>
             </div>
           </div>
         </div>

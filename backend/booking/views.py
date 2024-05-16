@@ -33,8 +33,6 @@ def ValidateUser(request):
         if not user:
             return Response({'detail': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'detail': 'User exists'}, status=status.HTTP_200_OK)
-    # except Exception as e:
-    #     return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
         return Response({'detail': 'User cannot be validated'},
@@ -230,7 +228,7 @@ def getSuggestedClubGame(request):
         organization_locations = [ogt.organization_location for ogt in organization_location_game_types]
         
         serializer = ClubSerializerWithImages(organization_locations, many=True)
-        
+        print(serializer.data)
         return Response(serializer.data)
 
     except GameType.DoesNotExist:
@@ -315,6 +313,24 @@ def getAvailableSlots(request):
     # Exclude booked slots
     slots = slots.exclude(id__in=bookings)
     serializer = SlotSerializer(slots, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getAdditionalSlots(request):
+    court = request.query_params.get('courtId')
+    date_str = request.query_params.get('date')
+
+    slots = AdditionalSlot.objects.filter(court = court, date = date_str, is_active = True)
+    serializer = AdditionalSlotSerializer(slots, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getUnavailableSlots(request):
+    court = request.query_params.get('courtId')
+    date_str = request.query_params.get('date')
+
+    slots = UnavailableSlot.objects.filter(court = court, date = date_str, is_active = True)
+    serializer = UnAvailableSlotSerializer(slots, many=True)
     return Response(serializer.data)
 
 

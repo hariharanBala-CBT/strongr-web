@@ -96,6 +96,12 @@ import {
   USER_VALIDATE_REQUEST,
   USER_VALIDATE_SUCCESS,
   USER_VALIDATE_FAIL,
+  ADDITIONAL_SLOT_REQUEST,
+  ADDITIONAL_SLOT_SUCCESS,
+  ADDITIONAL_SLOT_FAIL,
+  UNAVAILABLE_SLOT_REQUEST,
+  UNAVAILABLE_SLOT_SUCCESS,
+  UNAVAILABLE_SLOT_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -589,6 +595,56 @@ export const fetchAvailableSlots = (courtId, date) => async (dispatch) => {
 
     dispatch({
       type: AVAILABLE_SLOT_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const fetchAdditionalSlots = (courtId, date) => async (dispatch) => {
+  try {
+    dispatch({ type: ADDITIONAL_SLOT_REQUEST });
+
+    const { data } = await axios.get(`/api/slots/additional/`, {
+      params: { courtId: courtId, date: date },
+    });
+
+    dispatch({
+      type: ADDITIONAL_SLOT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    console.error("Error fetching additonal slots:", error);
+
+    dispatch({
+      type: ADDITIONAL_SLOT_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const fetchUnAvailableSlots = (courtId, date) => async (dispatch) => {
+  try {
+    dispatch({ type: UNAVAILABLE_SLOT_REQUEST });
+
+    const { data } = await axios.get(`/api/slots/unavailable/`, {
+      params: { courtId: courtId, date: date },
+    });
+
+    dispatch({
+      type: UNAVAILABLE_SLOT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    console.error("Error fetching unavailable slots:", error);
+
+    dispatch({
+      type: UNAVAILABLE_SLOT_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

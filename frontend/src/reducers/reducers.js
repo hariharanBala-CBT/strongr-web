@@ -103,6 +103,12 @@ import {
   USER_VALIDATE_SUCCESS,
   USER_VALIDATE_FAIL,
   USER_VALIDATE_RESET,
+  ADDITIONAL_SLOT_REQUEST,
+  ADDITIONAL_SLOT_SUCCESS,
+  ADDITIONAL_SLOT_FAIL,
+  UNAVAILABLE_SLOT_REQUEST,
+  UNAVAILABLE_SLOT_SUCCESS,
+  UNAVAILABLE_SLOT_FAIL,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -444,6 +450,32 @@ export const availableslotsReducer = (state = { slots: [] }, action) => {
   }
 };
 
+export const additionalslotsReducer = (state = { additionalSlots: [] }, action) => {
+  switch (action.type) {
+    case ADDITIONAL_SLOT_REQUEST:
+      return { loading: true };
+    case ADDITIONAL_SLOT_SUCCESS:
+      return { loading: false, additionalSlots: action.payload };
+    case ADDITIONAL_SLOT_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const unavailableslotsReducer = (state = { unavailableSlots: [] }, action) => {
+  switch (action.type) {
+    case UNAVAILABLE_SLOT_REQUEST:
+      return { loading: true };
+    case UNAVAILABLE_SLOT_SUCCESS:
+      return { loading: false, unavailableSlots: action.payload };
+    case UNAVAILABLE_SLOT_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 export const phoneLoginReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
@@ -699,14 +731,14 @@ export const suggestedClubListReducer = (
 };
 
 export const suggestedClubGameListReducer = (
-  state = { userValidate: [] },
+  state = { suggestedClubGameList: [] },
   action
 ) => {
   switch (action.type) {
     case SUGGESTED_CLUBGAME_REQUEST:
-      return { loading: true, userValidate: [] };
+      return { loading: true, suggestedClubGameList: [] };
     case SUGGESTED_CLUBGAME_SUCCESS:
-      return { loading: false, userValidate: action.payload };
+      return { loading: false, suggestedClubGameList: action.payload };
     case SUGGESTED_CLUBGAME_FAIL:
       return { loading: false, error: action.payload };
     default:

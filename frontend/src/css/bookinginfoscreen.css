@@ -52,17 +52,23 @@
 .bookinginfo-content .card1 select,.bookinginfo-content .card1 input{
     padding: 5px;
     margin: 5px;
-    /* border: 1px solid #bebebe; */
+    border: 1px solid #bebebe;
     border-radius: 5px;
     width: 10rem;
     max-width: 150px;
     flex-wrap: wrap;
     flex-shrink: inherit;
     flex-grow: inherit;
-    background: #dadada;
-    color: #2b2b2b;
+    background: #e2e2e2;
+    color: #202020;
 }
  
+.bookinginfo-content .card1 select:disabled{
+    background-color: #aaaaaa;
+    color: #000000;
+}
+    
+
 .bookinginfo-content .card1 .ul{
     margin: 0%;
     padding-left: 0%;
@@ -70,7 +76,7 @@
 
  
 .bookinginfo-content .card1{
-    width: 450px;
+    width: max-content;
     display: flex;
     flex-direction: column;
     padding: 2rem;
@@ -127,10 +133,10 @@
     flex-grow: inherit;
 }
  
-.bookinginfo-content .card1 input[type='text']{
+/* .bookinginfo-content .card1 input[type='text']{
     width:32px;
     height: 30px;
-}
+} */
 
 .bookinginfo-content .card2{
     display: flex;
@@ -177,7 +183,8 @@
     display: flex;
     justify-content: center;
 }
-    
+
+
 @media (max-width: 770px) {
 
         .bookinginfo-content{

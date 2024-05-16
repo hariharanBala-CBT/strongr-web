@@ -188,7 +188,10 @@ function HomeScreen(history) {
                 id="gameName"
                 value={gameName}
                 onChange={changeGame}
-                options={games}
+                options={games?.map((game) => ({
+                  id: game?.id,
+                  name: game?.game_name,
+                }))}
                 required="required"
               />
             )}
@@ -203,7 +206,10 @@ function HomeScreen(history) {
                 id="areaName"
                 value={areaName}
                 onChange={changeArea}
-                options={areas}
+                options={areas?.map((area) => ({
+                  id: area?.id,
+                  name: area?.area_name,
+                }))}
                 required="required"
               />
             )}
