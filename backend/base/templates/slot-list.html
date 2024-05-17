@@ -129,7 +129,7 @@
                         <div class="location-card card-header">
                             <div>Slots</div>
                             <div>
-                                <a href="{% url 'add-slot' %}" class="btn btn-success align-self-end"><i class="fa-solid fa-plus"></i></a>
+                                <a href="{% url 'add-slot' %}" class="btn btn-success align-self-end" data-toggle="tooltip" title="Add slot"><i class="fa-solid fa-plus"></i></a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -169,8 +169,8 @@
                     </div>
                 </div>
                 <div class="buttons px-4 py-4" style="margin-left: 40%;">
-                    <div><a href="{% url 'court-list' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i></a></div>
-                    <div><a href="{% url 'organization_locationamenities' %}" type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right-long"></i></a></div>
+                    <div><a href="{% url 'court-list' %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a></div>
+                    <div><a href="{% url 'organization_locationamenities' %}" type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></a></div>
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
@@ -178,7 +178,7 @@
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="footer-text">Copyright &copy; Your Website 2023</div>
                         <div>
-                            <a href="#" class="footer-text">Privacy Policy</a>
+                            <a href="{% url 'privacypolicy' %}" class="footer-text">Privacy Policy</a>
                             &middot;
                             <a href="{% url 'termsconditions' %}" class="footer-text">Terms &amp; Conditions</a>
                         </div>

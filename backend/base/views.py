@@ -827,7 +827,7 @@ class CourtCreateView(CreateView):
 class PreviewView(FormView):
     template_name = 'org_preview2.html'
     form_class = TermsandConditionsForm
-    success_url = reverse_lazy('organization_page')
+    success_url = reverse_lazy('status')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

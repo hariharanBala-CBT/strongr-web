@@ -148,7 +148,7 @@
                                 <div class="location-card card-header">
                                     <div>
                                         Game</div>
-                                    <div><a href= "{% url 'organization_locationgametype' %}" class="btn btn-success align-self-end"><i class="fa-solid fa-plus"></i></a>
+                                    <div><a href= "{% url 'organization_locationgametype' %}" class="btn btn-success align-self-end" data-toggle="tooltip" title="Add game"><i class="fa-solid fa-plus"></i></a>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -178,8 +178,8 @@
                         </div>
                     </div>
                     <div class="buttons px-4 py-4" style="margin-left: 40%;">
-                        <div><a href="{% url 'organization_locationworkingdays' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i></a></div>
-                        <div><a href="{% url 'organization_imageslist' %}" type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right-long"></i></a></div>
+                        <div><a href="{% url 'organization_locationworkingdays' %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a></div>
+                        <div><a href="{% url 'organization_imageslist' %}" type="submit" class="btn btn-primary" data-toggle="tooltip" title="next"><i class="fa-solid fa-arrow-right-long"></i></a></div>
                     </div>
             </main>
             <footer class="py-4 bg-light mt-auto">

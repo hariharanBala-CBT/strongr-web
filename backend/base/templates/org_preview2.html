@@ -517,7 +517,7 @@
                     </div>
                 </div>
                 {% for profile in profiles %}
-                    {% if profile.status == 2 %}
+                    {% if profile.status == 2 or profile.status == 4 %}
                         <hr style="height:2px;border-width:0;color:gray;background-color:gray">
                         <div class="my-4"
                             style="  display: flex;justify-content: center;align-items: center; flex-direction: row;">
@@ -531,7 +531,7 @@
                                         <div class="buttons" style="margin-left: 30%; margin-top: 20px;">
                                             <div><a href="{% url 'organization_locationlist' %}" class="btn btn-primary"><i
                                                         class="fas fa-edit"></i>&nbsp;Edit</a></div>
-                                            <div><button type="submit" href="{% url 'status' %}" class="btn btn-primary">Submit</button></div>
+                                            <div><button type="submit" class="btn btn-primary">Submit</button></div>
                                         </div>
                                 </form>
                             </div>

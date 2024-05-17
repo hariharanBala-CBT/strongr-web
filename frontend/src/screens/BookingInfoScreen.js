@@ -357,7 +357,7 @@ function BookingInfoScreen() {
               )}
               {loading ? (
                 <div>Loading slots...</div>
-              ) : slots?.length !== 0 ? (
+              ) : slots?.length !== 0 || additionalSlots?.length !== 0 ? (
                 <SelectInput
                   id="slot"
                   value={slot}
@@ -367,11 +367,11 @@ function BookingInfoScreen() {
                     name: `${slot.start_time}-${slot.end_time}`,
                   }))}
                   label="slot"
-                  addSlots = {additionalSlots?.map((slot) => ({
+                  addSlots={additionalSlots?.map((slot) => ({
                     id: slot.id,
                     name: `${slot.start_time}-${slot.end_time}`,
                   }))}
-                  removeSlots =  {unavailableSlots?.map((slot) => ({
+                  removeSlots={unavailableSlots?.map((slot) => ({
                     id: slot.id,
                     name: `${slot.start_time}-${slot.end_time}`,
                   }))}
