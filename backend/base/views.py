@@ -459,6 +459,27 @@ class OrganizationLocationListView(ListView):
         organization = get_object_or_404(Organization, user=self.request.user)
         return OrganizationLocation.objects.filter(organization=organization)
 
+@method_decorator(login_required, name='dispatch')
+class TempslotLocationListView(ListView):
+    model = OrganizationLocation
+    template_name = 'temp-slot-location.html'
+    context_object_name = 'locations'
+
+    def get_queryset(self):
+        organization = get_object_or_404(Organization, user=self.request.user)
+        return OrganizationLocation.objects.filter(organization=organization)
+
+@method_decorator(login_required, name='dispatch')
+class TempdeslotLocationListView(ListView):
+    model = OrganizationLocation
+    template_name = 'temp-deslot-location.html'
+    context_object_name = 'locations'
+
+    def get_queryset(self):
+        organization = get_object_or_404(Organization, user=self.request.user)
+        return OrganizationLocation.objects.filter(organization=organization)
+
+
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationGameListView(ListView):
@@ -1305,3 +1326,174 @@ class TenantOrganizationPreviewView(DetailView):
 
         context['all_locations'] = locationdetails
         return context
+
+class AddMultipleTempSlotsView(View):
+    template_name = 'add_temp_slot.html'
+
+    def get(self, request, *args, **kwargs):
+        form = TempSlotForm(prefix='0')  # Start with prefix '0' for the first form
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form_count = int(request.POST.get('form-TOTAL_FORMS', 1))
+        forms = [TempSlotForm(request.POST, prefix=str(i)) for i in range(form_count)]
+
+        if all(form.is_valid() for form in forms):
+            for form in forms:
+                pk = request.session.get('location_pk')
+                if pk:
+                    location = OrganizationLocation.objects.get(pk=pk)
+                    form.instance.location = location
+                    form.save()
+                else:
+                    messages.error(request, 'Location not found.')
+                    return redirect('error-url')
+            
+            messages.success(request, 'Slots created successfully.')
+            return redirect('temp-slot-list')
+        return render(request, self.template_name, {'forms': forms})
+
+class TempSlotListView(ListView):
+    model = AdditionalSlot
+    template_name = 'temp-slots-list.html'
+    context_object_name = 'tempSlots'
+
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        if pk:
+            self.request.session['location_pk'] = pk
+            return AdditionalSlot.objects.filter(location_id=pk)
+        return AdditionalSlot.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.request.session.get('location_pk')
+        return context
+
+    def post(self, request, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        id = request.POST.get('slot_id')
+        print("id is :",id)
+        if id:
+            try:
+                slot = AdditionalSlot.objects.get(id=id)
+                slot.delete()
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            except AdditionalSlot.DoesNotExist:
+                print("Slot does not exist")
+        else:
+            print("Error: No slot ID provided")
+
+@method_decorator(login_required, name='dispatch')
+class TempSlotCreateView(CreateView):
+    template_name = 'add_temp_slot.html'
+    form_class = TempSlotForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def form_invalid(self, form):
+        return self.render_to_response(
+            self.get_context_data(form=form, error=form.errors.as_text())
+        )
+
+    def form_valid(self, form):
+        try:
+            pk = self.request.session.get('location_pk')
+            if not pk:
+                raise KeyError('Location PK not found in session')
+            location = OrganizationLocation.objects.get(pk=pk)
+            form.instance.location = location
+            response = super().form_valid(form)
+            return response
+        except KeyError as e:
+            return self.render_to_response(
+                self.get_context_data(form=form, error=str(e))
+            )
+        except OrganizationLocation.DoesNotExist:
+            return self.render_to_response(
+                self.get_context_data(form=form, error='Invalid location PK')
+            )
+
+    def get_success_url(self):
+        return reverse_lazy('temp-slot-list', kwargs={'pk': self.request.session.get('location_pk')})
+
+@method_decorator(login_required, name='dispatch')
+class UnavailableSlotListView(ListView):
+    model = UnavailableSlot
+    template_name = 'unavailable-slot-list.html'
+    context_object_name = 'tempSlots'
+
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        if pk:
+            self.request.session['location_pk'] = pk
+            return UnavailableSlot.objects.filter(location_id=pk)
+        return UnavailableSlot.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.request.session.get('location_pk')
+        return context
+
+    def post(self, request, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        print("pk is :",pk)
+        id = request.POST.get('slot_id')
+        print("id is :",id)
+        if id:
+            try:
+                print("entered try")
+                slot = UnavailableSlot.objects.get(id=id)
+                slot.delete()
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            except UnavailableSlot.DoesNotExist:
+                print("Slot does not exist")
+        else:
+            print("Error: No slot ID provided")
+
+@method_decorator(login_required, name='dispatch')
+class UnavailableSlotCreateView(CreateView):
+    form_class = unavailableSlotForm
+    template_name = 'add-unavailable-slot.html'
+
+    def clean_date(self):
+        date = self.cleaned_data.get('date')
+        today = datetime.now().date()  # Correctly using timezone.now()
+        if date < today:
+            raise ValidationError("The date cannot be in the past.")
+        return date
+    
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def form_invalid(self, form):
+        return self.render_to_response(
+            self.get_context_data(form=form, error=form.errors.as_text())
+        )
+
+    def form_valid(self, form):
+        try:
+            pk = self.request.session.get('location_pk')
+            if not pk:
+                raise KeyError('Location PK not found in session')
+            location = OrganizationLocation.objects.get(pk=pk)
+            form.instance.location = location
+            response = super().form_valid(form)
+            return response
+        except KeyError as e:
+            return self.render_to_response(
+                self.get_context_data(form=form, error=str(e))
+            )
+        except OrganizationLocation.DoesNotExist:
+            return self.render_to_response(
+                self.get_context_data(form=form, error='Invalid location PK')
+            )
+
+    def get_success_url(self):
+        return reverse_lazy('unavailable-slot-list', kwargs={'pk': self.request.session.get('location_pk')})

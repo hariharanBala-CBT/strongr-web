@@ -75,7 +75,7 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                                 Profile
                             </a>
-                            <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
+                            <a class="nav-link" href="{% url 'organization_locationlist'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
                             </a>
@@ -107,30 +107,10 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4 mt-4">
-                        {% if messages %}
-                            <div>
-                                {% for message in messages %}
-                                    {% if 'profile_update' in message.tags %}
-                                        <div class="alert alert-success" role="alert" id="successAlert">
-                                            {{ message }}
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        {% if messages %}
-                            <div class="alert alert-success" role="alert" id="successAlert">
-                                {% for message in messages %}
-                                <p>{{ message }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        <h1 class="mt-4 mb-4" style="margin-left: 40%;">Location List</h1>
+                        <h1 class="mt-4 mb-4" style="margin-left: 40%;">Unavailable Slots</h1>
                         <div class="card mb-4">
                             <div class="location-card card-header">
-                                <div><i class="fas fa-map-marker-alt"></i>
-                                Locations</div>
-                                <div><a href="{% url 'organization_addlocation' %}" class="btn btn-success align-self-end">Add locations</a></div>
+                                <div><i class="fas fa-map-marker-alt"></i>Locations</div>
                             </div>
                             <div class="card-body">
                                 <form method="post">
@@ -158,14 +138,7 @@
                                                 <td>{{location.address_line_1}}</td>
                                                 <td>{{location.area}}</td>
                                                 <td>{{location.area.city}}</td>
-                                                <!-- <td><a href="{% url 'organization_updatelocation' pk=location.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i>
-                                                </a></td> -->
-                                                <td><a href="{% url 'organization_updatelocation' pk=location.pk %}" class="btn btn-primary btn-icon-split">
-                                                    <span class="icon text-white-50">
-                                                        <i class="fa-regular fa-pen-to-square "></i>
-                                                    </span>
-                                                    <span class="text">Edit</span>
-                                                </a></td>
+                                                <td><a href="{% url 'unavailable-slot-list' pk=location.pk %}" class="btn btn-success align-self-end" data-toggle="tooltip" title="Add Unavailable slot"><i class="fa-solid fa-plus"></i></a></td>
                                             </tr>
                                             {% endfor%}
                                         </tbody>
@@ -173,11 +146,6 @@
                                 </form>
                             </div>
                         </div>
-                    </div>
-                    <div class="text-end mt-3 preview">
-                        <a href="{% url 'preview' %}" class="btn btn-primary"
-                          >Proceed to Preview &ensp; <i class="fa-solid fa-angles-right"></i></a
-                        >
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">

@@ -174,6 +174,15 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
                             Status
                         </a>
+                        <div class="sb-sidenav-menu-heading">Slot</div>
+                        <a class="nav-link" href="{% url 'temp-slot-location'%}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
+                            Additional Slots
+                        </a>
+                        <a class="nav-link" href="{% url 'temp-deslot-location'%}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
+                            Unavailable Slots
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -253,8 +262,7 @@
                                 aria-labelledby="modalLabel">
                                 <div class="modal-content">
                                     <h2 id="modalLabel">Confirm Update</h2>
-                                    <p id="updateDetails">Are you sure you want to update the following details?</p>
-                                    <div id="detailsToUpdate"></div>
+                                    <p id="updateDetails">Are you sure you want to update the profile details?</p>
                                     <div style="display: flex; justify-content: center; align-items: center;">
                                         <button id="cancelUpdateButton">Cancel</button>
                                         <button id="confirmUpdateButton">Confirm</button>
@@ -313,12 +321,6 @@
         
             updateButton.addEventListener('submit', function (event) {
                 event.preventDefault();
-                var updatedDetails = '';
-                updatedDetails += '<p>Phone Number: ' + document.querySelector('input[name="phone_number"]').value + '</p>';
-                updatedDetails += '<p>Alternate Phone Number: ' + document.querySelector('input[name="alt_number"]').value + '</p>';
-                updatedDetails += '<p>Description: ' + document.querySelector('textarea[name="description"]').value + '</p>';
-        
-                document.getElementById('detailsToUpdate').innerHTML = updatedDetails;
                 modal.style.display = "block";
                 modal.setAttribute('aria-hidden', 'false');
                 return false;

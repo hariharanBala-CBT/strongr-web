@@ -31,9 +31,18 @@ urlpatterns = [
      path('court-list/', CourtsListView.as_view(), name='court-list'),
      path('delete-court/<int:pk>', CourtDeleteView.as_view(), name='delete-court'),
      path('add-slot/', SlotCreateView.as_view(), name='add-slot'),
+     path('add-temp-slot/<int:pk>/', TempSlotCreateView.as_view(), name='add-temp-slot'),
+     path('temp-slot-location/', TempslotLocationListView.as_view(), name='temp-slot-location'),
+     path('temp-unavailableslot-location/', TempdeslotLocationListView.as_view(), name='temp-deslot-location'),
+     path('temp-slot-list/<int:pk>/', TempSlotListView.as_view(), name='temp-slot-list'),
+     path('temp-slot-list/<int:id>', TempSlotListView.as_view(), name='temp-slot-list'),
+     path('add-unavailable-slot/<int:pk>/', UnavailableSlotCreateView.as_view(), name='add-unavailable-slot'),
+     path('unavailable-slot-list/<int:pk>/', UnavailableSlotListView.as_view(), name='unavailable-slot-list'),
+
      path('slot-list/', SlotListView.as_view(), name='slot-list'),
      path('update-slot/<int:pk>', SlotUpdateView.as_view(), name='update-slot'),
      path('delete-slot/<int:pk>', SlotDeleteView.as_view(), name='delete-slot'),
+
      path('error/', TemplateView.as_view(template_name='error.html'), name='error_view'),
      path('multiple-slot/<int:court_pk>', CreateMultipleSlotsView.as_view(), name='multiple-slot'),
      path('organizationlocationamenities/' ,OrganizationLocationAmenitiesView.as_view(), name='organization_locationamenities'),

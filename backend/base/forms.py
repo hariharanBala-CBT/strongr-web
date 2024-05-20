@@ -1,4 +1,5 @@
 import datetime
+from django.utils import timezone
 from django import forms
 from django.db.models.base import Model 
 from django.forms import ClearableFileInput, DateInput, ValidationError, ModelForm, modelformset_factory
@@ -197,6 +198,16 @@ class SlotForm(forms.ModelForm):
         # Check if a slot with the same start_time, end_time, court, and days already exists
         if Slot.objects.filter(start_time=start_time, end_time=end_time, court=court, days=days).exists():
             raise forms.ValidationError("A slot with the same details already exists.")
+        
+        time_diff_seconds = (end_time.hour * 3600 + end_time.minute * 60 + end_time.second) - \
+                            (start_time.hour * 3600 + start_time.minute * 60 + start_time.second)
+        time_diff_minutes = time_diff_seconds / 60
+
+        # Check if the time difference exceeds one hour
+        if time_diff_minutes > 60:
+            raise forms.ValidationError("Time difference between slots cannot exceed one hour.")
+
+        return cleaned_data
 
 class SlotUpdateForm(forms.ModelForm):
     start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
@@ -225,3 +236,49 @@ class SlotUpdateForm(forms.ModelForm):
         # Check if a slot with the same start_time, end_time, court, and days already exists
         if Slot.objects.filter(start_time=start_time, end_time=end_time, court=court, days=days).exists():
             raise forms.ValidationError("A slot with the same details already exists.")
+        
+        time_diff_seconds = (end_time.hour * 3600 + end_time.minute * 60 + end_time.second) - \
+                            (start_time.hour * 3600 + start_time.minute * 60 + start_time.second)
+        time_diff_minutes = time_diff_seconds / 60
+
+        # Check if the time difference exceeds one hour
+        if time_diff_minutes > 60:
+            raise forms.ValidationError("Time difference between slots cannot exceed one hour.")
+
+        return cleaned_data
+
+class TempSlotForm(forms.ModelForm):
+    start_time = forms.TimeField(label='Select start time', widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
+    end_time = forms.TimeField(label='Select end time', widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
+    date = forms.DateField(label='Select date', widget=forms.DateInput(attrs={'type': 'date'}))
+
+    class Meta:
+        model = AdditionalSlot
+        fields = ['start_time', 'end_time', 'court', 'date']
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(TempSlotForm, self).__init__(*args, **kwargs)
+        if self.request:
+            key = self.request.session.get('location_pk')
+            if key:
+                self.fields['court'].queryset = Court.objects.filter(location_id=key)
+
+
+class unavailableSlotForm(forms.ModelForm):
+    start_time = forms.TimeField(label='Select start time', widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
+    end_time = forms.TimeField(label='Select end time', widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
+    date = forms.DateField(label='Select date', widget=forms.DateInput(attrs={'type': 'date'}))
+
+    class Meta:
+        model = UnavailableSlot
+        fields = ['start_time', 'end_time', 'court', 'date']
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(unavailableSlotForm, self).__init__(*args, **kwargs)
+        if self.request:
+            key = self.request.session.get('location_pk')
+            if key:
+                self.fields['court'].queryset = Court.objects.filter(location_id=key)
+    
