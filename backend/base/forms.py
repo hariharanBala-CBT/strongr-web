@@ -94,29 +94,21 @@ class OrganizationLocationGameTypeForm(ModelForm):
         }
 
 class OrganizationLocationGameTypeCreateForm(ModelForm):
-    # def __init__(self, *args, **kwargs):
-    #     self.request = kwargs.pop('request', None)
-    #     super().__init__(*args, **kwargs)
-    #     if self.request:
-    #         key = self.request.session.get('location_pk')
-    #         if key:
-    #             existing_game_types = OrganizationLocationGameType.objects.filter(organization_location_id=key).values_list('game_type__pk', flat=True)
-    #             for field_name, field in self.fields.items():
-    #                 if field_name == 'game_type':
-    #                     choices = []
-    #                     for choice in field.choices:
-    #                         if choice[0] in existing_game_types:
-    #                             choices.append((choice[0], choice[1], {'disabled': True}))
-    #                         else:
-    #                             choices.append((choice[0], choice[1]))
-    #                     field.choices = choices
-        
     class Meta:
         model = OrganizationLocationGameType
         fields = ['game_type', 'pricing', 'number_of_courts', 'description']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 2, 'cols': 25})
         }
+
+    def __init__(self, *args, **kwargs):
+        organization_location = kwargs.pop('organization_location', None)
+        super().__init__(*args, **kwargs)
+        if organization_location:
+            existing_game_types = OrganizationLocationGameType.objects.filter(
+                organization_location=organization_location
+            ).values_list('game_type', flat=True)
+            self.fields['game_type'].queryset = GameType.objects.exclude(pk__in=existing_game_types)
 
 class OrganizationGameImagesForm(forms.ModelForm):
     clear_image = forms.BooleanField(required=False)

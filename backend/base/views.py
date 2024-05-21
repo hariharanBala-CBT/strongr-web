@@ -532,6 +532,13 @@ class OrganizationLocationGameTypeView(CreateView):
     form_class = OrganizationLocationGameTypeCreateForm
     success_url = reverse_lazy('organization_locationgamelist')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        organization_location = OrganizationLocation.objects.get(
+            pk=self.request.session.get('location_pk'))
+        kwargs['organization_location'] = organization_location
+        return kwargs
+
     def form_valid(self, form):
         form.instance.organization_location = OrganizationLocation.objects.get(
             pk=self.request.session.get('location_pk'))
@@ -548,9 +555,9 @@ class OrganizationLocationGameTypeView(CreateView):
                 game=game_type,
                 description=f"description for court {i+1}",
                 is_active=True)
+        
         messages.success(self.request, 'Game created successfully.')
         return HttpResponseRedirect(self.success_url)
-
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationGameTypeView(UpdateView):
@@ -1518,7 +1525,7 @@ class UnavailableSlotCreateView(CreateView):
 
     def clean_date(self):
         date = self.cleaned_data.get('date')
-        today = datetime.now().date()  # Correctly using timezone.now()
+        today = datetime.now().date()
         if date < today:
             raise ValidationError("The date cannot be in the past.")
         return date
