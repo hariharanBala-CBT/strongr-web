@@ -43,7 +43,7 @@ function Club({ clubs }) {
 
                   <Card.Img
                     variant="top"
-                    src={club.organization_images[0]}
+                    src={club && club?.organization_images}
                     alt="Image"
                     className="image"
                   />

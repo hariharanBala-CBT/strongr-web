@@ -133,7 +133,7 @@ function ClubListScreen() {
   }, [areaError, gameError]);
 
   useEffect(() => {
-    if (clubLocationDetails?.length === 0 && areaName !== undefined && gameName !== undefined) {
+    if ( areaName !== undefined && gameName !== undefined) {
       dispatch(listSuggestedClub(areaName));
       dispatch(listSuggestedClubGame(gameName));
     }
@@ -188,7 +188,7 @@ function ClubListScreen() {
         {clubFilterLoading ? (
           <CircularProgress />
         ) : (
-          clubLocationDetails && <Club clubs={clubLocationDetails} />
+          clubLocationDetails && <Club clubs={clubLocationDetails} /> 
         )}
       </div>
       {clubLocationDetails?.length === 0 && suggestedClubList?.length > 0 && (
@@ -205,7 +205,7 @@ function ClubListScreen() {
           </div>
         </div>
       )}
-      {suggestedClubList?.length === 0 && (
+      {suggestedClubList?.length === 0 && suggestedClubGameList?.length > 0 && (
         <div>
           <div>
             <div className="clubs-error">

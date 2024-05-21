@@ -129,29 +129,23 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
         model = Booking
         fields = ['id', 'name', 'phone_number', 'booking_date', 'booking_status', 'payment_status', 'tax_price', 'total_price', 'organization_name', 'court', 'slot', 'organization_location', 'game_type','image']
 
-class ClubSerializerWithLocation(serializers.ModelSerializer):
-    organizationlocation_set = ClubLocationSerializer(many=True, read_only=True)
-    class Meta:
-        model = Organization
-        fields = '__all__'
-
-class ClubSerializerWithImages(serializers.ModelSerializer):
-    organization = ClubSerializer()
-    area = AreaSerializer()
-    organization_images = serializers.SerializerMethodField()
-    address_line_1 = serializers.SerializerMethodField()
+# class ClubSerializerWithImages(serializers.ModelSerializer):
+#     organization = ClubSerializer()
+#     area = AreaSerializer()
+#     # organization_images = serializers.SerializerMethodField()
+#     address_line_1 = serializers.SerializerMethodField()
     
-    def get_organization_images(self, obj):
-        images = OrganizationGameImages.objects.filter(organization=obj)
-        return [image.image.url for image in images]
+#     # def get_organization_images(self, obj):
+#     #     images = OrganizationGameImages.objects.filter(organization=obj)
+#     #     return [image.image.url for image in images]
 
-    def get_address_line_1(self, obj):
-        location = obj 
-        return location.address_line_1 if location else None
+#     def get_address_line_1(self, obj):
+#         location = obj 
+#         return location.address_line_1 if location else None
 
-    class Meta:
-        model = Organization
-        fields = ['id', 'organization', 'area', 'organization_images', 'address_line_1']
+#     class Meta:
+#         model = Organization
+#         fields = ['id', 'organization', 'area', 'address_line_1']
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -168,7 +162,6 @@ class ClubSerializerWithLocation(serializers.ModelSerializer):
 class ClubSerializerWithImages(serializers.ModelSerializer):
     organization = ClubSerializer()
     area = AreaSerializer()
-    # review = ReviewSerializer(read_only=True)
     organization_images = serializers.SerializerMethodField()
     address_line_1 = serializers.SerializerMethodField()
     rating = serializers.DecimalField(max_digits=7, decimal_places=2, read_only=True)
@@ -176,8 +169,16 @@ class ClubSerializerWithImages(serializers.ModelSerializer):
     reviews = serializers.SerializerMethodField(read_only=True)
     
     def get_organization_images(self, obj):
-        images = OrganizationGameImages.objects.filter(organization=obj)
-        return [image.image.url for image in images]
+        try:
+            print("entered image try")
+            organization_location = obj
+            organization_game_images = OrganizationGameImages.objects.filter(organization=organization_location).first()
+            if organization_game_images:
+                return organization_game_images.image.url
+        except Exception as e:
+            # Handle exceptions appropriately
+            pass
+        return None
 
     def get_address_line_1(self, obj):
         location = obj 
@@ -191,5 +192,5 @@ class ClubSerializerWithImages(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
-        fields = ['id', 'organization', 'area', 'organization_images', 'address_line_1','rating', 'numRatings','reviews']
+        fields = ['id', 'organization', 'area','organization_images','address_line_1','rating', 'numRatings','reviews']
 
