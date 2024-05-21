@@ -43,7 +43,6 @@ function ClubDetailScreen() {
 
   const {
     loading: loadingclubReview,
-    // error: errorclubReview,
     success: successclubReview,
   } = clubReviewCreate;
 
@@ -60,10 +59,10 @@ function ClubDetailScreen() {
   }, [dispatch, id, gameName, successclubReview]);
 
   useEffect(() => {
-    if(successclubReview){
-      toast.success('Review submitted')
+    if (successclubReview) {
+      toast.success("Review submitted");
     }
-  },[successclubReview])
+  }, [successclubReview]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -73,12 +72,12 @@ function ClubDetailScreen() {
         comment,
       })
     ).then(() => {
-        setRating(0);
-        setComment("");
-        dispatch({
-          type: CLUB_CREATE_REVIEW_RESET,
-        })
-      })
+      setRating(0);
+      setComment("");
+      dispatch({
+        type: CLUB_CREATE_REVIEW_RESET,
+      });
+    });
   };
 
   const [isPopupVisible, setPopupVisible] = useState(false);
@@ -124,30 +123,34 @@ function ClubDetailScreen() {
             width={600}
             showThumbs={false}
           >
-            {clubImage?.map((image) => (
-              <div key={image.id}>
-                <img
-                  src={image.image}
-                  alt="carousel-img"
-                  className="carousel-img"
-                />
-              </div>
-            ))}
-
-            <div>
-              <img
-                src="https://source.unsplash.com/Jr5x1CAWySo"
-                alt="carousel-img"
-                className="carousel-img"
-              />
-            </div>
-            <div>
-              <img
-                src="https://source.unsplash.com/Jr5x1CAWySo"
-                alt="carousel-img"
-                className="carousel-img"
-              />
-            </div>
+            {clubImage ? (
+              clubImage?.map((image) => (
+                <div key={image.id}>
+                  <img
+                    src={image.image}
+                    alt="carousel-img"
+                    className="carousel-img"
+                  />
+                </div>
+              ))
+            ) : (
+              <>
+                <div>
+                  <img
+                    src="https://source.unsplash.com/Jr5x1CAWySo"
+                    alt="carousel-img"
+                    className="carousel-img"
+                  />
+                </div>
+                <div>
+                  <img
+                    src="https://source.unsplash.com/Jr5x1CAWySo"
+                    alt="carousel-img"
+                    className="carousel-img"
+                  />
+                </div>
+              </>
+            )}
           </Carousel>
         </div>
 

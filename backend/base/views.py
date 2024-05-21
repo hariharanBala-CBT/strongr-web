@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from base.serializers import UserSerializerWithToken
+from base.serializers import UserSerializerWithToken, UserSerializerWithTokenAndCustomer
 
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
@@ -41,20 +41,23 @@ from django.shortcuts import redirect
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models import Q
-# from django.db import transaction
-# from django.http import JsonResponse
-# from .middleware import FirstLoginMiddleware
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+from django.template.loader import render_to_string
 
 
 #FOR CUSTOMER ------------
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
-        data = super().validate(attrs)
-        serializer = UserSerializerWithToken(self.user).data
-        for k, v in serializer.items():
-            data[k] = v
-        return data
-
+        try:
+            data = super().validate(attrs)
+            serializer = UserSerializerWithTokenAndCustomer(self.user).data
+            for k, v in serializer.items():
+                data[k] = v
+            return data
+        except Exception:
+            return Response({'detail': 'User does not exist'},
+                            status=status.HTTP_404_NOT_FOUND)
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -78,25 +81,49 @@ def PhoneLoginView(request):
         # return Response(message)
 
     except Customer.DoesNotExist:
-        return Response({'error': 'User not registered'},
+        return Response({'detail': 'User not registered'},
                         status=status.HTTP_404_NOT_FOUND)
 
     except KeyError:  # Handle specific exception
         message = {
-            'error': 'phone_number is required'
+            'detail': 'phone_number is required'
         }  # Provide an appropriate error message
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+def generateOtp(request):
+    email = request.query_params.get('email')
+    otp = get_random_string(length=4, allowed_chars='0123456789')
+    subject = 'Welcome to Our Website'
+    message = render_to_string('email_otp.html', {
+        'otp': otp,
+    })
+
+    from_email = 'testgamefront@gmail.com'
+    recipient_list = [email]
+    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+    request.session['emailedotp'] = otp
+    return Response({'otp': 'sent'})
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 @api_view(['POST'])
 def registerUser(request):
     data = request.data
+    otp_from_session = request.session.get('emailedotp')
+    otp_from_client = data.get('otp')
+    phone = data.get('phone')
 
-    otp_from_session = request.session.get('otp')
-    if not otp_from_session or otp_from_session != data.get('otp'):
-        return Response({'error': 'Invalid OTP'},
-                        status=status.HTTP_400_BAD_REQUEST)
+    if not otp_from_session or otp_from_session != otp_from_client:
+        return Response({'detail': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
 
+    if not phone:
+        return Response({'detail': 'Phone number is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # The rest of your logic
     try:
         user = User.objects.create(
             first_name=data['name'],
@@ -108,15 +135,15 @@ def registerUser(request):
         customer = Customer.objects.create(
             tenant=Tenant.objects.get(id=1),
             user=user,
-            phone_number=data['phoneNumber'],
+            phone_number=data.get('phone'),
         )
 
-        serializer = UserSerializerWithToken(user, many=False)
+        serializer = UserSerializerWithTokenAndCustomer(user, many=False)
         return Response(serializer.data)
+    except Exception as e:
+        print('this is exception', str(e))
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    except:
-        message = {'detail': 'User with this email already exists'}
-        return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
 #FOR ORGANIZATION ------------
@@ -358,7 +385,7 @@ class OrganizationProfileView(UpdateView):
         return response
 
     def form_invalid(self, form):
-    # Collect all form errors
+        # Collect all form errors
         errors = {field: [str(e) for e in form.errors[field]] for field in form.errors}
 
         if self.is_ajax_request():
@@ -441,7 +468,7 @@ class OrganizationUpdateLocationView(UpdateView):
                 form.add_error('phone_number',
                                'Phone number must be at least 10 digits')
                 return self.form_invalid(form)
-            
+
         messages.success(self.request, 'Location updated successfully.')
         return super().form_valid(form)
 
@@ -685,7 +712,7 @@ class CourtDeleteView(DeleteView):
     success_url = reverse_lazy('court-list')
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request,'Court deleted successfully.')  
+        messages.success(self.request,'Court deleted successfully.')
         return super().delete(request, *args, **kwargs)
 
 
@@ -799,7 +826,7 @@ class SlotDeleteView(DeleteView):
     success_url = reverse_lazy('slot-list')
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request,'Slot deleted successfully.')  
+        messages.success(self.request,'Slot deleted successfully.')
         return super().delete(request, *args, **kwargs)
 
 class CourtCreateView(CreateView):
@@ -888,7 +915,7 @@ class TenantTermsandConditionsView(FormView):
 @method_decorator(login_required, name='dispatch')
 class PrivacyPolicyView(TemplateView):
     template_name = 'privacy_policy.html'
-    
+
 # from collections import defaultdict
 
 
@@ -1276,7 +1303,7 @@ class TenantOrganizationPreviewView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        organization = self.object  # Get the organization object aka pk
+        organization = self.object
 
         # Fetch all locations related to the organization
         locations = OrganizationLocation.objects.filter(
@@ -1305,3 +1332,34 @@ class TenantOrganizationPreviewView(DetailView):
 
         context['all_locations'] = locationdetails
         return context
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+@method_decorator(login_required, name='dispatch')
+class OrganizationsCustomerlist(LoginRequiredMixin, ListView):
+    model = Customer
+    template_name = 'org_customers.html'
+    context_object_name = 'customers'
+    login_url = '/orglogin/'
+
+    def get_queryset(self):
+        organization = get_object_or_404(Organization, user=self.request.user)
+        organization_locations = OrganizationLocation.objects.filter(organization=organization)
+        bookings = Booking.objects.filter(court__location__in=organization_locations)
+        booking_users = bookings.values_list('user', flat=True)
+        customers = Customer.objects.filter(user__in=booking_users).distinct()
+        return customers
+
+@method_decorator(login_required, name='dispatch')
+class TenantsCustomerlist(LoginRequiredMixin, ListView):
+    model = Customer
+    template_name = 'tenant_customers.html'
+    context_object_name = 'customers'
+    login_url = '/orglogin/'
+
+    def get_queryset(self):
+        tenant = Tenant.objects.get(id = self.request.user.id)
+        customers = Customer.objects.filter(
+            tenant = tenant)
+        return customers

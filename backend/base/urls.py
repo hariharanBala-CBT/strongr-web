@@ -3,6 +3,7 @@ from .views import *
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+     path('', TemplateView.as_view(template_name = 'cover.html'), name='home'),
      path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
      path('login/phone/', PhoneLoginView, name='phone_login'),
      path('register/', registerUser, name='register'),
@@ -14,6 +15,9 @@ urlpatterns = [
      path('confirmed_bookings/',ListofConfirmBookingView.as_view(), name='confirmed_bookings'),
      path('pending_bookings/',ListofPendingBookingView.as_view(), name='pending_bookings'),
      path('cancelled_bookings/',ListofCancelledBookingView.as_view(), name='cancelled_bookings'),
+
+     path('sendotp/', generateOtp, name="generate-otp"),
+
 
      path('organizationprofile/<int:pk>/' ,OrganizationProfileView.as_view(), name='organization_profile'),
      path('organizationaddlocation/' ,OrganizationAddLocationView.as_view(), name='organization_addlocation'),
@@ -40,7 +44,7 @@ urlpatterns = [
      path('organizationlocationworkingdays/' , OrganizationWorkingDaysView.as_view(), name='organization_locationworkingdays'),
      path('preview/' ,PreviewView.as_view(), name='preview'),
      path('termsandconditions/' ,TermsandConditionsView.as_view(),name='termsandconditions'),
-    path('terms-conditions/' ,TenantTermsandConditionsView.as_view(),name='termsconditions'),
+     path('terms-conditions/' ,TenantTermsandConditionsView.as_view(),name='termsconditions'),
      path('privacy-policy/' ,PrivacyPolicyView.as_view(), name='privacypolicy'),
 
      path('user/' ,TenantEmployeeHomeView.as_view(), name='tenantuser_page'),
@@ -77,6 +81,9 @@ urlpatterns = [
      path('password-reset-complete/',
           auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),
           name='password_reset_complete'),
+
+     path('organization/customers/', OrganizationsCustomerlist.as_view(), name='org_customers_list'),
+     path('tenant/customers/', TenantsCustomerlist.as_view(), name='tenant_customers_list'),
 
 
      ]
