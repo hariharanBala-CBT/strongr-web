@@ -13,7 +13,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-
     <style>
         form {
             max-width: 500px;
@@ -41,13 +40,14 @@
             padding: 20px;
             box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
         }
+
     </style>
 </head>
 
 <body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark" aria-label="Main Navigation">
         <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" aria-controls="sidenavAccordion" aria-expanded="false"><i class="fas fa-bars"></i></button>
         <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -61,7 +61,7 @@
     </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" aria-label="Sidebar Navigation">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Main</div>
@@ -94,7 +94,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                             Additional Slots
                         </a>
-                        <a class="nav-link" href="{% url 'temp-deslot-location'%}">
+                        <a class="nav-link" href="{% url 'temp-deslot-location'%}" style="color: white; background-color: rgb(68, 68, 68);">
                             <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
                             Unavailable Slots
                         </a>
@@ -108,12 +108,18 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4 m">
+                <div class="container-fluid px-4">
                     <div class="profile-card">
                         <h3 class="my-4">Unavailable Slot:</h3>
                         <h6 class="mb-5">Add Unavailable Temporary Slot to your court</h6>
-
-                        <form method="post">
+                        {% if error %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ error }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+                        <form method="post" aria-labelledby="formHeading">
+                            <h2 id="formHeading" class="visually-hidden">Unavailable Slot Form</h2>
                             {% csrf_token %}
                             <table>
                                 <tbody>
@@ -135,10 +141,9 @@
                                     </tr>
                                 </tbody>
                             </table>
-
                             <div class="buttons px-4 py-4" style="margin-left: 10%">
-                                <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
-                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right-long"></i></button>
+                                <button type="button" class="btn btn-secondary" onclick="goBack()" aria-label="Go back"><i class="fa-solid fa-arrow-left-long"></i></button>
+                                <button type="submit" class="btn btn-primary" aria-label="Submit form"><i class="fa-solid fa-arrow-right-long"></i></button>
                             </div>
                         </form>
                     </div>
@@ -181,6 +186,7 @@
             var today = new Date().toISOString().split('T')[0];
             dateInput.setAttribute('min', today);
         });
+
     </script>
 </body>
 

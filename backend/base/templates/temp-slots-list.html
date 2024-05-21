@@ -74,7 +74,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                             Profile
                         </a>
-                        <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
+                        <a class="nav-link" href="{% url 'organization_locationlist'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                             Locations
                         </a>
@@ -91,7 +91,7 @@
                             Customers
                         </a>  
                         <div class="sb-sidenav-menu-heading">Slot</div>
-                        <a class="nav-link" href="{% url 'temp-slot-location'%}">
+                        <a class="nav-link" href="{% url 'temp-slot-location'%}" style="color: white; background-color: rgb(68, 68, 68);">
                             <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                             Additional Slots
                         </a>
@@ -150,7 +150,6 @@
                                                 <td>{{ slot.court.name }}</td>
                                                 <td>{{ slot.date }}</td>
                                                 <td>{{ slot.start_time }} - {{ slot.end_time }}</td>
-                                                <!-- <td><a href="{% url 'temp-slot-list' slot.id %}"></a></td> -->
                                                 <td><form id="delform-{{ slot.id }}" action="{% url 'temp-slot-list' slot.location.id %}" method="post">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="slot_id" value="{{ slot.id }}">
@@ -204,7 +203,6 @@
     <script>
         function handleYes(event){
             const slotId = document.getElementById("popup").getAttribute("data-slot-id");
-            // Construct the form ID based on the slot ID
             const formId = "delform-" + slotId;
             const form = document.getElementById(formId);
             form.submit();

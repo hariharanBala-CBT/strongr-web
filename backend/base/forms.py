@@ -255,12 +255,44 @@ class TempSlotForm(forms.ModelForm):
             key = self.request.session.get('location_pk')
             if key:
                 self.fields['court'].queryset = Court.objects.filter(location_id=key)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        start_time = cleaned_data.get("start_time")
+        end_time = cleaned_data.get("end_time")
+        court = cleaned_data.get("court")
+        date = cleaned_data.get("date")
+
+        # Check if a slot with the same start_time, end_time, court, and days already exists
+        if AdditionalSlot.objects.filter(start_time=start_time, end_time=end_time, court=court, date=date).exists():
+            raise forms.ValidationError("A slot with the same details already exists.")
+        
+        time_diff_seconds = (end_time.hour * 3600 + end_time.minute * 60 + end_time.second) - \
+                            (start_time.hour * 3600 + start_time.minute * 60 + start_time.second)
+        time_diff_minutes = time_diff_seconds / 60
+
+        # Check if the time difference exceeds one hour
+        if ((time_diff_minutes < 60) and (time_diff_minutes > 60)):
+            raise forms.ValidationError("Time difference between slots can exactly be one hour.")
+
+        return cleaned_data
 
 
 class unavailableSlotForm(forms.ModelForm):
-    start_time = forms.TimeField(label='Select start time', widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
-    end_time = forms.TimeField(label='Select end time', widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
-    date = forms.DateField(label='Select date', widget=forms.DateInput(attrs={'type': 'date'}))
+    start_time = forms.TimeField(label='Select start time', widget=forms.TimeInput(attrs={
+        'class': 'form-control', 
+        'type': 'time', 
+        'aria-label': 'Start Time'
+    }))
+    end_time = forms.TimeField(label='Select end time', widget=forms.TimeInput(attrs={
+        'class': 'form-control', 
+        'type': 'time', 
+        'aria-label': 'End Time'
+    }))
+    date = forms.DateField(label='Select date', widget=forms.DateInput(attrs={
+        'type': 'date', 
+        'aria-label': 'Date'
+    }))
 
     class Meta:
         model = UnavailableSlot
@@ -273,4 +305,22 @@ class unavailableSlotForm(forms.ModelForm):
             key = self.request.session.get('location_pk')
             if key:
                 self.fields['court'].queryset = Court.objects.filter(location_id=key)
-    
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_time = cleaned_data.get("start_time")
+        end_time = cleaned_data.get("end_time")
+        court = cleaned_data.get("court")
+        date = cleaned_data.get("date")
+
+        if UnavailableSlot.objects.filter(start_time=start_time, end_time=end_time, court=court, date=date).exists():
+            raise forms.ValidationError("A slot with the same details already exists.", code='duplicate')
+
+        time_diff_seconds = (end_time.hour * 3600 + end_time.minute * 60 + end_time.second) - \
+                            (start_time.hour * 3600 + start_time.minute * 60 + start_time.second)
+        time_diff_minutes = time_diff_seconds / 60
+
+        if time_diff_minutes != 60:
+            raise forms.ValidationError("Time difference between slots must exactly be one hour.", code='time_error')
+
+        return cleaned_data

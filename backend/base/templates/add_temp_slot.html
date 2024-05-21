@@ -90,7 +90,7 @@
                             Customers
                         </a>  
                         <div class="sb-sidenav-menu-heading">Slot</div>
-                        <a class="nav-link" href="{% url 'temp-slot-location'%}">
+                        <a class="nav-link" href="{% url 'temp-slot-location'%}" style="color: white; background-color: rgb(68, 68, 68);">
                             <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                             Additional Slots
                         </a>
@@ -112,6 +112,12 @@
                     <div class="profile-card">
                         <h3 class="my-4">Temporary Slot:</h3>
                         <h6 class="mb-5">Add Available Temporary Slot to your court</h6>
+                        {% if error %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ error }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
 
                         <form method="post">
                             {% csrf_token %}
