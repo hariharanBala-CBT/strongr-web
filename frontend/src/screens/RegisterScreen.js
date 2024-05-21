@@ -53,7 +53,7 @@ function RegisterScreen() {
       toast.success("user signup sucess!");
       navigate("/");
     } else if (registerError) {
-      toast.error("incorrect OTP");
+      toast.error(registerError);
       setOpenForm(false);
       dispatch({
         type: USER_LOGOUT,
@@ -63,9 +63,13 @@ function RegisterScreen() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (otp === "") {
+      toast.error("Please enter the OTP");
+      return;
+    }
     dispatch(register(name, email, password, phoneNumber, otp));
   };
-
+  
   const otpGenerate = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {

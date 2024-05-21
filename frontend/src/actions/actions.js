@@ -814,7 +814,7 @@ export const generateOTP = (email) => async (dispatch) => {
   try {
     dispatch({ type: GENERATE_OTP_REQUEST });
 
-    const { data } = await axios.get(`/api/sendotp/`, {
+    const { data } = await axios.get(`/sendotp/`, {
       params: { email: email },
     });
 

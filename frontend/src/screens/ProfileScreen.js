@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import {
   bookingCancel,
   listUserBookings,
-  listcustomerDetails,
+  // listcustomerDetails,
 } from "../actions/actions";
 import { Box } from "@mui/material";
 import { USER_UPDATE_PROFILE_RESET } from "../constants/constants";
@@ -56,7 +56,7 @@ function ProfileScreen() {
   // const [courtList, setCourtList] = useState([]);
   const [bookingId, setBookingId] = useState("");
 
-  const { customerDetails } = useSelector((state) => state.customerDetails);
+  // const { customerDetails } = useSelector((state) => state.customerDetails);
   const { userInfo } = useSelector((state) => state.userLogin);
   const { userbookings } = useSelector((state) => state.userBookingsList);
   const { cancelBooking } = useSelector((state) => state.cancelBooking);
@@ -115,7 +115,7 @@ function ProfileScreen() {
 
     if (userInfo) {
       dispatch(listUserBookings(userInfo.id));
-      dispatch(listcustomerDetails(userInfo.id));
+      // dispatch(listcustomerDetails(userInfo.id));
     } else {
       navigate("/");
     }
@@ -157,7 +157,7 @@ function ProfileScreen() {
                   </ul>
                   <ul>
                     <strong>Phone number: </strong>
-                    {customerDetails?.phone_number}
+                    {userInfo?.customer?.phone_number}
                   </ul>
                 </Content>
                 <Button

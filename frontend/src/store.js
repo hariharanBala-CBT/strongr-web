@@ -41,6 +41,7 @@ import {
 
 const reducer = combineReducers({
   userLogin: userLoginReducer,
+  userRegister: userRegisterReducer,
   clubList: clubListReducer,
   clubDetails: clubDetailsReducer,
   Location: clubLocationReducer,
@@ -50,7 +51,6 @@ const reducer = combineReducers({
   clubImages: clubImageReducer,
   areaList: areaListReducer,
   gameList: gameListReducer,
-  userRegister: userRegisterReducer,
   filterClubLocations: filterclubReducer,
   bookingCreate: bookingCreateReducer,
   bookingDetails: bookingDetailsReducer,

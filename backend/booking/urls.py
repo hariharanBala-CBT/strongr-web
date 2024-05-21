@@ -8,7 +8,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('recentsearch/', views.recentSearch, name='recent_search'),
     path('filterclubs/',views.filterClubs, name='filter-clubs'),
-    path('sendotp/', views.generateOtp, name="generate-otp"),
     path('slots/', views.getAvailableSlots, name='get-slots'),
     path('slots/additional/', views.getAdditionalSlots, name='get-slots'),
     path('slots/unavailable/', views.getUnavailableSlots, name='get-slots'),

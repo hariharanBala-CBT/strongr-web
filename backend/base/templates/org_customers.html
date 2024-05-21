@@ -11,7 +11,6 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <link href="{% static 'styles.css' %}" rel="stylesheet" />
-        <!-- <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet" /> -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
@@ -75,7 +74,7 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                                 Profile
                             </a>
-                            <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
+                            <a class="nav-link" href="{% url 'organization_locationlist'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
                             </a>
@@ -87,19 +86,11 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
                                 Status
                             </a>
-                            <a class="nav-link" href="{% url 'org_customers_list'%}">
+                            <a class="nav-link" href="{% url 'org_customers_list'%}"  style="color: white; background-color: rgb(68, 68, 68);">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                 Customers
-                            </a>   
-                            <div class="sb-sidenav-menu-heading">Slot</div>
-                            <a class="nav-link" href="{% url 'temp-slot-location'%}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
-                                Additional Slots
-                            </a>
-                            <a class="nav-link" href="{% url 'temp-deslot-location'%}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
-                                Unavailable Slots
-                            </a>
+                            </a>                            
+                        
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -129,12 +120,11 @@
                                 {% endfor %}
                             </div>
                         {% endif %}
-                        <h1 class="mt-4 mb-4" style="margin-left: 40%;">Location List</h1>
+                        <h1 class="mt-4 mb-4" style="margin-left: 40%;">Customers List</h1>
                         <div class="card mb-4">
                             <div class="location-card card-header">
-                                <div><i class="fas fa-map-marker-alt"></i>
-                                Locations</div>
-                                <div><a href="{% url 'organization_addlocation' %}" class="btn btn-success align-self-end">Add locations</a></div>
+                                <div><i class="fas fa-users"></i>
+                                Customers</div>
                             </div>
                             <div class="card-body">
                                 <form method="post">
@@ -142,34 +132,24 @@
                                     <table id="datatablesSimple">
                                         <thead>
                                             <tr>
-                                                <th>Address</th>
-                                                <th>Area</th>
-                                                <th>City</th>
-                                                <th>Edit</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Number</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
-                                                <th>Address</th>
-                                                <th>Area</th>
-                                                <th>City</th>
-                                                <th>Edit</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Number</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
-                                            {% for location in locations %}
+                                            {% for customer in customers %}
                                             <tr>
-                                                <td>{{location.address_line_1}}</td>
-                                                <td>{{location.area}}</td>
-                                                <td>{{location.area.city}}</td>
-                                                <!-- <td><a href="{% url 'organization_updatelocation' pk=location.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i>
-                                                </a></td> -->
-                                                <td><a href="{% url 'organization_updatelocation' pk=location.pk %}" class="btn btn-primary btn-icon-split">
-                                                    <span class="icon text-white-50">
-                                                        <i class="fa-regular fa-pen-to-square "></i>
-                                                    </span>
-                                                    <span class="text">Edit</span>
-                                                </a></td>
+                                                <td>{{customer.user.first_name}}</td>
+                                                <td>{{customer.user.email}}</td>
+                                                <td>{{customer.phone_number}}</td>
                                             </tr>
                                             {% endfor%}
                                         </tbody>
@@ -177,11 +157,6 @@
                                 </form>
                             </div>
                         </div>
-                    </div>
-                    <div class="text-end mt-3 preview">
-                        <a href="{% url 'preview' %}" class="btn btn-primary"
-                          >Proceed to Preview &ensp; <i class="fa-solid fa-angles-right"></i></a
-                        >
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">

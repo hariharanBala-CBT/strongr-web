@@ -17,9 +17,6 @@ from dateutil.parser import parse
 import datetime
 from datetime import timedelta
 from django.db import transaction
-from django.core.mail import send_mail
-from django.utils.crypto import get_random_string
-from django.template.loader import render_to_string
 from django.contrib.auth.hashers import make_password
 
 @api_view(['GET'])
@@ -358,33 +355,6 @@ def updateUserProfile(request):
 
     return Response(serializer.data)
 
-
-@api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-def generateOtp(request):
-    user = request.user
-    serializer = UserSerializerWithToken(user, many=False)
-    email = request.query_params.get('email')
-
-    # Generate OTP
-    otp = get_random_string(length=4, allowed_chars='0123456789')
-    subject = 'Welcome to Our Website'
-    message = render_to_string('email_otp.html', {
-        'user': user,
-        'otp': otp,
-    })
-
-    from_email = 'testgamefront@gmail.com'
-    recipient_list = [email]
-    send_mail(subject,
-              message,
-              from_email,
-              recipient_list,
-              fail_silently=False)
-
-    request.session['otp'] = otp
-
-    return Response(serializer.data)
 
 @api_view(['PUT'])
 def cancelBooking(request, pk):
