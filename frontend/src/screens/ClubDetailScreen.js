@@ -5,7 +5,6 @@ import Loader from "../components/Loader";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import "../css/clubdetailscreen.css";
-import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,11 +16,27 @@ import {
   listCourts,
   createClubReview,
   listClubReviews,
+  login,
 } from "../actions/actions";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { useHomeContext } from "../context/HomeContext";
 import toast, { Toaster } from "react-hot-toast";
+import { Alert, Box, CircularProgress, Modal } from "@mui/material";
+import Button from "../components/Button";
+import Footer from "../components/Footer";
 import { CLUB_CREATE_REVIEW_RESET } from "../constants/constants";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 function ClubDetailScreen() {
   const { id } = useParams();
@@ -29,7 +44,10 @@ function ClubDetailScreen() {
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-
+  const [openForm, setOpenForm] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const gameName = localStorage.getItem("selectedGame");
@@ -46,6 +64,18 @@ function ClubDetailScreen() {
     success: successclubReview,
   } = clubReviewCreate;
 
+  const loginAndRedirect = (e) => {
+    e.preventDefault();
+    setLoader(true);
+    dispatch(login(username, password));
+    setUsername("");
+    setPassword("");
+    setLoader(true);
+    setTimeout(() => {
+      setLoader(false);
+      setOpenForm(false);
+    }, 1000);
+  };
   useEffect(() => {
     if (id) {
       dispatch(listClubReviews(id));
@@ -107,6 +137,15 @@ function ClubDetailScreen() {
 
   const handleClick = () => {
     navigate(`/bookinginfo/${clubLocation.id}`);
+  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (userInfo) {
+      setLoader(false);
+    } else if (!userInfo) {
+      setLoader(false);
+      setOpenForm(true);
+    }
   };
 
   return (
@@ -295,7 +334,11 @@ function ClubDetailScreen() {
               </form>
             ) : (
               <span>
-                Please <Link to="/login">login</Link> to write a review
+                Please{" "}
+                <a href="#" onClick={handleSubmit}>
+                  login
+                </a>{" "}
+                to write a review
               </span>
             )}
           </div>
@@ -310,6 +353,56 @@ function ClubDetailScreen() {
           <Club link="/" />
         </div> */}
       </div>
+      <Modal
+        open={openForm}
+        onClose={() => setOpenForm(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        {loader ? (
+          <Box sx={style} className="otp-loader">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Box sx={style}>
+            <Alert severity="info">You are one step away!!</Alert>
+            <form onSubmit={loginAndRedirect} className="booking-login-form">
+              <h2 className="login-title">Login</h2>
+
+              <label>Username</label>
+              <input
+                required
+                type="text"
+                placeholder="Enter username"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+              />
+
+              <label>Password</label>
+              <input
+                required
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+
+              <div className="login-button">
+                <Button
+                  type="submit"
+                  className="btn-check-availability-home"
+                  text="Login"
+                />
+              </div>
+            </form>
+          </Box>
+        )}
+      </Modal>
+      <Footer />
     </div>
   );
 }

@@ -24,6 +24,7 @@ import {
 } from "../actions/actions";
 import { Alert, Box, CircularProgress, Modal } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
+import Footer from "../components/Footer";
 // import SlotPicker from "slotpicker";
 
 const style = {
@@ -166,8 +167,10 @@ function BookingInfoScreen() {
       const courtId = theCourt?.id;
 
       const selectedDate = new Date(date);
-      const selectedWeekday = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
-      console.log(selectedWeekday)
+      const selectedWeekday = selectedDate.toLocaleDateString("en-US", {
+        weekday: "long",
+      });
+      console.log(selectedWeekday);
 
       // const Timings = () => {
       //   const day = clubWorking?.find((day) => day.days === selectedWeekday)
@@ -278,8 +281,7 @@ function BookingInfoScreen() {
     if (slots) {
       setSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
       setSelectedSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
-      setLoading(false)
-
+      setLoading(false);
     }
   }, [slots, setSelectedSlot, courts]);
 
@@ -504,6 +506,7 @@ function BookingInfoScreen() {
           </Box>
         )}
       </Modal>
+      <Footer name="bookinginfo-f"/>
     </div>
   );
 }

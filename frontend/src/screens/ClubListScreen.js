@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHomeContext } from "../context/HomeContext";
 import { CircularProgress } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
+import Footer from "../components/Footer";
 
 function ClubListScreen() {
   const dispatch = useDispatch();
@@ -218,6 +219,7 @@ function ClubListScreen() {
           </div>
         </div>
       )}
+      <Footer name="clublist-f" />
     </div>
   );
 }

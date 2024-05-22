@@ -24,7 +24,7 @@ code {
 footer {
   display: flex;
   justify-content: center;
-  padding: 2rem;
+  padding: 15px;
   background-color: black;
   color: white;
   margin-top: auto;

@@ -18,6 +18,7 @@ import { CircularProgress } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Form } from "react-bootstrap";
+import Footer from "../components/Footer";
 
 function HomeScreen(history) {
   const dispatch = useDispatch();
@@ -184,7 +185,7 @@ function HomeScreen(history) {
               <Message variant="danger">{gameError}</Message>
             ) : (
               <SelectInput
-                label="game"
+                label="Game"
                 id="gameName"
                 value={gameName}
                 onChange={changeGame}
@@ -202,7 +203,7 @@ function HomeScreen(history) {
               <Message variant="danger">{areaError}</Message>
             ) : (
               <SelectInput
-                label="area"
+                label="Area"
                 id="areaName"
                 value={areaName}
                 onChange={changeArea}
@@ -230,6 +231,7 @@ function HomeScreen(history) {
           </div>
         </form>
       </section>
+      <Footer/>
     </div>
   );
 }

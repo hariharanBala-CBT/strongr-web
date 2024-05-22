@@ -7,6 +7,7 @@ import { Form } from "react-bootstrap";
 import { listOrganizations, RecentSearch } from "../actions/actions"; // Import RecentSearch
 import { useHomeContext } from "../context/HomeContext";
 import Club  from '../components/Club'
+import Footer from "../components/Footer";
 
 function ClubSearchScreen() {
   const { keyword, setKeyword } = useHomeContext();
@@ -83,7 +84,7 @@ function ClubSearchScreen() {
         )}
       </div>
       <div className="clubs-error">
-        {filteredClubLocations?.length === 0 && <h2>No clubs available :(</h2>}
+        {filteredClubLocations?.length === 0 && <h2>No clubs available</h2>}
       </div>
       {filteredData?.length > 0 && (
         <div className="recently-searched">
@@ -94,6 +95,7 @@ function ClubSearchScreen() {
           />
         </div>
       )}
+      <Footer name="club-search"/>
     </div>
   );
 }

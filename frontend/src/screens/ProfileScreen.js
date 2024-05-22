@@ -30,6 +30,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import Tooltip from "@mui/material/Tooltip";
 import { IconButton } from '@mui/material';
+import Footer from "../components/Footer";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -338,6 +339,7 @@ function ProfileScreen() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Footer />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { BOOKING_CREATE_RESET } from "../constants/constants";
 import "../css/bookingscreen.css";
 import { IconButton } from "@mui/material";
+import Footer from "../components/Footer";
 
 function BookingScreen() {
   const { id } = useParams();
@@ -186,6 +187,7 @@ function BookingScreen() {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }

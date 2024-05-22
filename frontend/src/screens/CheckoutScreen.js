@@ -10,7 +10,7 @@ import {
 // import { BOOKING_CREATE_RESET } from '../constants/constants'
 import { CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
-
+import Footer from "../components/Footer";
 // import { useLocation } from 'react-router-dom';
 
 function CheckoutScreen() {
@@ -233,6 +233,7 @@ function CheckoutScreen() {
           </div>
         </div>
       </div>
+    <Footer/>
     </div>
   );
 }
