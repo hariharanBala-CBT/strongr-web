@@ -190,7 +190,7 @@ LOGIN_URL = '/orglogin/'
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
-    BASE_DIR / 'base/static',
+    # BASE_DIR / 'base/static',
     BASE_DIR / 'frontend/build/static',
 ]
 
