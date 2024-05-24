@@ -8,7 +8,7 @@ urlpatterns = [
      path('login/phone/', PhoneLoginView, name='phone_login'),
      path('register/', registerUser, name='register'),
      path('home/', TemplateView.as_view(template_name = 'getstarted.html'), name='home_page'), 
-     path('signup/', OrganizationSignupView.as_view(), name='signup'),
+     path('orgsignup/', OrganizationSignupView.as_view(), name='signup'),
      path('orglogin/', LoginView.as_view(), name='login'),
      path('logout/', LogoutView.as_view(), name='logout'),
      path('organizationpage/',OrganizationHomeView.as_view(), name='organization_page'),
