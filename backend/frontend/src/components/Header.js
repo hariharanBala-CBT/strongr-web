@@ -14,6 +14,8 @@ function Header({ location }) {
     dispatch(logout());
   };
 
+  const backendURL = process.env.REACT_APP_BACKEND_URL;
+
   return (
     <header>
       <nav className={location}>
@@ -43,7 +45,7 @@ function Header({ location }) {
           )}
 
           {!userInfo && (
-            <a href="http://127.0.0.1:8000/signup/" className="link">
+            <a href={backendURL + "signup/"} className="link">
               Work with us
             </a>
           )}
