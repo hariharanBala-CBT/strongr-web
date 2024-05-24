@@ -231,9 +231,9 @@
                                         {% endfor %}
                                     </table>
                                     <div class="row mt-4">
-                                        <div class="col-md-6">
+                                        <!-- <div class="col-md-6">
                                             <a  href="{% url 'organization_updatelocation' pk=locationpk %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a>
-                                        </div>
+                                        </div> -->
                                         <div class="col-md-6 text-end">
                                             <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
                                         </div>
@@ -312,7 +312,7 @@
                         if (data.status === 'success') {
                             showToast(data.message);
                             setTimeout(() => {
-                                window.location.href = "{% url 'organization_locationgamelist' %}";
+                                window.location.href = "{% url 'organization_locationgamelist' locationpk %}";
                             }, 2000);
                         } else {
                             showToast(data.message || 'Error updating working days.');

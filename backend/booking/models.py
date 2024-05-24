@@ -9,7 +9,7 @@ class AdditionalSlot(models.Model):
     date = models.DateField()
     location = models.ForeignKey(OrganizationLocation,on_delete=models.CASCADE)
     court = models.ForeignKey(Court, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
 class UnavailableSlot(models.Model):
     start_time = models.TimeField(null=True, blank=True)
@@ -17,7 +17,7 @@ class UnavailableSlot(models.Model):
     date = models.DateField()
     location = models.ForeignKey(OrganizationLocation,on_delete=models.CASCADE)
     court = models.ForeignKey(Court, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
 class Slot(models.Model):
     day_choices = (

@@ -179,7 +179,7 @@
                                                     <td>{{ game.game_type }}</td>
                                                     <td>
                                                         <div class="update-icon">
-                                                            <a href="{% url 'organization_updatelocationgametype' pk=game.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
+                                                            <a href="{% url 'organization_updatelocationgametype' locationpk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -190,10 +190,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="buttons px-4 py-4" style="margin-left: 40%;">
-                        <div><a href="{% url 'organization_locationworkingdays' %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a></div>
-                        <div><a href="{% url 'organization_imageslist' %}" type="submit" class="btn btn-primary" data-toggle="tooltip" title="next"><i class="fa-solid fa-arrow-right-long"></i></a></div>
-                    </div>
+                    <!-- <div class="buttons px-4 py-4" style="margin-left: 40%;">
+                        <div><a href="{% url 'organization_locationworkingdays' locationpk %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a></div>
+                        <div><a href="{% url 'organization_imageslist' locationpk %}" type="submit" class="btn btn-primary" data-toggle="tooltip" title="next"><i class="fa-solid fa-arrow-right-long"></i></a></div>
+                    </div> -->
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">

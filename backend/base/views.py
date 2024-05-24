@@ -505,9 +505,7 @@ class TempdeslotLocationListView(ListView):
     def get_queryset(self):
         organization = get_object_or_404(Organization, user=self.request.user)
         return OrganizationLocation.objects.filter(organization=organization)
-
-
-
+    
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationGameListView(ListView):
     model = OrganizationLocationGameType
@@ -515,16 +513,14 @@ class OrganizationLocationGameListView(ListView):
     context_object_name = 'games'
 
     def get_queryset(self):
-        pk = self.request.session.get('location_pk')
-        return OrganizationLocationGameType.objects.filter(
-            organization_location__pk=pk)
+        pk = self.kwargs.get('locationpk') 
+        return OrganizationLocationGameType.objects.filter(organization_location__pk=pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['locationpk'] = self.request.session.get('location_pk')
+        context['locationpk'] = self.kwargs.get('locationpk') 
         return context
-
-
+    
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationGameTypeView(CreateView):
     model = OrganizationLocationGameType
@@ -576,18 +572,18 @@ class OrganizationUpdateLocationGameTypeView(UpdateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationLocationImageListiew(ListView):
+class OrganizationLocationImageListView(ListView):
     model = OrganizationGameImages
     template_name = 'org_locationimages.html'
     context_object_name = 'images'
 
     def get_queryset(self):
-        pk = self.request.session.get('location_pk')
+        pk = self.kwargs.get('locationpk')
         return OrganizationGameImages.objects.filter(organization__pk=pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['locationpk'] = self.request.session.get('location_pk')
+        context['locationpk'] = self.kwargs.get('locationpk')
         return context
 
 
@@ -653,19 +649,17 @@ class OrganizationLocationAmenitiesView(UpdateView):
 
     def get_object(self):
         try:
-            pk = self.request.session.get('location_pk')
-            return OrganizationLocationAmenities.objects.get(
-                organization_location__pk=pk)
+            pk = self.kwargs.get('locationpk')
+            return OrganizationLocationAmenities.objects.get(organization_location__pk=pk)
         except OrganizationLocationAmenities.DoesNotExist:
             return None
 
     def form_valid(self, form):
-        form = form.save(commit=False)
-        pk = self.request.session.get('location_pk')
-        form.organization_location = OrganizationLocation.objects.get(pk=pk)
+        form.instance.organization_location = OrganizationLocation.objects.get(pk=self.kwargs.get('locationpk'))
         form.save()
         messages.success(self.request, 'Amenities updated successfully.')
         return HttpResponseRedirect(self.success_url)
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -676,17 +670,15 @@ class OrganizationWorkingDaysView(UpdateView):
     success_url = reverse_lazy('organization_locationgamelist')
 
     def get_object(self):
-        pk = self.request.session.get('location_pk')
-        days = OrganizationLocationWorkingDays.objects.filter(
-            organization_location_id=pk)
-        return days
+        pk = self.kwargs.get('locationpk')
+        return OrganizationLocationWorkingDays.objects.filter(organization_location_id=pk)
 
     def get_context_data(self, **kwargs):
         context = {}
         queryset = self.get_object()
         formset = OrganizationLocationWorkingDaysFormSet(queryset=queryset)
         context['formset'] = formset
-        context['locationpk'] = self.request.session.get('location_pk')
+        context['locationpk'] = self.kwargs.get('locationpk')
         return context
 
     def post(self, request, **kwargs):
@@ -724,12 +716,12 @@ class CourtsListView(ListView):
     context_object_name = 'courts'
 
     def get_queryset(self):
-        pk = self.request.session.get('location_pk')
+        pk = self.kwargs.get('locationpk')
         return Court.objects.filter(location_id=pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['locationpk'] = self.request.session.get('location_pk')
+        context['locationpk'] = self.kwargs.get('locationpk')
         return context
 
 
@@ -1561,3 +1553,13 @@ class UnavailableSlotCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('unavailable-slot-list', kwargs={'pk': self.request.session.get('location_pk')})
+    
+class MainView(TemplateView):
+    template_name = 'main_template.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        location_pk = self.kwargs.get('location_pk')
+        if location_pk is not None:
+            context['locationpk'] = location_pk
+        return context

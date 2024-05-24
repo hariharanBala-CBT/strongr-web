@@ -3,7 +3,7 @@ from .views import *
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-     # path('', TemplateView.as_view(template_name = 'cover.html'), name='home'),
+     path('', TemplateView.as_view(template_name = 'cover.html'), name='home'),
      path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
      path('login/phone/', PhoneLoginView, name='phone_login'),
      path('register/', registerUser, name='register'),
@@ -24,15 +24,15 @@ urlpatterns = [
      path('organizationupdatelocation/<int:pk>/' , OrganizationUpdateLocationView.as_view(), name='organization_updatelocation'),
      path('organizationlocationlist/' ,OrganizationLocationListView.as_view(), name='organization_locationlist'),
      path('organizationlocationgametype/' ,OrganizationLocationGameTypeView.as_view(), name='organization_locationgametype'),
-     path('organizationupdatelocationgametype/<int:pk>/' ,OrganizationUpdateLocationGameTypeView.as_view(), name='organization_updatelocationgametype'),
-     path('organizationlocationgamelist/' ,OrganizationLocationGameListView.as_view(), name='organization_locationgamelist'),
-     path('organizationlocationimageslist/' ,OrganizationLocationImageListiew.as_view(), name='organization_imageslist'),
+     path('organizationupdatelocationgametype/<int:locationpk>/' ,OrganizationUpdateLocationGameTypeView.as_view(), name='organization_updatelocationgametype'),
+     path('organizationlocationgamelist/<int:locationpk>/' ,OrganizationLocationGameListView.as_view(), name='organization_locationgamelist'),
+     path('organizationlocationimageslist/<int:locationpk>/' ,OrganizationLocationImageListView.as_view(), name='organization_imageslist'),
      path('organizationlocationimages/', OrganizationLocationImageView.as_view(), name='organization_images'),
      path('organizationupdateimages/<int:pk>/', OrganizationUpdateLocationImageView.as_view(), name='organization_updateimages'),
      path('organizationdeleteimage/<int:pk>/', OrganizationDeleteLocationImageView.as_view(), name='organization_deleteimage'),
      path('add-court/', CourtCreateView.as_view(), name='add-court'),
      path('update-court/<int:pk>', CourtUpdateView.as_view(), name='update-court'),
-     path('court-list/', CourtsListView.as_view(), name='court-list'),
+     path('court-list/<int:locationpk>/', CourtsListView.as_view(), name='court-list'),
      path('delete-court/<int:pk>', CourtDeleteView.as_view(), name='delete-court'),
      path('add-slot/', SlotCreateView.as_view(), name='add-slot'),
      path('add-temp-slot/<int:pk>/', TempSlotCreateView.as_view(), name='add-temp-slot'),
@@ -49,8 +49,8 @@ urlpatterns = [
 
      path('error/', TemplateView.as_view(template_name='error.html'), name='error_view'),
      path('multiple-slot/<int:court_pk>', CreateMultipleSlotsView.as_view(), name='multiple-slot'),
-     path('organizationlocationamenities/' ,OrganizationLocationAmenitiesView.as_view(), name='organization_locationamenities'),
-     path('organizationlocationworkingdays/' , OrganizationWorkingDaysView.as_view(), name='organization_locationworkingdays'),
+     path('organizationlocationamenities/<int:locationpk>/' ,OrganizationLocationAmenitiesView.as_view(), name='organization_locationamenities'),
+     path('organizationlocationworkingdays/<int:locationpk>/' , OrganizationWorkingDaysView.as_view(), name='organization_locationworkingdays'),
      path('preview/' ,PreviewView.as_view(), name='preview'),
      path('termsandconditions/' ,TermsandConditionsView.as_view(),name='termsandconditions'),
      path('terms-conditions/' ,TenantTermsandConditionsView.as_view(),name='termsconditions'),
@@ -75,6 +75,7 @@ urlpatterns = [
      path('organization_preview/<int:pk>/', TenantOrganizationPreviewView.as_view(), name='organization_preview'),
      path('organizations/<int:organization_id>/change_status/<int:new_status>/', ChangeOrganizationStatusView.as_view(), name='change_organization_status'),
      path('status/' ,StatusView.as_view(), name='status'),
+     path('organization/location/<int:location_pk>/', MainView.as_view(), name='mainview'),
 
      # path('success/', TemplateView.as_view(template_name = 'success.html'), name='success'),
      # path('reject/', TemplateView.as_view(template_name = 'reject.html'), name='reject'),
