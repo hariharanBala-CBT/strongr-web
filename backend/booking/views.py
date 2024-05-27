@@ -206,7 +206,7 @@ def getSuggestedClub(request):
 
     try:
         selected_area_obj = Area.objects.get(area_name=selected_area)
-        organizationlocations = OrganizationLocation.objects.filter(area=selected_area_obj,status = 1, organization__status = 1)
+        organizationlocations = OrganizationLocation.objects.filter(area=selected_area_obj,status = 1, organization__status = 1,status = 1)
         serializer = ClubSerializerWithImages(organizationlocations, many=True)
         return Response(serializer.data)
 
@@ -222,10 +222,12 @@ def getSuggestedClubGame(request):
         selected_game_obj = GameType.objects.get(game_name=selected_game)
         organization_location_game_types = OrganizationLocationGameType.objects.filter(game_type=selected_game_obj, is_active=True)
         
-        organization_locations = [ogt.organization_location for ogt in organization_location_game_types]
-        
+        organization_locations = [
+                    ogt.organization_location for ogt in organization_location_game_types 
+                    if ogt.organization_location.status == OrganizationLocation.APPROVED
+                ]
+                
         serializer = ClubSerializerWithImages(organization_locations, many=True)
-        print(serializer.data)
         return Response(serializer.data)
 
     except GameType.DoesNotExist:
