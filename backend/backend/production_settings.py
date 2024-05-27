@@ -195,8 +195,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'frontend/build/static',
 ]
 
-MEDIA_ROOT = 'static/images'
 MEDIA_URL = '/images/'
+MEDIA_ROOT = BASE_DIR / 'static/images'
+
 
 
 # Default primary key field type

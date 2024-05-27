@@ -14,7 +14,8 @@ function Header({ location }) {
     dispatch(logout());
   };
 
-  const backendURL = process.env.REACT_APP_BACKEND_URL;
+  const currentUrl = window.location.origin;     //yields: "https://stacksnippets.net/js"
+  // const baseUrl = currentUrl.split('/').slice(0, 3).join('/');
 
   return (
     <header>
@@ -45,7 +46,7 @@ function Header({ location }) {
           )}
 
           {!userInfo && (
-            <a href={backendURL + "signup/"} className="link">
+            <a href={`${currentUrl}/orglogin/`} className="link">
               Work with us
             </a>
           )}
