@@ -534,6 +534,11 @@ class OrganizationLocationGameTypeView(CreateView):
             pk=self.request.session.get('location_pk'))
         kwargs['organization_location'] = organization_location
         return kwargs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.request.session.get('location_pk')
+        return context
 
     def form_valid(self, form):
         form.instance.organization_location = OrganizationLocation.objects.get(
@@ -562,14 +567,22 @@ class OrganizationUpdateLocationGameTypeView(UpdateView):
     form_class = OrganizationLocationGameTypeForm
     success_url = reverse_lazy('organization_locationgamelist')
 
+    def get_object(self):
+        locationpk = self.kwargs.get('locationpk')
+        return OrganizationLocationGameType.objects.get(pk=locationpk)
+
     def form_valid(self, form):
         form = form.save(commit=False)
-        pk = self.request.session.get('location_pk')
+        pk = self.kwargs.get('locationpk')
         form.organization_location = OrganizationLocation.objects.get(pk=pk)
         form.save()
         messages.success(self.request, 'Game updated successfully.')
         return HttpResponseRedirect(self.success_url)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.kwargs.get('locationpk')
+        return context
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationImageListView(ListView):
@@ -601,6 +614,11 @@ class OrganizationLocationImageView(CreateView):
         form_instance.save()
         messages.success(self.request, 'Image created successfully.')
         return HttpResponseRedirect(self.success_url)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.request.session.get('location_pk')
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -619,6 +637,12 @@ class OrganizationUpdateLocationImageView(UpdateView):
             form.instance.image = None
         messages.success(self.request, 'Image updated successfully.')
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.kwargs.get('pk')
+        return context
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -638,6 +662,11 @@ class OrganizationDeleteLocationImageView(DeleteView):
             self.object.delete()
             messages.success(request, "Image Deleted Successfully")
             return redirect(self.get_success_url())
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.request.session.get('location_pk')
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -708,6 +737,12 @@ class CourtUpdateView(UpdateView):
         instance.save()
         messages.success(self.request, 'Court updated successfully!')
         return HttpResponseRedirect(self.success_url)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.request.session.get('location_pk')
+        return context
+
 
 
 class CourtsListView(ListView):
@@ -734,6 +769,11 @@ class CourtDeleteView(DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request,'Court deleted successfully.')
         return super().delete(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.request.session.get('location_pk')
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -858,6 +898,11 @@ class CourtCreateView(CreateView):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.request.session.get('location_pk')
+        return context
 
     def form_valid(self, form):
         try:
@@ -1197,7 +1242,8 @@ class CreateMultipleSlotsView(View):
         form = SlotForm()  # Instantiate your SlotForm
         context = {
             'courts': courts,
-            'form': form,  # Pass the form to the template context
+            'form': form,
+            'locationpk': pk,
         }
         return render(request, 'ml.html', context)
 
@@ -1249,7 +1295,7 @@ class CreateMultipleSlotsView(View):
                 current_datetime += timedelta(hours=1)
 
         # Redirect or render as needed
-        return redirect('court-list')
+        return redirect('slot-list')
 
 
 @method_decorator(login_required, name='dispatch')

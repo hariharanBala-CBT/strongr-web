@@ -148,7 +148,7 @@
                       <h5>Are you sure you want to delete "{{ court.name }}"?</h5>
                       <div style="display: flex; justify-content: space-around; margin-top: 50px;">
                         <input type="submit" class="btn btn-danger" value="Confirm Delete">
-                        <a href="{% url 'court-list' %}" class="btn btn-secondary">Cancel</a>
+                        <a href="{% url 'court-list' locationpk %}" class="btn btn-secondary">Cancel</a>
                       </div>
                     </form>
               </div>
