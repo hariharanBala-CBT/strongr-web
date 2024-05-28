@@ -414,13 +414,14 @@ class OrganizationAddLocationView(CreateView):
     model = OrganizationLocation
     template_name = 'org_createlocation.html'
     form_class = OrganizationLocationForm
-    success_url = reverse_lazy('organization_locationworkingdays')
 
     def form_valid(self, form):
         organization = get_object_or_404(Organization, user=self.request.user)
         form.instance.organization = organization
         form.save()
         self.request.session['location_pk'] = form.instance.pk
+        print('location_pk',form.instance.pk)
+        pk = form.instance.pk
 
         days_order = [
             'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
@@ -442,8 +443,8 @@ class OrganizationAddLocationView(CreateView):
             workingdays.save()
         messages.success(self.request, 'Location created successfully.')
 
-        return HttpResponseRedirect(self.success_url)
-
+    # def get_success_url(self):
+        return redirect('organization_locationworkingdays', kwargs={'locationpk': pk})
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationView(UpdateView):
@@ -545,6 +546,8 @@ class OrganizationLocationGameTypeView(CreateView):
             pk=self.request.session.get('location_pk'))
         form.save()
 
+        pk=self.request.session.get('location_pk')
+
         # Create courts based on the number_of_courts selected
         number_of_courts = form.instance.number_of_courts
         game_type = form.instance
@@ -558,14 +561,13 @@ class OrganizationLocationGameTypeView(CreateView):
                 is_active=True)
         
         messages.success(self.request, 'Game created successfully.')
-        return HttpResponseRedirect(self.success_url)
+        return reverse_lazy('organization_locationgamelist', kwargs={'locationpk': self.request.session.get('location_pk')})
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationGameTypeView(UpdateView):
     model = OrganizationLocationGameType
     template_name = 'update_game.html'
     form_class = OrganizationLocationGameTypeForm
-    success_url = reverse_lazy('organization_locationgamelist')
 
     def get_object(self):
         locationpk = self.kwargs.get('locationpk')
@@ -577,8 +579,8 @@ class OrganizationUpdateLocationGameTypeView(UpdateView):
         form.organization_location = OrganizationLocation.objects.get(pk=pk)
         form.save()
         messages.success(self.request, 'Game updated successfully.')
-        return HttpResponseRedirect(self.success_url)
-
+        return reverse_lazy('organization_locationgamelist', kwargs={'locationpk': pk})
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.kwargs.get('locationpk')
