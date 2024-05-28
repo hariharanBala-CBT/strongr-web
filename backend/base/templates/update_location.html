@@ -160,7 +160,7 @@
                         <div class="profile-card"> 
                             <h1 class="my-4">Update Location</h1>
                             <div>                          
-                                <form id="upd-loc-form" method="post">
+                                <form id="upd-loc-form" method="post" action="{% url 'organization_updatelocation' pk=object.pk %}">
                                     {% csrf_token %}
                                     <table>
                                         <tbody>
@@ -181,13 +181,13 @@
                                             {% endfor %}
                                         </tbody>
                                     </table>
-        
+                                
                                     <div class="buttons text-center mt-4 mx-5">
-                                        <button type="submit" onclick="openPopup(event)" class="btn btn-primary mx-2"><i class="fa-solid fa-arrow-right-long"></i></button>
+                                        <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2"><i class="fa-solid fa-arrow-right-long"></i></button>
                                     </div>
-        
+                                
                                     <input type="hidden" name="organization" value="{{ request.user.organization.id }}">
-                                </form>
+                                </form>                                
                             </div>
                         </div>
                     </div>

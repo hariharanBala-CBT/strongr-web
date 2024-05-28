@@ -21,7 +21,7 @@ urlpatterns = [
 
      path('organizationprofile/<int:pk>/' ,OrganizationProfileView.as_view(), name='organization_profile'),
      path('organizationaddlocation/' ,OrganizationAddLocationView.as_view(), name='organization_addlocation'),
-     path('organizationupdatelocation/<int:pk>/' , OrganizationUpdateLocationView.as_view(), name='organization_updatelocation'),
+     path('organizationupdatelocation/<int:pk>/', OrganizationUpdateLocationView.as_view(), name='organization_updatelocation'),
      path('organizationlocationlist/' ,OrganizationLocationListView.as_view(), name='organization_locationlist'),
      path('organizationlocationgametype/<int:locationpk>/' ,OrganizationLocationGameTypeView.as_view(), name='organization_locationgametype'),
      path('organizationupdatelocationgametype/<int:locationpk>/' ,OrganizationUpdateLocationGameTypeView.as_view(), name='organization_updatelocationgametype'),
@@ -75,7 +75,7 @@ urlpatterns = [
      path('organization_preview/<int:pk>/', TenantOrganizationPreviewView.as_view(), name='organization_preview'),
      path('organizations/<int:organization_id>/change_status/<int:new_status>/', ChangeOrganizationStatusView.as_view(), name='change_organization_status'),
      path('status/' ,StatusView.as_view(), name='status'),
-     path('organization/location/<int:location_pk>/', MainView.as_view(), name='mainview'),
+     path('organization/location/<int:location_pk>/', main_view, name='mainview'),
 
      # path('success/', TemplateView.as_view(template_name = 'success.html'), name='success'),
      # path('reject/', TemplateView.as_view(template_name = 'reject.html'), name='reject'),

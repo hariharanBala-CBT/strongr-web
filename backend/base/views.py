@@ -449,30 +449,38 @@ class OrganizationUpdateLocationView(UpdateView):
     model = OrganizationLocation
     template_name = 'update_location.html'
     form_class = OrganizationLocationForm
-    success_url = reverse_lazy('organization_locationworkingdays')
 
     def form_valid(self, form):
+        print("Form is valid")
         organization = get_object_or_404(Organization, user=self.request.user)
         form.instance.organization = organization
+        print("Form instance before save:", form.instance)
         form.save()
+        print("Form instance after save:", form.instance)
         self.request.session['location_pk'] = form.instance.pk
         phone_number = form.cleaned_data.get('phone_number')
 
         if not self.is_valid_number(phone_number):
             if len(str(phone_number)) > 10:
-                form.add_error('phone_number',
-                               'Phone number exceeds 10 digits')
+                form.add_error('phone_number', 'Phone number exceeds 10 digits')
                 return self.form_invalid(form)
             elif len(str(phone_number)) < 10:
-                form.add_error('phone_number',
-                               'Phone number must be at least 10 digits')
+                form.add_error('phone_number', 'Phone number must be at least 10 digits')
                 return self.form_invalid(form)
 
         messages.success(self.request, 'Location updated successfully.')
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        print("Form is invalid")
+        print(form.errors)
+        return super().form_invalid(form)
+
     def is_valid_number(self, number):
         return len(str(number)) == 10
+
+    def get_success_url(self):
+        return reverse('mainview', kwargs={'location_pk': self.object.pk})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -1602,12 +1610,10 @@ class UnavailableSlotCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('unavailable-slot-list', kwargs={'pk': self.request.session.get('location_pk')})
     
-class MainView(TemplateView):
-    template_name = 'main_template.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        location_pk = self.kwargs.get('location_pk')
-        if location_pk is not None:
-            context['locationpk'] = location_pk
-        return context
+@login_required
+def main_view(request, location_pk=None):
+    context = {}
+    if location_pk is not None:
+        context['locationpk'] = location_pk
+    return render(request, 'main_template.html', context)
+
