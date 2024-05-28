@@ -442,9 +442,7 @@ class OrganizationAddLocationView(CreateView):
             )
             workingdays.save()
         messages.success(self.request, 'Location created successfully.')
-
-    # def get_success_url(self):
-        return redirect('organization_locationworkingdays', kwargs={'locationpk': pk})
+        return redirect('organization_locationworkingdays', locationpk=pk)
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationView(UpdateView):
@@ -514,12 +512,12 @@ class OrganizationLocationGameListView(ListView):
     context_object_name = 'games'
 
     def get_queryset(self):
-        pk = self.kwargs.get('locationpk') 
+        pk = self.kwargs.get('locationpk')
         return OrganizationLocationGameType.objects.filter(organization_location__pk=pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['locationpk'] = self.kwargs.get('locationpk') 
+        context['locationpk'] = self.kwargs.get('locationpk')
         return context
     
 @method_decorator(login_required, name='dispatch')
@@ -531,37 +529,40 @@ class OrganizationLocationGameTypeView(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        organization_location = OrganizationLocation.objects.get(
-            pk=self.request.session.get('location_pk'))
-        kwargs['organization_location'] = organization_location
+        location_pk = self.kwargs.get('locationpk')
+        if location_pk:
+            organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
+            kwargs['organization_location'] = organization_location
         return kwargs
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.request.session.get('location_pk')
         return context
 
     def form_valid(self, form):
-        form.instance.organization_location = OrganizationLocation.objects.get(
-            pk=self.request.session.get('location_pk'))
+        location_pk = self.kwargs.get('locationpk')
+        if not location_pk:
+            messages.error(self.request, 'No location found in session.')
+            return redirect('organization_addlocation')
+        
+        form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
         form.save()
 
-        pk=self.request.session.get('location_pk')
-
-        # Create courts based on the number_of_courts selected
         number_of_courts = form.instance.number_of_courts
         game_type = form.instance
 
         for i in range(number_of_courts):
-            court = Court.objects.create(
+            Court.objects.create(
                 name=f"Court {i+1} of {game_type.game_type}",
                 location=form.instance.organization_location,
                 game=game_type,
                 description=f"description for court {i+1}",
-                is_active=True)
-        
+                is_active=True
+            )
+
         messages.success(self.request, 'Game created successfully.')
-        return reverse_lazy('organization_locationgamelist', kwargs={'locationpk': self.request.session.get('location_pk')})
+        return redirect('organization_locationgamelist', locationpk=location_pk)
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationGameTypeView(UpdateView):
@@ -571,15 +572,14 @@ class OrganizationUpdateLocationGameTypeView(UpdateView):
 
     def get_object(self):
         locationpk = self.kwargs.get('locationpk')
-        return OrganizationLocationGameType.objects.get(pk=locationpk)
+        return OrganizationLocationGameType.objects.get(organization_location=locationpk)
 
     def form_valid(self, form):
         form = form.save(commit=False)
-        pk = self.kwargs.get('locationpk')
-        form.organization_location = OrganizationLocation.objects.get(pk=pk)
+        form.organization_location = OrganizationLocation.objects.get(pk=self.kwargs.get('locationpk'))
         form.save()
         messages.success(self.request, 'Game updated successfully.')
-        return reverse_lazy('organization_locationgamelist', kwargs={'locationpk': pk})
+        return redirect('organization_locationgamelist',  locationpk=self.kwargs.get('locationpk'))
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
