@@ -82,11 +82,16 @@ class Booking(models.Model):
                              on_delete=models.CASCADE,
                              null=True,
                              blank=True)
+    additional_slot = models.ForeignKey(AdditionalSlot,
+                             on_delete=models.CASCADE,
+                             null=True,
+                             blank=True)
     created_at = models.DateTimeField(auto_now=True)
     tax_price = models.PositiveBigIntegerField(null=True, blank=True)
     total_price = models.PositiveBigIntegerField(null=True, blank=True)
 
-    booking_status =models.IntegerField(choices=booking_status_choices,default=PENDING)
+    booking_status = models.IntegerField(choices=booking_status_choices,
+                                         default=PENDING)
 
     def __str__(self):
         return f"{self.name}"

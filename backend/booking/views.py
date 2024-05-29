@@ -19,21 +19,25 @@ from datetime import timedelta
 from django.db import transaction
 from django.contrib.auth.hashers import make_password
 
+
 @api_view(['GET'])
 def ValidateUser(request):
     username = request.GET.get('username')
 
     try:
         if not username:
-            return Response({'detail': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Username is required'},
+                            status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.filter(username=username).first()
         if not user:
-            return Response({'detail': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'detail': 'User does not exist'},
+                            status=status.HTTP_404_NOT_FOUND)
         return Response({'detail': 'User exists'}, status=status.HTTP_200_OK)
 
     except Exception as e:
         return Response({'detail': 'User cannot be validated'},
                         status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def search(request):
@@ -41,11 +45,11 @@ def search(request):
     organizations = Organization.objects.all()
 
     if query:
-        organizations = organizations.filter(organization_name__icontains=query)
+        organizations = organizations.filter(
+            organization_name__icontains=query)
 
     organization_locations = OrganizationLocation.objects.filter(
-        organization__in=organizations,status = 1, organization__status = 1
-    )
+        organization__in=organizations, status=1, organization__status=1)
 
     serializer = ClubSerializerWithImages(organization_locations, many=True)
     serialized_data = serializer.data
@@ -55,13 +59,13 @@ def search(request):
 @api_view(['GET'])
 def recentSearch(request):
     stored_keywords = request.GET.getlist('storedKeywords[]')
-    
+
     organization_locations = OrganizationLocation.objects.filter(
-        id__in=stored_keywords
-    )
+        id__in=stored_keywords)
 
     serializer = ClubSerializerWithImages(organization_locations, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getAreas(request):
@@ -130,7 +134,7 @@ def getClubImages(request, pk):
 
 
 @api_view(['GET'])
-def getBookingDetails(request,pk):
+def getBookingDetails(request, pk):
     booking = Booking.objects.get(id=pk)
     serializer = BookingDetailsSerializer(booking)
     return Response(serializer.data)
@@ -179,7 +183,9 @@ def filterClubs(request):
     time = datetime.datetime.strptime(date, '%Y-%m-%d')
     day = time.strftime('%A')
 
-    areas = OrganizationLocation.objects.filter(area=selected_area_obj,status = 1, organization__status = 1)
+    areas = OrganizationLocation.objects.filter(area=selected_area_obj,
+                                                status=1,
+                                                organization__status=1)
 
     game_names = []
     for location in areas:
@@ -199,6 +205,7 @@ def filterClubs(request):
     serializer = ClubSerializerWithImages(organizationlocations, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getSuggestedClub(request):
     selected_area = request.query_params.get('area')
@@ -206,7 +213,8 @@ def getSuggestedClub(request):
 
     try:
         selected_area_obj = Area.objects.get(area_name=selected_area)
-        organizationlocations = OrganizationLocation.objects.filter(area=selected_area_obj,status = 1, organization__status = 1)
+        organizationlocations = OrganizationLocation.objects.filter(
+            area=selected_area_obj, status=1, organization__status=1)
         serializer = ClubSerializerWithImages(organizationlocations, many=True)
         return Response(serializer.data)
 
@@ -214,25 +222,29 @@ def getSuggestedClub(request):
         return Response({'error': f'Area {selected_area} not found'},
                         status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(['GET'])
 def getSuggestedClubGame(request):
     selected_game = request.query_params.get('game')
 
     try:
         selected_game_obj = GameType.objects.get(game_name=selected_game)
-        organization_location_game_types = OrganizationLocationGameType.objects.filter(game_type=selected_game_obj, is_active=True)
-        
+        organization_location_game_types = OrganizationLocationGameType.objects.filter(
+            game_type=selected_game_obj, is_active=True)
+
         organization_locations = [
-                    ogt.organization_location for ogt in organization_location_game_types 
-                    if ogt.organization_location.status == 1
-                ]
-                
-        serializer = ClubSerializerWithImages(organization_locations, many=True)
+            ogt.organization_location
+            for ogt in organization_location_game_types
+            if ogt.organization_location.status == 1
+        ]
+
+        serializer = ClubSerializerWithImages(organization_locations,
+                                              many=True)
         return Response(serializer.data)
 
     except GameType.DoesNotExist:
-        return Response({'error': f'Game {selected_game} not found'}, status=status.HTTP_404_NOT_FOUND)
-
+        return Response({'error': f'Game {selected_game} not found'},
+                        status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -241,36 +253,68 @@ def createBooking(request):
     user = request.user
     data = request.data
 
-    try:
-        court_id = data['courtId']
-        court = Court.objects.get(id=court_id)
-        slot_id = data['slotId']
-        slot = Slot.objects.get(id=slot_id)
+    if 'slotId' in data:
+        try:
+            court_id = data['courtId']
+            court = Court.objects.get(id=court_id)
+            slot_id = data['slotId']
+            slot = Slot.objects.get(id=slot_id)
 
-        with transaction.atomic():
-            # slot.is_booked = True
-            slot.save()
+            with transaction.atomic():
+                slot.save()
 
-            booking = Booking.objects.create(
-                user=user,
-                name=user.first_name,
-                email=data['userInfo']['email'],
-                phone_number=data['phoneNumber'],
-                booking_date=data['date'],
-                court=court,
-                slot=slot,
-                tax_price=data['taxPrice'],
-                total_price=data['totalPrice'],
-                booking_status = 2,
+                booking = Booking.objects.create(
+                    user=user,
+                    name=user.first_name,
+                    email=data['userInfo']['email'],
+                    phone_number=data['phoneNumber'],
+                    booking_date=data['date'],
+                    court=court,
+                    slot=slot,
+                    tax_price=data['taxPrice'],
+                    total_price=data['totalPrice'],
+                    booking_status=2,
+                )
 
-            )
+            serializer = BookingDetailsSerializer(booking)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        serializer = BookingDetailsSerializer(booking)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e)
+            return Response({'detail': 'Booking not created'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-    except Exception as e:
-        return Response({'detail': 'Booking not created'},
-                        status=status.HTTP_400_BAD_REQUEST)
+    elif 'addSlotId' in data:
+        try:
+            court_id = data['courtId']
+            court = Court.objects.get(id=court_id)
+            add_slot = data['addSlotId']
+            slot = AdditionalSlot.objects.get(id=add_slot)
+
+            with transaction.atomic():
+                slot.save()
+
+                booking = Booking.objects.create(
+                    user=user,
+                    name=user.first_name,
+                    email=data['userInfo']['email'],
+                    phone_number=data['phoneNumber'],
+                    booking_date=data['date'],
+                    court=court,
+                    additional_slot=slot,
+                    tax_price=data['taxPrice'],
+                    total_price=data['totalPrice'],
+                    booking_status=2,
+                )
+
+            serializer = BookingDetailsSerializer(booking)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            print(e)
+            return Response({'detail': 'Booking not created'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def getCourts(request, pk):
@@ -294,12 +338,10 @@ def getAvailableSlots(request):
     current_time = (current_datetime + timedelta(hours=1)).time()
 
     slots = Slot.objects.all()
-    
 
     slots = Slot.objects.filter(court_id=court,
                                 days=weekday_name,
                                 is_booked=False)
-
 
     if date_obj.date() == datetime.datetime.today().date():
         slots = slots.filter(start_time__gte=current_time)
@@ -314,21 +356,27 @@ def getAvailableSlots(request):
     serializer = SlotSerializer(slots, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getAdditionalSlots(request):
     court = request.query_params.get('courtId')
     date_str = request.query_params.get('date')
 
-    slots = AdditionalSlot.objects.filter(court = court, date = date_str, is_active = True)
+    slots = AdditionalSlot.objects.filter(court=court,
+                                          date=date_str,
+                                          is_active=True)
     serializer = AdditionalSlotSerializer(slots, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getUnavailableSlots(request):
     court = request.query_params.get('courtId')
     date_str = request.query_params.get('date')
 
-    slots = UnavailableSlot.objects.filter(court = court, date = date_str, is_active = True)
+    slots = UnavailableSlot.objects.filter(court=court,
+                                           date=date_str,
+                                           is_active=True)
     serializer = UnAvailableSlotSerializer(slots, many=True)
     return Response(serializer.data)
 
@@ -366,6 +414,7 @@ def cancelBooking(request, pk):
     serializer = BookingDetailsSerializer(booking, many=False)
     return Response(serializer.data)
 
+
 @api_view(['PUT'])
 def resetPassword(request):
     user = request.user
@@ -380,12 +429,12 @@ def resetPassword(request):
 
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def getClubReviews(request, pk):
     reviews = Review.objects.filter(organization_location=pk)
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
-
 
 
 @api_view(['POST'])
@@ -419,7 +468,8 @@ def createProductReview(request, pk):
             )
         except IntegrityError:
             # Handle the IntegrityError, e.g., if there's a unique constraint violation
-            return Response({'detail': 'Error creating Customer'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Error creating Customer'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
     # Create review
     review = Review.objects.create(
@@ -448,15 +498,17 @@ def PhoneLoginView(request):
     data = request.data
     phone = data['phone_number']
 
-    try: 
-        customer = Customer.objects.get(phone_number = phone[2:12])
-        user = User.objects.get(id = customer.user_id)
+    try:
+        customer = Customer.objects.get(phone_number=phone[2:12])
+        user = User.objects.get(id=customer.user_id)
 
         serializer = UserSerializerWithToken(user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        
+
     except Customer.DoesNotExist:
-        return Response({'No active user credentials found. Please sign up to login.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {'No active user credentials found. Please sign up to login.'},
+            status=status.HTTP_404_NOT_FOUND)
 
     except KeyError:
         message = {'phone_number is required'}

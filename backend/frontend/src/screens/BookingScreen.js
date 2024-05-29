@@ -51,19 +51,6 @@ function BookingScreen() {
     dispatch(getBookingDetails(id));
   }, [dispatch, id]);
 
-  // useEffect(() => {
-  //   if (bookingDetails?.court && bookingDetails?.slot) {
-  //     dispatch(getCourt(bookingDetails?.court));
-  //     dispatch(getSlotDetails(bookingDetails?.slot));
-  //   }
-  // }, [dispatch, bookingDetails]);
-
-  // useEffect(() => {
-  //   if (court) {
-  //     dispatch(listclubDetails(court?.location));
-  //   }
-  // }, [dispatch, court]);
-
   useEffect(() => {
     if (success) {
       toast.success("Booked!");
@@ -111,11 +98,25 @@ function BookingScreen() {
                 <strong>Date: </strong>
                 <span>{bookingDetails?.booking_date}</span>
                 <br />
-                <strong>Time: </strong>
-                <span>
-                  ({bookingDetails?.slot?.start_time?.slice(0, 5)}-
-                  {bookingDetails?.slot?.end_time?.slice(0, 5)})
-                </span>
+                {bookingDetails?.additional_slot ? (
+                  <>
+                    <strong>Time: </strong>
+                    <span>
+                      ({bookingDetails?.additional_slot?.start_time?.slice(0, 5)}-
+                      {bookingDetails?.additional_slot?.end_time?.slice(0, 5)})
+                    </span>
+                  </>
+                ) : (
+                  bookingDetails?.slot && (
+                    <>
+                      <strong>Time: </strong>
+                      <span>
+                        ({bookingDetails?.slot?.start_time?.slice(0, 5)}-
+                        {bookingDetails?.slot?.end_time?.slice(0, 5)})
+                      </span>
+                    </>
+                  )
+                )}
               </small>
             </div>
             <div className="li">
@@ -150,7 +151,10 @@ function BookingScreen() {
             <h3 className="heading">User Details</h3>
             <div className="li">
               <h3>{bookingDetails?.name}</h3>
-              <small><strong>phone: </strong><span>{bookingDetails?.phone_number}</span></small>
+              <small>
+                <strong>phone: </strong>
+                <span>{bookingDetails?.phone_number}</span>
+              </small>
             </div>
             <div className="li">
               <h4>Booking status</h4>
@@ -187,7 +191,7 @@ function BookingScreen() {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

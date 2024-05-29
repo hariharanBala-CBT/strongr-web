@@ -91,9 +91,11 @@ class UserBookingsSerializer(serializers.ModelSerializer):
         model = Booking
         fields = ['id', 'name', 'email', 'phone_number', 'organization_name', 'game_type', 'booking_date', 'total_price', 'booking_status', 'payment_status']
 
+
 class BookingDetailsSerializer(serializers.ModelSerializer):
     court = serializers.SerializerMethodField()
     slot = serializers.SerializerMethodField()
+    additional_slot = serializers.SerializerMethodField()
     organization_name = serializers.SerializerMethodField()
     organization_location = serializers.SerializerMethodField()
     game_type = serializers.SerializerMethodField()
@@ -105,6 +107,9 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
     def get_slot(self, obj):
         return SlotSerializer(obj.slot).data
 
+    def get_additional_slot(self, obj):
+        return AdditionalSlotSerializer(obj.additional_slot).data
+
     def get_organization_name(self, obj):
         return obj.court.location.organization.organization_name
 
@@ -113,11 +118,12 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
 
     def get_game_type(self, obj):
         return obj.court.game.game_type.game_name
-    
+
     def get_image(self, obj):
         try:
             organization_location = obj.court.location
-            organization_game_images = OrganizationGameImages.objects.filter(organization=organization_location).first()
+            organization_game_images = OrganizationGameImages.objects.filter(
+                organization=organization_location).first()
             if organization_game_images:
                 return organization_game_images.image.url
         except Exception as e:
@@ -127,20 +133,24 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['id', 'name', 'phone_number', 'booking_date', 'booking_status', 'payment_status', 'tax_price', 'total_price', 'organization_name', 'court', 'slot', 'organization_location', 'game_type','image']
+        fields = [
+            'id', 'name', 'phone_number', 'booking_date', 'booking_status',
+            'payment_status', 'tax_price', 'total_price', 'organization_name',
+            'court', 'slot', 'additional_slot', 'organization_location', 'game_type', 'image'
+        ]
 
 # class ClubSerializerWithImages(serializers.ModelSerializer):
 #     organization = ClubSerializer()
 #     area = AreaSerializer()
 #     # organization_images = serializers.SerializerMethodField()
 #     address_line_1 = serializers.SerializerMethodField()
-    
+
 #     # def get_organization_images(self, obj):
 #     #     images = OrganizationGameImages.objects.filter(organization=obj)
 #     #     return [image.image.url for image in images]
 
 #     def get_address_line_1(self, obj):
-#         location = obj 
+#         location = obj
 #         return location.address_line_1 if location else None
 
 #     class Meta:
@@ -167,7 +177,7 @@ class ClubSerializerWithImages(serializers.ModelSerializer):
     rating = serializers.DecimalField(max_digits=7, decimal_places=2, read_only=True)
     numRatings = serializers.IntegerField(read_only=True)
     reviews = serializers.SerializerMethodField(read_only=True)
-    
+
     def get_organization_images(self, obj):
         try:
             print("entered image try")
@@ -181,9 +191,9 @@ class ClubSerializerWithImages(serializers.ModelSerializer):
         return None
 
     def get_address_line_1(self, obj):
-        location = obj 
+        location = obj
         return location.address_line_1 if location else None
-    
+
     def get_reviews(self, obj):
         reviews = obj.review_set.all()
         serializer = ReviewSerializer(reviews, many=True)
@@ -193,4 +203,3 @@ class ClubSerializerWithImages(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = ['id', 'organization', 'area','organization_images','address_line_1','rating', 'numRatings','reviews']
-

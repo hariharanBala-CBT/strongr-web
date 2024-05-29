@@ -234,6 +234,14 @@ function BookingInfoScreen() {
       );
       const courtId = court?.id;
       const slotId = myslot?.id;
+      let addslot = null;
+      if(!slotId){
+        addslot = additionalSlots.find(
+          (slot) => slot.start_time === parts[0] && slot.end_time === parts[1]
+        );
+      }
+      const addSlotId = addslot?.id;
+      alert(addSlotId)
       const formData = {
         id,
         clubLocation,
@@ -247,6 +255,7 @@ function BookingInfoScreen() {
         courtId,
         userInfo,
         slotId,
+        addSlotId,
         selectedSlot,
       };
       const formDataJSON = JSON.stringify(formData);
@@ -385,16 +394,6 @@ function BookingInfoScreen() {
               )}
             </div>
           </form>
-          {/* <SlotPicker
-            interval={60}
-            onSelectTime={(s) => setSelectedTime(s)}
-            unAvailableSlots={[closingTime,openingTime]}
-            from={openingTime}
-            to={closingTime}
-            defaultSelectedTime={openingTime}
-            selectedSlotColor="blue"
-            lang="en"
-          /> */}
         </div>
         <div className="card2">
           <h2>

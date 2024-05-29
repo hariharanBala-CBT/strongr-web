@@ -26,13 +26,15 @@ function CheckoutScreen() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const placeOrder = () => {
+      alert(bookingData?.addSlotId)
       dispatch(
       createBooking({
         id: bookingData.id,
         userInfo: userInfo,
         phoneNumber: phoneNumber,
         date: bookingData.date,
-        slotId: bookingData.slotId,
+        slotId: bookingData?.slotId,
+        addSlotId : bookingData?.addSlotId,
         courtId: bookingData.courtId,
         taxPrice: bookingData.taxPrice,
         totalPrice: bookingData.totalPrice,
