@@ -179,7 +179,7 @@
                                                     <td>{{ game.game_type }}</td>
                                                     <td>
                                                         <div class="update-icon">
-                                                            <a href="{% url 'organization_updatelocationgametype' locationpk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
+                                                            <a href="{% url 'organization_updatelocationgametype' locationpk=game.organization_location.pk gamepk=game.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
                                                         </div>
                                                     </td>
                                                 </tr>

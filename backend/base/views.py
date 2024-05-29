@@ -533,7 +533,9 @@ class OrganizationLocationGameTypeView(CreateView):
     model = OrganizationLocationGameType
     template_name = 'add_game.html'
     form_class = OrganizationLocationGameTypeCreateForm
-    success_url = reverse_lazy('organization_locationgamelist')
+
+    def get_success_url(self):
+        return reverse_lazy('organization_locationgamelist', kwargs={'locationpk': self.kwargs.get('locationpk')})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -545,7 +547,7 @@ class OrganizationLocationGameTypeView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['locationpk'] = self.request.session.get('location_pk')
+        context['locationpk'] = self.kwargs.get('locationpk')
         return context
 
     def form_valid(self, form):
@@ -553,7 +555,7 @@ class OrganizationLocationGameTypeView(CreateView):
         if not location_pk:
             messages.error(self.request, 'No location found in session.')
             return redirect('organization_addlocation')
-        
+
         form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
         form.save()
 
@@ -580,14 +582,14 @@ class OrganizationUpdateLocationGameTypeView(UpdateView):
 
     def get_object(self):
         locationpk = self.kwargs.get('locationpk')
-        return OrganizationLocationGameType.objects.get(organization_location=locationpk)
+        gamepk = self.kwargs.get('gamepk')
+        return get_object_or_404(OrganizationLocationGameType, organization_location__pk=locationpk, pk=gamepk)
 
     def form_valid(self, form):
-        form = form.save(commit=False)
-        form.organization_location = OrganizationLocation.objects.get(pk=self.kwargs.get('locationpk'))
+        form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=self.kwargs.get('locationpk'))
         form.save()
         messages.success(self.request, 'Game updated successfully.')
-        return redirect('organization_locationgamelist',  locationpk=self.kwargs.get('locationpk'))
+        return redirect('organization_locationgamelist', locationpk=self.kwargs.get('locationpk'))
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
