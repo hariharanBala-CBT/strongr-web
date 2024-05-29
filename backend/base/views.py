@@ -420,12 +420,10 @@ class OrganizationAddLocationView(CreateView):
         form.instance.organization = organization
         form.save()
         self.request.session['location_pk'] = form.instance.pk
-        print('location_pk',form.instance.pk)
         pk = form.instance.pk
 
         days_order = [
-            'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
-            'Saturday'
+            'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
         ]
 
         days_index_map = {
@@ -443,6 +441,9 @@ class OrganizationAddLocationView(CreateView):
             workingdays.save()
         messages.success(self.request, 'Location created successfully.')
         return redirect('organization_locationworkingdays', locationpk=pk)
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationView(UpdateView):

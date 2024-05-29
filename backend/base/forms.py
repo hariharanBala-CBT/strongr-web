@@ -74,15 +74,39 @@ class OrganizationProfileForm(forms.ModelForm):
 
 
 class OrganizationLocationForm(ModelForm):
-     pincode = forms.IntegerField(validators=[MinValueValidator(100000, message='Make sure pincode is 6-digits'), MaxValueValidator(999999, message='Make sure pincode is 6-digits')])
-     class Meta:
-         model = OrganizationLocation
-         fields = ['address_line_1', 'address_line_2', 'area', 'pincode', 'phone_number']
-         widgets = {
+    pincode = forms.IntegerField(validators=[MinValueValidator(100000, message='Make sure pincode is 6-digits'), MaxValueValidator(999999, message='Make sure pincode is 6-digits')])
+    phone_number = forms.IntegerField(
+        validators=[
+            MinValueValidator(1000000000, message='Phone number must be 10 digits long'),
+            MaxValueValidator(9999999999, message='Phone number can be at most 10 digits long')
+        ]
+    )
+    class Meta:
+        model = OrganizationLocation
+        fields = ['address_line_1', 'address_line_2', 'area', 'pincode', 'phone_number']
+        widgets = {
             'address_line_1':forms.Textarea(attrs={'rows':2 , 'cols':20}),
             'address_line_2':forms.Textarea(attrs={'rows':2 , 'cols':20})
-
             }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        address_line_1 = cleaned_data.get('address_line_1')
+        address_line_2 = cleaned_data.get('address_line_2')
+        area = cleaned_data.get('area')
+        pincode = cleaned_data.get('pincode')
+        phone_number = cleaned_data.get('phone_number')
+
+        if OrganizationLocation.objects.filter(
+            address_line_1=address_line_1,
+            address_line_2=address_line_2,
+            area=area,
+            pincode=pincode,
+            phone_number=phone_number
+        ).exists():
+            raise ValidationError("This location already exists.")
+        
+        return cleaned_data    
                 
 class OrganizationLocationGameTypeForm(ModelForm):
 
