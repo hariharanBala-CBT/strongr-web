@@ -584,19 +584,21 @@ class OrganizationUpdateLocationGameTypeView(UpdateView):
     def get_object(self):
         locationpk = self.kwargs.get('locationpk')
         gamepk = self.kwargs.get('gamepk')
+        print("Location PK:", locationpk)
+        print("Game PK:", gamepk)
         return get_object_or_404(OrganizationLocationGameType, organization_location__pk=locationpk, pk=gamepk)
 
     def form_valid(self, form):
         form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=self.kwargs.get('locationpk'))
         form.save()
         messages.success(self.request, 'Game updated successfully.')
-        return redirect('organization_locationgamelist', locationpk=self.kwargs.get('locationpk'))
+        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.kwargs.get('locationpk')
         return context
-
+        
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationImageListView(ListView):
     model = OrganizationGameImages
@@ -618,15 +620,14 @@ class OrganizationLocationImageView(CreateView):
     model = OrganizationGameImages
     template_name = 'add_images.html'
     form_class = OrganizationGameImagesForm
-    success_url = reverse_lazy('organization_imageslist')
 
     def form_valid(self, form):
         form_instance = form.save(commit=False)
-        pk = self.request.session.get('location_pk')
-        form_instance.organization = OrganizationLocation.objects.get(pk=pk)
+        location_pk = self.kwargs.get('locationpk')
+        form_instance.organization = OrganizationLocation.objects.get(pk=location_pk)
         form_instance.save()
         messages.success(self.request, 'Image created successfully.')
-        return HttpResponseRedirect(self.success_url)
+        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -639,7 +640,7 @@ class OrganizationUpdateLocationImageView(UpdateView):
     model = OrganizationGameImages
     template_name = 'update_image.html'
     form_class = OrganizationGameImagesForm
-    success_url = reverse_lazy('organization_imageslist')
+    # success_url = reverse_lazy('organization_imageslist')
 
     def form_valid(self, form):
         clear_image = self.request.POST.get('image-clear', False)
@@ -655,15 +656,18 @@ class OrganizationUpdateLocationImageView(UpdateView):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.kwargs.get('pk')
         return context
-
+    
+    def get_success_url(self):
+        image_pk = self.kwargs.get('pk')
+        location_pk = OrganizationGameImages.objects.get(pk = image_pk).organization.id
+        return reverse('mainview',kwargs={'location_pk' : location_pk})
 
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationDeleteLocationImageView(DeleteView):
     model = OrganizationGameImages
     template_name = 'delete_image.html'
-    success_url = reverse_lazy('organization_imageslist')
-
+    
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
 
@@ -680,6 +684,10 @@ class OrganizationDeleteLocationImageView(DeleteView):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.request.session.get('location_pk')
         return context
+    
+    def get_success_url(self):
+        locationpk = self.request.session.get('location_pk')
+        return reverse('mainview' , kwargs={'location_pk': locationpk})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -687,7 +695,6 @@ class OrganizationLocationAmenitiesView(UpdateView):
     model = OrganizationLocationAmenities
     template_name = 'update_amenities.html'
     form_class = OrganizationLocationAmenitiesForm
-    success_url = reverse_lazy('organization_locationlist')
 
     def get_object(self):
         try:
@@ -700,7 +707,7 @@ class OrganizationLocationAmenitiesView(UpdateView):
         form.instance.organization_location = OrganizationLocation.objects.get(pk=self.kwargs.get('locationpk'))
         form.save()
         messages.success(self.request, 'Amenities updated successfully.')
-        return HttpResponseRedirect(self.success_url)
+        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
 
 
 
@@ -709,7 +716,6 @@ class OrganizationWorkingDaysView(UpdateView):
     model = OrganizationLocationWorkingDays
     template_name = 'update_workingdays.html'
     form_class = OrganizationLocationWorkingDaysForm
-    success_url = reverse_lazy('organization_locationgamelist')
 
     def get_object(self):
         pk = self.kwargs.get('locationpk')
@@ -729,31 +735,37 @@ class OrganizationWorkingDaysView(UpdateView):
             formset = OrganizationLocationWorkingDaysFormSet(request.POST, queryset=queryset)
             if formset.is_valid():
                 formset.save()
-                return JsonResponse({'status': 'success', 'message': 'Working days updated successfully.'})
+                messages.success(request, 'Working days updated successfully.')
+                return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
+            
             else:
                 return JsonResponse({'status': 'error', 'message': 'Form validation failed.'}, status=400)
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
+@method_decorator(login_required, name='dispatch')
 class CourtUpdateView(UpdateView):
     model = Court
     template_name = 'update_court.html'
     form_class = CourtForm
-    success_url = reverse_lazy('court-list')
+
+    def get_object(self):
+        locationpk = self.kwargs.get('locationpk')
+        courtpk = self.kwargs.get('courtpk')
+        print("Location PK:", locationpk)
+        print("Court PK:", courtpk)
+        return get_object_or_404(Court,location__pk=locationpk, pk=courtpk)
 
     def form_valid(self, form):
-        instance = form.save(commit=False)
-        pk = self.request.session.get('location_pk')
-        instance.organization_location = OrganizationLocation.objects.get(
-            pk=pk)
-        instance.save()
+        form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=self.kwargs.get('locationpk'))
+        form.save()
         messages.success(self.request, 'Court updated successfully!')
-        return HttpResponseRedirect(self.success_url)
+        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['locationpk'] = self.request.session.get('location_pk')
+        context['locationpk'] = self.kwargs.get('locationpk')
         return context
 
 
@@ -777,12 +789,14 @@ class CourtsListView(ListView):
 class CourtDeleteView(DeleteView):
     model = Court
     template_name = 'delete_court.html'
-    success_url = reverse_lazy('court-list')
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request,'Court deleted successfully.')
+        messages.success(self.request, 'Court deleted successfully.')
         return super().delete(request, *args, **kwargs)
-    
+
+    def get_success_url(self):
+        return reverse('mainview', kwargs={'location_pk': self.request.session.get('locationpk')})
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.request.session.get('location_pk')
@@ -856,7 +870,6 @@ class SlotUpdateView(UpdateView):
     model = Slot
     template_name = 'update_slot.html'
     form_class = SlotUpdateForm
-    success_url = reverse_lazy('slot-list')
 
     def form_invalid(self, form):
         return self.render_to_response(
@@ -889,7 +902,7 @@ class SlotUpdateView(UpdateView):
         #     error_message = 'Selected start time is before working day time given'
         #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
         messages.success(self.request, 'Slot updated successfully.')
-        return super().form_valid(form)
+        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -1620,7 +1633,10 @@ class UnavailableSlotCreateView(CreateView):
 @login_required
 def main_view(request, location_pk=None):
     context = {}
+    organization_locations = OrganizationLocation.objects.filter(organization=request.user.organization)
+    context['organization_locations'] = organization_locations
     if location_pk is not None:
+        request.session['location_pk'] = location_pk
         context['locationpk'] = location_pk
     return render(request, 'main_template.html', context)
 

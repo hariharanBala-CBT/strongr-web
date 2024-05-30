@@ -1,3 +1,4 @@
+
 {% load static %}
 
 <!DOCTYPE html>
@@ -340,7 +341,11 @@
                                         {% if profile.alt_number %}
                                             <li><div class="label"> Alternate Phone</div>:&nbsp; {{profile.alt_number}}</li>
                                         {% endif %}
-                                        <li><div class="label">Description</div>:&nbsp; {{profile.description}}</li>
+                                        {% if profile.description|length  > 0 %}
+                                            <li><div class="label">Description</div>:&nbsp; {{profile.description}}</li>
+                                        {% elif profile.description|length  == 0 %}
+                                            <li><div class="label">Description</div>:&nbsp; None</li>
+                                        {% endif %}
                                         <li><div class="label">Status</div>:&nbsp; 
                                             {% if profile.status == 1 %}
                                                 <span class="status-approved"style="margin: left 10px;" >Approved</span>
@@ -412,7 +417,11 @@
                                                         <ul>
                                                             <strong>{{ game.game_type }}</strong>
                                                             <li><div class="label">Pricing</div>: {{ game.pricing }}</li>
-                                                            <li><div class="label">Description</div>: {{ game.description }}</li>
+                                                            {% if game.description|length  > 0 %}
+                                                                <li><div class="label">Description</div>: {{ game.description }}</li>
+                                                            {% elif game.description|length  == 0 %}
+                                                                <li><div class="label">Description</div>: None</li>
+                                                            {% endif %}
                                                         </ul>
                                                     {% endfor %}
                                                 </ul>
@@ -451,9 +460,12 @@
                                                             <span></span> Coaching
                                                         </label><br>
                                                         
-                                                        <label>
-                                                            Description: {{ amenity.description }}
-                                                        </label>
+
+                                                        {% if amenity.description|length  > 0 %}
+                                                            <li><div class="label">Description</div>: {{ amenity.description }}</li>
+                                                        {% elif amenity.description|length  == 0 %}
+                                                            <li><div class="label">Description</div>: None</li>
+                                                        {% endif %}
                                                     </li>
                                                     {% endfor %}
                                                 </ul>
@@ -497,10 +509,20 @@
                                                     </table>
                                                 </form>
                                                 <!-- Courts -->
-                                                <h5><strong>Courts</strong></h5>
                                                 <ul>
+                                                    <h5><strong>Courts</strong></h5>
                                                     {% for court in location_item.courts %}
-                                                    <li>{{ court.name }}</li>
+                                                        <li>{{ court.name }}</li>
+                                                    {% empty %}
+                                                        <li>No Courts Addded</li>
+                                                    {% endfor %}
+                                                </ul>
+                                                <ul>
+                                                    <h5><strong>Images</strong></h5>
+                                                    {% for image in location_item.images %}
+                                                        <img src="{{ image.image }}"></img>
+                                                    {% empty %}
+                                                        <li>No images Addded</li>
                                                     {% endfor %}
                                                 </ul>
                                                 <div class="text-center mb-4">

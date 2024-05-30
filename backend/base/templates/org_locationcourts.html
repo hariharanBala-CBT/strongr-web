@@ -35,8 +35,7 @@
 
         .card {
             margin: 0 auto;
-            padding: 20px;
-            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+            /* box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); */
         }
 
         /* .datatable-top {
@@ -154,8 +153,8 @@
                         </div>
                     {% endif %}
                     <div class="profile-card">
-                        <h3 class="my-4">Courts:</h3>
-                        <h6 class="mb-5">Add Available Courts to your Location</h6>
+                        <!-- <h3 class="my-4">Courts:</h3> -->
+                        <!-- <h6 class="mb-5">Add Available Courts to your Location</h6> -->
 
                         <div>
                             <div class="card mb-4">
@@ -183,7 +182,7 @@
                                                     <td>{{ court.name }}</td>
                                                         <td>
                                                             <div class="update-icon">
-                                                                <a href="{% url 'update-court' court.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
+                                                                <a href="{% url 'update-court' locationpk=locationpk courtpk=court.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
                                                             </div>
                                                         </td>
                                                         <td>

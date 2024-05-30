@@ -17,7 +17,7 @@
 
     <style>
         form{
-            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+            /* box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); */
             border-radius: 2%;
             padding: 20px;
         }
@@ -158,7 +158,7 @@
                 <main>
                     <div class="container-fluid px-4 m">
                         <div class="profile-card"> 
-                            <h1 class="my-4">Update Location</h1>
+                            <!-- <h1 class="my-4">Update Location</h1> -->
                             <div>                          
                                 <form id="upd-loc-form" method="post" action="{% url 'organization_updatelocation' pk=object.pk %}">
                                     {% csrf_token %}

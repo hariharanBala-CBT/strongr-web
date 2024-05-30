@@ -35,8 +35,7 @@
 
         .card {
             margin: 0 auto;
-            padding: 20px;
-            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+            /* box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); */
         }
 
         .update-icon{
@@ -152,15 +151,15 @@
                         </div>
                     {% endif %}
                     <div class="profile-card">
-                        <h3 class="my-4">Images:</h3>
-                        <h6 class="mb-5">Add Available Images to your Location</h6>
+                        <!-- <h3 class="my-4">Images:</h3> -->
+                        <!-- <h6 class="mb-5">Add Available Images to your Location</h6> -->
 
                         <div>
                             <div class="card mb-4">
                                 <div class="location-card card-header">
                                     <div>
                                         Image</div>
-                                    <div><a href= "{% url 'organization_images' %}" class="btn btn-success align-self-end" data-toggle="tooltip" title="Add image"><i class="fa-solid fa-plus"></i></a>
+                                    <div><a href= "{% url 'organization_images' locationpk %}" class="btn btn-success align-self-end" data-toggle="tooltip" title="Add image"><i class="fa-solid fa-plus"></i></a>
                                     </div>
                                 </div>
                                 <div class="card-body">
