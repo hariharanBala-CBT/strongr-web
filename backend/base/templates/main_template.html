@@ -179,7 +179,9 @@
                             <button class="tab-button" disabled>Update (Location not specified)</button>
                             {% endif %}
                             <button data-url="{% url 'organization_locationgamelist' locationpk %}"
-                                class="tab-button">Game</button>
+                                class="tab-button">Games</button>
+                                <button data-url="{% url 'organization_locationgametype' locationpk %}"
+                                class="tab-button">Add Game</button>
                             <button data-url="{% url 'court-list' locationpk %}" class="tab-button">Court</button>
                             <button data-url="{% url 'organization_imageslist' locationpk %}"
                                 class="tab-button">Images</button>

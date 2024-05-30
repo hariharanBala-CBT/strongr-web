@@ -1493,6 +1493,7 @@ class TempSlotListView(ListView):
             try:
                 slot = AdditionalSlot.objects.get(id=id)
                 slot.delete()
+                messages.success(self.request, 'Deleted Additional slot successfully !!!')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             except AdditionalSlot.DoesNotExist:
                 print("Slot does not exist")
@@ -1521,6 +1522,7 @@ class TempSlotCreateView(CreateView):
                 raise KeyError('Location PK not found in session')
             location = OrganizationLocation.objects.get(pk=pk)
             form.instance.location = location
+            messages.success(self.request, 'Created Additional slot successfully !!!')
             response = super().form_valid(form)
             return response
         except KeyError as e:
@@ -1563,6 +1565,7 @@ class UnavailableSlotListView(ListView):
                 print("entered try")
                 slot = UnavailableSlot.objects.get(id=id)
                 slot.delete()
+                messages.success(self.request, 'Deleted Unavailable slot successfully !!!')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             except UnavailableSlot.DoesNotExist:
                 print("Slot does not exist")
@@ -1600,6 +1603,7 @@ class UnavailableSlotCreateView(CreateView):
             location = OrganizationLocation.objects.get(pk=pk)
             form.instance.location = location
             response = super().form_valid(form)
+            messages.success(self.request, 'Created Unavailable slot successfully !!!')
             return response
         except KeyError as e:
             return self.render_to_response(

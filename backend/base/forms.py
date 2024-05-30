@@ -296,8 +296,8 @@ class TempSlotForm(forms.ModelForm):
         time_diff_minutes = time_diff_seconds / 60
 
         # Check if the time difference exceeds one hour
-        if ((time_diff_minutes < 60) and (time_diff_minutes > 60)):
-            raise forms.ValidationError("Time difference between slots can exactly be one hour.")
+        if time_diff_minutes != 60:
+            raise forms.ValidationError("Time difference between slots must exactly be one hour.", code='time_error')
 
         return cleaned_data
 

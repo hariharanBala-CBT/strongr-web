@@ -37,6 +37,62 @@
                 background-color: rgba(0, 0, 0, 0.5);
                 z-index: 9998;
             }
+            /* Container for the messages */
+            .messages {
+                list-style: none;
+                padding: 0;
+                margin: 20px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            /* Common styles for all messages */
+            .messages li {
+                padding: 15px 20px;
+                border-radius: 5px;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Success message styles */
+            .messages .success {
+                background-color: #dff0d8;
+                color: #3c763d;
+            }
+
+            /* Error message styles */
+            .messages .error {
+                background-color: #f2dede;
+                color: #a94442;
+            }
+
+            /* Warning message styles */
+            .messages .warning {
+                background-color: #fcf8e3;
+                color: #8a6d3b;
+            }
+
+            /* Info message styles */
+            .messages .info {
+                background-color: #d9edf7;
+                color: #31708f;
+            }
+
+            /* Close button styles */
+            .messages .close-btn {
+                background: none;
+                border: none;
+                font-size: 16px;
+                cursor: pointer;
+                color: inherit;
+                margin-left: 10px;
+            }
+
     </style>
     
 </head>
@@ -118,6 +174,16 @@
                                 <a href="{% url 'add-temp-slot' pk=locationpk %}" class="btn btn-success align-self-end"><i class="fa-solid fa-plus"></i></a>
                             </div>
                         </div>
+                        {% if messages %}
+                            <ul class="messages">
+                                {% for message in messages %}
+                                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                                        {{ message }}
+                                        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                         <div class="card-body">
                                 {% csrf_token %}
                                 <table class="table" id="datatablesSimple">
@@ -247,6 +313,20 @@
                 });
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.messages li');
+            messages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.opacity = '0';
+                    message.style.transition = 'opacity 0.5s ease';
+                    setTimeout(function() {
+                        message.style.display = 'none';
+                    }, 500);
+                }, 3000); // Adjust the timeout as needed
+            });
+        });
+
     </script>
 </body>
 </html>

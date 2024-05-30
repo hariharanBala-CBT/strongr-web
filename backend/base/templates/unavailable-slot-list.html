@@ -121,6 +121,14 @@
                                 <a href="{% url 'add-unavailable-slot' pk=locationpk %}" class="btn btn-success align-self-end"><i class="fa-solid fa-plus"></i></a>
                             </div>
                         </div>
+                        {% if messages %}
+                            <ul class="messages">
+                                {% for message in messages %}
+                                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
                         <div class="card-body">
                                 {% csrf_token %}
                                 <table class="table" id="datatablesSimple">
