@@ -26,7 +26,6 @@ function CheckoutScreen() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const placeOrder = () => {
-      alert(bookingData?.addSlotId)
       dispatch(
       createBooking({
         id: bookingData.id,
@@ -109,20 +108,6 @@ function CheckoutScreen() {
                   required
                 />
               </div>
-              {/* <div>
-                <label htmlFor="lastName" className="form-label">
-                  Last name
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="lastName"
-                  placeholder=""
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                />
-              </div> */}
             </div>
 
             <div className="email-input">

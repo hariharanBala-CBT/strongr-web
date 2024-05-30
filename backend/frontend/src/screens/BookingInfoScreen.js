@@ -75,9 +75,6 @@ function BookingInfoScreen() {
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [selectedTime, setSelectedTime] = useState(0);
-  // const [openingTime, setOpeningTime] = useState(0);
-  // const [closingTime, setClosingTime] = useState(0);
 
   const getSelectedGamePricing = () => {
     const selectedGame = clubGame?.find(
@@ -171,15 +168,6 @@ function BookingInfoScreen() {
         weekday: "long",
       });
       console.log(selectedWeekday);
-
-      // const Timings = () => {
-      //   const day = clubWorking?.find((day) => day.days === selectedWeekday)
-      //   setOpeningTime(day?.work_from_time)
-      //   setClosingTime(day?.work_to_time)
-      // };
-
-      // Timings();
-
       dispatch(fetchAvailableSlots(courtId, date)).then(() =>
         setLoading(false)
       );
@@ -241,7 +229,6 @@ function BookingInfoScreen() {
         );
       }
       const addSlotId = addslot?.id;
-      alert(addSlotId)
       const formData = {
         id,
         clubLocation,
@@ -261,14 +248,16 @@ function BookingInfoScreen() {
       const formDataJSON = JSON.stringify(formData);
       localStorage.setItem("Bookingdata", formDataJSON);
 
-      if (userInfo && slots?.length !== 0) {
-        setLoader(false);
-        navigate("/checkout");
-      } else if (!userInfo) {
+      if (userInfo) {
+        if (slots?.length > 0 || additionalSlots?.length > 0) {
+          setLoader(false);
+          navigate("/checkout");
+        } else {
+          toast.error("select a slot before proceeding to book");
+        }
+      } else {
         setLoader(false);
         setOpenForm(true);
-      } else if (slots?.length === 0) {
-        toast.error("select a slot before proceeding to book");
       }
     }
   };
@@ -287,12 +276,19 @@ function BookingInfoScreen() {
   };
 
   useEffect(() => {
-    if (slots) {
+    if (slots?.length > 0) {
       setSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
       setSelectedSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
       setLoading(false);
     }
   }, [slots, setSelectedSlot, courts]);
+  useEffect(() => {
+    if (additionalSlots?.length > 0 && slots?.length === 0) {
+      setSlot(`${additionalSlots[0]?.start_time}-${additionalSlots[0]?.end_time}`);
+      setSelectedSlot(`${additionalSlots[0]?.start_time}-${additionalSlots[0]?.end_time}`);
+      setLoading(false);
+    }
+  }, [additionalSlots, setSelectedSlot, courts, slots]);
 
   useEffect(() => {
     setSelectedArea(areaName);
