@@ -576,7 +576,7 @@ class OrganizationLocationGameTypeView(CreateView):
             )
 
         messages.success(self.request, 'Game created successfully.')
-        return redirect('organization_locationgamelist', locationpk=location_pk)
+        return redirect(self.get_success_url())
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationGameTypeView(UpdateView):
