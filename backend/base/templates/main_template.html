@@ -64,7 +64,7 @@
         width: 100%;
         border-radius: 5px;
         column-gap: 1rem;
-        padding: 13px 0px;
+        padding: 10px 0px;
         background-color: #f0f0f0;
         cursor: pointer;
     }
@@ -75,18 +75,8 @@
 
     .tab-button:focus {
         outline: none;
-        background-color: rgb(72, 72, 72);
-        color: white;
-    }
-
-    .tab-button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    #tab-content {
-        border: 1px solid #ddd;
-        border-top: none;
+        /* background-color: rgb(72, 72, 72);
+        color: white; */
     }
 
     footer {
@@ -118,7 +108,28 @@
     .form-select {
         min-width: 200px;
     }
+
+
+    .tab-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    .tab-button.active,.tab-button:focus {
+        background-color: #ddd;
+        border-bottom: 2px solid #000; 
+        font-weight: bold;
+        outline: none;
+    }
+
+    /* Style for tab content */
+    #tab-content {
+        /* padding: 20px; */
+        border: 1px solid #ddd;
+        border-top: none;
+    }
+
 </style>
+
 
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -206,15 +217,20 @@
                     <div class="card mb-4">
                         <div class="tabs">
                             {% if locationpk %}
-                            <button data-url="{% url 'organization_updatelocation' locationpk %}" class="tab-button active" aria-selected="true">Address</button>
+                            <button tabindex="0" data-url="{% url 'organization_updatelocation' locationpk %}"
+                                class="tab-button active">Address</button>
                             {% else %}
                             <button class="tab-button" disabled>Update (Location not specified)</button>
                             {% endif %}
-                            <button data-url="{% url 'organization_locationgamelist' locationpk %}" class="tab-button" aria-selected="false">Game</button>
-                            <button data-url="{% url 'court-list' locationpk %}" class="tab-button" aria-selected="false">Court</button>
-                            <button data-url="{% url 'organization_imageslist' locationpk %}" class="tab-button" aria-selected="false">Images</button>
-                            <button data-url="{% url 'organization_locationworkingdays' locationpk %}" class="tab-button" aria-selected="false">Working Days</button>
-                            <button data-url="{% url 'organization_locationamenities' locationpk %}" class="tab-button" aria-selected="false">Amenities</button>
+                            <button tabindex="0" data-url="{% url 'organization_locationgamelist' locationpk %}"
+                                class="tab-button">Game</button>
+                            <button tabindex="0" data-url="{% url 'court-list' locationpk %}" class="tab-button">Court</button>
+                            <button tabindex="0" data-url="{% url 'organization_imageslist' locationpk %}"
+                                class="tab-button">Images</button>
+                            <button tabindex="0" data-url="{% url 'organization_locationworkingdays' locationpk %}"
+                                class="tab-button">Working Days</button>
+                            <button tabindex="0" data-url="{% url 'organization_locationamenities' locationpk %}"
+                                class="tab-button">Amenities</button>
                         </div>
                         <div id="tab-content"></div>
                     </div>
@@ -255,44 +271,52 @@
             }
         });
     </script>
-    <script>
-        $(document).ready(function () {
-            function initForm() {
-                $('#tab-content form').submit(function (event) {
-                    event.preventDefault();
-                    var formData = new FormData(this);
-                    $.ajax({
-                        url: $(this).attr('action'),
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (response) {
-                            $('#tab-content').html(response);
-                            initForm();
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Form submission error: " + error);
-                        }
-                    });
+   <script>
+    $(document).ready(function() {
+        // Function to initialize form submission
+        function initForm() {
+            $('#tab-content form').submit(function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                var formData = new FormData(this); // Create a FormData object passing in the form
+                $.ajax({
+                    url: $(this).attr('action'), // Get form action attribute
+                    type: 'POST',
+                    formData,
+                    processData: false, // Prevent jQuery from converting the data into a query string
+                    contentType: false, // Prevent jQuery from setting the content type
+                    success: function(response) {
+                        $('#tab-content').html(response); // Load response into tab content
+                        initForm(); // Reinitialize the form submission
+                        messages.success(request, 'Location updated successfully.');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Form submission error: " + error);
+                    }
                 });
-            }
-
-            function handleTabClick(button) {
-                var url = $(button).data('url');
-                $('#tab-content').load(url, function () {
-                    initForm();
-                });
-                $('.tab-button').removeClass('active').attr('aria-selected', 'false');
-                $(button).addClass('active').attr('aria-selected', 'true');
-            }
-
-            $('.tab-button').click(function () {
-                handleTabClick(this);
             });
+        }
+    
+        function setActiveTab(tab) {
+            $('.tab-button').removeClass('active'); 
+            $(tab).addClass('active'); 
+        }
 
-            $('.tab-button.active').trigger('click');
+        $('.tab-button').click(function() {
+            var url = $(this).data('url');
+            setActiveTab(this);
+            $('#tab-content').load(url, function() {
+                initForm(); 
+            });
         });
+
+        // Load content for the initially active tab
+        var initialTab = $('.tab-button.active').data('url');
+        if (initialTab) {
+            $('#tab-content').load(initialTab, function() {
+                initForm(); 
+            });
+        }
+    });
     </script>
     <script>
         function locationChange(select) {

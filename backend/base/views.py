@@ -538,7 +538,8 @@ class OrganizationLocationGameTypeView(CreateView):
     form_class = OrganizationLocationGameTypeCreateForm
 
     def get_success_url(self):
-        return reverse_lazy('organization_locationgamelist', kwargs={'locationpk': self.kwargs.get('locationpk')})
+        locationpk = self.request.session.get('location_pk')
+        return reverse('mainview' , kwargs={'location_pk': locationpk})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
