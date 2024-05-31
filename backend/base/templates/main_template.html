@@ -12,21 +12,21 @@
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link href="{% static 'styles.css' %}" rel="stylesheet" />
-    <!-- <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet" /> -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
 </head>
 <style>
-    form{
+    form {
         box-shadow: 0px !important;
         border: 1px solid #ddd !important;
     }
-    .main-template{
-        /* margin-left: -18rem; */
+
+    .main-template {
         margin-top: -1rem;
     }
+
     .preview {
         margin-top: 1rem;
         display: flex;
@@ -53,16 +53,19 @@
         margin: 0;
     }
 
-    /* Style for tab buttons */
     .tabs {
         display: flex;
         flex-direction: row;
     }
 
     .tab-button {
-        padding: 7px 72px;
+        border: 1px solid #ddd;
+        margin: 10px;
+        width: 100%;
+        border-radius: 5px;
+        column-gap: 1rem;
+        padding: 13px 0px;
         background-color: #f0f0f0;
-        border: none;
         cursor: pointer;
     }
 
@@ -72,6 +75,8 @@
 
     .tab-button:focus {
         outline: none;
+        background-color: rgb(72, 72, 72);
+        color: white;
     }
 
     .tab-button:disabled {
@@ -79,9 +84,7 @@
         cursor: not-allowed;
     }
 
-    /* Style for tab content */
     #tab-content {
-        /* padding: 20px; */
         border: 1px solid #ddd;
         border-top: none;
     }
@@ -92,14 +95,14 @@
         background-color: #333;
         color: #fff;
         margin-top: auto;
-        /* Push footer to the bottom */
         width: 100%;
     }
+
     .form-group {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 20px; /* Adjust the gap between elements as needed */
+        gap: 20px;
     }
 
     .select-location {
@@ -109,30 +112,22 @@
     }
 
     .form-label {
-        margin-bottom: 0.5rem; /* Adjust label margin if necessary */
+        margin-bottom: 0.5rem;
     }
 
     .form-select {
-        min-width: 200px; /* Adjust the width of the select dropdown as needed */
+        min-width: 200px;
     }
 </style>
 
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
         <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
-        <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                class="fas fa-bars"></i></button>
-
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false"><i class="fas fa-user fa-fw"></i>{{ user.username }}</a>
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>{{ user.username }}</a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <!-- <li><a class="dropdown-item" href="#!">Settings</a></li>
-                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                        <li><hr class="dropdown-divider" /></li> -->
                     <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </li>
@@ -152,8 +147,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                             Profile
                         </a>
-                        <a class="nav-link" href="{% url 'organization_locationlist'%}"
-                            style="color: white; background-color: rgb(68, 68, 68);">
+                        <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
                             <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                             Locations
                         </a>
@@ -188,7 +182,6 @@
         </div>
         <div id="layoutSidenav_content">
             <main class="main-template">
-
                 <div class="container-fluid px-4 mt-4">
                     {% if messages %}
                     <div class="alert alert-success" role="alert" id="successAlert">
@@ -209,8 +202,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                    </div>            
-                    <!-- <h1 class="mt-4 mb-4" style="margin-left: 40%;">Location</h1> -->
+                    </div>
                     <div class="card mb-4">
                         <div class="tabs">
                             {% if locationpk %}
@@ -218,15 +210,11 @@
                             {% else %}
                             <button class="tab-button" disabled>Update (Location not specified)</button>
                             {% endif %}
-                            <button data-url="{% url 'organization_locationgamelist' locationpk %}"
-                                class="tab-button">Game</button>
-                            <button data-url="{% url 'court-list' locationpk %}" class="tab-button">Court</button>
-                            <button data-url="{% url 'organization_imageslist' locationpk %}"
-                                class="tab-button">Images</button>
-                            <button data-url="{% url 'organization_locationworkingdays' locationpk %}"
-                                class="tab-button">Working Days</button>
-                            <button data-url="{% url 'organization_locationamenities' locationpk %}"
-                                class="tab-button">Amenities</button>
+                            <button data-url="{% url 'organization_locationgamelist' locationpk %}" class="tab-button" aria-selected="false">Game</button>
+                            <button data-url="{% url 'court-list' locationpk %}" class="tab-button" aria-selected="false">Court</button>
+                            <button data-url="{% url 'organization_imageslist' locationpk %}" class="tab-button" aria-selected="false">Images</button>
+                            <button data-url="{% url 'organization_locationworkingdays' locationpk %}" class="tab-button" aria-selected="false">Working Days</button>
+                            <button data-url="{% url 'organization_locationamenities' locationpk %}" class="tab-button" aria-selected="false">Amenities</button>
                         </div>
                         <div id="tab-content"></div>
                     </div>
@@ -234,20 +222,12 @@
             </main>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-        crossorigin="anonymous"></script>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script>
         window.addEventListener('DOMContentLoaded', event => {
-
             const datatablesSimple = document.getElementById('datatablesSimple');
             if (datatablesSimple) {
                 new simpleDatatables.DataTable(datatablesSimple);
@@ -255,8 +235,6 @@
         });
 
         window.addEventListener('DOMContentLoaded', event => {
-
-            // Toggle the side navigation
             const sidebarToggle = document.body.querySelector('#sidebarToggle');
             if (sidebarToggle) {
                 sidebarToggle.addEventListener('click', event => {
@@ -265,7 +243,6 @@
                     localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
                 });
             }
-
         });
     </script>
     <script>
@@ -274,54 +251,57 @@
             if (successAlert) {
                 setTimeout(() => {
                     successAlert.style.display = 'none';
-                }, 2500); // Hide after 5000ms or 5 seconds
+                }, 2500); // Hide after 2500ms or 2.5 seconds
             }
         });
     </script>
     <script>
-        $(document).ready(function() {
-    // Function to initialize form submission
-    function initForm() {
-        $('#tab-content form').submit(function(event) {
-            event.preventDefault(); // Prevent the default form submission
-            var formData = new FormData(this); // Create a FormData object passing in the form
-            $.ajax({
-                url: $(this).attr('action'), // Get form action attribute
-                type: 'POST',
-                formData,
-                processData: false, // Prevent jQuery from converting the data into a query string
-                contentType: false, // Prevent jQuery from setting the content type
-                success: function(response) {
-                    $('#tab-content').html(response); // Load response into tab content
-                    initForm(); // Reinitialize the form submission
-                },
-                error: function(xhr, status, error) {
-                    console.error("Form submission error: " + error);
-                }
-            });
-        });
-    }
-
-    // Load content when tab is clicked and initialize form
-    $('.tab-button').click(function() {
-        var url = $(this).data('url');
-        $('#tab-content').load(url, function() {
-            initForm(); // Initialize form submission after content is loaded
-        });
-    });
-
-    // Trigger the first tab to load its content by default
-    $('.tab-button.active').click();
-});
-        </script>
-        <script>
-            function locationChange(select) {
-                const locationPk = select.value;
-                if (locationPk) {
-                    window.location.href = "{% url 'mainview' locationpk %}".replace('locationpk', locationPk);
-                }
+        $(document).ready(function () {
+            function initForm() {
+                $('#tab-content form').submit(function (event) {
+                    event.preventDefault();
+                    var formData = new FormData(this);
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            $('#tab-content').html(response);
+                            initForm();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Form submission error: " + error);
+                        }
+                    });
+                });
             }
-        </script>  
+
+            function handleTabClick(button) {
+                var url = $(button).data('url');
+                $('#tab-content').load(url, function () {
+                    initForm();
+                });
+                $('.tab-button').removeClass('active').attr('aria-selected', 'false');
+                $(button).addClass('active').attr('aria-selected', 'true');
+            }
+
+            $('.tab-button').click(function () {
+                handleTabClick(this);
+            });
+
+            $('.tab-button.active').trigger('click');
+        });
+    </script>
+    <script>
+        function locationChange(select) {
+            const locationPk = select.value;
+            if (locationPk) {
+                window.location.href = "{% url 'mainview' locationpk %}".replace('locationpk', locationPk);
+            }
+        }
+    </script>
 </body>
 
 </html>

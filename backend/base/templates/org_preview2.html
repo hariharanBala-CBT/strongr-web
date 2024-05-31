@@ -509,18 +509,19 @@
                                                     </table>
                                                 </form>
                                                 <!-- Courts -->
+                                                <h5><strong>Courts</strong></h5>
                                                 <ul>
-                                                    <h5><strong>Courts</strong></h5>
                                                     {% for court in location_item.courts %}
                                                         <li>{{ court.name }}</li>
                                                     {% empty %}
                                                         <li>No Courts Addded</li>
                                                     {% endfor %}
                                                 </ul>
-                                                <ul>
-                                                    <h5><strong>Images</strong></h5>
+                                                <!-- Images -->
+                                                <h5><strong>Images</strong></h5>
+                                                <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
                                                     {% for image in location_item.images %}
-                                                        <img src="{{ image.image }}"></img>
+                                                        <img src="{{ image.image.url }}" alt="image" width="250" height="250"></img>
                                                     {% empty %}
                                                         <li>No images Addded</li>
                                                     {% endfor %}
