@@ -33,5 +33,4 @@ urlpatterns = [
     path('booking/cancel/<str:pk>/', views.cancelBooking, name='cancel-booking'),
     path('club/reviewslist/<str:pk>/', views.getClubReviews, name='get-reviews'),
     path('club/reviews/<str:pk>', views.createProductReview, name="club-review"),
-
 ]                                                                        

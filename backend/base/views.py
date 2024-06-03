@@ -9,10 +9,9 @@ from base.serializers import UserSerializerWithToken, UserSerializerWithTokenAnd
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import serializers
 
 import os
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.http.response import Http404
@@ -20,7 +19,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.urls import reverse
-from django.views.generic import DetailView, ListView, TemplateView, RedirectView
+from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from base.forms import *
 from django.contrib.auth.models import Group
@@ -39,7 +38,6 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.base import TemplateView
 from django.shortcuts import redirect
 from datetime import datetime, timedelta
-from django.utils import timezone
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
@@ -843,9 +841,7 @@ class SlotCreateView(CreateView):
             pk = self.request.session['location_pk']
             location = OrganizationLocation.objects.get(pk=pk)
             form.instance.location = location
-            # Get the selected day from the form
             selected_day = form.cleaned_data.get('days')
-            # Get the working days object for the selected day
             working_day = OrganizationLocationWorkingDays.objects.get(
                 organization_location=location, days=selected_day)
 
@@ -853,16 +849,6 @@ class SlotCreateView(CreateView):
                 return self.render_to_response(
                     self.get_context_data(
                         form=form, error='Selected working day is not active'))
-
-            # # Set the start and end time for the slot based on the working day
-            # if (form.instance.start_time < working_day.work_from_time):
-            #     error_message = 'Selected start time is before working day time given'
-            #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
-
-            # if (form.instance.end_time > working_day.work_to_time):
-            #     error_message = 'Selected end time is after working day time given'
-            #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
-
             return super().form_valid(form)
         except KeyError:
             return self.render_to_response(
@@ -880,9 +866,7 @@ class SlotUpdateView(UpdateView):
             self.get_context_data(form=form, error=form.errors.as_text()))
 
     def form_valid(self, form):
-        # Get the selected day from the form
         selected_day = form.cleaned_data.get('days')
-        # Get the working days object for the selected day
         working_day = OrganizationLocationWorkingDays.objects.get(
             organization_location=self.object.location, days=selected_day)
 
@@ -893,18 +877,6 @@ class SlotUpdateView(UpdateView):
                 self.get_context_data(
                     form=form, error='Selected working day is not active'))
 
-        # start_time = form.cleaned_data.get('start_time')
-        # end_time = form.cleaned_data.get('end_time')
-
-
-        # # Set the start and end time for the slot based on the working day
-        # if (form.instance.start_time < working_day.work_from_time):
-        #     error_message = 'Selected start time is before working day time given'
-        #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
-
-        # if (form.instance.end_time > working_day.work_to_time):
-        #     error_message = 'Selected start time is before working day time given'
-        #     return self.render_to_response(self.get_context_data(form=form, error=error_message))
         messages.success(self.request, 'Slot updated successfully.')
         return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
 
@@ -1006,13 +978,11 @@ class TermsandConditionsView(FormView):
 class TenantTermsandConditionsView(FormView):
     template_name = 'terms.html'
     form_class = TermsandConditionsForm
-    # success_url = reverse_lazy('organization_page')
 
 @method_decorator(login_required, name='dispatch')
 class PrivacyPolicyView(TemplateView):
     template_name = 'privacy_policy.html'
 
-# from collections import defaultdict
 
 
 @method_decorator(login_required, name='dispatch')
@@ -1032,37 +1002,14 @@ class StatusView(TemplateView):
         except OrganizationLocation.DoesNotExist:
             raise Http404("Organization Location not found")
 
-    # def get_latest_cancellation_message(self, recipient):
-    #     try:
-    #         return Message.objects.filter(recipient=recipient, subject="Organization Cancellation").latest('timestamp')
-    #     except Message.DoesNotExist:
-    #         return None
-
-    # def get_location_cancellation_messages(self, recipient, location):
-    #     try:
-    #         return Message.objects.filter(recipient=recipient, subject=f"Location Cancellation")
-    #     except Message.DoesNotExist:
-    #         return []
-
     def get(self, request, *args, **kwargs):
         try:
             organization = self.get_organization()
             locations = self.get_organization_location(organization)
 
-            # organization_cancellation_message = None
-
-            # if organization.status == Organization.CANCELLED:
-            #     organization_cancellation_message = self.get_latest_cancellation_message(request.user)
-
-            # for location in locations:
-            #     if location.status == OrganizationLocation.CANCELLED:
-            #         cancellation_messages = self.get_location_cancellation_messages(request.user, location)
-
             context = {
                 'organization': organization,
                 'locations': locations,
-                # 'organization_cancellation_message': organization_cancellation_message,
-                # 'location_cancellation_messages': cancellation_messages,
             }
             return render(request, self.template_name, context)
         except Http404 as e:
@@ -1085,40 +1032,6 @@ class OrganizationListView(ListView):
     model = Organization
     template_name = 'organization_list.html'
     context_object_name = 'organizations'
-
-
-# class TenantOrganizationPreviewView(DetailView):
-#     model = Organization
-#     template_name = 'tenant_organization_preview.html'
-#     context_object_name = 'organization'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         organization = self.object  # Get the organization object aka pk
-
-#         # Fetch all locations related to the organization
-#         locations = OrganizationLocation.objects.filter(
-#             organization=organization)
-
-#         # Create a list to store location details
-#         locationdetails = []
-
-#         for location in locations:
-#             context_item = {}
-#             context_item['location'] = location
-#             context_item['games'] = OrganizationLocationGameType.objects.filter(
-#                 organization_location=location)
-#             context_item['amenities'] = OrganizationLocationAmenities.objects.filter(
-#                 organization_location=location)
-#             context_item['workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
-#                 organization_location=location)
-#             context_item['courts'] = Court.objects.filter(
-#                 location=location)
-#             locationdetails.append(context_item)
-
-#         context['all_locations'] = locationdetails
-#         return context
-
 
 @method_decorator(login_required, name='dispatch')
 class ApprovalListView(ListView):
@@ -1146,16 +1059,9 @@ class ChangeOrganizationStatusView(View):
             status_text = 'Approved'
         elif new_status == 4:
             status_text = 'Cancelled'
-            # Message.objects.create(
-            #     sender=request.user,
-            #     recipient=organization.user,
-            #     subject="Organization Cancellation",
-            #     body=reason_for_cancellation,
-            #     is_read=False
-            # )
             organization.status_description = reason_for_cancellation
         else:
-            status_text = 'Unknown'  # Default status text
+            status_text = 'Unknown'
 
     # Update the organization's status and save it
         organization.status = new_status
@@ -1194,13 +1100,6 @@ class ChangeOrganizationLocationStatusView(View):
             status_text = 'Approved'
         elif new_status == 4:
             status_text = 'Cancelled'
-            # Message.objects.create(
-            #     sender=request.user,
-            #     recipient=organizationLocation.organization.user,
-            #     subject=f"Location Cancellation {organizationLocation}",
-            #     body=reason_for_cancellation,
-            #     is_read=False
-            # )
             organizationLocation.status_description = reason_for_cancellation
         else:
             status_text = 'Unknown'

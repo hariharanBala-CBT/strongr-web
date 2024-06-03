@@ -63,7 +63,7 @@ function BookingInfoScreen() {
   const { slots } = useSelector((state) => state.slot);
   const { additionalSlots } = useSelector((state) => state.additionalSlot);
   const { unavailableSlots } = useSelector((state) => state.unavailableSlot);
-  const { userInfo } = useSelector((state) => state.userLogin);
+  const { userInfo, LoginError, userLoginSuccess } = useSelector((state) => state.userLogin);
 
   const [slot, setSlot] = useState("");
   const [areaName, setAreaName] = useState(selectedArea);
@@ -282,6 +282,7 @@ function BookingInfoScreen() {
       setLoading(false);
     }
   }, [slots, setSelectedSlot, courts]);
+
   useEffect(() => {
     if (additionalSlots?.length > 0 && slots?.length === 0) {
       setSlot(`${additionalSlots[0]?.start_time}-${additionalSlots[0]?.end_time}`);
@@ -308,6 +309,20 @@ function BookingInfoScreen() {
     setSelectedCourt,
     setSelectedSlot,
   ]);
+
+  useEffect(() => {
+    if(LoginError){
+      toast.error('Incorrect Credentials')
+      setOpenForm(true)
+    }
+  },[LoginError])
+
+  useEffect(() => {
+    if(userLoginSuccess){
+      toast.success('Logged in successfully')
+      setOpenForm(false)
+    }
+  },[userLoginSuccess])
 
   return (
     <div>
