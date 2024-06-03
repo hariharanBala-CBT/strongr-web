@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
-# settings.py
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Set DEBUG based on the environment
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'

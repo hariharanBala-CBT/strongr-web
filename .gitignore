@@ -10,3 +10,4 @@ backend/booking/migrations
 backend/booking/migrations/__pycache__
 backend/static/images/
 node_modules
+/backend/.env
