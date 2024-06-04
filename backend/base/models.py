@@ -220,7 +220,7 @@ def get_organization_image_upload_path(instance, filename):
 
 class OrganizationGameImages(models.Model):
     organization = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="images/", null=True, blank=True)
+    image = models.ImageField(upload_to=get_organization_image_upload_path, null=True, blank=True)
     is_active = models.BooleanField(default = True)
 
 class Court(models.Model):

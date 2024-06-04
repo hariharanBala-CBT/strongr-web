@@ -616,6 +616,7 @@ class OrganizationLocationImageListView(ListView):
         return context
 
 
+from django.core.files.storage import default_storage
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationImageView(CreateView):
     model = OrganizationGameImages
@@ -626,9 +627,13 @@ class OrganizationLocationImageView(CreateView):
         form_instance = form.save(commit=False)
         location_pk = self.kwargs.get('locationpk')
         form_instance.organization = OrganizationLocation.objects.get(pk=location_pk)
+        uploaded_image = form.cleaned_data['image']
+        file_path = get_organization_image_upload_path(form_instance, uploaded_image.name)
+        s3_path = default_storage.save(file_path, uploaded_image)
+        form_instance.image = s3_path
         form_instance.save()
         messages.success(self.request, 'Image created successfully.')
-        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
+        return redirect(reverse('mainview', kwargs={'location_pk': location_pk}))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
