@@ -155,10 +155,10 @@ LOGIN_URL = '/orglogin/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'base/static',
-    BASE_DIR / 'frontend/build/static',
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'base/static',
+#     BASE_DIR / 'frontend/build/static',
+# ]
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
