@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-import os
+# import os
 
 class Tenant(models.Model):
     tenant_name = models.CharField(max_length=100)
@@ -209,7 +209,7 @@ class OrganizationLocationWorkingDays(models.Model):
 def get_organization_image_upload_path(instance, filename):
     organization_name = instance.organization.organization.organization_name.replace(' ', '_')
     location_address_line_2 = instance.organization.address_line_2.replace(' ', '_')
-    return os.path.join('organization', organization_name, location_address_line_2, filename)
+    return f"organization/{organization_name}/{location_address_line_2}/{filename}"
 
 class OrganizationGameImages(models.Model):
     organization = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)
