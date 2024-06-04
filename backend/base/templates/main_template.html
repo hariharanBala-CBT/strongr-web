@@ -241,90 +241,86 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', event => {
-            const datatablesSimple = document.getElementById('datatablesSimple');
-            if (datatablesSimple) {
-                new simpleDatatables.DataTable(datatablesSimple);
+        $(document).ready(function() {
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
-        });
+        }
+        return cookieValue;
+    }
 
-        window.addEventListener('DOMContentLoaded', event => {
-            const sidebarToggle = document.body.querySelector('#sidebarToggle');
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', event => {
-                    event.preventDefault();
-                    document.body.classList.toggle('sb-sidenav-toggled');
-                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-                });
-            }
-        });
-    </script>
-    <script>
-        window.addEventListener('DOMContentLoaded', (event) => {
-            const successAlert = document.getElementById('successAlert');
-            if (successAlert) {
-                setTimeout(() => {
-                    successAlert.style.display = 'none';
-                }, 2500); // Hide after 2500ms or 2.5 seconds
-            }
-        });
-    </script>
-   <script>
-    $(document).ready(function() {
-        // Function to initialize form submission
-        function initForm() {
-            $('#tab-content form').submit(function(event) {
-                event.preventDefault(); // Prevent the default form submission
-                var formData = new FormData(this); // Create a FormData object passing in the form
-                $.ajax({
-                    url: $(this).attr('action'), // Get form action attribute
-                    type: 'POST',
-                    formData,
-                    processData: false, // Prevent jQuery from converting the data into a query string
-                    contentType: false, // Prevent jQuery from setting the content type
-                    success: function(response) {
-                        $('#tab-content').html(response); // Load response into tab content
-                        initForm(); // Reinitialize the form submission
-                        messages.success(request, 'Location updated successfully.');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Form submission error: " + error);
+    function initFormSubmission() {
+        $('#tab-content form').submit(function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const csrftoken = getCookie('csrftoken');
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        showToast(response.message);
+                    } else {
+                        showToast(response.message || 'Error submitting form.');
                     }
-                });
-            });
-        }
-    
-        function setActiveTab(tab) {
-            $('.tab-button').removeClass('active'); 
-            $(tab).addClass('active'); 
-        }
-
-        $('.tab-button').click(function() {
-            var url = $(this).data('url');
-            setActiveTab(this);
-            $('#tab-content').load(url, function() {
-                initForm(); 
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    showToast('Error submitting form. ' + error);
+                }
             });
         });
+    }
 
-        // Load content for the initially active tab
-        var initialTab = $('.tab-button.active').data('url');
-        if (initialTab) {
-            $('#tab-content').load(initialTab, function() {
-                initForm(); 
-            });
-        }
+    function showToast(message) {
+        const toast = $('#successToast');
+        toast.text(message);
+        toast.show();
+        setTimeout(() => {
+            toast.hide();
+        }, 2000);
+    }
+
+    function setActiveTab(tab) {
+        $('.tab-button').removeClass('active');
+        $(tab).addClass('active');
+    }
+
+    $('.tab-button').click(function() {
+        const url = $(this).data('url');
+        setActiveTab(this);
+        $('#tab-content').load(url, function() {
+            initFormSubmission();
+        });
     });
-    </script>
-    <script>
-        function locationChange(select) {
-            const locationPk = select.value;
-            if (locationPk) {
-                window.location.href = "{% url 'mainview' locationpk %}".replace('locationpk', locationPk);
-            }
-        }
+
+    const initialTab = $('.tab-button.active').data('url');
+    if (initialTab) {
+        $('#tab-content').load(initialTab, function() {
+            initFormSubmission();
+        });
+    }
+});
+
     </script>
 </body>
 

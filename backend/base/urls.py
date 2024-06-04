@@ -49,8 +49,8 @@ urlpatterns = [
 
      path('error/', TemplateView.as_view(template_name='error.html'), name='error_view'),
      path('multiple-slot/<int:court_pk>', CreateMultipleSlotsView.as_view(), name='multiple-slot'),
-     path('organizationlocationamenities/<int:locationpk>/' ,OrganizationLocationAmenitiesView.as_view(), name='organization_locationamenities'),
-     path('organizationlocationworkingdays/<int:locationpk>/' , OrganizationWorkingDaysView.as_view(), name='organization_locationworkingdays'),
+     path('organizationlocationamenities/<int:location_pk>/' ,update_amenities, name='organization_locationamenities'),
+     path('organizationlocationworkingdays/<int:location_pk>/' , update_working_days, name='organization_locationworkingdays'),
      path('preview/' ,PreviewView.as_view(), name='preview'),
      path('termsandconditions/' ,TermsandConditionsView.as_view(),name='termsandconditions'),
      path('terms-conditions/' ,TenantTermsandConditionsView.as_view(),name='termsconditions'),

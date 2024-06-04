@@ -42,7 +42,7 @@ from django.db.models import Q
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.template.loader import render_to_string
-
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
 #FOR CUSTOMER ------------
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -691,60 +691,59 @@ class OrganizationDeleteLocationImageView(DeleteView):
         return reverse('mainview' , kwargs={'location_pk': locationpk})
 
 
-@method_decorator(login_required, name='dispatch')
-class OrganizationLocationAmenitiesView(UpdateView):
-    model = OrganizationLocationAmenities
-    template_name = 'update_amenities.html'
-    form_class = OrganizationLocationAmenitiesForm
+# @method_decorator(login_required, name='dispatch')
+# class OrganizationLocationAmenitiesView(UpdateView):
+#     model = OrganizationLocationAmenities
+#     template_name = 'update_amenities.html'
+#     form_class = OrganizationLocationAmenitiesForm
 
-    def get_object(self):
-        try:
-            pk = self.kwargs.get('locationpk')
-            return OrganizationLocationAmenities.objects.get(organization_location__pk=pk)
-        except OrganizationLocationAmenities.DoesNotExist:
-            return None
+#     def get_object(self):
+#         try:
+#             pk = self.kwargs.get('location_pk')
+#             return OrganizationLocationAmenities.objects.get(organization_location__pk=pk)
+#         except OrganizationLocationAmenities.DoesNotExist:
+#             return None
 
-    def form_valid(self, form):
-        form.instance.organization_location = OrganizationLocation.objects.get(pk=self.kwargs.get('locationpk'))
-        form.save()
-        messages.success(self.request, 'Amenities updated successfully.')
-        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
-
-
-
-@method_decorator(login_required, name='dispatch')
-class OrganizationWorkingDaysView(UpdateView):
-    model = OrganizationLocationWorkingDays
-    template_name = 'update_workingdays.html'
-    form_class = OrganizationLocationWorkingDaysForm
-
-    def get_object(self):
-        pk = self.kwargs.get('locationpk')
-        return OrganizationLocationWorkingDays.objects.filter(organization_location_id=pk)
-
-    def get_context_data(self, **kwargs):
-        context = {}
-        queryset = self.get_object()
-        formset = OrganizationLocationWorkingDaysFormSet(queryset=queryset)
-        context['formset'] = formset
-        context['locationpk'] = self.kwargs.get('locationpk')
-        return context
-
-    def post(self, request, **kwargs):
-        try:
-            queryset = self.get_object()
-            formset = OrganizationLocationWorkingDaysFormSet(request.POST, queryset=queryset)
-            if formset.is_valid():
-                formset.save()
-                messages.success(request, 'Working days updated successfully.')
-                return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
-
-            else:
-                return JsonResponse({'status': 'error', 'message': 'Form validation failed.'}, status=400)
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    # def form_valid(self, form):
+    #     form.instance.organization_location = OrganizationLocation.objects.get(pk=self.kwargs.get('location_pk'))
+    #     form.save()
+    #     messages.success(self.request, 'Amenities updated successfully.')
+    #     return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('location_pk')}))
 
 
+
+# @method_decorator(login_required, name='dispatch')
+# class OrganizationWorkingDaysView(UpdateView):
+#     model = OrganizationLocationWorkingDays
+#     template_name = 'update_workingdays.html'
+#     form_class = OrganizationLocationWorkingDaysForm
+
+#     def get_object(self):
+#         pk = self.kwargs.get('locationpk')
+#         return OrganizationLocationWorkingDays.objects.filter(organization_location_id=pk)
+
+#     def get_context_data(self, **kwargs):
+#         context = {}
+#         queryset = self.get_object()
+#         formset = OrganizationLocationWorkingDaysFormSet(queryset=queryset)
+#         context['formset'] = formset
+#         context['locationpk'] = self.kwargs.get('locationpk')
+#         return context
+
+#     def post(self, request, **kwargs):
+#         try:
+#             queryset = self.get_object()
+#             formset = OrganizationLocationWorkingDaysFormSet(request.POST, queryset=queryset)
+#             if formset.is_valid():
+#                 formset.save()
+#                 messages.success(request, 'Working days updated successfully.')
+#                 return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
+
+#             else:
+#                 return JsonResponse({'status': 'error', 'message': 'Form validation failed.'}, status=400)
+#         except Exception as e:
+#             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
 @method_decorator(login_required, name='dispatch')
 class CourtUpdateView(UpdateView):
     model = Court
@@ -1534,12 +1533,47 @@ class UnavailableSlotCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('unavailable-slot-list', kwargs={'pk': self.request.session.get('location_pk')})
 
+
 @login_required
+@ensure_csrf_cookie
 def main_view(request, location_pk=None):
     context = {}
     organization_locations = OrganizationLocation.objects.filter(organization=request.user.organization)
     context['organization_locations'] = organization_locations
+
     if location_pk is not None:
         request.session['location_pk'] = location_pk
         context['locationpk'] = location_pk
+        context['location_pk'] = location_pk
+
     return render(request, 'main_template.html', context)
+
+@login_required
+def update_working_days(request, location_pk):
+    queryset = OrganizationLocationWorkingDays.objects.filter(organization_location_id=location_pk)
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        formset = OrganizationLocationWorkingDaysFormSet(request.POST, queryset=queryset)
+        if formset.is_valid():
+            formset.save()
+            messages.success(request, 'Working days updated successfully.')
+            return JsonResponse({'status': 'success', 'message': 'Working days updated successfully.'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Form validation failed.'}, status=400)
+    else:
+        formset = OrganizationLocationWorkingDaysFormSet(queryset=queryset)
+    return render(request, 'update_workingdays.html', {'formset': formset, 'locationpk': location_pk})
+
+@login_required
+def update_amenities(request, location_pk):
+    amenities = OrganizationLocationAmenities.objects.filter(organization_location_id=location_pk).first()
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        form = OrganizationLocationAmenitiesForm(request.POST, instance=amenities)
+        if form.is_valid():
+            form.instance.organization_location_id = location_pk
+            form.save()
+            return JsonResponse({'status': 'success', 'message': 'Amenities updated successfully.'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Form validation failed.', 'errors': form.errors}, status=400)
+    else:
+        form = OrganizationLocationAmenitiesForm(instance=amenities)
+    return render(request, 'update_amenities.html', {'form': form, 'locationpk': location_pk})

@@ -210,7 +210,7 @@
                         <div class="container-fluid my-4">
                             <div class="profile-card">     
                                 <!-- <h1>Working Days</h1> -->
-                                <form method="post" id="workingdays_form">
+                                <form action="{% url 'organization_locationworkingdays' locationpk %}" id="workingdays_form" method="post">
                                     {% csrf_token %}
                                     {{ formset.management_form }}
                                     <table>
@@ -299,7 +299,7 @@
                         body: formData,
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRFToken': '{% csrf_token %}'
+                            'X-CSRFToken': 'csrf_token'
                         },
                     })
                     .then(response => {
@@ -312,7 +312,7 @@
                         if (data.status === 'success') {
                             showToast(data.message);
                             setTimeout(() => {
-                                window.location.href = "{% url 'organization_locationgamelist' locationpk %}";
+                                window.location.href = "{% url 'mainview' locationpk %}";
                             }, 2000);
                         } else {
                             showToast(data.message || 'Error updating working days.');
