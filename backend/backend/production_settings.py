@@ -163,10 +163,10 @@ STATICFILES_DIRS = [
 ]
 
 # Define STATIC_ROOT for local storage
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/images/'
-MEDIA_ROOT = BASE_DIR / 'static/images'
+# MEDIA_ROOT = BASE_DIR / 'static/images'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
