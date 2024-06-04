@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-# import os
+import os
 
 class Tenant(models.Model):
     tenant_name = models.CharField(max_length=100)
@@ -91,7 +91,7 @@ class Organization(models.Model):
         return self.organization_name
 
 class OrganizationLocation(models.Model):
-    
+
     APPROVED = 1
     PENDING = 2
     IN_PROGRESS = 3
@@ -128,7 +128,7 @@ class Review(models.Model):
     rating = models.IntegerField(null=True, blank=True, default=0)
     comment = models.TextField(null=True, blank=True)
     createdAt = models.DateTimeField(auto_now_add=True)
-    
+
     def __str__(self):
         return str(self.rating)
 
@@ -181,7 +181,7 @@ class OrganizationLocationGameType(models.Model):
     description = models.TextField(default=None,blank=True,null=True)
     is_active = models.BooleanField(default=True)
     number_of_courts = models.IntegerField(choices = court_number_choices, default = one)
-    
+
     def __str__(self):
         return f"{self.game_type}"
 
@@ -194,7 +194,7 @@ class OrganizationLocationWorkingDays(models.Model):
         ('Wednesday','Wednesday'),
         ('Thursday','Thursday'),
         ('Friday','Friday'),
-        ('Saturday','Saturday'), 
+        ('Saturday','Saturday'),
     )
 
     organization_location = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)
@@ -206,15 +206,22 @@ class OrganizationLocationWorkingDays(models.Model):
     def __str__(self):
         return str(self.organization_location)
 
+
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 def get_organization_image_upload_path(instance, filename):
-    organization_name = instance.organization.organization.organization_name.replace(' ', '_')
-    location_address_line_2 = instance.organization.address_line_2.replace(' ', '_')
-    return f"organization/{organization_name}/{location_address_line_2}/{filename}"
+        if DEBUG:
+            organization_name = instance.organization.organization.organization_name.replace(' ', '_')
+            location_address_line_2 = instance.organization.address_line_2.replace(' ', '_')
+            return f"organization/{organization_name}/{location_address_line_2}/{filename}"
+        else:
+            organization_name = instance.organization.organization.organization_name.replace(' ', '_')
+            location_address_line_2 = instance.organization.address_line_2.replace(' ', '_')
+            return os.path.join('organization', organization_name, location_address_line_2, filename) 
 
 class OrganizationGameImages(models.Model):
     organization = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=get_organization_image_upload_path, null=True, blank=True)
-    is_active = models.BooleanField(default = True) 
+    is_active = models.BooleanField(default = True)
 
 class Court(models.Model):
     name = models.CharField(max_length=100)
@@ -225,7 +232,7 @@ class Court(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.game}"
-    
+
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')

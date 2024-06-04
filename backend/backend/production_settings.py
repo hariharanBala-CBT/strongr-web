@@ -155,18 +155,11 @@ LOGIN_URL = '/orglogin/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-# STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [
     BASE_DIR / 'base/static',
     BASE_DIR / 'frontend/build/static',
 ]
 
-# Define STATIC_ROOT for local storage
-# STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# MEDIA_URL = '/images/'
-# MEDIA_ROOT = BASE_DIR / 'static/images'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -178,12 +171,6 @@ AWS_STORAGE_BUCKET_NAME = 'cbtstrongr'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
-
-# Static files storage using S3
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-# Media files storage using S3
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 AWS_S3_URL_PROTOCOL = 'https'
 AWS_S3_USE_SSL = True
