@@ -212,10 +212,12 @@ def get_organization_image_upload_path(instance, filename):
         if DEBUG == False:
             organization_name = instance.organization.organization.organization_name.replace(' ', '_')
             location_address_line_2 = instance.organization.address_line_2.replace(' ', '_')
+            print('production_images_path')
             return f"organization/{organization_name}/{location_address_line_2}/{filename}"
         else:
             organization_name = instance.organization.organization.organization_name.replace(' ', '_')
             location_address_line_2 = instance.organization.address_line_2.replace(' ', '_')
+            print('local_images_path')
             return os.path.join('organization', organization_name, location_address_line_2, filename) 
 
 class OrganizationGameImages(models.Model):

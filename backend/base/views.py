@@ -616,7 +616,6 @@ class OrganizationLocationImageListView(ListView):
         return context
 
 
-from django.core.files.storage import default_storage
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationImageView(CreateView):
     model = OrganizationGameImages
@@ -627,20 +626,38 @@ class OrganizationLocationImageView(CreateView):
         form_instance = form.save(commit=False)
         location_pk = self.kwargs.get('locationpk')
         form_instance.organization = OrganizationLocation.objects.get(pk=location_pk)
-        uploaded_image = form.cleaned_data['image']
-        file_path = get_organization_image_upload_path(form_instance, uploaded_image.name)
-        s3_path = default_storage.save(file_path, uploaded_image)
-        form_instance.image = s3_path
         form_instance.save()
         messages.success(self.request, 'Image created successfully.')
-        return redirect(reverse('mainview', kwargs={'location_pk': location_pk}))
+        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.request.session.get('location_pk')
         return context
 
+# from django.core.files.storage import default_storage
+# @method_decorator(login_required, name='dispatch')
+# class OrganizationLocationImageView(CreateView):
+#     model = OrganizationGameImages
+#     template_name = 'add_images.html'
+#     form_class = OrganizationGameImagesForm
 
+#     def form_valid(self, form):
+#         form_instance = form.save(commit=False)
+#         location_pk = self.kwargs.get('locationpk')
+#         form_instance.organization = OrganizationLocation.objects.get(pk=location_pk)
+#         uploaded_image = form.cleaned_data['image']
+#         file_path = get_organization_image_upload_path(form_instance, uploaded_image.name)
+#         s3_path = default_storage.save(file_path, uploaded_image)
+#         form_instance.image = s3_path
+#         form_instance.save()
+#         messages.success(self.request, 'Image created successfully.')
+#         return redirect(reverse('mainview', kwargs={'location_pk': location_pk}))
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['locationpk'] = self.request.session.get('location_pk')
+#         return context
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationImageView(UpdateView):
     model = OrganizationGameImages
