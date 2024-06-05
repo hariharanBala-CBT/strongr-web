@@ -18,7 +18,8 @@ load_dotenv()
 
 
 # Set DEBUG based on the environment
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DJANGO_DEBUG')
+print('DEBUG value is',DEBUG)
 if DEBUG:
     from .local_settings import *
 else:

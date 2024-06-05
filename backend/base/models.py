@@ -207,7 +207,7 @@ class OrganizationLocationWorkingDays(models.Model):
         return str(self.organization_location)
 
 
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DJANGO_DEBUG')
 def get_organization_image_upload_path(instance, filename):
         if DEBUG == False:
             organization_name = instance.organization.organization.organization_name.replace(' ', '_')
