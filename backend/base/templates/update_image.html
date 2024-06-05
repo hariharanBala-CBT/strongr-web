@@ -157,6 +157,10 @@
               Customers
             </a>   
           <div class="sb-sidenav-menu-heading">Slot</div>
+          <a class="nav-link" href="{% url 'slot-location' %}">
+            <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
+            Slots List
+        </a>
               <a class="nav-link" href="{% url 'temp-slot-location'%}">
                   <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                   Additional Slots
@@ -192,8 +196,8 @@
                   </div>
                   
                   <div class="buttons px-4 py-4" style="margin-left: 20%">
-                      <a href="{% url 'mainview' locationpk %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a>
-                      <button type="submit" onclick="openPopup(event)" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
+                    <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
+                    <button type="submit" onclick="openPopup(event)" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
                   </div>
               </form>
               </div>
@@ -310,6 +314,10 @@
                 document.getElementById("popup").style.display = "none";
                 document.getElementById("overlay").style.display = "none";
             }
+
+            function goBack() {
+            history.go(-1);
+        }
     </script>
         
   </body>

@@ -127,6 +127,10 @@ form {
                             Customers
                         </a>   
                         <div class="sb-sidenav-menu-heading">Slot</div>
+                        <a class="nav-link" href="{% url 'slot-location' %}">
+                            <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
+                            Slots List
+                        </a>
                         <a class="nav-link" href="{% url 'temp-slot-location'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                             Additional Slots
@@ -174,7 +178,7 @@ form {
                                 {{ form.days }}
                             </div>
                             <div class="buttons px-4 py-4">
-                                <a href="{% url 'slot-list' %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a>
+                                <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
                                 <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
                             </div>
                         </form>
@@ -222,6 +226,10 @@ form {
             }
 
         });
+
+        function goBack() {
+            history.go(-1);
+        }
 
     </script>
 

@@ -121,6 +121,10 @@
               Customers
             </a>   
             <div class="sb-sidenav-menu-heading">Slot</div>
+              <a class="nav-link" href="{% url 'slot-location' %}" style="color: white; background-color: rgb(68, 68, 68);">
+                <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
+                Slots List
+              </a>
               <a class="nav-link" href="{% url 'temp-slot-location'%}">
                   <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                   Additional Slots
@@ -148,7 +152,7 @@
                       <h5>Are you sure you want to delete "{{ slot.get_days_display }} -- {{ slot.start_time }} - {{ slot.end_time }}"?</h5>
                       <div style="display: flex; justify-content: space-around; margin-top: 50px;">
                         <input type="submit" class="btn btn-danger" value="Confirm Delete">
-                        <a href="{% url 'slot-list' %}" class="btn btn-secondary">Cancel</a>
+                        <a type="button" class="btn btn-secondary" onclick="goBack()">Cancel</a>
                       </div>
                     </form>
               </div>
@@ -209,6 +213,10 @@
           });
         }
       });
+      function goBack() {
+            history.go(-1);
+        }
+
     </script>
   </body>
 </html>

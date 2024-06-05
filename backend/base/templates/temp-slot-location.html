@@ -92,6 +92,10 @@
                                 Customers
                             </a>
                             <div class="sb-sidenav-menu-heading">Slot</div>
+                            <a class="nav-link" href="{% url 'slot-location' %}">
+                                <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
+                                Slots List
+                            </a>
                             <a class="nav-link" href="{% url 'temp-slot-location'%}" style="color: white; background-color: rgb(68, 68, 68);">
                                 <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                                 Additional Slots
@@ -114,7 +118,7 @@
                         <h1 class="mt-4 mb-4" style="margin-left: 40%;">Additional Slots</h1>
                         <div class="card mb-4">
                             <div class="location-card card-header">
-                                <div><i class="fas fa-map-marker-alt"></i>Locations</div>
+                                <div><i class="fas fa-map-marker-alt"></i>  Locations</div>
                             </div>
                             <div class="card-body">
                                 <form method="post">

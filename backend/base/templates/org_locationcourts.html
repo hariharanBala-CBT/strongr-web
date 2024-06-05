@@ -126,6 +126,10 @@
                             Customers
                         </a>   
                         <div class="sb-sidenav-menu-heading">Slot</div>
+                        <a class="nav-link" href="{% url 'slot-location' %}">
+                            <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
+                            Slots List
+                        </a>
                         <a class="nav-link" href="{% url 'temp-slot-location'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                             Additional Slots
@@ -171,7 +175,7 @@
                                                 <th>Court</th>
                                                 <th>Edit</th>
                                                 <th>Delete</th>
-                                                <th>Slot</th>
+                                                <!-- <th>Slot</th> -->
 
                                             </tr>
                                         </thead>
@@ -189,11 +193,11 @@
                                                             <div class="update-icon">
                                                                 <a href="{% url 'delete-court' court.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
                                                             </div>
-                                                        <td>
+                                                        <!-- <td>
                                                             <div class="update-icon">
                                                                 <a href="{% url 'multiple-slot' court.pk %}" class="btn btn-success">Create slot</a>
                                                             </div>
-                                                        </td>
+                                                        </td> -->
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -205,7 +209,6 @@
                     </div>
                     <!-- <div class="buttons px-4 py-4" style="margin-left: 40%;">
                         <div><a href="{% url 'organization_imageslist' locationpk %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a></div>
-                        <div><a href="{% url 'slot-list' %}" type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></a></div>
                     </div> -->
             </main>
             <footer class="py-4 bg-light mt-auto">

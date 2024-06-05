@@ -78,7 +78,7 @@
                             <a class="nav-link" href="{% url 'organization_locationlist'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
-                            </a>
+                            </a>                           
                             <a class="nav-link" href="{% url 'preview' %}">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                                 Preview
@@ -90,9 +90,9 @@
                             <a class="nav-link" href="{% url 'org_customers_list'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                 Customers
-                            </a>  
+                            </a>
                             <div class="sb-sidenav-menu-heading">Slot</div>
-                            <a class="nav-link" href="{% url 'slot-location' %}">
+                            <a class="nav-link" href="{% url 'slot-location' %}" style="color: white; background-color: rgb(68, 68, 68);">
                                 <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
                                 Slots List
                             </a>
@@ -100,7 +100,7 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                                 Additional Slots
                             </a>
-                            <a class="nav-link" href="{% url 'temp-deslot-location'%}" style="color: white; background-color: rgb(68, 68, 68);">
+                            <a class="nav-link" href="{% url 'temp-deslot-location'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
                                 Unavailable Slots
                             </a>
@@ -115,7 +115,7 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4 mt-4">
-                        <h1 class="mt-4 mb-4" style="margin-left: 40%;">Unavailable Slots</h1>
+                        <h1 class="mt-4 mb-4" style="margin-left: 40%;">Slot location list</h1>
                         <div class="card mb-4">
                             <div class="location-card card-header">
                                 <div><i class="fas fa-map-marker-alt"></i>  Locations</div>
@@ -130,6 +130,7 @@
                                                 <th>Area</th>
                                                 <th>City</th>
                                                 <th>Action</th>
+                                                <th>Create</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
@@ -138,6 +139,7 @@
                                                 <th>Area</th>
                                                 <th>City</th>
                                                 <th>Action</th>
+                                                <th>Create</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
@@ -146,7 +148,9 @@
                                                 <td>{{location.address_line_1}}</td>
                                                 <td>{{location.area}}</td>
                                                 <td>{{location.area.city}}</td>
-                                                <td><a href="{% url 'unavailable-slot-list' pk=location.pk %}" class="btn btn-success align-self-end" data-toggle="tooltip" title="Add Unavailable slot"><i class="fa-solid fa-plus"></i></a></td>
+                                                <td><a href="{% url 'slot-list' location.pk %}" class="btn btn-success align-self-end"data-toggle="tooltip">Slot</a></td>
+                                                <td></td>
+                                                <!-- <td><a href="{% url 'multiple-slot' location.pk %}" class="btn btn-success">Create slot</a></td> -->
                                             </tr>
                                             {% endfor%}
                                         </tbody>

@@ -138,6 +138,10 @@
                                 Customers
                             </a>   
                             <div class="sb-sidenav-menu-heading">Slot</div>
+                            <a class="nav-link" href="{% url 'slot-location' %}">
+                                <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
+                                Slots List
+                            </a>
                             <a class="nav-link" href="{% url 'temp-slot-location'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                                 Additional Slots
@@ -183,7 +187,7 @@
                                     </table>
                                 
                                     <div class="buttons text-center mt-4 mx-5">
-                                        <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2"><i class="fa-solid fa-arrow-right-long"></i></button>
+                                        <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2">Update</button>
                                     </div>
                                 
                                     <input type="hidden" name="organization" value="{{ request.user.organization.id }}">

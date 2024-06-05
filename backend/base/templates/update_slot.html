@@ -173,6 +173,10 @@ form {
                             Customers
                         </a>   
                         <div class="sb-sidenav-menu-heading">Slot</div>
+                        <a class="nav-link" href="{% url 'slot-location' %}" style="color: white; background-color: rgb(68, 68, 68);">
+                            <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
+                            Slots List
+                        </a>
                         <a class="nav-link" href="{% url 'temp-slot-location'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                             Additional Slots
@@ -239,7 +243,7 @@ form {
                             </div>
                             
                             <div class="buttons px-4 py-4" style="margin-left: 8%">
-                                <a href="{% url 'slot-list' %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a>
+                                <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
                                 <button type="submit" onclick="openPopup(event)" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
                             </div>
                         </form>
@@ -320,6 +324,11 @@ form {
             document.getElementById("popup").style.display = "none";
             document.getElementById("overlay").style.display = "none";
         }
+
+        function goBack() {
+            history.go(-1);
+        }
+
     </script>
 </body>
 

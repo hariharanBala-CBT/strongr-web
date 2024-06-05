@@ -67,12 +67,9 @@ def PhoneLoginView(request):
 
     try:
         phone = data['phone_number']
-        print('phone', phone)
         message = {'success': 'logged in successfully'}
         customer = Customer.objects.get(phone_number=phone[2:12])
-        print('customer', customer)
         user = User.objects.get(id=customer.user_id)
-        print('user', user)
 
         serializer = UserSerializerWithToken(user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -450,12 +447,9 @@ class OrganizationUpdateLocationView(UpdateView):
     form_class = OrganizationLocationForm
 
     def form_valid(self, form):
-        print("Form is valid")
         organization = get_object_or_404(Organization, user=self.request.user)
         form.instance.organization = organization
-        print("Form instance before save:", form.instance)
         form.save()
-        print("Form instance after save:", form.instance)
         self.request.session['location_pk'] = form.instance.pk
         phone_number = form.cleaned_data.get('phone_number')
 
@@ -471,7 +465,6 @@ class OrganizationUpdateLocationView(UpdateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print("Form is invalid")
         print(form.errors)
         messages.error(self.request, 'Location updated successfully.')
         return HttpResponseRedirect(reverse('mainview', kwargs={'location_pk': self.object.pk}))
@@ -585,8 +578,6 @@ class OrganizationUpdateLocationGameTypeView(UpdateView):
     def get_object(self):
         locationpk = self.kwargs.get('locationpk')
         gamepk = self.kwargs.get('gamepk')
-        print("Location PK:", locationpk)
-        print("Game PK:", gamepk)
         return get_object_or_404(OrganizationLocationGameType, organization_location__pk=locationpk, pk=gamepk)
 
     def form_valid(self, form):
@@ -775,8 +766,6 @@ class CourtUpdateView(UpdateView):
     def get_object(self):
         locationpk = self.kwargs.get('locationpk')
         courtpk = self.kwargs.get('courtpk')
-        print("Location PK:", locationpk)
-        print("Court PK:", courtpk)
         return get_object_or_404(Court,location__pk=locationpk, pk=courtpk)
 
     def form_valid(self, form):
@@ -833,48 +822,55 @@ class SlotListView(ListView):
     context_object_name = 'slots'
 
     def get_queryset(self):
-        pk = self.request.session.get('location_pk')
+        pk = self.kwargs.get('locationpk')
         return Slot.objects.filter(location_id=pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['locationpk'] = self.request.session.get('location_pk')
+        pk = self.kwargs.get('locationpk')
+        context['locationpk'] = pk
+        self.request.session['locationpk'] = pk
         return context
 
 
+@method_decorator(login_required, name='dispatch')
+class SlotLocationListView(ListView):
+    model = OrganizationLocation
+    template_name = 'slot_location.html'
+    context_object_name = 'locations'
+
+    def get_queryset(self):
+        organization = get_object_or_404(Organization, user=self.request.user)
+        return OrganizationLocation.objects.filter(organization=organization)
+
+@method_decorator(login_required, name='dispatch')
 class SlotCreateView(CreateView):
     template_name = 'add_slot.html'
     form_class = SlotForm
-    success_url = reverse_lazy('slot-list')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        location_pk = self.kwargs.get('location_pk')
         kwargs['request'] = self.request
         return kwargs
 
-    def form_invalid(self, form):
-        return self.render_to_response(
-            self.get_context_data(form=form, error=form.errors.as_text()))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['location_pk'] = self.request.session.get('location_pk')
+        return context
 
     def form_valid(self, form):
         try:
-            pk = self.request.session['location_pk']
-            location = OrganizationLocation.objects.get(pk=pk)
+            location_pk = self.request.session['location_pk']
+            location = OrganizationLocation.objects.get(pk=location_pk)
             form.instance.location = location
-            selected_day = form.cleaned_data.get('days')
-            working_day = OrganizationLocationWorkingDays.objects.get(
-                organization_location=location, days=selected_day)
-
-            if not working_day.is_active:
-                return self.render_to_response(
-                    self.get_context_data(
-                        form=form, error='Selected working day is not active'))
-            return super().form_valid(form)
         except KeyError:
-            return self.render_to_response(
-                self.get_context_data(
-                    form=form, error='Location PK not found in session'))
+            return HttpResponseRedirect(reverse_lazy('error-url'))
+        messages.success(self.request, 'Slot created successfully.')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        location_pk = self.request.session.get('location_pk')
+        return reverse('slot-list', kwargs={'locationpk': location_pk})
 
 
 class SlotUpdateView(UpdateView):
@@ -884,33 +880,52 @@ class SlotUpdateView(UpdateView):
 
     def form_invalid(self, form):
         return self.render_to_response(
-            self.get_context_data(form=form, error=form.errors.as_text()))
+            self.get_context_data(form=form, error=form.errors.as_text())
+        )
 
     def form_valid(self, form):
         selected_day = form.cleaned_data.get('days')
-        working_day = OrganizationLocationWorkingDays.objects.get(
-            organization_location=self.object.location, days=selected_day)
+        try:
+            working_day = OrganizationLocationWorkingDays.objects.get(
+                organization_location=self.object.location, days=selected_day
+            )
+            pk = self.request.session.get('locationpk')
 
-        print("working_day.work_from_time is:", working_day.work_from_time)
+            if not working_day.is_active:
+                return self.render_to_response(
+                    self.get_context_data(
+                        form=form, error='Selected working day is not active'
+                    )
+                )
+            # Save the form and update the slot
+            self.object = form.save()
+            messages.success(self.request, 'Slot updated successfully.')
+            return HttpResponseRedirect(reverse('slot-list', kwargs={'locationpk': pk}))
 
-        if not working_day.is_active:
+        except OrganizationLocationWorkingDays.DoesNotExist:
             return self.render_to_response(
                 self.get_context_data(
-                    form=form, error='Selected working day is not active'))
-
-        messages.success(self.request, 'Slot updated successfully.')
-        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
-
+                    form=form, error='Selected working day does not exist'
+                )
+            )
 
 @method_decorator(login_required, name='dispatch')
 class SlotDeleteView(DeleteView):
     model = Slot
     template_name = 'delete_slot.html'
-    success_url = reverse_lazy('slot-list')
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request,'Slot deleted successfully.')
+        messages.success(self.request, 'Slot deleted successfully.')
         return super().delete(request, *args, **kwargs)
+
+    def get_success_url(self):
+        pk = self.request.session.get('location_pk')
+        return reverse('slot-list', kwargs={'locationpk': pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.request.session.get('location_pk')
+        return context
 
 class CourtCreateView(CreateView):
     template_name = 'add_court.html'
@@ -991,7 +1006,6 @@ class TermsandConditionsView(FormView):
         organization = Organization.objects.get(user=self.request.user)
         context[
             'terms_and_conditions'] = organization.tenant.sign_up_terms_and_conditions
-        print(context)
         return context
 
 
@@ -1198,26 +1212,26 @@ class CreateMultipleSlotsView(View):
         }
         return render(request, 'ml.html', context)
 
-    def post(self, request, *args, **kwargs):
-        # Get the court_pk from URL parameters
-        court_pk = kwargs.get('court_pk')
+def post(self, request, *args, **kwargs):
+    # Get the location_pk from URL parameters
+    location_pk = kwargs.get('location_pk')
 
-        # Retrieve the court object corresponding to court_pk
-        court = get_object_or_404(
-            Court, pk=court_pk, location_id=request.session.get('location_pk'))
+    # Retrieve the court objects corresponding to the location_pk
+    courts = Court.objects.filter(location_id=location_pk)
 
-        # Get all active days for the organization location
-        active_days = OrganizationLocationWorkingDays.objects.filter(
-            organization_location=request.session.get('location_pk'),
-            is_active=True)
+    # Get all active days for the organization location
+    active_days = OrganizationLocationWorkingDays.objects.filter(
+        organization_location=location_pk,
+        is_active=True)
 
-        # Delete existing slots associated with outdated working days
-        Slot.objects.filter(court=court,
-                            location=OrganizationLocation.objects.get(
-                                pk=request.session.get('location_pk')),
-                            days__in=[day.days
-                                      for day in active_days]).delete()
+    # Delete existing slots associated with outdated working days
+    Slot.objects.filter(
+        court__location_id=location_pk,
+        days__in=[day.days for day in active_days]
+    ).delete()
 
+    # Iterate over courts
+    for court in courts:
         # Iterate over active days
         for day in active_days:
             # Get start and end time for the day from updated working days
@@ -1236,8 +1250,7 @@ class CreateMultipleSlotsView(View):
                     start_time=current_datetime.time(),
                     end_time=(current_datetime + timedelta(hours=1)).time(),
                     court=court,
-                    location=OrganizationLocation.objects.get(
-                        pk=request.session.get('location_pk')),
+                    location_id=location_pk,
                     days=day.days,
                     is_booked=False  # Assuming slots are initially not booked
                 )
@@ -1245,8 +1258,8 @@ class CreateMultipleSlotsView(View):
                 # Move to the next hour
                 current_datetime += timedelta(hours=1)
 
-        # Redirect or render as needed
-        return redirect('slot-list')
+    # Redirect or render as needed
+    return redirect('slot-list')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -1426,7 +1439,6 @@ class TempSlotListView(ListView):
     def post(self, request, *args, **kwargs):
         pk = self.kwargs.get('pk')
         id = request.POST.get('slot_id')
-        print("id is :",id)
         if id:
             try:
                 slot = AdditionalSlot.objects.get(id=id)
@@ -1495,12 +1507,9 @@ class UnavailableSlotListView(ListView):
 
     def post(self, request, *args, **kwargs):
         pk = self.kwargs.get('pk')
-        print("pk is :",pk)
         id = request.POST.get('slot_id')
-        print("id is :",id)
         if id:
             try:
-                print("entered try")
                 slot = UnavailableSlot.objects.get(id=id)
                 slot.delete()
                 messages.success(self.request, 'Deleted Unavailable slot successfully !!!')

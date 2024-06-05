@@ -53,8 +53,8 @@ function ClubDetailScreen() {
   const gameName = localStorage.getItem("selectedGame");
   const { setSelectedCourt } = useHomeContext();
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo, LoginError, userLoginSuccess } = useSelector((state) => state.userLogin);
+  // const { userInfo } = userLogin;
 
   const clubReviewCreate = useSelector((state) => state.clubReviewCreate);
   const { clubReviews } = useSelector((state) => state.clubReviews);
@@ -147,6 +147,19 @@ function ClubDetailScreen() {
       setOpenForm(true);
     }
   };
+  useEffect(() => {
+    if(LoginError){
+      toast.error('Incorrect Credentials')
+      setOpenForm(true)
+    }
+  },[LoginError])
+
+  useEffect(() => {
+    if(userLoginSuccess){
+      // toast.success('Logged in successfully')
+      setOpenForm(false)
+    }
+  },[userLoginSuccess])
 
   return (
     <div>
