@@ -129,6 +129,15 @@
         border-top: none;
     }
 
+    .sb-sidenav-toggled #layoutSidenav_nav {
+    margin-left: -250px; /* Adjust based on your sidebar width */
+}
+
+.sb-sidenav-toggled #layoutSidenav_content {
+    margin-left: 0;
+}
+
+
 </style>
 
 
@@ -322,6 +331,41 @@
     if (initialTab) {
         $('#tab-content').load(initialTab, function() {
             initFormSubmission();
+        });
+    }
+});
+
+function locationChange(select) {
+    const selectedLocation = select.value;
+    if (selectedLocation) {
+        window.location.href = `/organization/location/${selectedLocation}/`;
+    }
+}
+    </script>
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const successAlert = document.getElementById('successAlert');
+            if (successAlert) {
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 2500); // Hide after 5000ms or 5 seconds
+            }
+        });
+        
+        window.addEventListener('DOMContentLoaded', event => {
+            const datatablesSimple = document.getElementById('datatablesSimple');
+            if (datatablesSimple) {
+                new simpleDatatables.DataTable(datatablesSimple);
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', event => {
+    const sidebarToggle = document.body.querySelector('#sidebarToggle');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', event => {
+            event.preventDefault();
+            document.body.classList.toggle('sb-sidenav-toggled');
+            localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
         });
     }
 });

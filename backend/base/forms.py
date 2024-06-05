@@ -1,4 +1,5 @@
 import datetime
+import re
 from django.utils import timezone
 from django import forms
 from django.db.models.base import Model 
@@ -91,22 +92,37 @@ class OrganizationLocationForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        address_line_1 = cleaned_data.get('address_line_1')
-        address_line_2 = cleaned_data.get('address_line_2')
-        area = cleaned_data.get('area')
+        address_line_1 = cleaned_data.get('address_line_1', '')
+        address_line_2 = cleaned_data.get('address_line_2', '')
+        area = cleaned_data.get('area', '')
         pincode = cleaned_data.get('pincode')
         phone_number = cleaned_data.get('phone_number')
 
-        if OrganizationLocation.objects.filter(
-            address_line_1=address_line_1,
-            address_line_2=address_line_2,
-            area=area,
-            pincode=pincode,
-            phone_number=phone_number
-        ).exists():
-            raise ValidationError("This location already exists.")
+        # Convert to uppercase
+        address_line_1 = address_line_1.upper()
+        address_line_2 = address_line_2.upper()
+        area = str(area).upper()
+
+        # Remove spaces and special characters
+        def sanitize_string(s):
+            return re.sub(r'\W+', '', s)
+
+        address_line_1 = sanitize_string(address_line_1)
+        address_line_2 = sanitize_string(address_line_2)
+        area = sanitize_string(area)
+        pincode = sanitize_string(str(pincode))
+        phone_number = sanitize_string(str(phone_number))
+
+        combined_data = f"{address_line_1}{address_line_2}{area}{pincode}{phone_number}"
+
+        existing_entries = OrganizationLocation.objects.all()
+
+        for entry in existing_entries:
+            combined_entry_data = f"{sanitize_string(entry.address_line_1.upper())}{sanitize_string(entry.address_line_2.upper())}{sanitize_string(str(entry.area).upper())}{sanitize_string(str(entry.pincode))}{sanitize_string(str(entry.phone_number))}"
+            if combined_data == combined_entry_data:
+                raise ValidationError("This location already exists.")
         
-        return cleaned_data    
+        return cleaned_data 
                 
 class OrganizationLocationGameTypeForm(ModelForm):
 

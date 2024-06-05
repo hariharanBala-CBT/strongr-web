@@ -1,4 +1,5 @@
-{%load static%}
+{% load static %}{% load url_filters %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -186,14 +187,18 @@
                 <form id="upd-img-form" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
                   {% csrf_token %}
                   <div class="mb-3">
-                      <label for="id_image" class="form-label">Image</label>
-                      {{ form.image }}
-                      {% if form.instance.image %}
-                          <img src="{{ form.instance.image.url|fix_https }}" alt="Current Image" class="mt-3" style="max-width: 300px;">
-                      {% else %}
-                          <p>Upload a new image</p>
-                      {% endif %}
-                  </div>
+                    <label for="id_image" class="form-label">Image</label>
+                    {{ form.image }}
+                    {% if form.instance.image %}
+                        {% if "https//" in form.instance.image.url %}
+                            <img src="{{ form.instance.image.url|fix_https }}" alt="Current Image" class="mt-3" style="max-width: 300px;">
+                        {% else %}
+                            <img src="{{ form.instance.image.url }}" alt="Current Image" class="mt-3" style="max-width: 300px;">
+                        {% endif %}
+                    {% else %}
+                        <p>Upload a new image</p>
+                    {% endif %}
+                </div>
                   
                   <div class="buttons px-4 py-4" style="margin-left: 20%">
                     <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>

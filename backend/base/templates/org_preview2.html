@@ -284,7 +284,7 @@
                             Profile
                         </a>
                         <a class="nav-link" href="{% url 'organization_locationlist'  %}">
-                            <div class="sb-nav-link-icon"><i class="fa-solid fa-location-pin"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                             Locations
                         </a>
                         <a class="nav-link" href="{% url 'preview' %}" style="color: white; background-color: rgb(68, 68, 68);">
@@ -526,9 +526,13 @@
                                                 <h5><strong>Images</strong></h5>
                                                 <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
                                                     {% for image in location_item.images %}
-                                                        <img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
-                                                    {% empty %}
-                                                        <li>No images Addded</li>
+                                                        {% if "https//" in image.image.url %}
+                                                            <img src="{{ image.image.url|fix_https }}" alt="Current Image" class="mt-3" style="max-width: 300px;">
+                                                        {% else %}
+                                                            <img src="{{ image.image.url }}" alt="Current Image" class="mt-3" style="max-width: 300px;">
+                                                        {% endif %}
+                                                        {% empty %}
+                                                            <li>No images Addded</li>
                                                     {% endfor %}
                                                 </ul>
                                                 <div class="text-center mb-4">

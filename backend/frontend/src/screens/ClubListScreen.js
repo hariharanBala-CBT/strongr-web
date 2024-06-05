@@ -66,6 +66,22 @@ function ClubListScreen() {
   };
 
   useEffect(() => {
+    const fixImageUrls = () => {
+      const images = document.querySelectorAll('img');
+      images.forEach(img => {
+          const src = img.getAttribute('src');
+          if (src && src.startsWith('https//')) {
+              img.setAttribute('src', src.replace('https//', 'https://'));
+          }
+      });
+  };
+  
+  // Call the fixImageUrls function on component mount
+  fixImageUrls();
+    },[suggestedClubGameList, suggestedClubList, clubLocationDetails]);
+  
+
+  useEffect(() => {
     const storedSelectedGame = localStorage.getItem("selectedGame");
     const storedSelectedArea = localStorage.getItem("selectedArea");
     const storedSelectedDate = localStorage.getItem("selectedDate");
