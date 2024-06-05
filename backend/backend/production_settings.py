@@ -8,7 +8,7 @@ debug = os.environ.get('DJANGO_DEBUG')
 print('debug value is', debug)
 DEBUG = True
 
-ALLOWED_HOSTS = ['35.232.95.159']
+ALLOWED_HOSTS = ['*']
 
 BASE_URL = 'http://35.232.95.159'
 

@@ -1,4 +1,5 @@
-{% load static %}
+{% load static %}{% load url_filters %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -183,7 +184,7 @@
                                                     <td>
                                                         <div class="update-icon">
                                                         {% if image.image %}
-                                                            <img src="{{ image.image.url }}" alt="Image" width="70" height="70">
+                                                            <img src="{{ image.image.url|fix_https }}" alt="Image" width="70" height="70">
                                                         {% else %}
                                                             No Image
                                                         {% endif %}
