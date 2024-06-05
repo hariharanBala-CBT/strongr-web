@@ -165,11 +165,6 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/images/'
 MEDIA_ROOT = BASE_DIR / 'static/images'
 
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -189,5 +184,5 @@ AWS_S3_VERIFY = True
 # STATIC_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/static/'
 # STATICFILES_STORAGE = "storages.backends.s3.S3Storage"
 
-# MEDIA_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/media/'
-# DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
+MEDIA_URL = f'{AWS_S3_URL_PROTOCOL}://{AWS_S3_CUSTOM_DOMAIN}/media/'
+DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
