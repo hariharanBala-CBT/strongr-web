@@ -26,6 +26,12 @@ function ResetPassword() {
     }
   }, [navigate, resetPsuccess]);
 
+  useEffect(() => {
+    if (!userInfo) {
+      navigate('/')
+    }
+  }, [navigate,userInfo]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     e.preventDefault();
@@ -74,7 +80,7 @@ function ResetPassword() {
               }}
             />
 
-            <label>Password</label>
+            <label>Confirm Password</label>
             <input
               required
               type="password"

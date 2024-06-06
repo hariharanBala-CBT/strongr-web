@@ -15,6 +15,12 @@ import OTPInput from "react-otp-input";
 import { CircularProgress } from "@mui/material";
 import { LinkContainer } from "react-router-bootstrap";
 
+const linkStyle = {
+  textDecoration: 'underline',
+  color : 'purple',
+  cursor : 'pointer'
+}
+
 function PhoneNumberScreen() {
   const [showOTPInput, setShowOTPInput] = useState(false);
   const [otp, setOTP] = useState("");
@@ -37,26 +43,6 @@ function PhoneNumberScreen() {
     }
   }, [navigate, userInfo, redirect]);
 
-  // const handleGenerateOTP = (e) => {
-  //   e.preventDefault();
-  //   if (!ph) {
-  //     alert("Please enter a phone number!");
-  //     return;
-  //   }
-  //   setPhoneNumber(ph);
-  //   dispatch(fetchOTP(ph));
-  //   setShowOTPInput(true);
-  //   onCaptchVerify();
-  // };
-
-  // const handleLogin = (e) => {
-  //   e.preventDefault();
-  //   if (!otp) {
-  //     alert("Please enter the OTP!");
-  //     return;
-  //   }
-  //   dispatch(login(phoneNumber, otp));
-  // };
 
   const renderInput = (inputProps) => {
     return (
@@ -95,7 +81,7 @@ function PhoneNumberScreen() {
     setLoading(true);
     onCaptchVerify();
     // setShowOTPInput(true);
-    const appVerifier = window.recaptchaVerifier;  
+    const appVerifier = window.recaptchaVerifier;
     const formatPh = "+" + ph;
     signInWithPhoneNumber(auth, formatPh, appVerifier)
       .then((confirmationResult) => {
@@ -122,7 +108,7 @@ function PhoneNumberScreen() {
     },1000)
 
   };
-  
+
 
 function onOTPVerify(e) {
   e.preventDefault();
@@ -195,11 +181,11 @@ function onOTPVerify(e) {
           </form>
           <span>
             Login through username &nbsp;
-          <LinkContainer to="/login" style={{textDecoration: 'underline', color : 'purple'}}><span>login</span></LinkContainer>
+          <LinkContainer to="/login" style={linkStyle}><span>login</span></LinkContainer>
           </span>
           <span>
             Don't have an Account?&nbsp;
-            <LinkContainer to="/signup" style={{textDecoration: 'underline', color : 'purple'}}><span>signup</span></LinkContainer>
+            <LinkContainer to="/signup" style={linkStyle}><span>signup</span></LinkContainer>
           </span>
         </div>
       </div>

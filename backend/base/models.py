@@ -5,6 +5,7 @@ import re
 
 DEBUG = os.environ.get('DJANGO_DEBUG')
 class Tenant(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     tenant_name = models.CharField(max_length=100)
     sign_up_terms_and_conditions = models.TextField()
     booking_terms_and_conditions = models.TextField()

@@ -11,6 +11,12 @@ import { USER_LOGIN_RESET } from "../constants/constants";
 // import { USER_LOGIN_RESET } from "../constants/constants";
 import { LinkContainer } from "react-router-bootstrap";
 
+const linkStyle = {
+  textDecoration: 'underline',
+  color : 'purple',
+  cursor : 'pointer'
+}
+
 function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -46,7 +52,7 @@ function LoginScreen() {
     e.preventDefault();
     dispatch(validateUser(username));
   };
-  
+
   useEffect(() => {
     if(userValidate){
       dispatch(login(username, password));
@@ -114,7 +120,7 @@ function LoginScreen() {
             Login using Phone number?&nbsp;
             <LinkContainer
               to="/phonenumberlogin"
-              style={{ textDecoration: "underline", color: "purple" }}
+              style={linkStyle}
             >
               <span>login</span>
             </LinkContainer>
@@ -124,7 +130,7 @@ function LoginScreen() {
             Dont you have an Account?&nbsp;
             <LinkContainer
               to="/signup"
-              style={{ textDecoration: "underline", color: "purple" }}
+              style={linkStyle}
             >
               <span>signup</span>
             </LinkContainer>

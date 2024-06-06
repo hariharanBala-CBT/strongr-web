@@ -24,6 +24,12 @@ const style = {
   p: 4,
 };
 
+const linkStyle = {
+  textDecoration: 'underline',
+  color : 'purple',
+  cursor : 'pointer'
+}
+
 function RegisterScreen() {
   const navigate = useNavigate();
   // const location = useLocation();
@@ -69,7 +75,7 @@ function RegisterScreen() {
     }
     dispatch(register(name, email, password, phoneNumber, otp));
   };
-  
+
   const otpGenerate = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -218,7 +224,7 @@ function RegisterScreen() {
 
           <span>
             Already have an Account?
-            <LinkContainer to="/login" style={{textDecoration: 'underline', color : 'purple'}}><span> login</span></LinkContainer>
+            <LinkContainer to="/login" style={linkStyle}><span> login</span></LinkContainer>
           </span>
 
         </div>

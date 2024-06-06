@@ -10,8 +10,8 @@ import CheckoutScreen from "./screens/CheckoutScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import UpdateprofileScreen from './screens/UpdateProfileScreen'
 import ProfileScreen from "./screens/ProfileScreen";
-import UpdatePassword from './screens/UpdatePassword'
-import PhoneNumberLoginScreen from './screens/PhoneNumberLoginScreen'
+import UpdatePassword from './screens/UpdatePassword';
+import PhoneNumberLoginScreen from './screens/PhoneNumberLoginScreen';
 import { HomeProvider } from "./context/HomeContext";
 import ClubSearchScreen from "./screens/clubSearchScreen";
 import ErrorScreen from "./screens/ErrorScreen";
@@ -34,11 +34,11 @@ function App() {
               <Route path="/signup/" element={<RegisterScreen />} />
               <Route path="/checkout/" element={<CheckoutScreen />} />
               <Route path="/profile/" element={<ProfileScreen />} />
+              <Route path="/updatepassword/" element={<UpdatePassword />} />
               <Route path="/profile/:id" element={<UpdateprofileScreen />} />
               <Route path="/club/:id" element={<ClubDetailScreen />} />
               <Route path="/bookinginfo/:id" element={<BookingInfoScreen />} />
               <Route path="/booking/:id" element={<BookingScreen />} />
-              <Route path="/updatepassword/" element={<UpdatePassword />} />
             </Routes>
           </Container>
         </HomeProvider>

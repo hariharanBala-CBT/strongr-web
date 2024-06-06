@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db.models.query import QuerySet
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -756,7 +757,7 @@ class OrganizationDeleteLocationImageView(DeleteView):
 #                 return JsonResponse({'status': 'error', 'message': 'Form validation failed.'}, status=400)
 #         except Exception as e:
 #             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    
+
 @method_decorator(login_required, name='dispatch')
 class CourtUpdateView(UpdateView):
     model = Court
@@ -953,7 +954,7 @@ class CourtCreateView(CreateView):
 
     def get_success_url(self):
             locationpk = self.request.session.get('location_pk')
-            return reverse('mainview' , kwargs={'location_pk': locationpk})        
+            return reverse('mainview' , kwargs={'location_pk': locationpk})
 
 class PreviewView(FormView):
     template_name = 'org_preview2.html'
@@ -1268,12 +1269,22 @@ class TenantEmployeeHomeView(ListView):
     template_name = 'tenantuser_page.html'
     context_object_name = 'organizations'
 
+    def get_queryset(self):
+        return Organization.objects.filter(tenant = self.request.user.id)
+
 
 @method_decorator(login_required, name='dispatch')
 class BookingListView(ListView):
     model = Booking
     template_name = 'bookings_list.html'
     context_object_name = 'bookings'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        customers = Customer.objects.filter(tenant=self.request.user.id)
+        bookings = Booking.objects.filter(user__in=customers.values_list('user', flat=True))
+        context['bookings'] = bookings
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -1282,12 +1293,8 @@ class OrganizationListView(ListView):
     template_name = 'organization_list.html'
     context_object_name = 'organizations'
 
-
-# @method_decorator(login_required, name='dispatch')
-# class LocationListView(ListView):
-#     model = Organization
-#     template_name = 'tenant_location_list.html'
-#     context_object_name = 'organizations'
+    def get_queryset(self):
+        return Organization.objects.filter(tenant = self.request.user.id)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -1296,12 +1303,18 @@ class LocationListView(ListView):
     template_name = 'tenant_location_list2.html'
     context_object_name = 'organizationlocations'
 
+    def get_queryset(self):
+        return OrganizationLocation.objects.filter(organization__tenant = self.request.user.id)
+
 
 @method_decorator(login_required, name='dispatch')
 class CancelOrganizationListView(ListView):
     model = Organization
     template_name = 'cancelled_organization.html'
     context_object_name = 'organizations'
+
+    def get_queryset(self):
+        return Organization.objects.filter(tenant = self.request.user.id)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -1310,6 +1323,9 @@ class PendingOrganizationListView(ListView):
     template_name = 'pending_organization.html'
     context_object_name = 'organizations'
 
+    def get_queryset(self):
+        return Organization.objects.filter(tenant = self.request.user.id)
+
 
 @method_decorator(login_required, name='dispatch')
 class WaitingOrganizationListView(ListView):
@@ -1317,12 +1333,18 @@ class WaitingOrganizationListView(ListView):
     template_name = 'waiting_organization.html'
     context_object_name = 'organizations'
 
+    def get_queryset(self):
+        return Organization.objects.filter(tenant = self.request.user.id)
+
 
 @method_decorator(login_required, name='dispatch')
 class ConfirmOrganizationListView(ListView):
     model = Organization
     template_name = 'confirmed_organization.html'
     context_object_name = 'organizations'
+
+    def get_queryset(self):
+        return Organization.objects.filter(tenant = self.request.user.id)
 
 
 class TenantOrganizationPreviewView(DetailView):
@@ -1389,10 +1411,14 @@ class TenantsCustomerlist(LoginRequiredMixin, ListView):
     login_url = '/orglogin/'
 
     def get_queryset(self):
-        tenant = Tenant.objects.get(id = self.request.user.id)
+        origin = self.request.META.get("HTTP_ORIGIN")
+        print(origin)
+        user_object = User.objects.get(id = self.request.user.id)
+        tenant_object = Tenant.objects.get(user = user_object)
         customers = Customer.objects.filter(
-            tenant = tenant)
+            tenant = tenant_object)
         return customers
+
 class AddMultipleTempSlotsView(View):
     template_name = 'add_temp_slot.html'
 

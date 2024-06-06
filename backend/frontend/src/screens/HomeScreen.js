@@ -136,7 +136,7 @@ function HomeScreen(history) {
       <Toaster />
       <div className="banner">
         <video autoPlay muted loop id="myVideo">
-          <source src="/videos/sample-video.mp4" type="video/mp4" />
+          <source src="https://cbtstrongr.s3.amazonaws.com/videos/sample-video.mp4"  type="video/mp4" />
         </video>
         <div className="content">
           <h1>Fuel your spirit, lit your soul</h1>

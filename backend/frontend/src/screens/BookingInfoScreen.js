@@ -27,7 +27,7 @@ import toast, { Toaster } from "react-hot-toast";
 import Footer from "../components/Footer";
 // import SlotPicker from "slotpicker";
 
-const style = {
+const boxStyle = {
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -474,11 +474,11 @@ function BookingInfoScreen() {
         aria-describedby="modal-modal-description"
       >
         {loader ? (
-          <Box sx={style} className="otp-loader">
+          <Box sx={boxStyle} className="otp-loader">
             <CircularProgress />
           </Box>
         ) : (
-          <Box sx={style}>
+          <Box sx={boxStyle}>
             <Alert severity="info">You are one step away from booking</Alert>
             <form onSubmit={loginAndRedirect} className="booking-login-form">
               <h2 className="login-title">Login</h2>

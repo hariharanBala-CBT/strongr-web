@@ -15,6 +15,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { RESET_PASSWORD_RESET, USER_UPDATE_PROFILE_RESET } from "../constants/constants";
 import OTPInput, { ResendOTP } from "otp-input-react";
 import toast, { Toaster } from 'react-hot-toast';
+import { LinkContainer } from "react-router-bootstrap";
 
 const style = {
   position: "absolute",
@@ -27,6 +28,12 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+
+const linkStyle = {
+  textDecoration: 'underline',
+  color : 'purple',
+  cursor : 'pointer'
+}
 
 function UpdateprofileScreen() {
   const dispatch = useDispatch();
@@ -76,12 +83,6 @@ function UpdateprofileScreen() {
     dispatch(generateOTP(email));
   }
 
-  useEffect(() => {
-    if (!otpLoading) {
-      setLoader(false);
-    }
-  }, [otpLoading]);
-
   const updateCustomer = (e) => {
     e.preventDefault();
     dispatch(
@@ -91,9 +92,15 @@ function UpdateprofileScreen() {
         email: email,
         phone: phone,
         otp: otp,
-      })
-    );
-  };
+        })
+        );
+        };
+
+  useEffect(() => {
+    if (!otpLoading) {
+      setLoader(false);
+    }
+  }, [otpLoading]);
 
   useEffect(() => {
     if (userUpdateSuccess) {
@@ -173,14 +180,14 @@ function UpdateprofileScreen() {
                 />
               </div>
             )}
-          
+
           <span>
             Want to update your password?&nbsp;
-            <a href="/updatepassword/">Update Password</a>
+            <LinkContainer to="/updatepassword" style={linkStyle}><span> update password</span></LinkContainer>
           </span>
 
           </form>
-          
+
           <Modal
             open={openForm}
             onClose={() => setOpenForm(false)}
