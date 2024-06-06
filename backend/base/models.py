@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 import os
+import re
 
+DEBUG = os.environ.get('DJANGO_DEBUG')
 class Tenant(models.Model):
     tenant_name = models.CharField(max_length=100)
     sign_up_terms_and_conditions = models.TextField()
@@ -207,18 +209,20 @@ class OrganizationLocationWorkingDays(models.Model):
         return str(self.organization_location)
 
 
-DEBUG = os.environ.get('DJANGO_DEBUG')
+def replace_special_chars(text):
+    return re.sub(r'\W+', '_', text)
+
 def get_organization_image_upload_path(instance, filename):
-        if DEBUG == False:
-            organization_name = instance.organization.organization.organization_name.replace(' ', '_')
-            location_address_line_2 = instance.organization.address_line_2.replace(' ', '_')
-            print('production_images_path')
-            return f"organization/{organization_name}/{location_address_line_2}/{filename}"
-        else:
-            organization_name = instance.organization.organization.organization_name.replace(' ', '_')
-            location_address_line_2 = instance.organization.address_line_2.replace(' ', '_')
-            print('local_images_path')
-            return os.path.join('organization', organization_name, location_address_line_2, filename) 
+    if DEBUG == 'True':
+        organization_name = replace_special_chars(instance.organization.organization.organization_name)
+        location_address_line_2 = replace_special_chars(instance.organization.address_line_2)
+        print('local_images_path')
+        return os.path.join('organization', organization_name, location_address_line_2, filename)
+    else:
+        organization_name = replace_special_chars(instance.organization.organization.organization_name)
+        location_address_line_2 = replace_special_chars(instance.organization.address_line_2)
+        print('production_images_path')
+        return f"organization/{organization_name}/{location_address_line_2}/{filename}"
 
 class OrganizationGameImages(models.Model):
     organization = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)

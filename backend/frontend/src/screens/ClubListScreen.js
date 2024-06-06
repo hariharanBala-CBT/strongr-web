@@ -46,9 +46,7 @@ function ClubListScreen() {
   const { clubFilterLoading, clubLocationDetails } = useSelector(
     (state) => state.filterClubLocations
   );
-  const { suggestedClubList } = useSelector(
-    (state) => state.suggestedClubs
-  );
+  const { suggestedClubList } = useSelector((state) => state.suggestedClubs);
   const { suggestedClubGameList } = useSelector(
     (state) => state.suggestedClubsGame
   );
@@ -67,19 +65,17 @@ function ClubListScreen() {
 
   useEffect(() => {
     const fixImageUrls = () => {
-      const images = document.querySelectorAll('img');
-      images.forEach(img => {
-          const src = img.getAttribute('src');
-          if (src && src.startsWith('https//')) {
-              img.setAttribute('src', src.replace('https//', 'https://'));
-          }
+      const images = document.querySelectorAll("img");
+      images.forEach((img) => {
+        const src = img.getAttribute("src");
+        if (src && src.startsWith("https//")) {
+          img.setAttribute("src", src.replace("https//", "https://"));
+        }
       });
-  };
-  
-  // Call the fixImageUrls function on component mount
-  fixImageUrls();
-    },[suggestedClubGameList, suggestedClubList, clubLocationDetails]);
-  
+    };
+
+    fixImageUrls();
+  }, [suggestedClubGameList, suggestedClubList, clubLocationDetails]);
 
   useEffect(() => {
     const storedSelectedGame = localStorage.getItem("selectedGame");
@@ -150,7 +146,7 @@ function ClubListScreen() {
   }, [areaError, gameError]);
 
   useEffect(() => {
-    if ( areaName !== undefined && gameName !== undefined) {
+    if (areaName !== undefined && gameName !== undefined) {
       dispatch(listSuggestedClub(areaName));
       dispatch(listSuggestedClubGame(gameName));
     }
@@ -197,7 +193,12 @@ function ClubListScreen() {
               />
             )}
 
-            <DateInput id="date" label="Date" value={date} onChange={handleDateChange} />
+            <DateInput
+              id="date"
+              label="Date"
+              value={date}
+              onChange={handleDateChange}
+            />
           </div>
         </form>
       </div>
@@ -205,7 +206,7 @@ function ClubListScreen() {
         {clubFilterLoading ? (
           <CircularProgress />
         ) : (
-          clubLocationDetails && <Club clubs={clubLocationDetails} /> 
+          clubLocationDetails && <Club clubs={clubLocationDetails} />
         )}
       </div>
       {clubLocationDetails?.length === 0 && suggestedClubList?.length > 0 && (

@@ -62,6 +62,20 @@ function BookingScreen() {
     }
   }, [success, dispatch]);
 
+  useEffect(() => {
+    const fixImageUrls = () => {
+      const images = document.querySelectorAll("img");
+      images.forEach((img) => {
+        const src = img.getAttribute("src");
+        if (src && src.startsWith("https//")) {
+          img.setAttribute("src", src.replace("https//", "https://"));
+        }
+      });
+    };
+
+    fixImageUrls();
+  }, [bookingDetails]);
+
   return (
     <div>
       <Header location="nav-all" />
@@ -102,8 +116,9 @@ function BookingScreen() {
                   <>
                     <strong>Time: </strong>
                     <span>
-                      ({bookingDetails?.additional_slot?.start_time?.slice(0, 5)}-
-                      {bookingDetails?.additional_slot?.end_time?.slice(0, 5)})
+                      (
+                      {bookingDetails?.additional_slot?.start_time?.slice(0, 5)}
+                      -{bookingDetails?.additional_slot?.end_time?.slice(0, 5)})
                     </span>
                   </>
                 ) : (

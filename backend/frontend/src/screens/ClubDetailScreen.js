@@ -53,16 +53,16 @@ function ClubDetailScreen() {
   const gameName = localStorage.getItem("selectedGame");
   const { setSelectedCourt } = useHomeContext();
 
-  const { userInfo, LoginError, userLoginSuccess } = useSelector((state) => state.userLogin);
+  const { userInfo, LoginError, userLoginSuccess } = useSelector(
+    (state) => state.userLogin
+  );
   // const { userInfo } = userLogin;
 
   const clubReviewCreate = useSelector((state) => state.clubReviewCreate);
   const { clubReviews } = useSelector((state) => state.clubReviews);
 
-  const {
-    loading: loadingclubReview,
-    success: successclubReview,
-  } = clubReviewCreate;
+  const { loading: loadingclubReview, success: successclubReview } =
+    clubReviewCreate;
 
   const loginAndRedirect = (e) => {
     e.preventDefault();
@@ -148,18 +148,32 @@ function ClubDetailScreen() {
     }
   };
   useEffect(() => {
-    if(LoginError){
-      toast.error('Incorrect Credentials')
-      setOpenForm(true)
+    if (LoginError) {
+      toast.error("Incorrect Credentials");
+      setOpenForm(true);
     }
-  },[LoginError])
+  }, [LoginError]);
 
   useEffect(() => {
-    if(userLoginSuccess){
+    if (userLoginSuccess) {
       // toast.success('Logged in successfully')
-      setOpenForm(false)
+      setOpenForm(false);
     }
-  },[userLoginSuccess])
+  }, [userLoginSuccess]);
+
+  useEffect(() => {
+    const fixImageUrls = () => {
+      const images = document.querySelectorAll("img");
+      images.forEach((img) => {
+        const src = img.getAttribute("src");
+        if (src && src.startsWith("https//")) {
+          img.setAttribute("src", src.replace("https//", "https://"));
+        }
+      });
+    };
+
+    fixImageUrls();
+  }, [clubImage]);
 
   return (
     <div>

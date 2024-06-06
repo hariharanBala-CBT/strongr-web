@@ -1,11 +1,14 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-$_hzgjvbbs06b-g-x3ra&f!2ck6kmbs%g+-xchhjprnl16+_77'
 debug = os.environ.get('DJANGO_DEBUG')
-print('debug value is', debug)
+print('debug value in prod sett. is', debug)
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']

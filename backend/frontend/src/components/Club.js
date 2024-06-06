@@ -8,15 +8,6 @@ import { useNavigate } from "react-router-dom";
 
 function Club({ clubs }) {
   const navigate = useNavigate();
-  // const [isButtonVisible, setButtonVisibility] = useState(false);
-
-  // const showButton = () => {
-  //   setButtonVisibility(true);
-  // };
-
-  // const hideButton = () => {
-  //   setButtonVisibility(false);
-  // };
 
   const handleViewDetails = (club) => {
     navigate(`/club/${club.id}`);
@@ -28,19 +19,8 @@ function Club({ clubs }) {
         clubs.map((club) => (
           <div className="flip-card" onClick={() => handleViewDetails(club)}>
             <div className="flip-card-inner">
-              <Card
-                key={club.id}
-                // onMouseEnter={showButton}
-                // onMouseLeave={hideButton}
-                className="flip-card-front"
-              >
+              <Card key={club.id} className="flip-card-front">
                 <div className="flip-card-front">
-                  {/* {isButtonVisible && (
-              <LinkContainer to={`/club/${club.id}`}>
-                <Button variant="outline-dark" onClick={() => handleViewDetails(club)}>View Details</Button>
-              </LinkContainer>
-            )} */}
-
                   <Card.Img
                     variant="top"
                     src={club && club?.organization_images}
@@ -51,7 +31,6 @@ function Club({ clubs }) {
                   <Card.Body>
                     <Card.Title>
                       {club.organization.organization_name}
-                      {/* <small className="text-muted">500/hr</small> */}
                     </Card.Title>
                     {/* <Card.Text
                       style={{ textDecoration: "none", color: "gray" }}
@@ -69,38 +48,29 @@ function Club({ clubs }) {
                   </Card.Body>
                 </div>
               </Card>
-              <Card
-                key={club.id}
-                // onMouseEnter={showButton}
-                // onMouseLeave={hideButton}
-                className="flip-card-back"
-              >
-                  <Card.Body className="content">
-                    <Card.Title>
-                      {club.organization.organization_name}
-                    </Card.Title>
-                    <Card.Text
-                      style={{ textDecoration: "none", color: "gray" }}
-                    >
-                      {club.numRatings >= 0 && (
-                        <Rating
-                          value={club.rating}
-                          text={`${club.numRatings} reviews`}
-                          color={"#f8e825"}
-                        />
-                      )}
+              <Card key={club.id} className="flip-card-back">
+                <Card.Body className="content">
+                  <Card.Title>{club.organization.organization_name}</Card.Title>
+                  <Card.Text style={{ textDecoration: "none", color: "gray" }}>
+                    {club.numRatings >= 0 && (
+                      <Rating
+                        value={club.rating}
+                        text={`${club.numRatings} reviews`}
+                        color={"#f8e825"}
+                      />
+                    )}
 
-                      <div>{club.address_line_1}</div>
-                      <strong>{club?.area?.area_name}</strong>
-                      <Button
-                        variant="outline-dark"
-                        onClick={() => handleViewDetails(club)}
-                      >
-                        View Details
-                      </Button>
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
+                    <div>{club.address_line_1}</div>
+                    <strong>{club?.area?.area_name}</strong>
+                    <Button
+                      variant="outline-dark"
+                      onClick={() => handleViewDetails(club)}
+                    >
+                      View Details
+                    </Button>
+                  </Card.Text>
+                </Card.Body>
+              </Card>
             </div>
           </div>
         ))}
