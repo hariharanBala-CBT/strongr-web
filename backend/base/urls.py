@@ -7,7 +7,7 @@ urlpatterns = [
      path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
      path('login/phone/', PhoneLoginView, name='phone_login'),
      path('register/', registerUser, name='register'),
-     path('home/', TemplateView.as_view(template_name = 'getstarted.html'), name='home_page'), 
+     path('home/', TemplateView.as_view(template_name = 'getstarted.html'), name='home_page'),
      path('orgsignup/', OrganizationSignupView.as_view(), name='signup'),
      path('orglogin/', LoginView.as_view(), name='login'),
      path('logout/', LogoutView.as_view(), name='logout'),
@@ -64,8 +64,8 @@ urlpatterns = [
      path('organizations/<int:organization_id>/change_status/<int:new_status>/', ChangeOrganizationStatusView.as_view(), name='change_organization_status'),
      path('organizationlocation/<int:location_id>/change_status/<int:new_status>/', ChangeOrganizationLocationStatusView.as_view(), name='change_location_status'),
      path('booking_list/' ,BookingListView.as_view(),name='booking_list'),
-    
-     
+
+
      path('approvallist/' ,ApprovalListView.as_view(),name='approval_list'),
      path('user/' ,TenantEmployeeHomeView.as_view(), name='tenantuser_page'),
      path('organization_list/' ,OrganizationListView.as_view(),name='organization_list'),
@@ -81,10 +81,10 @@ urlpatterns = [
      # path('success/', TemplateView.as_view(template_name = 'success.html'), name='success'),
      # path('reject/', TemplateView.as_view(template_name = 'reject.html'), name='reject'),
      path('change-password/', ChangePasswordView.as_view(), name='change_password'),
-     
-     # path('signup/', TemplateView.as_view(template_name = 'signup.html'), name='signup'), 
+
+     # path('signup/', TemplateView.as_view(template_name = 'signup.html'), name='signup'),
      # path ('org-create/', TemplateView.as_view(template_name = 'org_createlocation.html'),name='org_create'),
-     
+
      path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
      path('password-reset-confirm/<uidb64>/<token>/',
           auth_views.PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'),

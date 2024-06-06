@@ -13,7 +13,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import UpdatePassword from './screens/UpdatePassword';
 import PhoneNumberLoginScreen from './screens/PhoneNumberLoginScreen';
 import { HomeProvider } from "./context/HomeContext";
-import ClubSearchScreen from "./screens/clubSearchScreen";
+import ClubSearchScreen from "./screens/ClubSearchScreen";
 import ErrorScreen from "./screens/ErrorScreen";
 
 
@@ -30,6 +30,7 @@ function App() {
               <Route path="/clubs/" element={<ClubListScreen />} />
               <Route path="/clubsearch/" element={<ClubSearchScreen/>} />
               <Route path="/login/" element={<LoginScreen />} />
+              <Route path="/updatepassword/" element={<UpdatePassword />} />
               <Route path="/phonenumberlogin/" element={<PhoneNumberLoginScreen />} />
               <Route path="/signup/" element={<RegisterScreen />} />
               <Route path="/checkout/" element={<CheckoutScreen />} />

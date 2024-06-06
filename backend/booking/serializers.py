@@ -180,7 +180,6 @@ class ClubSerializerWithImages(serializers.ModelSerializer):
 
     def get_organization_images(self, obj):
         try:
-            print("entered image try")
             organization_location = obj
             organization_game_images = OrganizationGameImages.objects.filter(organization=organization_location).first()
             if organization_game_images:

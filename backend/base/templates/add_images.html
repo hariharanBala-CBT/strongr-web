@@ -118,7 +118,7 @@
             <a class="nav-link" href="{% url 'org_customers_list'%}">
               <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
               Customers
-            </a>   
+            </a>
            <div class="sb-sidenav-menu-heading">Slot</div>
               <a class="nav-link" href="{% url 'slot-location' %}">
                 <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
@@ -152,7 +152,7 @@
                   <label for="id_image">Image<span class="text-danger">*</span></label>
                   {{ form.image }}
                   <div class="buttons px-4 py-4" style="margin-left: 20%">
-                      <a href="{% url 'organization_imageslist' locationpk%}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a>
+                    <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
                       <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
                   </div>
               </form>
@@ -182,18 +182,18 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       crossorigin="anonymous"
     ></script>
-     
+
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
       crossorigin="anonymous"
     ></script>
-     
-      
+
+
     <script
       src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
       crossorigin="anonymous"
     ></script>
-      
+
 
     <script>
       window.addEventListener("DOMContentLoaded", (event) => {
@@ -219,6 +219,9 @@
           });
         }
       });
+      function goBack() {
+            history.go(-1);
+        }
     </script>
   </body>
 </html>

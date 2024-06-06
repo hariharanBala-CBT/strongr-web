@@ -6,16 +6,17 @@ import { Toaster } from "react-hot-toast";
 import { Form } from "react-bootstrap";
 import { listOrganizations, RecentSearch } from "../actions/actions"; // Import RecentSearch
 import { useHomeContext } from "../context/HomeContext";
-import Club  from '../components/Club'
+import Club from "../components/Club";
 import Footer from "../components/Footer";
 
 function ClubSearchScreen() {
   const { keyword, setKeyword } = useHomeContext();
   const dispatch = useDispatch();
 
-  const { filteredClubLocations } = useSelector((state) => state.listOrganizations);
-  const { filteredData } = useSelector((state) => state.RecentSearch);  
-
+  const { filteredClubLocations } = useSelector(
+    (state) => state.listOrganizations
+  );
+  const { filteredData } = useSelector((state) => state.RecentSearch);
 
   const [recentlySearchedKeywords, setRecentlySearchedKeywords] = useState([]);
 
@@ -27,11 +28,27 @@ function ClubSearchScreen() {
         ...recentlySearchedKeywords.filter((k) => k !== keyword).slice(0, 3),
       ];
       setRecentlySearchedKeywords(updatedKeywords);
-      localStorage.setItem("recentlySearchedKeywords", JSON.stringify(updatedKeywords));
+      localStorage.setItem(
+        "recentlySearchedKeywords",
+        JSON.stringify(updatedKeywords)
+      );
 
       dispatch(listOrganizations(keyword));
     }
   };
+  useEffect(() => {
+    const fixImageUrls = () => {
+      const images = document.querySelectorAll("img");
+      images.forEach((img) => {
+        const src = img.getAttribute("src");
+        if (src && src.startsWith("https//")) {
+          img.setAttribute("src", src.replace("https//", "https://"));
+        }
+      });
+    };
+
+    fixImageUrls();
+  }, [filteredClubLocations, filteredData]);
 
   useEffect(() => {
     const storedKeywords = localStorage.getItem("recentlySearchedKeywords");
@@ -54,7 +71,10 @@ function ClubSearchScreen() {
       ...recentlySearchedKeywords.filter((k) => k !== clubId).slice(0, 3),
     ];
     setRecentlySearchedKeywords(updatedKeywords);
-    localStorage.setItem("recentlySearchedKeywords", JSON.stringify(updatedKeywords));
+    localStorage.setItem(
+      "recentlySearchedKeywords",
+      JSON.stringify(updatedKeywords)
+    );
     dispatch(listOrganizations(clubId));
   };
 
@@ -89,13 +109,10 @@ function ClubSearchScreen() {
       {filteredData?.length > 0 && (
         <div className="recently-searched">
           <h2>Recently Searched:</h2>
-          <Club
-            clubs={filteredData} 
-            onClick={handleClubClick}
-          />
+          <Club clubs={filteredData} onClick={handleClubClick} />
         </div>
       )}
-      <Footer name="club-search"/>
+      <Footer name="club-search" />
     </div>
   );
 }

@@ -16,7 +16,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-        
+
     </head>
     <style>
         .preview {
@@ -29,11 +29,11 @@
         }
         #successAlert {
             position: fixed;
-            top: 70px; 
+            top: 70px;
             left: 85%;
             transform: translateX(-50%);
             z-index: 9999;
-            width: 90%; 
+            width: 90%;
             max-width: 400px;
             height: 60px;
         }
@@ -41,6 +41,34 @@
         #successAlert p {
             text-align: center;
             margin: 0;
+        }
+        .info-icon {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .note {
+            display: none;
+            position: absolute;
+            top: 25px;
+            left: 0;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 1000;
+            width: 200px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        .note::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            border-width: 0 10px 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent #f9f9f9 transparent;
         }
       </style>
     <body class="sb-nav-fixed">
@@ -79,7 +107,7 @@
                             <a class="nav-link" href="{% url 'organization_locationlist'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
-                            </a>                           
+                            </a>
                             <a class="nav-link" href="{% url 'preview' %}">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                                 Preview
@@ -131,7 +159,9 @@
                                                 <th>Area</th>
                                                 <th>City</th>
                                                 <th>Action</th>
-                                                <th>Create</th>
+                                                <th>Create      <a onclick="toggleNote()"><i class="fa-solid fa-circle-info" style="color: #2a3fb9;"></i></a>
+                                                    <div id="note" class="note">Default slots for working days will be created.</div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tfoot>
@@ -149,9 +179,10 @@
                                                 <td>{{location.address_line_1}}</td>
                                                 <td>{{location.area}}</td>
                                                 <td>{{location.area.city}}</td>
-                                                <td><a href="{% url 'slot-list' location.pk %}" class="btn btn-success align-self-end"data-toggle="tooltip">Slot</a></td>
-                                                <td></td>
-                                                <!-- <td><a href="{% url 'multiple-slot' location.pk %}" class="btn btn-success">Create slot</a></td> -->
+                                                <td><a href="{% url 'slot-list' location.pk %}" class="btn btn-success align-self-end"data-toggle="tooltip">List</a></td>
+                                                <td>
+                                                    <a href="{% url 'multiple-slot' location.pk %}" class="btn btn-success custom-tooltip">Create slot</a>
+                                                </td>
                                             </tr>
                                             {% endfor%}
                                         </tbody>
@@ -176,15 +207,15 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-         
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-         
-          
+
+
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-          
+
 
         <script>
-        window.addEventListener('DOMContentLoaded', event => {
+            window.addEventListener('DOMContentLoaded', event => {
 
                 const datatablesSimple = document.getElementById('datatablesSimple');
                 if (datatablesSimple) {
@@ -192,29 +223,26 @@
                 }
             });
 
-        window.addEventListener('DOMContentLoaded', event => {
+            window.addEventListener('DOMContentLoaded', event => {
 
-          // Toggle the side navigation
-          const sidebarToggle = document.body.querySelector('#sidebarToggle');
-          if (sidebarToggle) {
-              sidebarToggle.addEventListener('click', event => {
-                  event.preventDefault();
-                  document.body.classList.toggle('sb-sidenav-toggled');
-                  localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-              });
-          }
-
-          });
-        </script>
-        <script>
-            window.addEventListener('DOMContentLoaded', (event) => {
-                const successAlert = document.getElementById('successAlert');
-                if (successAlert) {
-                    setTimeout(() => {
-                        successAlert.style.display = 'none';
-                    }, 2500); // Hide after 5000ms or 5 seconds
+                const sidebarToggle = document.body.querySelector('#sidebarToggle');
+                if (sidebarToggle) {
+                    sidebarToggle.addEventListener('click', event => {
+                        event.preventDefault();
+                        document.body.classList.toggle('sb-sidenav-toggled');
+                        localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+                    });
                 }
+
             });
+            function toggleNote() {
+                var note = document.getElementById('note');
+                if (note.style.display === 'none' || note.style.display === '') {
+                    note.style.display = 'block';
+                } else {
+                    note.style.display = 'none';
+                }
+            }
         </script>
     </body>
 </html>

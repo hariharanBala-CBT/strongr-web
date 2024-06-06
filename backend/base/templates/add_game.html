@@ -184,7 +184,7 @@
                   </table>
 
                   <div class="buttons px-4 py-4" style="margin-left: 20%">
-                    <a  href="{% url 'organization_locationgamelist' locationpk %}"  class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a>
+                    <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
                     <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
                   </div>
                 </form>
@@ -222,7 +222,7 @@
       src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
       crossorigin="anonymous"
     ></script>
-    
+
     <script>
       window.addEventListener("DOMContentLoaded", (event) => {
 
@@ -246,6 +246,9 @@
           });
         }
       });
+      function goBack() {
+            history.go(-1);
+        }
     </script>
   </body>
 </html>

@@ -1205,7 +1205,7 @@ class CreateMultipleSlotsView(View):
     def get(self, request, *args, **kwargs):
         pk = request.session.get('location_pk')
         courts = Court.objects.filter(location_id=pk)
-        form = SlotForm()  # Instantiate your SlotForm
+        form = SlotForm()
         context = {
             'courts': courts,
             'form': form,
@@ -1213,55 +1213,39 @@ class CreateMultipleSlotsView(View):
         }
         return render(request, 'ml.html', context)
 
-def post(self, request, *args, **kwargs):
-    # Get the location_pk from URL parameters
-    location_pk = kwargs.get('location_pk')
+    def post(self, request, *args, **kwargs):
+        location_pk = kwargs.get('location_pk')
 
-    # Retrieve the court objects corresponding to the location_pk
-    courts = Court.objects.filter(location_id=location_pk)
+        courts = Court.objects.filter(location_id=location_pk)
 
-    # Get all active days for the organization location
-    active_days = OrganizationLocationWorkingDays.objects.filter(
-        organization_location=location_pk,
-        is_active=True)
+        active_days = OrganizationLocationWorkingDays.objects.filter(
+            organization_location=location_pk,
+            is_active=True)
 
-    # Delete existing slots associated with outdated working days
-    Slot.objects.filter(
-        court__location_id=location_pk,
-        days__in=[day.days for day in active_days]
-    ).delete()
+        Slot.objects.filter(
+            court__location_id=location_pk,
+            days__in=[day.days for day in active_days]
+        ).delete()
 
-    # Iterate over courts
-    for court in courts:
-        # Iterate over active days
-        for day in active_days:
-            # Get start and end time for the day from updated working days
-            work_from_time = day.work_from_time
-            work_to_time = day.work_to_time
+        for court in courts:
+            for day in active_days:
+                work_from_time = day.work_from_time
+                work_to_time = day.work_to_time
 
-            # Set current time to the starting work time
-            current_datetime = datetime.combine(datetime.now().date(),
-                                                work_from_time)
+                current_datetime = datetime.combine(datetime.now().date(), work_from_time)
 
-            # Create slots for each hour within the updated time range
-            while current_datetime < datetime.combine(datetime.now().date(),
-                                                      work_to_time):
-                # Create a new slot for the current hour and court
-                Slot.objects.create(
-                    start_time=current_datetime.time(),
-                    end_time=(current_datetime + timedelta(hours=1)).time(),
-                    court=court,
-                    location_id=location_pk,
-                    days=day.days,
-                    is_booked=False  # Assuming slots are initially not booked
-                )
+                while current_datetime < datetime.combine(datetime.now().date(), work_to_time):
+                    Slot.objects.create(
+                        start_time=current_datetime.time(),
+                        end_time=(current_datetime + timedelta(hours=1)).time(),
+                        court=court,
+                        location_id=location_pk,
+                        days=day.days,
+                        is_booked=False
+                    )
+                    current_datetime += timedelta(hours=1)
 
-                # Move to the next hour
-                current_datetime += timedelta(hours=1)
-
-    # Redirect or render as needed
-    return redirect('slot-list')
-
+        return redirect(reverse('slot-location'))
 
 @method_decorator(login_required, name='dispatch')
 class TenantEmployeeHomeView(ListView):
