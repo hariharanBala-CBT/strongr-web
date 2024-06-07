@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
-import "../css/clublistscreen.css";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import toast, { Toaster } from "react-hot-toast";
+
+import { useHomeContext } from "../context/HomeContext";
+
 import Header from "../components/Header";
 import SelectInput from "../components/SelectInput";
 import DateInput from "../components/DateInput";
-import { useNavigate } from "react-router-dom";
-// import Button from "../components/Button";
 import Club from "../components/Club";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import Footer from "../components/Footer";
+import NoDataAnimation from "../components/NoDataAnimation";
+
+import { CircularProgress } from "@mui/material";
+
 import {
   listAreas,
   listGames,
@@ -15,13 +23,13 @@ import {
   listSuggestedClub,
   listSuggestedClubGame,
 } from "../actions/actions";
-import { useDispatch, useSelector } from "react-redux";
-import { useHomeContext } from "../context/HomeContext";
-import { CircularProgress } from "@mui/material";
-import toast, { Toaster } from "react-hot-toast";
-import Footer from "../components/Footer";
+
+import "../css/clublistscreen.css";
 
 function ClubListScreen() {
+  const NoDataAnimationUrl =
+    "https://cbtstrongr.s3.amazonaws.com/videos/no-data-animation.json";
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
@@ -50,7 +58,6 @@ function ClubListScreen() {
   const { suggestedClubGameList } = useSelector(
     (state) => state.suggestedClubsGame
   );
-  // const organizations = location.state.organizations;
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -123,12 +130,12 @@ function ClubListScreen() {
     dispatch(filterLocation(areaName, gameName, date));
   }, [
     areaName,
-    gameName,
     date,
+    dispatch,
+    gameName,
     setSelectedArea,
     setSelectedGame,
     setSelectedDate,
-    dispatch,
   ]);
 
   useEffect(() => {
@@ -150,7 +157,7 @@ function ClubListScreen() {
       dispatch(listSuggestedClub(areaName));
       dispatch(listSuggestedClubGame(gameName));
     }
-  }, [clubLocationDetails, dispatch, areaName, areas, games, gameName]);
+  }, [areaName, areas, games, clubLocationDetails, dispatch, gameName]);
 
   return (
     <div>
@@ -202,18 +209,16 @@ function ClubListScreen() {
           </div>
         </form>
       </div>
-      <div className="club-list">
-        {clubFilterLoading ? (
-          <CircularProgress />
-        ) : (
-          clubLocationDetails && <Club clubs={clubLocationDetails} />
-        )}
-      </div>
+      {clubFilterLoading ? (
+        <CircularProgress />
+      ) : (
+        <>{clubLocationDetails && <Club clubs={clubLocationDetails} />}</>
+      )}
       {clubLocationDetails?.length === 0 && suggestedClubList?.length > 0 && (
         <div>
           <div>
             <div className="clubs-error">
-              <h2>No clubs available</h2>
+              <NoDataAnimation url={NoDataAnimationUrl} />
             </div>
 
             <div className="suggested-clubs">
@@ -227,7 +232,7 @@ function ClubListScreen() {
         <div>
           <div>
             <div className="clubs-error">
-              <h2>No clubs available</h2>
+              <NoDataAnimation url={NoDataAnimationUrl} />
             </div>
             <div className="suggested-clubs">
               <h3>Suggested Clubs for {gameName}</h3>
@@ -236,6 +241,15 @@ function ClubListScreen() {
           </div>
         </div>
       )}
+      {clubLocationDetails?.length === 0 &&
+        suggestedClubList?.length === 0 &&
+        suggestedClubGameList?.length === 0 && (
+          <div>
+            <div className="clubs-error">
+              <NoDataAnimation url={NoDataAnimationUrl} />
+            </div>
+          </div>
+        )}
       <Footer name="clublist-f" />
     </div>
   );
