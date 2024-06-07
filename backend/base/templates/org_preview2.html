@@ -526,13 +526,9 @@
                                                 <h5><strong>Images</strong></h5>
                                                 <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
                                                     {% for image in location_item.images %}
-                                                        {% if "https//" in image.image.url %}
-                                                            <img src="{{ image.image.url|fix_https }}" alt="Current Image" class="mt-3" style="max-width: 300px;">
-                                                        {% else %}
-                                                            <img src="{{ image.image.url }}" alt="Current Image" class="mt-3" style="max-width: 300px;">
-                                                        {% endif %}
-                                                        {% empty %}
-                                                            <li>No images Addded</li>
+                                                        <img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
+                                                    {% empty %}
+                                                        <li>No images Addded</li>
                                                     {% endfor %}
                                                 </ul>
                                                 <div class="text-center mb-4">
@@ -642,8 +638,17 @@
     <!-- Custom Scripts -->
     <script>
          // Get the button
+         // Toggle the side navigation
+        const $sidebarToggle = document.body.querySelector('#sidebarToggle');
+        if (sidebarToggle) {
+             sidebarToggle.addEventListener('click', event => {
+                 event.preventDefault();
+                 document.body.classList.toggle('sb-sidenav-toggled');
+                 localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+             });
+        }
+        
         var backToTopBtn = document.getElementById("backToTopBtn");
-
         // When the user scrolls down 20px from the top of the document, show the button
         window.onscroll = function() {scrollFunction()};
 
@@ -660,22 +665,13 @@
             document.body.scrollTop = 0; // For Safari
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         }
+        
         window.addEventListener('DOMContentLoaded', event => {
             // Simple-DataTables
             const datatablesSimple = document.getElementById('datatablesSimple');
             if (datatablesSimple) {
                 new simpleDatatables.DataTable(datatablesSimple);
-            }
-
-            // Toggle the side navigation
-            const sidebarToggle = document.body.querySelector('#sidebarToggle');
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', event => {
-                    event.preventDefault();
-                    document.body.classList.toggle('sb-sidenav-toggled');
-                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-                });
-            }
+            }     
         });
     </script>
 </body>

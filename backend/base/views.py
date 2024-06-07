@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.utils.html import format_html
+from .utils import generate_password
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -175,7 +177,7 @@ class OrganizationSignupView(CreateView):
             if form.errors:
                 return render(request, self.template_name, context)
 
-            random_password = form.generate_password()
+            random_password = generate_password()
             phone_number = form.cleaned_data['phone_number']
             organization_name = form.cleaned_data['organization_name']
             user = form.save(random_password, commit=False)
@@ -467,9 +469,11 @@ class OrganizationUpdateLocationView(UpdateView):
 
     def form_invalid(self, form):
         print(form.errors)
-        messages.error(self.request, 'Location updated successfully.')
+        error_messages = ''.join([f'{error}' for error in form.errors])
+        error_message = format_html('<ul class="errorlist">{}</ul>', error_messages)
+        messages.error(self.request, format_html('Location update failed. {}', error_message))
+    
         return HttpResponseRedirect(reverse('mainview', kwargs={'location_pk': self.object.pk}))
-
 
     def is_valid_number(self, number):
         return len(str(number)) == 10
@@ -807,6 +811,7 @@ class CourtDeleteView(DeleteView):
         return super().delete(request, *args, **kwargs)
 
     def get_success_url(self):
+        messages.success(self.request, 'Court deleted successfully.')
         locationpk = self.request.session.get('location_pk')
         return reverse('mainview', kwargs={'location_pk': locationpk})
 
@@ -1596,7 +1601,6 @@ def update_working_days(request, location_pk):
         formset = OrganizationLocationWorkingDaysFormSet(request.POST, queryset=queryset)
         if formset.is_valid():
             formset.save()
-            messages.success(request, 'Working days updated successfully.')
             return JsonResponse({'status': 'success', 'message': 'Working days updated successfully.'})
         else:
             return JsonResponse({'status': 'error', 'message': 'Form validation failed.'}, status=400)
