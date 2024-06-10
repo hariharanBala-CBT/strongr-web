@@ -199,7 +199,7 @@
                         <div class="card mb-4">
                             <div class="tabs">
                                 {% if locationpk %}
-                                <button tabindex="0" data-url="{% url 'organization_updatelocation' locationpk %}" class="tab-button active">Address</button>
+                                <button tabindex="0" data-url="{% url 'organization_updatelocation' pk=locationpk %}" class="tab-button active">Address</button>
                                 {% else %}
                                 <button class="tab-button" disabled>Update (Location not specified)</button>
                                 {% endif %}

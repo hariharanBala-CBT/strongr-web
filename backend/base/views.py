@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.utils.html import format_html
 from .utils import generate_password
+from .messages import SUCCESS_MESSAGES, ERROR_MESSAGES
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -443,44 +444,59 @@ class OrganizationAddLocationView(CreateView):
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
 
-@method_decorator(login_required, name='dispatch')
-class OrganizationUpdateLocationView(UpdateView):
-    model = OrganizationLocation
-    template_name = 'update_location.html'
-    form_class = OrganizationLocationForm
+# @method_decorator(login_required, name='dispatch')
+# class OrganizationUpdateLocationView(UpdateView):
+#     model = OrganizationLocation
+#     template_name = 'update_location.html'
+#     form_class = OrganizationLocationForm
 
-    def form_valid(self, form):
-        organization = get_object_or_404(Organization, user=self.request.user)
-        form.instance.organization = organization
-        form.save()
-        self.request.session['location_pk'] = form.instance.pk
-        phone_number = form.cleaned_data.get('phone_number')
+#     def form_valid(self, form):
+#         organization = get_object_or_404(Organization, user=self.request.user)
+#         form.instance.organization = organization
+#         form.save()
+#         self.request.session['location_pk'] = form.instance.pk
 
-        if not self.is_valid_number(phone_number):
-            if len(str(phone_number)) > 10:
-                form.add_error('phone_number', 'Phone number exceeds 10 digits')
-                return self.form_invalid(form)
-            elif len(str(phone_number)) < 10:
-                form.add_error('phone_number', 'Phone number must be at least 10 digits')
-                return self.form_invalid(form)
+#         messages.success(self.request, 'Location updated successfully.')
+#         return super().form_valid(form)
 
-        messages.success(self.request, 'Location updated successfully.')
-        return super().form_valid(form)
+#     def form_invalid(self, form):
+#         print(form.errors)
+#         error_messages = ''.join([f'{error}' for error in form.errors])
+#         error_message = format_html('<ul class="errorlist">{}</ul>', error_messages)
+#         messages.error(self.request, format_html('Location update failed. {}', error_message))
 
-    def form_invalid(self, form):
-        print(form.errors)
-        error_messages = ''.join([f'{error}' for error in form.errors])
-        error_message = format_html('<ul class="errorlist">{}</ul>', error_messages)
-        messages.error(self.request, format_html('Location update failed. {}', error_message))
-    
-        return HttpResponseRedirect(reverse('mainview', kwargs={'location_pk': self.object.pk}))
+#         return HttpResponseRedirect(reverse('mainview', kwargs={'location_pk': self.object.pk}))
 
-    def is_valid_number(self, number):
-        return len(str(number)) == 10
+#     def is_valid_number(self, number):
+#         return len(str(number)) == 10
 
-    def get_success_url(self):
-        return reverse('mainview', kwargs={'location_pk': self.object.pk})
+#     def get_success_url(self):
+#         return reverse('mainview', kwargs={'location_pk': self.object.pk})
 
+@login_required
+def update_location(request, pk):
+    location = get_object_or_404(OrganizationLocation, pk=pk)
+    organization = get_object_or_404(Organization, user=request.user)
+
+    if request.method == 'POST':
+        form = OrganizationLocationForm(request.POST, instance=location)
+        if form.is_valid():
+            form.instance.organization = organization
+            form.save()
+            request.session['location_pk'] = form.instance.pk
+            messages.success(request, SUCCESS_MESSAGES['update_location'])
+            return redirect('mainview', location_pk=form.instance.pk)
+        else:
+            if 'This Pincode,Phone Number and Area combination already exists.' in form.non_field_errors():
+                messages.error(request,"Location update failed.This Pincode,Phone Number and Area combination already exists.")
+            else:
+                error_messages = ''.join([f'{error}' for error in form.errors.values()])
+                messages.error(request, format_html(ERROR_MESSAGES['form_validation_failed'], error_message))
+            return render(request, 'main_template.html', {'form': form, 'locationpk': pk})
+    else:
+        form = OrganizationLocationForm(instance=location)
+
+    return render(request, 'update_location.html', {'form': form, 'pk': pk})
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationListView(ListView):

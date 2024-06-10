@@ -165,7 +165,7 @@
                         <div class="profile-card"> 
                             <!-- <h1 class="my-4">Update Location</h1> -->
                             <div>                          
-                                <form id="upd-loc-form" method="post" action="{% url 'organization_updatelocation' pk=object.pk %}">
+                                <form id="upd-loc-form" method="post" action="{% url 'organization_updatelocation' pk=pk %}">
                                     {% csrf_token %}
                                     <table>
                                         <tbody>

@@ -21,7 +21,7 @@ urlpatterns = [
 
      path('organizationprofile/<int:pk>/' ,OrganizationProfileView.as_view(), name='organization_profile'),
      path('organizationaddlocation/' ,OrganizationAddLocationView.as_view(), name='organization_addlocation'),
-     path('organizationupdatelocation/<int:pk>/', OrganizationUpdateLocationView.as_view(), name='organization_updatelocation'),
+     path('organizationupdatelocation/<int:pk>/', update_location, name='organization_updatelocation'),
      path('organizationlocationlist/' ,OrganizationLocationListView.as_view(), name='organization_locationlist'),
      path('organizationlocationgametype/<int:locationpk>/' ,OrganizationLocationGameTypeView.as_view(), name='organization_locationgametype'),
      path('organizationupdatelocationgametype/<int:locationpk>/<int:gamepk>/' ,OrganizationUpdateLocationGameTypeView.as_view(), name='organization_updatelocationgametype'),

@@ -94,10 +94,10 @@ class OrganizationLocationForm(ModelForm):
         pincode = str(pincode)
         phone_number = str(phone_number)
 
-        existing_entries = OrganizationLocation.objects.filter(pincode=pincode, phone_number=phone_number, area=area)
+        existing_entries = OrganizationLocation.objects.filter(pincode=pincode, phone_number=phone_number, area=area).exclude(pk=self.instance.pk)
 
         if existing_entries.exists():
-            raise ValidationError("This location already exists.")
+            raise ValidationError("This Pincode,Phone Number and Area combination already exists.")
 
         return cleaned_data
 
