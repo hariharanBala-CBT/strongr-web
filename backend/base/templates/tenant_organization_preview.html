@@ -495,8 +495,28 @@
                                                         <h5><strong>Courts</strong></h5>
                                                         <ul>
                                                             {% for court in location_item.courts %}
-                                                            <li>{{ court.name }}</li>
+                                                                <li>{{ court.name }}</li>
+                                                            {% empty %}
+                                                                <li>No Courts Addded</li>
                                                             {% endfor %}
+                                                        </ul>
+                                                        <!-- Images -->
+                                                        <h5><strong>Images</strong></h5>
+                                                        <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
+                                                            {% for image in location_item.images %}
+                                                                <img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
+                                                            {% empty %}
+                                                                <li>No images Addded</li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                        <!-- Slots -->
+                                                        <h5><strong>Slots</strong></h5>
+                                                        <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
+                                                            {% if location_item.slots %}
+                                                                <li><a href="{% url 'tenant-slot-list' locationpk=location_item.location.pk %}">Slot list</a></li>
+                                                            {% else %}
+                                                                <li>No Slot Added</li>
+                                                            {% endif %}
                                                         </ul>
                                                         <div class="text-center mb-4">
                                                             {% if location_item.location.status == 3 %}

@@ -854,6 +854,23 @@ class SlotListView(ListView):
         self.request.session['locationpk'] = pk
         return context
 
+@method_decorator(login_required, name='dispatch')
+class TenantSlotListView(ListView):
+    model = Slot
+    template_name = 'tenant_slot_list.html'
+    context_object_name = 'slots'
+
+    def get_queryset(self):
+        pk = self.kwargs.get('locationpk')
+        return Slot.objects.filter(location_id=pk)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('locationpk')
+        context['locationpk'] = pk
+        self.request.session['locationpk'] = pk
+        return context
+
 
 @method_decorator(login_required, name='dispatch')
 class SlotLocationListView(ListView):
@@ -1002,6 +1019,7 @@ class PreviewView(FormView):
             context_item['courts'] = Court.objects.filter(location=location)
             context_item['images'] = OrganizationGameImages.objects.filter(
                 organization=location)
+            context_item['slots'] = Slot.objects.filter(location_id=location)
             locationdetails.append(context_item)
         context['all_locations'] = locationdetails
         profile = Organization.objects.filter(user=self.request.user)
@@ -1384,7 +1402,7 @@ class TenantOrganizationPreviewView(DetailView):
             context_item['courts'] = Court.objects.filter(location=location)
             context_item['images'] = OrganizationGameImages.objects.filter(
                 organization=location)
-
+            context_item['slots'] = Slot.objects.filter(location_id=location)
             locationdetails.append(context_item)
 
         context['all_locations'] = locationdetails

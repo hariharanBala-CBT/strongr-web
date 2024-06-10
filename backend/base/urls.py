@@ -44,6 +44,7 @@ urlpatterns = [
      path('unavailable-slot-list/<int:pk>/', UnavailableSlotListView.as_view(), name='unavailable-slot-list'),
 
      path('slot-list/<int:locationpk>/', SlotListView.as_view(), name='slot-list'),
+     path('tenant-slot-list/<int:locationpk>/', TenantSlotListView.as_view(), name='tenant-slot-list'),
      path('slot/location/', SlotLocationListView.as_view(), name='slot-location' ),
      path('update-slot/<int:pk>/', SlotUpdateView.as_view(), name='update-slot'),
      path('delete-slot/<int:pk>/', SlotDeleteView.as_view(), name='delete-slot'),
