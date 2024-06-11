@@ -487,7 +487,7 @@ def update_location(request, pk):
                 messages.error(request,"Location update failed.This Pincode,Phone Number and Area combination already exists.")
             else:
                 error_messages = ''.join([f'{error}' for error in form.errors.values()])
-                messages.error(request, format_html(ERROR_MESSAGES['form_validation_failed'], error_message))
+                messages.error(request, format_html(ERROR_MESSAGES['form_validation_failed'], error_messages))
             return render(request, 'main_template.html', {'form': form, 'locationpk': pk})
     else:
         form = OrganizationLocationForm(instance=location)
