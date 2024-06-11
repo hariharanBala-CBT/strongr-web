@@ -753,7 +753,7 @@ export const validateUserReducer = (state = {}, action) => {
     case USER_VALIDATE_SUCCESS:
       return { loading: false, userValidate: true };
     case USER_VALIDATE_FAIL:
-      return { loading: false, userValidate: false };
+      return { loading: false, userValidateError: true };
     case USER_VALIDATE_RESET:
       return { };
     default:

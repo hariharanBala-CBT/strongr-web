@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-import "../css/registerscreen.css";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+
 import Header from "../components/Header";
 import Button from "../components/Button";
-// import Message from "../components/Message";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { generateOTP, register } from "../actions/actions";
-import { Box, CircularProgress, Modal } from "@mui/material";
 import OTPInput, { ResendOTP } from "otp-input-react";
+import { Box, CircularProgress, Modal } from "@mui/material";
+// import Message from "../components/Message";
+
+import { generateOTP, register, validateUser } from "../actions/actions";
+
 import { USER_LOGOUT } from "../constants/constants";
-import toast, { Toaster } from "react-hot-toast";
-import { LinkContainer } from "react-router-bootstrap";
+
+import "../css/registerscreen.css";
 
 const style = {
   position: "absolute",
@@ -25,26 +29,24 @@ const style = {
 };
 
 const linkStyle = {
-  textDecoration: 'underline',
-  color : 'purple',
-  cursor : 'pointer'
-}
+  textDecoration: "underline",
+  color: "purple",
+  cursor: "pointer",
+};
 
 function RegisterScreen() {
   const navigate = useNavigate();
-  // const location = useLocation();
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [validatedEmail, setValidatedEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  // const [message, setMessage] = useState("");
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
   const [otp, setOtp] = useState("");
-
-  // const redirect = location.search ? location.search.split("=")[1] : "/";
+  const [submit, setSubmit] = useState(false);
 
   const { registerError, registerUserLoading } = useSelector(
     (state) => state.userRegister
@@ -52,20 +54,31 @@ function RegisterScreen() {
 
   const { userInfo } = useSelector((state) => state.userLogin);
   const { otpLoading } = useSelector((state) => state.generateOtp);
+  const { userValidate, userValidateError } = useSelector((state) => state.userValidator);
 
-  useEffect(() => {
-    setOpenForm(false);
-    if (userInfo) {
-      toast.success("user signup sucess!");
-      navigate("/");
-    } else if (registerError) {
-      toast.error(registerError);
-      setOpenForm(false);
-      dispatch({
-        type: USER_LOGOUT,
-      });
+  const otpGenerate = () => {
+    setOpenForm(true);
+    dispatch(generateOTP(email));
+  };
+
+  const regenerateOtp = () => {
+    setLoader(true);
+    dispatch(generateOTP(email));
+  };
+
+  const validateEmail = (e) => {
+    e.preventDefault();
+    if (password.length < 8) {
+      toast.error("pasword must be atleast 8 characters");
+      return;
+    } else if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return
+    }else {
+      dispatch(validateUser(email));
+      setSubmit('true')
     }
-  }, [navigate, userInfo, registerError, dispatch]);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,28 +89,40 @@ function RegisterScreen() {
     dispatch(register(name, email, password, phoneNumber, otp));
   };
 
-  const otpGenerate = (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-    } else {
-      setLoader(true);
-      setOpenForm(true);
-      dispatch(generateOTP(email));
+  useEffect(() => {
+    if (userValidateError && submit) {
+      otpGenerate();
+      setSubmit(false);
+    } else if (userValidate && submit) {
+      toast.error('Email already exists');
+      setLoader(false);
+      setOpenForm(false);
+      setSubmit(false);
     }
-  };
+  }, [userValidate, userValidateError]);
 
-  const regenerateOtp = () => {
-    setLoader(true);
-    setOpenForm(true);
-    dispatch(generateOTP(email));
-  };
+  useEffect(() => {
+    if (userInfo) {
+      toast.success("User signup success!");
+      navigate("/");
+    } else if (registerError) {
+      if (registerError === "Email is already registered") {
+        toast.error("This email is already registered. Please use a different email.");
+      } else {
+        toast.error(registerError);
+      }
+      dispatch({
+        type: USER_LOGOUT,
+      });
+    }
+  }, [navigate, userInfo, registerError, dispatch]);
 
   useEffect(() => {
     if (!otpLoading) {
       setLoader(false);
     }
   }, [otpLoading]);
+
 
   return (
     <div>
@@ -107,7 +132,7 @@ function RegisterScreen() {
         <div className="signup-form">
           <h1 className="signup-title">SIGN UP</h1>
 
-          <form onSubmit={otpGenerate} method="post">
+          <form method="post" onSubmit={validateEmail}>
             <div className="div-div">
               <div className="div-1">
                 <label>Name</label>
@@ -121,17 +146,6 @@ function RegisterScreen() {
                   }}
                 />
 
-                <label>Email</label>
-                <input
-                  required
-                  type="email"
-                  placeholder="Enter email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                />
-
                 <label>Phone Number</label>
                 <input
                   required
@@ -140,6 +154,17 @@ function RegisterScreen() {
                   value={phoneNumber}
                   onChange={(e) => {
                     setPhoneNumber(e.target.value);
+                  }}
+                />
+
+                <label>Email</label>
+                <input
+                  required
+                  type="email"
+                  placeholder="Enter email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
                   }}
                 />
               </div>
@@ -173,7 +198,7 @@ function RegisterScreen() {
               <Button
                 type="submit"
                 className="btn-check-availability-home"
-                text="signup"
+                text="Sign Up"
               />
             </div>
           </form>
@@ -186,7 +211,7 @@ function RegisterScreen() {
           >
             {loader ? (
               <Box sx={style} className="otp-loader">
-                <span>sending otp...</span>
+                <span>Sending OTP...</span>
                 <CircularProgress />
               </Box>
             ) : (
@@ -213,7 +238,7 @@ function RegisterScreen() {
                       <Button
                         type="submit"
                         className="btn-check-availability-home"
-                        text="submit"
+                        text="Submit"
                       />
                     </div>
                   </form>
@@ -224,9 +249,10 @@ function RegisterScreen() {
 
           <span>
             Already have an Account?
-            <LinkContainer to="/login" style={linkStyle}><span> login</span></LinkContainer>
+            <LinkContainer to="/login" style={linkStyle}>
+              <span> Login</span>
+            </LinkContainer>
           </span>
-
         </div>
       </div>
     </div>

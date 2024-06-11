@@ -20,7 +20,7 @@
     a:hover {
       text-decoration: none;
     }
-    
+
     .form-group {
       margin-bottom: 15px;
     }
@@ -31,6 +31,9 @@
 
     .text-center button {
       width: 100%;
+    }
+    .error {
+      color: red;
     }
   </style>
 
@@ -61,21 +64,25 @@
                 <div class="form-group">
                   <label for="{{ form.email.id_for_label }}">Email</label>
                   {{ form.email }}
+                  {% if form.email.errors %}
+                    <div class="error">
+                      {% for error in form.email.errors %}
+                        <p>{{ error }}</p>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
                 </div>
                 <div class="form-group">
                   <label for="{{ form.phone_number.id_for_label }}">Phone number</label>
                   {{ form.phone_number }}
+                  {% if form.phone_number.errors %}
+                    <div class="error">
+                      {% for error in form.phone_number.errors %}
+                        <p>{{ error }}</p>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
                 </div>
-
-                <!-- <div class="form-group d-flex align-items-center justify-content-between">
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input type="checkbox" class="form-check-input"> Remember me
-                    </label>
-                  </div>
-                  <a href="#" class="forgot-pass">Forgot password</a>
-                </div> -->
-
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary btn-block enter-btn">Sign Up</button>
                 </div>
