@@ -150,6 +150,7 @@
                                                 <th>Address</th>
                                                 <th>Area</th>
                                                 <th>City</th>
+                                                <th>Pincode</th>
                                                 <th>Edit</th>
                                             </tr>
                                         </thead>
@@ -158,6 +159,7 @@
                                                 <th>Address</th>
                                                 <th>Area</th>
                                                 <th>City</th>
+                                                <th>Pincode</th>
                                                 <th>Edit</th>
                                             </tr>
                                         </tfoot>
@@ -167,8 +169,7 @@
                                                 <td>{{location.address_line_1}}</td>
                                                 <td>{{location.area}}</td>
                                                 <td>{{location.area.city}}</td>
-                                                <!-- <td><a href="{% url 'organization_updatelocation' pk=location.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i>
-                                                </a></td> -->
+                                                <td>{{location.pincode}}</td>
                                                 <td><a href="{% url 'mainview' location.pk %}" class="btn btn-primary btn-icon-split">
                                                     <span class="icon text-white-50">
                                                         <i class="fa-regular fa-pen-to-square "></i>

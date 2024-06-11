@@ -3,374 +3,328 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>STRONGR.</title>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <link href="{% static 'styles.css' %}" rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>STRONGR.</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <link href="{% static 'styles.css' %}" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    </head>
 
-</head>
-<style>
-    form {
-        box-shadow: 0px !important;
-        border: 1px solid #ddd !important;
-    }
-
-    .main-template {
-        margin-top: -1rem;
-    }
-
-    .preview {
-        margin-top: 1rem;
-        display: flex;
-        justify-content: center;
-    }
-
-    td {
-        align-items: center;
-    }
-
-    #successAlert {
-        position: fixed;
-        top: 70px;
-        left: 85%;
-        transform: translateX(-50%);
-        z-index: 9999;
-        width: 90%;
-        max-width: 400px;
-        height: 60px;
-    }
-
-    #successAlert p {
-        text-align: center;
-        margin: 0;
-    }
-
-    .tabs {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .tab-button {
-        border: 1px solid #ddd;
-        margin: 10px;
-        width: 100%;
-        border-radius: 5px;
-        column-gap: 1rem;
-        padding: 10px 0px;
-        background-color: #f0f0f0;
-        cursor: pointer;
-    }
-
-    .tab-button:hover {
-        background-color: #ddd;
-    }
-
-    .tab-button:focus {
-        outline: none;
-        /* background-color: rgb(72, 72, 72);
-        color: white; */
-    }
-
-    footer {
-        text-align: center;
-        padding: 1em 0;
-        background-color: #333;
-        color: #fff;
-        margin-top: auto;
-        width: 100%;
-    }
-
-    .form-group {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .select-location {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .form-label {
-        margin-bottom: 0.5rem;
-    }
-
-    .form-select {
-        min-width: 200px;
-    }
-
-
-    .tab-button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-    .tab-button.active,.tab-button:focus {
-        background-color: #ddd;
-        border-bottom: 2px solid #000; 
-        font-weight: bold;
-        outline: none;
-    }
-
-    /* Style for tab content */
-    #tab-content {
-        /* padding: 20px; */
-        border: 1px solid #ddd;
-        border-top: none;
-    }
-
-    .sb-sidenav-toggled #layoutSidenav_nav {
-    margin-left: -250px; /* Adjust based on your sidebar width */
-}
-
-.sb-sidenav-toggled #layoutSidenav_content {
-    margin-left: 0;
-}
-
-
-</style>
-
-
-<body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>{{ user.username }}</a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-    <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Main</div>
-                        <a class="nav-link" href="{% url 'organization_page' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-                        <a class="nav-link" href="{% url 'organization_profile' pk=1 %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
-                            Profile
-                        </a>
-                        <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
-                            <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
-                            Locations
-                        </a>
-                        <a class="nav-link" href="{% url 'preview' %}">
-                            <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
-                            Preview
-                        </a>
-                        <a class="nav-link" href="{% url 'status' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
-                            Status
-                        </a>
-                        <a class="nav-link" href="{% url 'org_customers_list'%}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Customers
-                        </a>
-                        <div class="sb-sidenav-menu-heading">Slot</div>
-                        <a class="nav-link" href="{% url 'slot-location' %}">
-                            <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
-                            Slots List
-                        </a>
-                        <a class="nav-link" href="{% url 'temp-slot-location'%}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
-                            Additional Slots
-                        </a>
-                        <a class="nav-link" href="{% url 'temp-deslot-location'%}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
-                            Unavailable Slots
-                        </a>
-                    </div>
-                </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    <div class="user-email">{{ request.user.email }}</div>
-                </div>
-            </nav>
-        </div>
-        <div id="layoutSidenav_content">
-            <main class="main-template">
-                <div class="container-fluid px-4 mt-4">
-                    {% if messages %}
-                    <div class="alert alert-success" role="alert" id="successAlert">
-                        {% for message in messages %}
-                        <p>{{ message }}</p>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    <div class="form-group d-flex justify-content-center align-items-center mb-4">
-                        <h1 class="mt-4 mb-4">Location:</h1>
-                        <div class="select-location ms-4">
-                            <select id="locationSelect" class="form-select" onchange="locationChange(this)">
-                                <option value="">Select location</option>
-                                {% for location in organization_locations %}
-                                <option value="{{ location.pk }}" {% if location.pk == locationpk %}selected{% endif %}>
-                                    {{ location.address_line_1 }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="card mb-4">
-                        <div class="tabs">
-                            {% if locationpk %}
-                            <button tabindex="0" data-url="{% url 'organization_updatelocation' locationpk %}"
-                                class="tab-button active">Address</button>
-                            {% else %}
-                            <button class="tab-button" disabled>Update (Location not specified)</button>
-                            {% endif %}
-                            <button tabindex="0" data-url="{% url 'organization_locationgamelist' locationpk %}"
-                                class="tab-button">Game</button>
-                            <button tabindex="0" data-url="{% url 'court-list' locationpk %}" class="tab-button">Court</button>
-                            <button tabindex="0" data-url="{% url 'organization_imageslist' locationpk %}"
-                                class="tab-button">Images</button>
-                            <button tabindex="0" data-url="{% url 'organization_locationworkingdays' locationpk %}"
-                                class="tab-button">Working Days</button>
-                            <button tabindex="0" data-url="{% url 'organization_locationamenities' locationpk %}"
-                                class="tab-button">Amenities</button>
-                        </div>
-                        <div id="tab-content"></div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function() {
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
+    <style>
+        form {
+            box-shadow: 0px !important;
+            border: 1px solid #ddd !important;
         }
-        return cookieValue;
-    }
+        .main-template {
+            margin-top: -1rem;
+        }
+        .preview {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+        }
+        td {
+            align-items: center;
+        }
+        #successAlert {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background-color: #323231;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1050;
+        }
+        #successAlert p {
+            text-align: center;
+            margin: 0;
+        }
+        .tabs {
+            display: flex;
+            flex-direction: row;
+        }
+        .tab-button {
+            border: 1px solid #ddd;
+            margin: 10px;
+            width: 100%;
+            border-radius: 5px;
+            column-gap: 1rem;
+            padding: 10px 0px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        .tab-button:hover {
+            background-color: #ddd;
+        }
+        .tab-button:focus {
+            outline: none;
+        }
+        footer {
+            text-align: center;
+            padding: 1em 0;
+            background-color: #333;
+            color: #fff;
+            margin-top: auto;
+            width: 100%;
+        }
+        .form-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .select-location {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .form-label {
+            margin-bottom: 0.5rem;
+        }
+        .form-select {
+            min-width: 200px;
+        }
+        .tab-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .tab-button.active, .tab-button:focus {
+            background-color: #ddd;
+            border-bottom: 2px solid #000;
+            font-weight: bold;
+            outline: none;
+        }
+        #tab-content {
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+    </style>
 
-    function initFormSubmission() {
-        $('#tab-content form').submit(function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            const csrftoken = getCookie('csrftoken');
-
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                success: function(response) {
-                    if (response.status === 'success') {
-                        showToast(response.message);
-                    } else {
-                        showToast(response.message || 'Error submitting form.');
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>{{ user.username }}</a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Main</div>
+                            <a class="nav-link" href="{% url 'organization_page' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <a class="nav-link" href="{% url 'organization_profile' pk=1 %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
+                                Profile
+                            </a>
+                            <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
+                                <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                Locations
+                            </a>
+                            <a class="nav-link" href="{% url 'preview' %}">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
+                                Preview
+                            </a>
+                            <a class="nav-link" href="{% url 'status' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
+                                Status
+                            </a>
+                            <a class="nav-link" href="{% url 'org_customers_list'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                Customers
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Slot</div>
+                            <a class="nav-link" href="{% url 'slot-location' %}">
+                                <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
+                                Slots List
+                            </a>
+                            <a class="nav-link" href="{% url 'temp-slot-location'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
+                                Additional Slots
+                            </a>
+                            <a class="nav-link" href="{% url 'temp-deslot-location'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
+                                Unavailable Slots
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        <div class="user-email">{{ request.user.email }}</div>
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main class="main-template">
+                    <div class="container-fluid px-4 mt-4">
+                        {% if messages %}
+                        <div class="alert alert-success" role="alert" id="successAlert">
+                            {% for message in messages %}
+                            <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-group d-flex justify-content-center align-items-center mb-4">
+                            <h1 class="mt-4 mb-4">Location:</h1>
+                            <div class="select-location ms-4">
+                                <select id="locationSelect" class="form-select" onchange="locationChange(this)">
+                                    <option value="">Select location</option>
+                                    {% for location in organization_locations %}
+                                    <option value="{{ location.pk }}" {% if location.pk == locationpk %}selected{% endif %}>
+                                        {{ location.address_line_1 }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="tabs">
+                                {% if locationpk %}
+                                <button tabindex="0" data-url="{% url 'organization_updatelocation' pk=locationpk %}" class="tab-button active">Address</button>
+                                {% else %}
+                                <button class="tab-button" disabled>Update (Location not specified)</button>
+                                {% endif %}
+                                <button tabindex="0" data-url="{% url 'organization_locationgamelist' locationpk %}" class="tab-button">Game</button>
+                                <button tabindex="0" data-url="{% url 'court-list' locationpk %}" class="tab-button">Court</button>
+                                <button tabindex="0" data-url="{% url 'organization_imageslist' locationpk %}" class="tab-button">Images</button>
+                                <button tabindex="0" data-url="{% url 'organization_locationworkingdays' locationpk %}" class="tab-button">Working Days</button>
+                                <button tabindex="0" data-url="{% url 'organization_locationamenities' locationpk %}" class="tab-button">Amenities</button>
+                            </div>
+                            <div id="tab-content"></div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function () {
+                function getCookie(name) {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        const cookies = document.cookie.split(';');
+                        for (let i = 0; i < cookies.length; i++) {
+                            const cookie = cookies[i].trim();
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    showToast('Error submitting form. ' + error);
+                    return cookieValue;
+                }
+
+                function initFormSubmission() {
+                    $('#tab-content form').submit(function (event) {
+                        event.preventDefault();
+                        const formData = new FormData(this);
+                        const csrftoken = getCookie('csrftoken');
+
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            headers: {
+                                'X-CSRFToken': csrftoken,
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            success: function (response) {
+                                if (response.status === 'success') {
+                                    showToast(response.message);
+                                } else {
+                                    showToast(response.message || 'Error submitting form.');
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error:', error);
+                                showToast('Error submitting form. ' + error);
+                            }
+                        });
+                    });
+                }
+
+                function showToast(message) {
+                    const toast = $('#successToast');
+                    toast.text(message);
+                    toast.show();
+                    setTimeout(() => {
+                        toast.hide();
+                    }, 2000);
+                }
+
+                function setActiveTab(tab) {
+                    $('.tab-button').removeClass('active');
+                    $(tab).addClass('active');
+                }
+
+                $('.tab-button').click(function () {
+                    const url = $(this).data('url');
+                    setActiveTab(this);
+                    $('#tab-content').load(url, function () {
+                        initFormSubmission();
+                    });
+                });
+
+                const initialTab = $('.tab-button.active').data('url');
+                if (initialTab) {
+                    $('#tab-content').load(initialTab, function () {
+                        initFormSubmission();
+                    });
+                }
+
+                $('#locationSelect').change(function () {
+                    const selectedLocation = $(this).val();
+                    if (selectedLocation) {
+                        window.location.href = `/organization/location/${selectedLocation}/`;
+                    }
+                });
+
+                const successAlert = $('#successAlert');
+                if (successAlert.length) {
+                    setTimeout(() => {
+                        successAlert.hide();
+                    }, 2500);
+                }
+
+                const datatablesSimple = $('#datatablesSimple');
+                if (datatablesSimple.length) {
+                    new simpleDatatables.DataTable(datatablesSimple[0]);
+                }
+
+                const sidebarToggle = $('#sidebarToggle');
+                if (sidebarToggle.length) {
+                    sidebarToggle.click(function (event) {
+                        event.preventDefault();
+                        $('body').toggleClass('sb-sidenav-toggled');
+                        localStorage.setItem('sb|sidebar-toggle', $('body').hasClass('sb-sidenav-toggled'));
+                    });
                 }
             });
-        });
-    }
-
-    function showToast(message) {
-        const toast = $('#successToast');
-        toast.text(message);
-        toast.show();
-        setTimeout(() => {
-            toast.hide();
-        }, 2000);
-    }
-
-    function setActiveTab(tab) {
-        $('.tab-button').removeClass('active');
-        $(tab).addClass('active');
-    }
-
-    $('.tab-button').click(function() {
-        const url = $(this).data('url');
-        setActiveTab(this);
-        $('#tab-content').load(url, function() {
-            initFormSubmission();
-        });
-    });
-
-    const initialTab = $('.tab-button.active').data('url');
-    if (initialTab) {
-        $('#tab-content').load(initialTab, function() {
-            initFormSubmission();
-        });
-    }
-});
-
-function locationChange(select) {
-    const selectedLocation = select.value;
-    if (selectedLocation) {
-        window.location.href = `/organization/location/${selectedLocation}/`;
-    }
-}
-    </script>
-    <script>
-        window.addEventListener('DOMContentLoaded', (event) => {
-            const successAlert = document.getElementById('successAlert');
-            if (successAlert) {
-                setTimeout(() => {
-                    successAlert.style.display = 'none';
-                }, 2500); // Hide after 5000ms or 5 seconds
-            }
-        });
-        
-        window.addEventListener('DOMContentLoaded', event => {
-            const datatablesSimple = document.getElementById('datatablesSimple');
-            if (datatablesSimple) {
-                new simpleDatatables.DataTable(datatablesSimple);
-            }
-        });
-
-        window.addEventListener('DOMContentLoaded', event => {
-    const sidebarToggle = document.body.querySelector('#sidebarToggle');
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', event => {
-            event.preventDefault();
-            document.body.classList.toggle('sb-sidenav-toggled');
-            localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-        });
-    }
-});
-
-    </script>
-</body>
-
+        </script>
+    </body>
 </html>

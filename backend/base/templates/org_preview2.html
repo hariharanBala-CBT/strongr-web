@@ -148,7 +148,7 @@
         }
 
         /* Custom Checkbox Style */
-        
+
         .checkbox-custom {
             display: inline-block;
             vertical-align: middle;
@@ -298,7 +298,7 @@
                         <a class="nav-link" href="{% url 'org_customers_list'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Customers
-                        </a>   
+                        </a>
                         <div class="sb-sidenav-menu-heading">Slot</div>
                         <a class="nav-link" href="{% url 'slot-location' %}">
                             <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
@@ -334,7 +334,7 @@
                     <div class="card-body">
                         <!-- Organization Details -->
                         <div class="row">
-                
+
                         <div class="card mb-4">
                             <div class="card-body">
                                 <h5 class="card-title"><strong>Organization Details</strong></h5>
@@ -351,7 +351,7 @@
                                         {% elif profile.description|length  == 0 %}
                                             <li><div class="label">Description</div>:&nbsp; None</li>
                                         {% endif %}
-                                        <li><div class="label">Status</div>:&nbsp; 
+                                        <li><div class="label">Status</div>:&nbsp;
                                             {% if profile.status == 1 %}
                                                 <span class="status-approved"style="margin: left 10px;" >Approved</span>
                                             {% elif profile.status == 2 %}
@@ -369,10 +369,10 @@
                                 </ul>
                             </div>
                         </div>
-                
+
                         <!-- Locations -->
                         <h3 class="mb-4">Locations</h3>
-                        
+
                         <!-- Tab Navigation -->
                         <ul class="nav nav-tabs" id="locationTabs" role="tablist">
                             {% for location_item in all_locations %}
@@ -390,7 +390,7 @@
                                         <div class="card mb-4">
                                             <div class="card-body">
                                                 <li style="list-style: none;">
-                                                    <div class="label">Status</div>:&nbsp; 
+                                                    <div class="label">Status</div>:&nbsp;
                                                     {% if location_item.location.status == 1 %}
                                                         <span class="status-approved">Approved</span>
                                                     {% elif location_item.location.status == 2 %}
@@ -439,32 +439,32 @@
                                                             <input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled>
                                                             <span></span> Parking
                                                         </label><br>
-                                                        
+
                                                         <label class="checkbox-custom">
                                                             <input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled>
                                                             <span></span> Restroom
                                                         </label><br>
-                                                        
+
                                                         <label class="checkbox-custom">
                                                             <input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled>
                                                             <span></span> Changeroom
                                                         </label><br>
-                                                        
+
                                                         <label class="checkbox-custom">
                                                             <input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled>
                                                             <span></span> Power Backup
                                                         </label><br>
-                                                        
+
                                                         <label class="checkbox-custom">
                                                             <input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled>
                                                             <span></span> Beverage
                                                         </label><br>
-                                                        
+
                                                         <label class="checkbox-custom">
                                                             <input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled>
                                                             <span></span> Coaching
                                                         </label><br>
-                                                        
+
 
                                                         {% if amenity.description|length  > 0 %}
                                                             <li><div class="label">Description</div>: {{ amenity.description }}</li>
@@ -477,7 +477,7 @@
 
                                                 <!-- Working Times -->
                                                 <h5><strong>Working Times:</strong></h5>
-                                                
+
                                                 <form action="post">
                                                     <table class="table table-bordered">
                                                         <thead>
@@ -494,7 +494,7 @@
                                                                     <td>{{ workingtime.get_days_display }}</td>
                                                                     <td>{{ workingtime.work_from_time }}</td>
                                                                     <td>{{ workingtime.work_to_time }}</td>
-                                                                    
+
                                                                     <td>
                                                                     {% if workingtime.is_active %}
                                                                         <label class="checkbox-custom">
@@ -526,14 +526,19 @@
                                                 <h5><strong>Images</strong></h5>
                                                 <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
                                                     {% for image in location_item.images %}
-                                                        {% if "https//" in image.image.url %}
-                                                            <img src="{{ image.image.url|fix_https }}" alt="Current Image" class="mt-3" style="max-width: 300px;">
-                                                        {% else %}
-                                                            <img src="{{ image.image.url }}" alt="Current Image" class="mt-3" style="max-width: 300px;">
-                                                        {% endif %}
-                                                        {% empty %}
-                                                            <li>No images Addded</li>
+                                                        <img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
+                                                    {% empty %}
+                                                        <li>No images Addded</li>
                                                     {% endfor %}
+                                                </ul>
+                                                <!-- Slots -->
+                                                <h5><strong>Slots</strong></h5>
+                                                <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
+                                                    {% if location_item.slots %}
+                                                        <li><a href="{% url 'slot-list' locationpk=location_item.location.pk %}">Slot list</a></li>
+                                                    {% else %}
+                                                        <li>No Slot Added</li>
+                                                    {% endif %}
                                                 </ul>
                                                 <div class="text-center mb-4">
                                                     {% for profile in profiles %}
@@ -544,20 +549,20 @@
                                                                         {% csrf_token %}
                                                                         <button type="submit" class="btn btn-success me-2">Submit</button>
                                                                     </form>
-                                                                
+
                                                                 </div>
                                                             {% endif %}
                                                         {% elif profile.status != 1 %}
                                                                 <p>Note: can submit only if organization status is active !!!</p>
                                                         {% endif %}
                                                     {% endfor %}
-                                                </div>   
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                             {% endfor %}
-            
+
                         </div>
                     </div>
                 </div>
@@ -617,7 +622,7 @@
                 </div>
             </main>
 
-            
+
             <!-- Footer -->
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
@@ -642,8 +647,17 @@
     <!-- Custom Scripts -->
     <script>
          // Get the button
-        var backToTopBtn = document.getElementById("backToTopBtn");
+         // Toggle the side navigation
+        const $sidebarToggle = document.body.querySelector('#sidebarToggle');
+        if (sidebarToggle) {
+             sidebarToggle.addEventListener('click', event => {
+                 event.preventDefault();
+                 document.body.classList.toggle('sb-sidenav-toggled');
+                 localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+             });
+        }
 
+        var backToTopBtn = document.getElementById("backToTopBtn");
         // When the user scrolls down 20px from the top of the document, show the button
         window.onscroll = function() {scrollFunction()};
 
@@ -660,21 +674,12 @@
             document.body.scrollTop = 0; // For Safari
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         }
+
         window.addEventListener('DOMContentLoaded', event => {
             // Simple-DataTables
             const datatablesSimple = document.getElementById('datatablesSimple');
             if (datatablesSimple) {
                 new simpleDatatables.DataTable(datatablesSimple);
-            }
-
-            // Toggle the side navigation
-            const sidebarToggle = document.body.querySelector('#sidebarToggle');
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', event => {
-                    event.preventDefault();
-                    document.body.classList.toggle('sb-sidenav-toggled');
-                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-                });
             }
         });
     </script>
