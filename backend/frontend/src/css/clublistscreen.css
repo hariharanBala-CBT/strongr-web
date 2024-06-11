@@ -76,7 +76,7 @@
 .clubs-error{
   display: flex !important;
   align-items: center;
-  padding: 5rem;
+  /* padding: 5rem; */
   justify-content: center;
 }
 /* 

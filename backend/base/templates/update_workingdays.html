@@ -48,7 +48,7 @@
             }
             #id_description {
                 resize: none;
-                height: 80px; 
+                height: 80px;
                 width: 300px;
             }
             .modal {
@@ -104,24 +104,25 @@
         }
         .toast {
             position: fixed;
-            bottom: 20px;
+            top: 60px;
             right: 20px;
-            background-color: #333;
+            background-color: #323231;
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
             z-index: 1050;
             display: none;
-        }
+      }
         #successAlert {
             position: fixed;
-            top: 70px; 
-            left: 85%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            width: 90%; 
-            max-width: 400px;
-            height: 60px;
+            top: 60px;
+            right: 20px;
+            background-color: #323231;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1050;
+            display: none;
         }
 
         #successAlert p {
@@ -138,7 +139,7 @@
             <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
- 
+
             <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>{{ user.username }}</a>
@@ -180,7 +181,7 @@
                             <a class="nav-link" href="{% url 'org_customers_list'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                 Customers
-                            </a>   
+                            </a>
                             <div class="sb-sidenav-menu-heading">Slot</div>
                             <a class="nav-link" href="{% url 'slot-location' %}">
                                 <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
@@ -213,7 +214,7 @@
                         </div>
                     {% endif %}
                         <div class="container-fluid my-4">
-                            <div class="profile-card">     
+                            <div class="profile-card">
                                 <!-- <h1>Working Days</h1> -->
                                 <form action="{% url 'organization_locationworkingdays' locationpk %}" id="workingdays_form" method="post">
                                     {% csrf_token %}
@@ -272,9 +273,9 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="toast" id="successToast"></div>
-    
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const form = document.getElementById('workingdays_form');
@@ -282,21 +283,21 @@
                 const confirmButton = document.getElementById('confirmButton');
                 const cancelButton = document.getElementById('cancelButton');
                 const toast = document.getElementById('successToast');
-    
+
                 form.addEventListener('submit', function(event) {
                     event.preventDefault();
                     modal.style.display = "block";
                 });
-    
+
                 confirmButton.addEventListener('click', function() {
                     modal.style.display = "none";
                     submitFormData();
                 });
-    
+
                 cancelButton.addEventListener('click', function() {
                     modal.style.display = "none";
                 });
-    
+
                 function submitFormData() {
                     const formData = new FormData(form);
                     fetch(form.action, {
@@ -328,7 +329,7 @@
                         showToast('Error submitting form. ' + error.message);
                     });
                 }
-    
+
                 function showToast(message) {
                     toast.textContent = message;
                     toast.style.display = 'block';
@@ -338,14 +339,14 @@
                 }
             });
         </script>
-    
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-         
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-         
-          
+
+
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-          
+
 
         <script>
         window.addEventListener('DOMContentLoaded', event => {
