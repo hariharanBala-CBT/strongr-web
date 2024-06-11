@@ -69,7 +69,7 @@ function RegisterScreen() {
   const validateEmail = (e) => {
     e.preventDefault();
     if (password.length < 8) {
-      toast.error("pasword must be atleast 8 characters");
+      toast.error("Pasword must be atleast 8 characters");
       return;
     } else if (password !== confirmPassword) {
       toast.error("Passwords do not match");
@@ -86,7 +86,7 @@ function RegisterScreen() {
       toast.error("Please enter the OTP");
       return;
     }
-    dispatch(register(name, email, password, phoneNumber, otp));
+    dispatch(register(email, name, otp, password, phoneNumber));
   };
 
   useEffect(() => {
@@ -115,7 +115,7 @@ function RegisterScreen() {
         type: USER_LOGOUT,
       });
     }
-  }, [navigate, userInfo, registerError, dispatch]);
+  }, [dispatch, navigate, registerError, userInfo]);
 
   useEffect(() => {
     if (!otpLoading) {
