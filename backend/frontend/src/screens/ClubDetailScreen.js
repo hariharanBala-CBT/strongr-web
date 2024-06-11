@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Carousel } from "react-responsive-carousel";
+import toast, { Toaster } from "react-hot-toast";
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import { LinkContainer } from "react-router-bootstrap";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
+import { useHomeContext } from "../context/HomeContext";
+
 import Header from "../components/Header";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from "react-responsive-carousel";
-import "../css/clubdetailscreen.css";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import Button from "../components/Button";
+import Footer from "../components/Footer";
+import { Alert, Box, CircularProgress, Modal } from "@mui/material";
+
 import {
   listclubLocation,
   listclubGame,
@@ -17,14 +26,17 @@ import {
   createClubReview,
   listClubReviews,
   login,
-} from "../actions/actions";
-import { IoMdCloseCircleOutline } from "react-icons/io";
-import { useHomeContext } from "../context/HomeContext";
-import toast, { Toaster } from "react-hot-toast";
-import { Alert, Box, CircularProgress, Modal } from "@mui/material";
-import Button from "../components/Button";
-import Footer from "../components/Footer";
+  } from "../actions/actions";
+
 import { CLUB_CREATE_REVIEW_RESET } from "../constants/constants";
+
+import "../css/clubdetailscreen.css";
+
+const linkStyle = {
+  textDecoration: "underline",
+  color: "purple",
+  cursor: "pointer",
+};
 
 const style = {
   position: "absolute",
@@ -39,7 +51,9 @@ const style = {
 };
 
 function ClubDetailScreen() {
+
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [rating, setRating] = useState(0);
@@ -48,34 +62,32 @@ function ClubDetailScreen() {
   const [loader, setLoader] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const [isPopupVisible, setPopupVisible] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
-  const gameName = localStorage.getItem("selectedGame");
   const { setSelectedCourt } = useHomeContext();
 
   const { userInfo, LoginError, userLoginSuccess } = useSelector(
     (state) => state.userLogin
   );
-  // const { userInfo } = userLogin;
-
   const clubReviewCreate = useSelector((state) => state.clubReviewCreate);
   const { clubReviews } = useSelector((state) => state.clubReviews);
 
   const { loading: loadingclubReview, success: successclubReview } =
-    clubReviewCreate;
+  clubReviewCreate;
+
+  const gameName = localStorage.getItem("selectedGame");
 
   const loginAndRedirect = (e) => {
     e.preventDefault();
+    setIsLogin(true);
     setLoader(true);
     dispatch(login(username, password));
     setUsername("");
     setPassword("");
     setLoader(true);
-    setTimeout(() => {
-      setLoader(false);
-      setOpenForm(false);
-    }, 1000);
   };
+
   useEffect(() => {
     if (id) {
       dispatch(listClubReviews(id));
@@ -86,7 +98,7 @@ function ClubDetailScreen() {
       dispatch(listClubImages(id));
       dispatch(listCourts(id, gameName));
     }
-  }, [dispatch, id, gameName, successclubReview]);
+  }, [dispatch, gameName, id, successclubReview]);
 
   useEffect(() => {
     if (successclubReview) {
@@ -110,7 +122,6 @@ function ClubDetailScreen() {
     });
   };
 
-  const [isPopupVisible, setPopupVisible] = useState(false);
 
   const handlePopupToggle = () => {
     setPopupVisible(!isPopupVisible);
@@ -138,6 +149,7 @@ function ClubDetailScreen() {
   const handleClick = () => {
     navigate(`/bookinginfo/${clubLocation.id}`);
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (userInfo) {
@@ -147,19 +159,23 @@ function ClubDetailScreen() {
       setOpenForm(true);
     }
   };
-  useEffect(() => {
-    if (LoginError) {
-      toast.error("Incorrect Credentials");
-      setOpenForm(true);
-    }
-  }, [LoginError]);
 
   useEffect(() => {
-    if (userLoginSuccess) {
-      // toast.success('Logged in successfully')
-      setOpenForm(false);
+    if (LoginError && isLogin) {
+      toast.error("Incorrect Credentials");
+      setOpenForm(true);
+      setLoader(false);
+      setIsLogin(false);
     }
-  }, [userLoginSuccess]);
+  }, [isLogin, LoginError]);
+
+  useEffect(() => {
+    if (userLoginSuccess && isLogin) {
+      toast.success("Logged in successfully");
+      setOpenForm(false);
+      setIsLogin(false);
+    }
+  }, [isLogin, userLoginSuccess]);
 
   useEffect(() => {
     const fixImageUrls = () => {
@@ -319,7 +335,6 @@ function ClubDetailScreen() {
             ))}
           </div>
 
-          {/* Write a Review Form */}
           <div className="write-review">
             <h4>Write a review</h4>
 
@@ -392,7 +407,7 @@ function ClubDetailScreen() {
           </Box>
         ) : (
           <Box sx={style}>
-            <Alert severity="info">You are one step away!!</Alert>
+            <Alert severity="info">Login to write a review</Alert>
             <form onSubmit={loginAndRedirect} className="booking-login-form">
               <h2 className="login-title">Login</h2>
 
@@ -425,6 +440,10 @@ function ClubDetailScreen() {
                   text="Login"
                 />
               </div>
+              <span>Don't have an account?</span>
+              <LinkContainer to="/signup" style={linkStyle}>
+                <span>Signup</span>
+              </LinkContainer>
             </form>
           </Box>
         )}

@@ -1,12 +1,15 @@
 import React from "react";
-import "../css/club.css";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-// import { LinkContainer } from "react-router-bootstrap";
-import Rating from "./Rating";
 import { useNavigate } from "react-router-dom";
 
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+
+import Rating from "./Rating";
+
+import "../css/club.css";
+
 function Club({ clubs }) {
+
   const navigate = useNavigate();
 
   const handleViewDetails = (club) => {
@@ -14,7 +17,7 @@ function Club({ clubs }) {
   };
 
   return (
-    <div className="clubs-display">
+    <div className={clubs && "clubs-display"}>
       {clubs &&
         clubs.map((club) => (
           <div className="flip-card" onClick={() => handleViewDetails(club)}>

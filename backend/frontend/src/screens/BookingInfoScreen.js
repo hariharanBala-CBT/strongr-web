@@ -1,31 +1,42 @@
 import React, { useEffect, useState } from "react";
-import "../css/bookinginfoscreen.css";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import { LinkContainer } from "react-router-bootstrap";
+
+import { useHomeContext } from "../context/HomeContext";
+
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import DateInput from "../components/DateInput";
 import SelectInput from "../components/SelectInput";
-import { useDispatch, useSelector } from "react-redux";
-import { useHomeContext } from "../context/HomeContext";
+
+import { Alert, Box, CircularProgress, Modal } from "@mui/material";
+
+import {
+  fetchAdditionalSlots,
+  fetchUnAvailableSlots,
+  fetchAvailableSlots,
+  listclubLocation,
+  listclubGame,
+  listCourts,
+  listclubWorking,
+  login,
+} from "../actions/actions";
+
 import {
   BOOKING_CREATE_RESET,
   BOOKING_DETAILS_RESET,
 } from "../constants/constants";
-import {
-  listclubLocation,
-  listclubGame,
-  listCourts,
-  fetchAvailableSlots,
-  login,
-  listclubWorking,
-  fetchAdditionalSlots,
-  fetchUnAvailableSlots,
-} from "../actions/actions";
-import { Alert, Box, CircularProgress, Modal } from "@mui/material";
-import toast, { Toaster } from "react-hot-toast";
-import Footer from "../components/Footer";
-// import SlotPicker from "slotpicker";
+
+import "../css/bookinginfoscreen.css";
+
+const linkStyle = {
+  textDecoration: "underline",
+  color: "purple",
+  cursor: "pointer",
+};
 
 const boxStyle = {
   position: "absolute",
@@ -56,6 +67,7 @@ function BookingInfoScreen() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
+
   const { clubLocation } = useSelector((state) => state.Location);
   const { clubGame } = useSelector((state) => state.clubGame);
   const { courts } = useSelector((state) => state.courtList);
@@ -63,7 +75,9 @@ function BookingInfoScreen() {
   const { slots } = useSelector((state) => state.slot);
   const { additionalSlots } = useSelector((state) => state.additionalSlot);
   const { unavailableSlots } = useSelector((state) => state.unavailableSlot);
-  const { userInfo, LoginError, userLoginSuccess } = useSelector((state) => state.userLogin);
+  const { userInfo, LoginError, userLoginSuccess } = useSelector(
+    (state) => state.userLogin
+  );
 
   const [slot, setSlot] = useState("");
   const [areaName, setAreaName] = useState(selectedArea);
@@ -75,6 +89,7 @@ function BookingInfoScreen() {
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
   const getSelectedGamePricing = () => {
     const selectedGame = clubGame?.find(
@@ -162,12 +177,6 @@ function BookingInfoScreen() {
       setLoading(true);
       const theCourt = courts?.find((court) => court.name === courtName);
       const courtId = theCourt?.id;
-
-      const selectedDate = new Date(date);
-      const selectedWeekday = selectedDate.toLocaleDateString("en-US", {
-        weekday: "long",
-      });
-      console.log(selectedWeekday);
       dispatch(fetchAvailableSlots(courtId, date)).then(() =>
         setLoading(false)
       );
@@ -223,11 +232,12 @@ function BookingInfoScreen() {
       const courtId = court?.id;
       const slotId = myslot?.id;
       let addslot = null;
-      if(!slotId){
+      if (!slotId) {
         addslot = additionalSlots.find(
           (slot) => slot.start_time === parts[0] && slot.end_time === parts[1]
         );
       }
+
       const addSlotId = addslot?.id;
       const formData = {
         id,
@@ -253,7 +263,7 @@ function BookingInfoScreen() {
           setLoader(false);
           navigate("/checkout");
         } else {
-          toast.error("select a slot before proceeding to book");
+          toast.error("select a slot to book");
         }
       } else {
         setLoader(false);
@@ -264,15 +274,12 @@ function BookingInfoScreen() {
 
   const loginAndRedirect = (e) => {
     e.preventDefault();
+    setIsLogin(true);
     setLoader(true);
     dispatch(login(username, password));
     setUsername("");
     setPassword("");
     setLoader(true);
-    setTimeout(() => {
-      setLoader(false);
-      setOpenForm(false);
-    }, 1000);
   };
 
   useEffect(() => {
@@ -281,15 +288,19 @@ function BookingInfoScreen() {
       setSelectedSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
       setLoading(false);
     }
-  }, [slots, setSelectedSlot, courts]);
+  }, [courts, slots, setSelectedSlot]);
 
   useEffect(() => {
     if (additionalSlots?.length > 0 && slots?.length === 0) {
-      setSlot(`${additionalSlots[0]?.start_time}-${additionalSlots[0]?.end_time}`);
-      setSelectedSlot(`${additionalSlots[0]?.start_time}-${additionalSlots[0]?.end_time}`);
+      setSlot(
+        `${additionalSlots[0]?.start_time}-${additionalSlots[0]?.end_time}`
+      );
+      setSelectedSlot(
+        `${additionalSlots[0]?.start_time}-${additionalSlots[0]?.end_time}`
+      );
       setLoading(false);
     }
-  }, [additionalSlots, setSelectedSlot, courts, slots]);
+  }, [courts, additionalSlots, setSelectedSlot, slots]);
 
   useEffect(() => {
     setSelectedArea(areaName);
@@ -311,18 +322,21 @@ function BookingInfoScreen() {
   ]);
 
   useEffect(() => {
-    if(LoginError){
-      toast.error('Incorrect Credentials')
-      setOpenForm(true)
+    if (LoginError && isLogin) {
+      toast.error("Incorrect Credentials");
+      setOpenForm(true);
+      setLoader(false);
+      setIsLogin(false);
     }
-  },[LoginError])
+  }, [isLogin, LoginError]);
 
   useEffect(() => {
-    if(userLoginSuccess){
-      toast.success('Logged in successfully')
-      setOpenForm(false)
+    if (userLoginSuccess && isLogin) {
+      toast.success("Logged in successfully");
+      setOpenForm(false);
+      setIsLogin(false);
     }
-  },[userLoginSuccess])
+  }, [isLogin, userLoginSuccess]);
 
   return (
     <div>
@@ -512,11 +526,15 @@ function BookingInfoScreen() {
                   text="Login"
                 />
               </div>
+              <span>Don't have an account?</span>
+              <LinkContainer to="/signup" style={linkStyle}>
+                <span>Signup</span>
+              </LinkContainer>
             </form>
           </Box>
         )}
       </Modal>
-      <Footer name="bookinginfo-f"/>
+      <Footer name="bookinginfo-f" />
     </div>
   );
 }

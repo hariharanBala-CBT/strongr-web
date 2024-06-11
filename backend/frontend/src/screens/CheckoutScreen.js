@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+
 import Header from "../components/Header";
 import Button from "../components/Button";
-import { useNavigate } from "react-router-dom";
-import "../css/checkoutscreen.css";
-import { useDispatch, useSelector } from "react-redux";
+import Footer from "../components/Footer";
+
+import { CircularProgress } from "@mui/material";
+
 import {
   createBooking, listcustomerDetails,
 } from "../actions/actions";
-// import { BOOKING_CREATE_RESET } from '../constants/constants'
-import { CircularProgress } from "@mui/material";
-import toast from "react-hot-toast";
-import Footer from "../components/Footer";
-// import { useLocation } from 'react-router-dom';
+
+import "../css/checkoutscreen.css";
 
 function CheckoutScreen() {
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [firstName, setFirstName] = useState("");
-  // const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+
   const { createBookingError, createBookingLoading, success, booking } = useSelector((state) => state.bookingCreate)
 
   const handleSubmit = (event) => {
@@ -51,33 +54,33 @@ function CheckoutScreen() {
   const bookingData = JSON.parse(bookingDataJSON);
 
   useEffect(() => {
-    if(bookingDetailsSuccess){
+    if (bookingDetailsSuccess) {
       navigate('/')
     }
-  },[navigate, bookingDetailsSuccess])
+  }, [bookingDetailsSuccess, navigate])
 
   useEffect(() => {
     dispatch(listcustomerDetails(userInfo?.id))
-  }, [userInfo, dispatch])
-  
+  }, [dispatch, userInfo])
+
   useEffect(() => {
     if (userInfo) {
       setFirstName(userInfo.first_name || "");
       setEmail(userInfo.email || "");
       setPhoneNumber(customerDetails?.phone_number || "");
     } else {
-      navigate(-1);
+      navigate('/');
     }
-  }, [userInfo, navigate, setFirstName, setEmail, setPhoneNumber, customerDetails]);
+  }, [customerDetails , navigate, setEmail, setFirstName, setPhoneNumber, userInfo]);
 
-  
-  useEffect(() =>  {
-    if(success && booking){
+
+  useEffect(() => {
+    if (success && booking) {
         navigate(`/booking/${booking.id}`);
-    }else if(createBookingError){
+    } else if (createBookingError) {
       toast.error('Something went wrong..')
     }
-  },[success, booking, navigate, createBookingError])
+  }, [booking, createBookingError, navigate, success])
 
   return (
     <div>
@@ -158,7 +161,7 @@ function CheckoutScreen() {
               </label>
             </div>
 
-            {createBookingLoading ? 
+            {createBookingLoading ?
             <CircularProgress /> :
             <div className="button">
               <Button
