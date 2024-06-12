@@ -94,7 +94,7 @@ def generateOtp(request):
     email = request.query_params.get('email')
     otp = get_random_string(length=4, allowed_chars='0123456789')
     subject = 'Welcome to Our Website'
-    message = render_to_string('email_otp.html', {
+    message = render_to_string('otp.html', {
         'otp': otp,
     })
 
