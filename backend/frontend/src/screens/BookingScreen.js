@@ -1,20 +1,25 @@
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
-import { getBookingDetails } from "../actions/actions";
 import toast, { Toaster } from "react-hot-toast";
-import { BOOKING_CREATE_RESET } from "../constants/constants";
-import "../css/bookingscreen.css";
-import { IconButton } from "@mui/material";
+
+import Header from "../components/Header";
 import Footer from "../components/Footer";
+
+import { IconButton } from "@mui/material";
+
+import { getBookingDetails } from "../actions/actions";
+
+import { BOOKING_CREATE_RESET } from "../constants/constants";
+
+import "../css/bookingscreen.css";
 
 function BookingScreen() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { bookingDetails } = useSelector((state) => state.bookingDetails);
-  // const { court, slot } = bookingDetails;
   const { success } = useSelector((state) => state.bookingCreate);
 
   function getPaymentStatusText(status) {
@@ -112,7 +117,7 @@ function BookingScreen() {
                 <strong>Date: </strong>
                 <span>{bookingDetails?.booking_date}</span>
                 <br />
-                {bookingDetails?.additional_slot ? (
+                {bookingDetails?.additional_slot?.start_time && (
                   <>
                     <strong>Time: </strong>
                     <span>
@@ -121,16 +126,15 @@ function BookingScreen() {
                       -{bookingDetails?.additional_slot?.end_time?.slice(0, 5)})
                     </span>
                   </>
-                ) : (
-                  bookingDetails?.slot && (
-                    <>
-                      <strong>Time: </strong>
-                      <span>
-                        ({bookingDetails?.slot?.start_time?.slice(0, 5)}-
-                        {bookingDetails?.slot?.end_time?.slice(0, 5)})
-                      </span>
-                    </>
-                  )
+                )}
+                {bookingDetails?.slot?.start_time && (
+                  <>
+                    <strong>Time: </strong>
+                    <span>
+                      ({bookingDetails?.slot?.start_time?.slice(0, 5)}-
+                      {bookingDetails?.slot?.end_time?.slice(0, 5)})
+                    </span>
+                  </>
                 )}
               </small>
             </div>
