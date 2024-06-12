@@ -23,19 +23,18 @@ class OrganizationSignupForm(forms.Form):
             raise ValidationError("User Already Exist")
         return username
 
-    def email_clean(self):
-        email = self.cleaned_data['email'].lower()
-        new = User.objects.filter(email=email)
-        if new.count():
-            raise ValidationError("Email Already Exist")
-        return email
-
-    def save(self, pwd, commit=True):
-        user = User.objects.create_user(
-            username=self.cleaned_data['email'],
-            email=self.cleaned_data['email'],
-            password=pwd,
-            first_name=self.cleaned_data['first_name'],
+    def clean_email(self):     
+        email = self.cleaned_data['email'].lower()     
+        if User.objects.filter(email=email).exists():    
+            raise ValidationError(" Email Already Exist")     
+        return email   
+    
+    def save(self, pwd, commit = True):     
+        user = User.objects.create_user(       
+            username = self.cleaned_data['email'],       
+            email=self.cleaned_data['email'],       
+            password = pwd,      
+            first_name=self.cleaned_data['first_name'],      
             last_name=self.cleaned_data['last_name']
         )
         return user

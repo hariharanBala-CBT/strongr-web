@@ -122,8 +122,10 @@ def registerUser(request):
     if not phone:
         return Response({'detail': 'Phone number is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # The rest of your logic
     try:
+        if User.objects.filter(email=data['email']).exists():
+            return Response({'detail': 'Email is already registered'}, status=status.HTTP_400_BAD_REQUEST)
+
         user = User.objects.create(
             first_name=data['name'],
             username=data['email'],
@@ -167,13 +169,10 @@ class OrganizationSignupView(CreateView):
             alt_number = form.cleaned_data.get('alt_number')
 
             if not self.is_valid_number(phone_number):
-                form.add_error('phone_number',
-                               'Phone number must be exactly 10 digits long.')
+                form.add_error('phone_number', 'Phone number must be exactly 10 digits long.')
 
             if alt_number and not self.is_valid_number(alt_number):
-                form.add_error(
-                    'alt_number',
-                    'Alternate number must be exactly 10 digits long.')
+                form.add_error('alt_number', 'Alternate number must be exactly 10 digits long.')
 
             if form.errors:
                 return render(request, self.template_name, context)
@@ -189,7 +188,8 @@ class OrganizationSignupView(CreateView):
                 phone_number=phone_number,
                 tenant=Tenant.objects.get(id=1),
                 organization_name=organization_name,
-                user=user)
+                user=user
+            )
             organization.save()
 
             if not user.last_login:
@@ -198,18 +198,14 @@ class OrganizationSignupView(CreateView):
             current_site = get_current_site(request)
             subject = 'Welcome to Our Website'
             message = render_to_string(
-                'email_genrate.html', {
+                'email_generate.html', {
                     'user': user,
                     'domain': current_site.domain,
                     'random_password': random_password
                 })
             from_email = 'testgamefront@gmail.com'
             recipient_list = [user.email]
-            send_mail(subject,
-                      message,
-                      from_email,
-                      recipient_list,
-                      fail_silently=False)
+            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
             login(request, user)
             return HttpResponseRedirect(self.success_url)
         else:
@@ -491,7 +487,7 @@ def update_location(request, pk):
                 messages.error(request,"Location update failed.This Pincode,Phone Number and Area combination already exists.")
             else:
                 error_messages = ''.join([f'{error}' for error in form.errors.values()])
-                messages.error(request, format_html(ERROR_MESSAGES['form_validation_failed'], error_message))
+                messages.error(request, format_html(ERROR_MESSAGES['form_validation_failed'], error_messages))
             return render(request, 'main_template.html', {'form': form, 'locationpk': pk})
     else:
         form = OrganizationLocationForm(instance=location)
