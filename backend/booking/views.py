@@ -384,26 +384,31 @@ def getUnavailableSlots(request):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def updateUserProfile(request):
-    user = request.user
-    serializer = UserSerializerWithToken(user, many=False)
+    try:
+        user = request.user
+        serializer = UserSerializerWithToken(user, many=False)
 
-    data = request.data
+        data = request.data
 
-    otp_from_session = request.session.get('otp')
-    if not otp_from_session or otp_from_session != data.get('otp'):
-        return Response({'error': 'Invalid OTP'},
-                        status=status.HTTP_400_BAD_REQUEST)
+        otp_from_session = request.session.get('emailedotp')
+        if not otp_from_session or otp_from_session != data.get('otp'):
+            return Response({'error': 'Invalid OTP'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-    user.first_name = data['fname']
-    user.username = data['email']
-    user.email = data['email']
+        user.first_name = data['fname']
+        user.username = data['email']
+        user.email = data['email']
 
-    customer = Customer.objects.get(user=user.id)
-    customer.phone_number = data['phone']
-    customer.save()
-    user.save()
+        customer = Customer.objects.get(user=user.id)
+        customer.phone_number = data['phone']
+        customer.save()
+        user.save()
 
-    return Response(serializer.data)
+        return Response(serializer.data)
+
+    except Exception as e:
+        print(e)
+        return Response({'detail': 'User profile not updated'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PUT'])

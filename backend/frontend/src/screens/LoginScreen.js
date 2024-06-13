@@ -1,52 +1,52 @@
 import React, { useState, useEffect } from "react";
-import "../css/loginscreen.css";
+import { LinkContainer } from "react-router-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+
 import Header from "../components/Header";
 import Button from "../components/Button";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { login, validateUser } from "../actions/actions";
-import { Toaster } from "react-hot-toast";
+
 import { CircularProgress, TextField } from "@mui/material";
+
+import { login, validateUser } from "../actions/actions";
+
 import { USER_LOGIN_RESET } from "../constants/constants";
-// import { USER_LOGIN_RESET } from "../constants/constants";
-import { LinkContainer } from "react-router-bootstrap";
+
+import "../css/loginscreen.css";
 
 const linkStyle = {
-  textDecoration: 'underline',
-  color : 'purple',
-  cursor : 'pointer'
-}
+  textDecoration: "underline",
+  color: "purple",
+  cursor: "pointer",
+};
 
 function LoginScreen() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  // const location = useLocation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  // const redirect = location.search ? location.search.split("=")[1] : "/";
-  const { userInfo, error, loading } = useSelector((state) => state.userLogin);
+  const { userInfo, LoginError, loading } = useSelector((state) => state.userLogin);
   const { userValidate } = useSelector((state) => state.userValidator);
 
-
   useEffect(() => {
-      dispatch({
-        type: USER_LOGIN_RESET,
-      });
-  },[dispatch])
+    dispatch({
+      type: USER_LOGIN_RESET,
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     if (userInfo) {
       navigate(-1);
-      // toast.success("logged in successfully");
-      setErrorMessage("")
-    } else if(!userInfo && error && password.length > 0){
-      setErrorMessage("Incorrect Password")
-      setPassword("")
+      setErrorMessage("");
+    } else if (!userInfo && LoginError && password.length > 0) {
+      setErrorMessage("Incorrect Password");
+      setPassword("");
     }
-  }, [navigate, userInfo, dispatch, error]);
+  }, [ dispatch, LoginError, navigate, userInfo]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,10 +54,10 @@ function LoginScreen() {
   };
 
   useEffect(() => {
-    if(userValidate){
+    if (userValidate) {
       dispatch(login(username, password));
     }
-  },[dispatch, userValidate])
+  }, [dispatch, userValidate]);
 
   const handleUsername = (e) => {
     setUsername(e.target.value);
@@ -65,7 +65,7 @@ function LoginScreen() {
 
   const handlePassword = (e) => {
     setPassword(e.target.value);
-    setErrorMessage("")
+    setErrorMessage("");
   };
 
   return (
@@ -98,8 +98,10 @@ function LoginScreen() {
 
               <label>Password</label>
               <TextField
-                error = {error && errorMessage.length > 0}
-                helperText={ errorMessage.length > 0 && error && errorMessage }
+                error={LoginError && errorMessage.length > 0}
+                helperText={
+                  errorMessage.length > 0 && LoginError && errorMessage
+                }
                 required
                 type="password"
                 placeholder="Enter password"
@@ -118,20 +120,14 @@ function LoginScreen() {
           )}
           <span>
             Login using Phone number?&nbsp;
-            <LinkContainer
-              to="/phonenumberlogin"
-              style={linkStyle}
-            >
+            <LinkContainer to="/phonenumberlogin" style={linkStyle}>
               <span>login</span>
             </LinkContainer>
           </span>
 
           <span>
             Dont you have an Account?&nbsp;
-            <LinkContainer
-              to="/signup"
-              style={linkStyle}
-            >
+            <LinkContainer to="/signup" style={linkStyle}>
               <span>signup</span>
             </LinkContainer>
           </span>
