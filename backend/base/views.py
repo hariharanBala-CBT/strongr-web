@@ -1016,6 +1016,8 @@ class PreviewView(FormView):
             context_item['images'] = OrganizationGameImages.objects.filter(
                 organization=location)
             context_item['slots'] = Slot.objects.filter(location_id=location)
+            context_item['has_courts'] = context_item['courts'].exists()
+            context_item['has_slots'] = context_item['slots'].exists()
             locationdetails.append(context_item)
         context['all_locations'] = locationdetails
         profile = Organization.objects.filter(user=self.request.user)
