@@ -46,7 +46,7 @@ function LoginScreen() {
       setErrorMessage("Incorrect Password");
       setPassword("");
     }
-  }, [navigate, userInfo, dispatch, LoginError]);
+  }, [ dispatch, LoginError, navigate, userInfo]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

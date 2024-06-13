@@ -15,17 +15,19 @@ import { listOrganizations, RecentSearch } from "../actions/actions";
 import "../css/clubsearchscreen.css";
 
 function ClubSearchScreen() {
-  
-  const NoDataAnimationUrl="https://cbtstrongr.s3.amazonaws.com/videos/no-data-animation.json";
+  const NoDataAnimationUrl =
+    "https://cbtstrongr.s3.amazonaws.com/videos/no-data-animation.json";
 
   const { keyword, setKeyword } = useHomeContext();
   const dispatch = useDispatch();
 
   const [recentlySearchedKeywords, setRecentlySearchedKeywords] = useState([]);
 
-  const { filteredClubLocations } = useSelector((state) => state.listOrganizations);
+  const { filteredClubLocations } = useSelector(
+    (state) => state.listOrganizations
+  );
   const { filteredData } = useSelector((state) => state.RecentSearch);
-  
+
   const submitHandler = async (e) => {
     e.preventDefault();
     if (keyword) {
@@ -105,15 +107,15 @@ function ClubSearchScreen() {
           </Form>
         </div>
       </section>
-        {filteredClubLocations.length > 0 ? (
+      {filteredClubLocations.length > 0 ? (
         <div className="club-list">
           <Club clubs={filteredClubLocations} onClick={handleClubClick} />
-        </div>)
-        :
-        (<div className="clubs-error">
+        </div>
+      ) : (
+        <div className="clubs-error">
           <NoDataAnimation url={NoDataAnimationUrl} />
-        </div>)
-        }
+        </div>
+      )}
 
       {filteredData?.length > 0 && (
         <div className="recently-searched">
