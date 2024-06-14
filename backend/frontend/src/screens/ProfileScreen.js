@@ -1,36 +1,39 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import "../css/profilescreen.css";
 import { useNavigate } from "react-router-dom";
-import {
-  bookingCancel,
-  listUserBookings,
-  // listcustomerDetails,
-} from "../actions/actions";
-import { Box } from "@mui/material";
-import { USER_UPDATE_PROFILE_RESET } from "../constants/constants";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import Tooltip from "@mui/material/Tooltip";
-import { IconButton } from '@mui/material';
+
 import Footer from "../components/Footer";
+import Header from "../components/Header";
+
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Slide,
+  Tooltip,
+  IconButton,
+  Paper,
+  Stack,
+  styled,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Grid,
+} from "@mui/material";
+
+import { bookingCancel, listUserBookings } from "../actions/actions";
+
+import { USER_UPDATE_PROFILE_RESET } from "../constants/constants";
+
+import "../css/profilescreen.css";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -54,30 +57,12 @@ function ProfileScreen() {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  // const [courtList, setCourtList] = useState([]);
   const [bookingId, setBookingId] = useState("");
 
-  // const { customerDetails } = useSelector((state) => state.customerDetails);
   const { userInfo } = useSelector((state) => state.userLogin);
   const { userbookings } = useSelector((state) => state.userBookingsList);
   const { cancelBooking } = useSelector((state) => state.cancelBooking);
-
-  // function getPaymentStatusText(status) {
-  //   switch (status) {
-  //     case 1:
-  //       return "Pending";
-  //     case 2:
-  //       return "Initiated";
-  //     case 3:
-  //       return "In Progress";
-  //     case 4:
-  //       return "Success";
-  //     case 5:
-  //       return "Cancelled";
-  //     default:
-  //       return "Unknown";
-  //   }
-  // }
+  const { customerDetails } = useSelector((state) => state.customerDetails);
 
   function getBookingStatusText(status) {
     switch (status) {
@@ -116,7 +101,6 @@ function ProfileScreen() {
 
     if (userInfo) {
       dispatch(listUserBookings(userInfo.id));
-      // dispatch(listcustomerDetails(userInfo.id));
     } else {
       navigate("/");
     }
@@ -158,7 +142,7 @@ function ProfileScreen() {
                   </ul>
                   <ul>
                     <strong>Phone number: </strong>
-                    {userInfo?.customer?.phone_number}
+                    {customerDetails?.phone_number}
                   </ul>
                 </Content>
                 <Button
@@ -197,9 +181,6 @@ function ProfileScreen() {
                         <TableCell>
                           <h4>Booked Date</h4>
                         </TableCell>
-                        {/* <TableCell>
-                        <h4>Payment</h4>
-                      </TableCell> */}
                         <TableCell>
                           <h4>Price</h4>
                         </TableCell>
@@ -241,9 +222,6 @@ function ProfileScreen() {
                               <TableCell>{booking.organization_name}</TableCell>
                               <TableCell>{booking.game_type}</TableCell>
                               <TableCell>{formattedDate}</TableCell>
-                              {/* <TableCell>
-                              {getPaymentStatusText(booking.payment_status)}
-                            </TableCell> */}
                               <TableCell>₹ {booking.total_price}</TableCell>
                               <TableCell>
                                 <span
@@ -285,9 +263,7 @@ function ProfileScreen() {
                                       <i class="fas fa-rectangle-xmark"></i>
                                     </IconButton>
                                   ) : (
-                                    <IconButton
-                                      color="default"
-                                    >
+                                    <IconButton color="default">
                                       <i class="fas fa-rectangle-xmark"></i>
                                     </IconButton>
                                   )}

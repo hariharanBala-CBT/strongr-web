@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
-import Button from "../components/Button";
+import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import "../css/updateprofilescreen.css";
+import toast, { Toaster } from "react-hot-toast";
+import OTPInput, { ResendOTP } from "otp-input-react";
+
+import Button from "../components/Button";
+import Header from "../components/Header";
+
+import { Box, CircularProgress, Modal} from "@mui/material/";
+
 import {
+  generateOTP,
   listcustomerDetails,
   updateUserProfile,
-  generateOTP,
+  validateUser,
 } from "../actions/actions";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import { RESET_PASSWORD_RESET, USER_UPDATE_PROFILE_RESET } from "../constants/constants";
-import OTPInput, { ResendOTP } from "otp-input-react";
-import toast, { Toaster } from 'react-hot-toast';
-import { LinkContainer } from "react-router-bootstrap";
+
+import {
+  RESET_PASSWORD_RESET,
+  USER_UPDATE_PROFILE_RESET,
+} from "../constants/constants";
+
+import "../css/updateprofilescreen.css";
 
 const style = {
   position: "absolute",
@@ -30,10 +37,10 @@ const style = {
 };
 
 const linkStyle = {
-  textDecoration: 'underline',
-  color : 'purple',
-  cursor : 'pointer'
-}
+  textDecoration: "underline",
+  color: "purple",
+  cursor: "pointer",
+};
 
 function UpdateprofileScreen() {
   const dispatch = useDispatch();
@@ -41,25 +48,81 @@ function UpdateprofileScreen() {
   const { id } = useParams();
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [submit, setSubmit] = useState(false);
+  const [otp, setOtp] = useState("");
 
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
-  const { userUpdateSuccess, userUpdateError } = useSelector(
-    (state) => state.userUpdate
-  );
+  const { userValidate, userValidateError } = useSelector((state) => state.userValidator);
+  const { userUpdateSuccess, userUpdateError } = useSelector((state) => state.userUpdate);
   const { otpLoading } = useSelector((state) => state.generateOtp);
 
   const [username, setUsername] = useState(userInfo?.username || "");
   const [email, setEmail] = useState(userInfo?.email || "");
   const [fname, setFname] = useState(userInfo?.first_name || "");
   const [phone, setPhone] = useState(customerDetails?.phone_number || "");
-  const [otp, setOtp] = useState("");
+
+  const regenerateOtp = () => {
+    setLoader(true);
+    setOtp("");
+    setOpenForm(true);
+    dispatch(generateOTP(email));
+  };
+
+  const updateCustomer = (e) => {
+    e.preventDefault();
+    if (otp && fname && email && phone) {
+      setSubmit(true)
+      dispatch(updateUserProfile({
+        id: userInfo.id,
+        otp: otp,
+        fname: fname,
+        email: email,
+        phone: phone
+      }))
+    } else {
+      toast.error("Please fill all fields and enter a valid OTP");
+    }
+  };
+
+  const otpGenerate = () => {
+    setLoader(true);
+    setOpenForm(true);
+    dispatch(generateOTP(email));
+  };
+
+  const validateEmail = (e) => {
+    e.preventDefault();
+    setOtp("");
+    dispatch(validateUser(email));
+    setSubmit(true);
+  };
+
+  useEffect(() => {
+    if (!otpLoading) {
+      setLoader(false);
+    }
+  }, [otpLoading]);
+
+  useEffect(() => {
+    if (userUpdateSuccess && submit) {
+      toast.success("user details updated");
+      setSubmit(false)
+    } else if (userUpdateError && submit) {
+      toast.error("incorrect OTP");
+      setOpenForm(false);
+      dispatch({
+        type: USER_UPDATE_PROFILE_RESET,
+      });
+    }
+  }, [userUpdateSuccess, navigate, dispatch, userUpdateError, submit]);
+
 
   useEffect(() => {
     setOpenForm(false);
     dispatch({
       type: RESET_PASSWORD_RESET,
-    })
+    });
     dispatch(listcustomerDetails(id));
     if (!userInfo) {
       navigate("/");
@@ -70,50 +133,18 @@ function UpdateprofileScreen() {
     setPhone(customerDetails?.phone_number);
   }, [customerDetails]);
 
-  const otpGenerate = (e) => {
-    e.preventDefault();
-    setLoader(true);
-    setOpenForm(true);
-    dispatch(generateOTP(email));
-  };
-
-  const regenerateOtp = () => {
-    setLoader(true);
-    setOpenForm(true);
-    dispatch(generateOTP(email));
-  }
-
-  const updateCustomer = (e) => {
-    e.preventDefault();
-    dispatch(
-      updateUserProfile({
-        id: userInfo.id,
-        fname: fname,
-        email: email,
-        phone: phone,
-        otp: otp,
-        })
-        );
-        };
-
   useEffect(() => {
-    if (!otpLoading) {
-      setLoader(false);
+    if (userValidateError && submit && email !== userInfo?.email) {
+      otpGenerate();
+      setSubmit(false);
+    } else if (userValidate && submit && email !== userInfo?.email) {
+      toast.error("Account with this email exists");
+      setSubmit(false);
+    } else if (userValidate && submit && email === userInfo?.email) {
+      otpGenerate();
+      setSubmit(false);
     }
-  }, [otpLoading]);
-
-  useEffect(() => {
-    if (userUpdateSuccess) {
-      toast.success('user details updated')
-      navigate("/profile/");
-    } else if (userUpdateError) {
-      toast.error('incorrect OTP')
-      setOpenForm(false);
-      dispatch({
-        type: USER_UPDATE_PROFILE_RESET,
-      });
-    }
-  }, [userUpdateSuccess, navigate, dispatch, userUpdateError]);
+  }, [userValidate, userValidateError]);
 
   return (
     <div>
@@ -121,7 +152,7 @@ function UpdateprofileScreen() {
       <Toaster />
       <div className="profile-page">
         <div className="profile-form">
-          <form onSubmit={otpGenerate}>
+          <form onSubmit={validateEmail}>
             <h2 className="profile-title">Update Profile</h2>
             <div className="username-input">
               <label>Username</label>
@@ -181,11 +212,12 @@ function UpdateprofileScreen() {
               </div>
             )}
 
-          <span>
-            Want to update your password?&nbsp;
-            <LinkContainer to="/updatepassword" style={linkStyle}><span> update password</span></LinkContainer>
-          </span>
-
+            <span>
+              Want to update your password?&nbsp;
+              <LinkContainer to="/updatepassword" style={linkStyle}>
+                <span> update password</span>
+              </LinkContainer>
+            </span>
           </form>
 
           <Modal
@@ -204,16 +236,8 @@ function UpdateprofileScreen() {
                 <form onSubmit={updateCustomer} className="otp-form">
                   <div className="otp-input">
                     <label>Enter OTP sent to email</label>
-                    {/* <input
-                      className="otp"
-                      value={otp}
-                      type="integer"
-                      onChange={(e) => {
-                        setOtp(e.target.value);
-                      }}
-                    /> */}
                     <OTPInput
-                      className='otp-input-field'
+                      className="otp-input-field"
                       value={otp}
                       onChange={setOtp}
                       autoFocus
@@ -222,9 +246,7 @@ function UpdateprofileScreen() {
                       disabled={false}
                       secure
                     />
-                    <ResendOTP
-                      onResendClick={regenerateOtp}
-                    />
+                    <ResendOTP onResendClick={regenerateOtp} />
                   </div>
                   <div className="otp-button">
                     <Button
