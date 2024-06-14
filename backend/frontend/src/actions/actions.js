@@ -102,6 +102,9 @@ import {
   UNAVAILABLE_SLOT_REQUEST,
   UNAVAILABLE_SLOT_SUCCESS,
   UNAVAILABLE_SLOT_FAIL,
+  PHONE_VALIDATE_REQUEST,
+  PHONE_VALIDATE_SUCCESS,
+  PHONE_VALIDATE_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -1048,6 +1051,33 @@ export const validateUser = (username) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_VALIDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const validatePhone = (phone) => async (dispatch) => {
+  try {
+    dispatch({ type: PHONE_VALIDATE_REQUEST });
+
+    const { data } = await axios.get("/api/phone/validate/", {
+      params: { 
+        phone: phone,
+       },
+    });
+
+
+    dispatch({
+      type: PHONE_VALIDATE_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: PHONE_VALIDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

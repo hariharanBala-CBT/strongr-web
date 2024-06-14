@@ -1,4 +1,3 @@
-# Create your views here.from django.shortcuts import render
 from django.db import IntegrityError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -26,17 +25,32 @@ def ValidateUser(request):
 
     try:
         if not username:
-            return Response({'detail': 'Username is required'},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Username is required'},status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.filter(username=username).first()
         if not user:
-            return Response({'detail': 'User does not exist'},
-                            status=status.HTTP_404_NOT_FOUND)
+            return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
         return Response({'detail': 'User exists'}, status=status.HTTP_200_OK)
 
     except Exception as e:
-        return Response({'detail': 'User cannot be validated'},
-                        status=status.HTTP_400_BAD_REQUEST)
+        print(e)
+        return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def ValidatePhone(request):
+    phone = request.GET.get('phone')
+    phone = phone[2:]
+
+    try:
+        if not phone:
+            return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
+        customer = Customer.objects.get(phone_number = phone)
+        if not customer:
+            return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
+        return Response({'detail': 'User exists'}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print(e)
+        return Response({'detail': 'phone number cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])

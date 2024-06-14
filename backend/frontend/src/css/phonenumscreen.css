@@ -65,10 +65,6 @@
 
 .logins-page form label {
   margin: 0.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  flex-grow: inherit;
-  flex-shrink: inherit;
 }
 
 .logins-page button {
@@ -94,4 +90,15 @@
 
 .logins-page .loader {
   align-self: center;
+}
+
+.logins-page .phone-label {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logins-page .otp-box{
+  margin-top: 2rem;
+  margin-bottom: -10%;
 }
