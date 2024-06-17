@@ -16,86 +16,44 @@
 
     <style>
         .popup {
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: #fff;
-                padding: 20px;
-                border: 2px solid #333;
-                border-radius: 5px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-                z-index: 9999;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
             }
-            .overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 9998;
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+        }
+        #successAlert {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background-color: #323231;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1050;
             }
-            /* Container for the messages */
-            .messages {
-                list-style: none;
-                padding: 0;
-                margin: 20px 0;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            /* Common styles for all messages */
-            .messages li {
-                padding: 15px 20px;
-                border-radius: 5px;
-                font-family: Arial, sans-serif;
-                font-size: 16px;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            }
-
-            /* Success message styles */
-            .messages .success {
-                background-color: #dff0d8;
-                color: #3c763d;
-            }
-
-            /* Error message styles */
-            .messages .error {
-                background-color: #f2dede;
-                color: #a94442;
-            }
-
-            /* Warning message styles */
-            .messages .warning {
-                background-color: #fcf8e3;
-                color: #8a6d3b;
-            }
-
-            /* Info message styles */
-            .messages .info {
-                background-color: #d9edf7;
-                color: #31708f;
-            }
-
-            /* Close button styles */
-            .messages .close-btn {
-                background: none;
-                border: none;
-                font-size: 16px;
-                cursor: pointer;
-                color: inherit;
-                margin-left: 10px;
-            }
-
+        #successAlert p {
+            text-align: center;
+            margin: 0;
+        }
     </style>
-    
+
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -146,7 +104,7 @@
                         <a class="nav-link" href="{% url 'org_customers_list'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Customers
-                        </a>  
+                        </a>
                         <div class="sb-sidenav-menu-heading">Slot</div>
                         <a class="nav-link" href="{% url 'slot-location' %}">
                             <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
@@ -171,6 +129,13 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4 mt-4">
+                    {% if messages %}
+                        <div class="alert alert-success" role="alert" id="successAlert">
+                            {% for message in messages %}
+                            <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     <div class="profile-card">
                         <h3 class="my-4">Temporary Slots</h3>
                         <h6 class="mb-5">Unavailable Temporary Slots are:</h6>
@@ -182,16 +147,6 @@
                                 <a href="{% url 'add-unavailable-slot' pk=locationpk %}" class="btn btn-success align-self-end"><i class="fa-solid fa-plus"></i></a>
                             </div>
                         </div>
-                        {% if messages %}
-                            <ul class="messages">
-                                {% for message in messages %}
-                                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                                        {{ message }}
-                                        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
 
                         <div class="card-body">
                                 {% csrf_token %}
@@ -229,11 +184,11 @@
                                                             <i class="fa-solid fa-trash"></i>
                                                         </button>
                                                     </form>
-                                                </td>                                               
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
-                                </table>                                
+                                </table>
                         </div>
                     </div>
                 </div>
@@ -268,9 +223,10 @@
             <button onclick="handleYes()">Yes</button>
         </div>
     </div>
-    
+
     <div class="overlay" id="overlay"></div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
     <script>
@@ -306,13 +262,13 @@
         }
 
         window.addEventListener('DOMContentLoaded', event => {
-            const datatablesSimple = document.getElementById('datatablesSimple');
-            if (datatablesSimple) {
-                new simpleDatatables.DataTable(datatablesSimple);
+            const $datatablesSimple = document.getElementById('datatablesSimple');
+            if ($datatablesSimple) {
+                new simpleDatatables.DataTable($datatablesSimple);
             }
-            const sidebarToggle = document.body.querySelector('#sidebarToggle');
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', event => {
+            const $sidebarToggle = document.body.querySelector('#sidebarToggle');
+            if ($sidebarToggle) {
+                $sidebarToggle.addEventListener('click', event => {
                     event.preventDefault();
                     document.body.classList.toggle('sb-sidenav-toggled');
                     localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
@@ -320,18 +276,12 @@
             }
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const messages = document.querySelectorAll('.messages li');
-            messages.forEach(function(message) {
-                setTimeout(function() {
-                    message.style.opacity = '0';
-                    message.style.transition = 'opacity 0.5s ease';
-                    setTimeout(function() {
-                        message.style.display = 'none';
-                    }, 500);
-                }, 3000);
-            });
-        });
+        const $successAlert = ('#successAlert');
+        if ($successAlert.length) {
+            setTimeout(() => {
+                $successAlert.hide();
+            }, 2500);
+        }
     </script>
 </body>
 </html>

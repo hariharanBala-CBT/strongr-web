@@ -790,16 +790,16 @@ class SlotCreateView(CreateView):
 
     def form_valid(self, form):
         try:
-            location_pk = self.request.session['location_pk']
+            location_pk = self.request.session['locationpk']
             location = OrganizationLocation.objects.get(pk=location_pk)
             form.instance.location = location
         except KeyError:
-            return HttpResponseRedirect(reverse_lazy('error-url'))
+            return HttpResponseRedirect(reverse_lazy('error'))
         messages.success(self.request, SUCCESS_MESSAGES.get('create_slot'))
         return super().form_valid(form)
 
     def get_success_url(self):
-        location_pk = self.request.session.get('location_pk')
+        location_pk = self.request.session.get('locationpk')
         return reverse('slot-list', kwargs={'locationpk': location_pk})
 
 class SlotUpdateView(UpdateView):
@@ -878,7 +878,7 @@ class CourtCreateView(CreateView):
             location = OrganizationLocation.objects.get(pk=pk)
             form.instance.location = location
         except KeyError:
-            return HttpResponseRedirect(reverse_lazy('error-url'))
+            return HttpResponseRedirect(reverse_lazy('error'))
         messages.success(self.request, SUCCESS_MESSAGES.get('create_court'))
         return super().form_valid(form)
 
@@ -1087,7 +1087,7 @@ class ChangeOrganizationLocationStatusView(View):
                 kwargs={'pk': organizationLocation.organization.pk})
             return redirect(page_url)
         elif user.groups.filter(name='Customer').exists():
-            return redirect('error-url')
+            return redirect('error')
 
 @method_decorator(login_required, name='dispatch')
 class ChangePasswordView(PasswordChangeView):
@@ -1325,7 +1325,7 @@ class AddMultipleTempSlotsView(View):
                     form.save()
                 else:
                     messages.error(request, 'Location not found.')
-                    return redirect('error-url')
+                    return redirect('error')
 
             messages.success(request, SUCCESS_MESSAGES.get('create_slot'))
             return redirect('temp-slot-list')
@@ -1424,7 +1424,7 @@ class UnavailableSlotListView(ListView):
             try:
                 slot = UnavailableSlot.objects.get(id=id)
                 slot.delete()
-                messages.success(self.request, SUCCESS_MESSAGES('delete_unavailable_slot'))
+                messages.success(self.request, SUCCESS_MESSAGES.get('delete_unavailable_slot'))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             except UnavailableSlot.DoesNotExist:
                 print("Slot does not exist")

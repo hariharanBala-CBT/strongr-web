@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
@@ -8,7 +8,6 @@ import Header from "../components/Header";
 import Button from "../components/Button";
 import OTPInput, { ResendOTP } from "otp-input-react";
 import { Box, CircularProgress, Modal } from "@mui/material";
-// import Message from "../components/Message";
 
 import { generateOTP, register, validateUser } from "../actions/actions";
 
@@ -39,7 +38,6 @@ function RegisterScreen() {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [validatedEmail, setValidatedEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
