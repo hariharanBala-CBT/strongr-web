@@ -105,11 +105,11 @@
             <main>
                 <div class="container-fluid px-4 mt-4">
                     {% if messages %}
-                    <div class="alert alert-success" role="alert" id="successAlert">
-                        {% for message in messages %}
-                        <p>{{ message }}</p>
-                        {% endfor %}
-                    </div>
+                        <div class="alert alert-success" role="alert" id="successAlert">
+                            {% for message in messages %}
+                            <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                     <div class="profile-card">
                         <h3 class="my-4">Slots</h3>
@@ -188,7 +188,7 @@
         });
 
         window.addEventListener('DOMContentLoaded', event => {
-            const sidebarToggle = document.body.querySelector('#sidebarToggle');
+            const $sidebarToggle = document.body.querySelector('#sidebarToggle');
             if (sidebarToggle) {
                 sidebarToggle.addEventListener('click', event => {
                     event.preventDefault();
@@ -197,12 +197,12 @@
                 });
             }
         });
-        const successAlert = $('#successAlert');
-            if (successAlert.length) {
-                setTimeout(() => {
-                    successAlert.hide();
-                }, 2500);
-            }
+        const $successAlert = $('#successAlert');
+        if (successAlert.length) {
+            setTimeout(() => {
+                successAlert.hide();
+            }, 2500);
+        }
     </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# messagespy
+# constant toast messages for success and error.
 
 SUCCESS_MESSAGES = {
     #create
@@ -37,16 +37,16 @@ SUCCESS_MESSAGES = {
 }
 
 ERROR_MESSAGES = {
-    'form_validation_failed_profile': 'Profile update failed {}',
-    'form_validation_failed_location': 'Location update failed {}',
-    'form_validation_failed_game': 'Game update failed {}',
-    'form_validation_failed_image': 'Image update failed {}',
-    'form_validation_failed_court': 'Court update failed {}',
-    'form_validation_failed_slot': 'Slot update failed {}',
-    'form_validation_failed_working_days': 'Working days update failed {}',
-    'form_validation_failed_amenities': 'Amenities update failed {}',
-    'form_validation_failed_generic': 'Please correct the error below {}',
-    'form_validation_failed_user_exist_without_group': 'User exist without group {}',
+    'form_validation_failed_profile': 'Profile update failed',
+    'form_validation_failed_location': 'Location update failed ',
+    'form_validation_failed_game': 'Game update failed ',
+    'form_validation_failed_image': 'Image update failed ',
+    'form_validation_failed_court': 'Court update failed ',
+    'form_validation_failed_slot': 'Slot update failed ',
+    'form_validation_failed_working_days': 'Working days update failed ',
+    'form_validation_failed_amenities': 'Amenities update failed ',
+    'form_validation_failed_generic': 'Please correct the error below ',
+    'form_validation_failed_user_exist_without_group': 'User exist without group ',
     'phone_number_invalid': 'Phone number must be exactly 10 digits.',
     'alt_number_invalid': 'Alternate number must be exactly 10 digits.',
 }

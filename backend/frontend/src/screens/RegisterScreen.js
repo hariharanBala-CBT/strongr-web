@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
@@ -69,14 +69,14 @@ function RegisterScreen() {
   const validateEmail = (e) => {
     e.preventDefault();
     if (password.length < 8) {
-      toast.error("Pasword must be atleast 8 characters");
+      toast.error("Password must be at least 8 characters");
       return;
     } else if (password !== confirmPassword) {
       toast.error("Passwords do not match");
-      return
-    }else {
+      return;
+    } else {
       dispatch(validateUser(email));
-      setSubmit('true')
+      setSubmit(true);
     }
   };
 
@@ -144,6 +144,7 @@ function RegisterScreen() {
                   onChange={(e) => {
                     setName(e.target.value);
                   }}
+                  autoComplete="off"
                 />
 
                 <label>Phone Number</label>
@@ -155,6 +156,7 @@ function RegisterScreen() {
                   onChange={(e) => {
                     setPhoneNumber(e.target.value);
                   }}
+                  autoComplete="off"
                 />
 
                 <label>Email</label>
@@ -166,6 +168,7 @@ function RegisterScreen() {
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
+                  autoComplete="off"
                 />
               </div>
 
@@ -179,6 +182,7 @@ function RegisterScreen() {
                   onChange={(e) => {
                     setPassword(e.target.value);
                   }}
+                  autoComplete="new-password"
                 />
 
                 <label>Confirm Password</label>
@@ -190,6 +194,7 @@ function RegisterScreen() {
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
                   }}
+                  autoComplete="off"
                 />
               </div>
             </div>

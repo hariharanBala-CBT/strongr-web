@@ -369,7 +369,7 @@ class OrganizationProfileView(UpdateView):
         # If all validations pass
         response = super().form_valid(form)
         if self.is_ajax_request():
-            return JsonResponse({'status': 'success', 'message': SUCCESS_MESSAGES.get('update_profile')})
+            return JsonResponse({'status': 'success', 'message': SUCCESS_MESSAGES.get('update_profile')}, status=200)
         return response
 
     def form_invalid(self, form):
@@ -427,7 +427,7 @@ class OrganizationAddLocationView(CreateView):
                 organization_location=form.instance,
             )
             workingdays.save()
-        messages.success(self.request, SUCCESS_MESSAGES.get['create_location'])
+        messages.success(self.request, SUCCESS_MESSAGES.get('create_location'))
         return HttpResponseRedirect(reverse('mainview', kwargs={'location_pk': pk}))
 
     def form_invalid(self, form):
@@ -444,7 +444,7 @@ def update_location(request, pk):
             form.instance.organization = organization
             form.save()
             request.session['location_pk'] = form.instance.pk
-            messages.success(request, SUCCESS_MESSAGES['update_location'])
+            messages.success(request, SUCCESS_MESSAGES.get('update_location'))
             return redirect('mainview', location_pk=form.instance.pk)
         else:
             if 'This Pincode,Phone Number and Area combination already exists.' in form.non_field_errors():
@@ -547,7 +547,7 @@ class OrganizationLocationGameTypeView(CreateView):
                 is_active=True
             )
 
-        messages.success(self.request, SUCCESS_MESSAGES.get['create_game'])
+        messages.success(self.request, SUCCESS_MESSAGES.get('create_game'))
         return redirect(self.get_success_url())
 
 @method_decorator(login_required, name='dispatch')
@@ -564,7 +564,7 @@ class OrganizationUpdateLocationGameTypeView(UpdateView):
     def form_valid(self, form):
         form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=self.kwargs.get('locationpk'))
         form.save()
-        messages.success(self.request, SUCCESS_MESSAGES['update_game'])
+        messages.success(self.request, SUCCESS_MESSAGES.get('update_game'))
         return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
 
     def form_invalid(self, form):
@@ -603,7 +603,7 @@ class OrganizationLocationImageView(CreateView):
         location_pk = self.kwargs.get('locationpk')
         form_instance.organization = get_object_or_404(OrganizationLocation, pk=location_pk)
         form_instance.save()
-        messages.success(self.request, SUCCESS_MESSAGES.get('create_image', 'Image created successfully.'))
+        messages.success(self.request, SUCCESS_MESSAGES.get('create_image'))
         return redirect(reverse('mainview', kwargs={'location_pk': location_pk}))
 
     def get_context_data(self, **kwargs):
@@ -1327,7 +1327,7 @@ class AddMultipleTempSlotsView(View):
                     messages.error(request, 'Location not found.')
                     return redirect('error-url')
 
-            messages.success(request, SUCCESS_MESSAGES.get['create_slot'])
+            messages.success(request, SUCCESS_MESSAGES.get('create_slot'))
             return redirect('temp-slot-list')
         return render(request, self.template_name, {'forms': forms})
 
@@ -1355,7 +1355,7 @@ class TempSlotListView(ListView):
             try:
                 slot = AdditionalSlot.objects.get(id=id)
                 slot.delete()
-                messages.success(self.request, SUCCESS_MESSAGES.get['delete_additional_slot'])
+                messages.success(self.request, SUCCESS_MESSAGES.get('delete_additional_slot'))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             except AdditionalSlot.DoesNotExist:
                 print("Slot does not exist")
@@ -1384,7 +1384,7 @@ class TempSlotCreateView(CreateView):
                 raise KeyError('Location PK not found in session')
             location = OrganizationLocation.objects.get(pk=pk)
             form.instance.location = location
-            messages.success(self.request, SUCCESS_MESSAGES.get['create_additional_slot'])
+            messages.success(self.request, SUCCESS_MESSAGES.get('create_additional_slot'))
             response = super().form_valid(form)
             return response
         except KeyError as e:
@@ -1424,7 +1424,7 @@ class UnavailableSlotListView(ListView):
             try:
                 slot = UnavailableSlot.objects.get(id=id)
                 slot.delete()
-                messages.success(self.request, SUCCESS_MESSAGES['delete_unavailable_slot'])
+                messages.success(self.request, SUCCESS_MESSAGES('delete_unavailable_slot'))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             except UnavailableSlot.DoesNotExist:
                 print("Slot does not exist")
@@ -1461,7 +1461,7 @@ class UnavailableSlotCreateView(CreateView):
             location = OrganizationLocation.objects.get(pk=pk)
             form.instance.location = location
             response = super().form_valid(form)
-            messages.success(self.request, SUCCESS_MESSAGES.get['create_unavailable_slot'])
+            messages.success(self.request, SUCCESS_MESSAGES.get('create_unavailable_slot'))
             return response
         except KeyError as e:
             return self.render_to_response(
@@ -1499,7 +1499,7 @@ def update_working_days(request, location_pk):
             return JsonResponse({'status': 'success', 'message': SUCCESS_MESSAGES.get('update_workingdays')})
         else:
             error_messages = ''.join([f'{error}' for error in formset.errors])
-            return JsonResponse({'status': 'error', 'message': format_html(ERROR_MESSAGES['form_validation_failed'], error_messages)}, status=400)
+            return JsonResponse({'status': 'error', 'message': format_html(ERROR_MESSAGES('form_validation_failed'), error_messages)}, status=400)
     else:
         formset = OrganizationLocationWorkingDaysFormSet(queryset=queryset)
     return render(request, 'update_workingdays.html', {'formset': formset, 'locationpk': location_pk})
@@ -1515,7 +1515,7 @@ def update_amenities(request, location_pk):
             return JsonResponse({'status': 'success', 'message': SUCCESS_MESSAGES.get('update_amenities')})
         else:
             error_messages = ''.join([f'{error}' for error in form.errors.values()])
-            return JsonResponse({'status': 'error', 'message': format_html(ERROR_MESSAGES['form_validation_failed'], error_messages)}, status=400)
+            return JsonResponse({'status': 'error', 'message': format_html(ERROR_MESSAGES('form_validation_failed'), error_messages)}, status=400)
     else:
         form = OrganizationLocationAmenitiesForm(instance=amenities)
     return render(request, 'update_amenities.html', {'form': form, 'locationpk': location_pk})
