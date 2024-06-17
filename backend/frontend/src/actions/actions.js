@@ -813,12 +813,12 @@ export const resetUserPassword = (user) => async (dispatch, getState) => {
 };
 
 
-export const generateOTP = (email) => async (dispatch) => {
+export const generateOTP = (email, id) => async (dispatch) => {
   try {
     dispatch({ type: GENERATE_OTP_REQUEST });
 
     const { data } = await axios.get(`/sendotp/`, {
-      params: { email: email },
+      params: { email: email, id: id },
     });
 
     dispatch({

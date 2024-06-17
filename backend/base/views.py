@@ -92,10 +92,13 @@ def PhoneLoginView(request):
 @api_view(['GET'])
 def generateOtp(request):
     email = request.query_params.get('email')
+    user_id = request.query_params.get('id')
     otp = get_random_string(length=4, allowed_chars='0123456789')
+    user = User.objects.get(id=user_id)
     subject = 'Welcome to Our Website'
     message = render_to_string('otp.html', {
         'otp': otp,
+        'username': user.first_name,
     })
 
     from_email = 'testgamefront@gmail.com'

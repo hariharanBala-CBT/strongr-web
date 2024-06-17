@@ -88,7 +88,7 @@ function UpdateprofileScreen() {
   const otpGenerate = () => {
     setLoader(true);
     setOpenForm(true);
-    dispatch(generateOTP(email));
+    dispatch(generateOTP(email, userInfo.id));
   };
 
   const validateEmail = (e) => {
@@ -107,16 +107,15 @@ function UpdateprofileScreen() {
   useEffect(() => {
     if (userUpdateSuccess && submit) {
       toast.success("user details updated");
-      setSubmit(false)
+      setSubmit(false);
     } else if (userUpdateError && submit) {
       toast.error("incorrect OTP");
       setOpenForm(false);
-      dispatch({
-        type: USER_UPDATE_PROFILE_RESET,
-      });
     }
+    dispatch({
+      type: USER_UPDATE_PROFILE_RESET,
+    });
   }, [userUpdateSuccess, navigate, dispatch, userUpdateError, submit]);
-
 
   useEffect(() => {
     setOpenForm(false);
