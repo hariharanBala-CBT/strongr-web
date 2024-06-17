@@ -1,0 +1,324 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+h1{
+    margin-left: 40%;
+}
+
+hr{
+    height:2px;
+    border-width:0;
+    color:gray;
+    background-color:gray
+}
+
+.my-4{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.navbar {
+    background-color: #004085;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: #fff;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 8px 8px 0 0;
+    padding: 10px 15px;
+}
+
+.card-body {
+    padding: 20px;
+    line-height: 1.6;
+    color: #666;
+}
+
+.status-label {
+    padding: 5px 10px;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+}
+
+footer a {
+    color: #007bff;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    color: #007bff;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: #e0e0e0 #e0e0e0 #fff;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    list-style-type: none;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+li .label {
+    display: inline-block;
+    width: 100px;
+}
+
+.navbar-brand {
+    font-weight: 700;
+}
+
+.navbar-toggler-icon {
+    color: white;
+}
+
+/* Style for Disabled Checkbox */
+input[type="checkbox"]:disabled {
+    opacity: 0.6;
+    /* Reduce opacity for disabled checkboxes */
+    cursor: not-allowed;
+    /* Change cursor to 'not-allowed' for disabled checkboxes */
+}
+
+/* Align Disabled Checkbox in a Straight Vertical Line */
+/* Style for Disabled Checkbox */
+input[type="checkbox"]:disabled {
+    opacity: 0.6;
+    /* Reduce opacity for disabled checkboxes */
+    cursor: not-allowed;
+    /* Change cursor to 'not-allowed' for disabled checkboxes */
+}
+
+/* Custom Checkbox Style */
+
+.checkbox-custom {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+}
+
+.checkbox-custom input[type="checkbox"] {
+    display: none;
+    /* Hide the default checkbox */
+}
+
+.checkbox-custom span {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    position: relative;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+/* Checked State Style */
+.checkbox-custom input[type="checkbox"]:checked+span::after {
+    content: "";
+    display: block;
+    width: 8px;
+    height: 16px;
+    border: solid #007bff;
+    border-width: 0 4px 4px 0;
+    position: absolute;
+    top: 0;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    transform: rotate(45deg);
+}
+
+/* Align Disabled Checkbox in a Straight Vertical Line */
+ul.checkbox-list {
+    list-style-type: none;
+    /* Remove default list style */
+    padding-left: 20px;
+    /* Add padding to align checkboxes */
+}
+
+ul.checkbox-list li input[type="checkbox"] {
+    margin-right: 10px;
+    /* Add margin right for spacing between checkbox and label */
+}
+
+.status-approved {
+    color: #28a745;
+    background-color: #e6f4ea;
+    border: 1px solid #28a745;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: left 10px;
+}
+
+.status-pending {
+    color: #ffc107;
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: left 10px;
+}
+
+.status-in-progress {
+    color: #007bff;
+    background-color: #d6e4ff;
+    border: 1px solid #007bff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: left 10px;
+}
+
+.status-cancelled {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #dc3545;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: left 10px;
+}
+
+.status-unknown {
+    color: #6c757d;
+    background-color: #e9ecef;
+    border: 1px solid #6c757d;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: left 10px;
+}
+
+.context-images {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 2rem;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    background: #000;
+    border: 0;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 3px;
+    position: relative;
+    transition: all .4s cubic-bezier(0.645, 0.045, 0.355, 1);
+    cursor: pointer;
+    display: block;
+}
+
+.submit-button::after,
+.submit-button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0px;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: all .4s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.submit-button::after,
+.submit-button:disabled::after {
+    width: 30px;
+    height: 1px;
+    background: white;
+    transform: translateX(-3px);
+    margin-top: 0px;
+}
+
+.submit-button::before,
+.submit-button:disabled::before {
+    content: "";
+    transform: rotate(-135deg) translateX(50%);
+    width: 11px;
+    height: 11px;
+    background: transparent;
+    border-left: 1px solid white;
+    border-bottom: 1px solid white;
+    margin-top: -1px;
+}
+
+.submit-button:hover,
+.submit-button:disabled:hover {
+    padding: 15px 60px 15px 20px;
+}
+
+.submit-button:hover::after,
+.submit-button:hover::before {
+    opacity: 1;
+    right: 15px;
+}
+
+.submit-button:disabled {
+    padding: 10px 20px;
+    background: #dc0f0f;
+    border: 0;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 3px;
+    position: relative;
+    transition: all .4s cubic-bezier(0.645, 0.045, 0.355, 1);
+    display: block;
+    pointer-events: auto;
+    cursor: not-allowed;
+}
+
+.buttons{
+    margin-left: 30%;
+    margin-top: 20px;
+}
