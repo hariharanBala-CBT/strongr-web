@@ -115,7 +115,7 @@ function UpdateprofileScreen() {
     dispatch({
       type: USER_UPDATE_PROFILE_RESET,
     });
-  }, [userUpdateSuccess, navigate, dispatch, userUpdateError, submit]);
+  }, [dispatch, navigate, submit, userUpdateError, userUpdateSuccess]);
 
   useEffect(() => {
     setOpenForm(false);
