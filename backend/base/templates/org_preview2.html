@@ -1,9 +1,6 @@
 {% load static %}{% load url_filters %}
-
-
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -29,6 +26,24 @@
                 font-family: 'Poppins', sans-serif;
                 background-color: #f4f6f9;
                 color: #333;
+            }
+
+            h1{
+                margin-left: 40%;
+            }
+
+            hr{
+                height:2px;
+                border-width:0;
+                color:gray;
+                background-color:gray
+            }
+
+            .my-4{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: row;
             }
 
             .navbar {
@@ -66,26 +81,6 @@
                 border-radius: 5px;
                 font-size: 0.9rem;
             }
-
-            /* .status-approved {
-                background-color: #28a745;
-            }
-
-            .status-pending {
-                background-color: #ffc107;
-            }
-
-            .status-in-progress {
-                background-color: #17a2b8;
-            }
-
-            .status-cancelled {
-                background-color: #dc3545;
-            }
-
-            .status-unknown {
-                background-color: #6c757d;
-            } */
 
             footer {
                 background-color: #f8f9fa;
@@ -130,6 +125,7 @@
             }
 
             li {
+                list-style-type: none;
                 margin-bottom: 5px;
                 font-size: 16px;
             }
@@ -220,83 +216,135 @@
             .status-approved {
                 color: #28a745;
                 background-color: #e6f4ea;
-                /* Light green background */
                 border: 1px solid #28a745;
-                /* Green border */
                 padding: 4px 8px;
-                /* Padding around the text */
                 border-radius: 4px;
-                /* Rounded corners */
                 font-weight: bold;
-                /* Bold text */
+                margin: left 10px;
             }
 
             .status-pending {
                 color: #ffc107;
                 background-color: #fff3cd;
-                /* Light yellow background */
                 border: 1px solid #ffc107;
-                /* Yellow border */
                 padding: 4px 8px;
-                /* Padding around the text */
                 border-radius: 4px;
-                /* Rounded corners */
                 font-weight: bold;
-                /* Bold text */
+                margin: left 10px;
             }
 
             .status-in-progress {
                 color: #007bff;
                 background-color: #d6e4ff;
-                /* Light blue background */
                 border: 1px solid #007bff;
-                /* Blue border */
                 padding: 4px 8px;
-                /* Padding around the text */
                 border-radius: 4px;
-                /* Rounded corners */
                 font-weight: bold;
-                /* Bold text */
+                margin: left 10px;
             }
 
             .status-cancelled {
                 color: #dc3545;
                 background-color: #f8d7da;
-                /* Light red background */
                 border: 1px solid #dc3545;
-                /* Red border */
                 padding: 4px 8px;
-                /* Padding around the text */
                 border-radius: 4px;
-                /* Rounded corners */
                 font-weight: bold;
-                /* Bold text */
+                margin: left 10px;
             }
 
             .status-unknown {
                 color: #6c757d;
                 background-color: #e9ecef;
-                /* Light gray background */
                 border: 1px solid #6c757d;
-                /* Gray border */
                 padding: 4px 8px;
-                /* Padding around the text */
                 border-radius: 4px;
-                /* Rounded corners */
                 font-weight: bold;
-                /* Bold text */
+                margin: left 10px;
             }
 
-            .submit-button{
-                padding: 10px 20px;
-                color: #28a745;
-                background-color: #d6e4ff;
+            .context-images {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                column-gap: 2rem;
             }
-            .submit-button:disabled{
+
+            .submit-button {
                 padding: 10px 20px;
-                color: #ce1619;
-                background-color: #333;
+                background: #000;
+                border: 0;
+                color: #fff;
+                text-transform: uppercase;
+                font-size: 12px;
+                letter-spacing: 3px;
+                position: relative;
+                transition: all .4s cubic-bezier(0.645, 0.045, 0.355, 1);
+                cursor: pointer;
+                display: block;
+            }
+
+            .submit-button::after,
+            .submit-button::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                right: 0px;
+                transform: translateY(-50%);
+                opacity: 0;
+                transition: all .4s cubic-bezier(0.645, 0.045, 0.355, 1);
+            }
+
+            .submit-button::after,
+            .submit-button:disabled::after {
+                width: 30px;
+                height: 1px;
+                background: white;
+                transform: translateX(-3px);
+                margin-top: 0px;
+            }
+
+            .submit-button::before,
+            .submit-button:disabled::before {
+                content: "";
+                transform: rotate(-135deg) translateX(50%);
+                width: 11px;
+                height: 11px;
+                background: transparent;
+                border-left: 1px solid white;
+                border-bottom: 1px solid white;
+                margin-top: -1px;
+            }
+
+            .submit-button:hover,
+            .submit-button:disabled:hover {
+                padding: 15px 60px 15px 20px;
+            }
+
+            .submit-button:hover::after,
+            .submit-button:hover::before {
+                opacity: 1;
+                right: 15px;
+            }
+
+            .submit-button:disabled {
+                padding: 10px 20px;
+                background: #dc0f0f;
+                border: 0;
+                color: #fff;
+                text-transform: uppercase;
+                font-size: 12px;
+                letter-spacing: 3px;
+                position: relative;
+                transition: all .4s cubic-bezier(0.645, 0.045, 0.355, 1);
+                display: block;
                 pointer-events: auto;
+                cursor: not-allowed;
+            }
+
+            .buttons{
+                margin-left: 30%;
+                margin-top: 20px;
             }
         </style>
     </head>
@@ -315,9 +363,6 @@
                         {{ user.username }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <!-- <li><a class="dropdown-item" href="#!">Settings</a></li>
-                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                        <li><hr class="dropdown-divider" /></li> -->
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>
@@ -382,8 +427,8 @@
 
             <!-- Main Content -->
             <div id="layoutSidenav_content">
-                <h1 class="mt-4 mb-4" style="margin-left: 40%;">Preview</h1>
-                <main class="container-fluid mt-4" style="margin-top: 210px;">
+                <h1 class="mt-4 mb-4">Preview</h1>
+                <main class="container-fluid mt-4">
                     <!-- Organization Card -->
                     <div class="card mb-4">
                         <div class="card-header bg-primary text-white">
@@ -422,7 +467,7 @@
                                             <li>
                                                 <div class="label">Status</div>:&nbsp;
                                                 {% if profile.status == 1 %}
-                                                <span class="status-approved" style="margin: left 10px;">Approved</span>
+                                                <span class="status-approved">Approved</span>
                                                 {% elif profile.status == 2 %}
                                                 <span class="status-pending">Pending</span>
                                                 {% elif profile.status == 3 %}
@@ -468,7 +513,7 @@
                                             <div class="card mb-4">
                                                 <div class="card-body">
                                                     <!-- Content for each tab -->
-                                                    <li style="list-style: none;">
+                                                    <li>
                                                         <div class="label">Status</div>:&nbsp;
                                                         {% if location_item.location.status == 1 %}
                                                         <span class="status-approved">Approved</span>
@@ -627,13 +672,13 @@
                                                     </ul>
                                                     <!-- Images -->
                                                     <h5><strong>Images</strong></h5>
-                                                    <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;" class="slots-list context-images id="slots-list-{{ location_item.location.id }}">
+                                                    <div class="context-images" id="slots-list-{{ location_item.location.id }}">
                                                         {% for image in location_item.images %}
                                                             <img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
                                                         {% empty %}
                                                             <li class="empty">No images Addded</li>
                                                         {% endfor %}
-                                                    </ul>
+                                                    </div>
                                                     <!-- Slots -->
                                                     <h5><strong>Slots</strong></h5>
                                                     <ul class="slots-list context-slots" id="slots-list-{{ location_item.location.id }}">
@@ -683,9 +728,8 @@
                         </div>
                         {% for profile in profiles %}
                             {% if profile.status == 2 or profile.status == 4 %}
-                            <hr style="height:2px;border-width:0;color:gray;background-color:gray">
-                            <div class="my-4"
-                                style="  display: flex;justify-content: center;align-items: center; flex-direction: row;">
+                            <hr>
+                            <div class="my-4">
                                 <div>
                                     <form method="post">
                                         {% csrf_token %}
@@ -694,9 +738,8 @@
                                             of Service</label>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms &amp;
                                             Conditions</a>
-                                        <div class="buttons" style="margin-left: 30%; margin-top: 20px;">
-                                            <div><a href="{% url 'organization_locationlist' %}" class="btn btn-primary"><i
-                                                        class="fas fa-edit"></i>&nbsp;Edit</a></div>
+                                        <div class="buttons">
+                                            <div><a href="{% url 'organization_locationlist' %}" class="btn btn-primary"><i class="fas fa-edit"></i>&nbsp;Edit</a></div>
                                             <div><button type="submit" class="btn btn-primary">Submit</button></div>
                                         </div>
                                     </form>
@@ -712,75 +755,44 @@
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <!-- Here you can include the terms and conditions text -->
+                                                <p><strong>Introduction</strong></p>
+                                                <p>Welcome to Strongr, the premier playground turf booking site. By using our services, you agree to abide by the following terms and conditions.</p>
+
                                                 <p><strong>General Site Usage</strong></p>
-                                                <p>Last Revised: December 16, 2013</p>
-                                                <p>Welcome to www.lorem-ipsum.info. This site is provided as a service to our
-                                                    visitors and may be used for informational purposes only. Because the Terms
-                                                    and Conditions contain legal obligations, please read them carefully.</p>
-                                                <p>1. YOUR AGREEMENT By using this Site, you agree to be bound by, and to comply
-                                                    with, these Terms and Conditions. If you do not agree to these Terms and
-                                                    Conditions, please do not use this site.</p>
-                                                <p>PLEASE NOTE: We reserve the right, at our sole discretion, to change, modify
-                                                    or otherwise alter these Terms and Conditions at any time. Unless otherwise
-                                                    indicated, amendments will become effective immediately. Please review these
-                                                    Terms and Conditions periodically. Your continued use of the Site following
-                                                    the posting of changes and/or modifications will constitute your acceptance
-                                                    of the revised Terms and Conditions and the reasonableness of these
-                                                    standards for notice of changes. For your information, this page was last
-                                                    updated as of the date at the top of these terms and conditions.</p>
-                                                <p>2. PRIVACY Please review our Privacy Policy, which also governs your visit to
-                                                    this Site, to understand our practices.</p>
-                                                <p>3. LINKED SITES This Site may contain links to other independent third-party
-                                                    Web sites ("Linked Sites”). These Linked Sites are provided solely as a
-                                                    convenience to our visitors. Such Linked Sites are not under our control,
-                                                    and we are not responsible for and does not endorse the content of such
-                                                    Linked Sites, including any information or materials contained on such
-                                                    Linked Sites. You will need to make your own independent judgment regarding
-                                                    your interaction with these Linked Sites.</p>
-                                                <p>4. FORWARD LOOKING STATEMENTS All materials reproduced on this site speak as
-                                                    of the original date of publication or filing. The fact that a document is
-                                                    available on this site does not mean that the information contained in such
-                                                    document has not been modified or superseded by events or by a subsequent
-                                                    document or filing. We have no duty or policy to update any information or
-                                                    statements contained on this site and, therefore, such information or
-                                                    statements should not be relied upon as being current as of the date you
-                                                    access this site.</p>
-                                                <p>5. DISCLAIMER OF WARRANTIES AND LIMITATION OF LIABILITY A. THIS SITE MAY
-                                                    CONTAIN INACCURACIES AND TYPOGRAPHICAL ERRORS. WE DOES NOT WARRANT THE
-                                                    ACCURACY OR COMPLETENESS OF THE MATERIALS OR THE RELIABILITY OF ANY ADVICE,
-                                                    OPINION, STATEMENT OR OTHER INFORMATION DISPLAYED OR DISTRIBUTED THROUGH THE
-                                                    SITE. YOU EXPRESSLY UNDERSTAND AND AGREE THAT: (i) YOUR USE OF THE SITE,
-                                                    INCLUDING ANY RELIANCE ON ANY SUCH OPINION, ADVICE, STATEMENT, MEMORANDUM,
-                                                    OR INFORMATION CONTAINED HEREIN, SHALL BE AT YOUR SOLE RISK; (ii) THE SITE
-                                                    IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS; (iii) EXCEPT AS
-                                                    EXPRESSLY PROVIDED HEREIN WE DISCLAIM ALL WARRANTIES OF ANY KIND, WHETHER
-                                                    EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO IMPLIED WARRANTIES OF
-                                                    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, WORKMANLIKE EFFORT, TITLE
-                                                    AND NON-INFRINGEMENT; (iv) WE MAKE NO WARRANTY WITH RESPECT TO THE RESULTS
-                                                    THAT MAY BE OBTAINED FROM THIS SITE, THE PRODUCTS OR SERVICES ADVERTISED OR
-                                                    OFFERED OR MERCHANTS INVOLVED; (v) ANY MATERIAL DOWNLOADED OR OTHERWISE
-                                                    OBTAINED THROUGH THE USE OF THE SITE IS DONE AT YOUR OWN DISCRETION AND
-                                                    RISK; and (vi) YOU WILL BE SOLELY RESPONSIBLE FOR ANY DAMAGE THAT RESULTS
-                                                    FROM THE DOWNLOAD OF ANY SUCH MATERIAL.</p>
-                                                <p>B. YOU UNDERSTAND AND AGREE THAT UNDER NO CIRCUMSTANCES, INCLUDING, BUT NOT
-                                                    LIMITED TO, NEGLIGENCE, SHALL WE BE LIABLE FOR ANY DIRECT, INDIRECT,
-                                                    INCIDENTAL, SPECIAL, PUNITIVE, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-                                                    INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR LOSS OF USE, DATA, OR PROFITS,
-                                                    ARISING OUT OF THE USE OR THE INABILITY TO USE THE SITE, WEBSITES LINKED TO
-                                                    THE SITE, THE CONTENT OR THE SERVICES CONTAINED IN OR ACCESSED THROUGH THE
-                                                    SITE, OR ANY SERVICES OR PRODUCTS RECEIVED THROUGH THE SITE. YOU
-                                                    SPECIFICALLY ACKNOWLEDGE AND AGREE THAT WE ARE NOT LIABLE FOR ANY CONDUCT OF
-                                                    ANY USER.</p>
-                                                <p>6. INDEMNIFICATION You agree to indemnify and hold us, our parents,
-                                                    subsidiaries, affiliates, officers and employees, harmless from any claim,
-                                                    demand, or damage, including reasonable attorneys' fees, asserted by any
-                                                    third party due to or arising out of your use of or conduct on the Site.</p>
-                                                <p>7. GENERAL You agree that all matters relating to your access to or use of
-                                                    the Site shall be governed by the laws of the State of California. You agree
-                                                    and hereby submit to the exclusive personal jurisdiction and venue any court
-                                                    of competent jurisdiction within the State of California with respect to
-                                                    such matters.</p>
+                                                <p>Last Revised: June 17, 2024</p>
+                                                <p>Welcome to www.strongr.com. This site is provided as a service to our visitors and may be used for informational purposes only. Because the Terms and Conditions contain legal obligations, please read them carefully.</p>
+                                                <p>1. <strong>YOUR AGREEMENT</strong> By using this Site, you agree to be bound by, and to comply with, these Terms and Conditions. If you do not agree to these Terms and Conditions, please do not use this site.</p>
+                                                <p><strong>PLEASE NOTE:</strong> We reserve the right, at our sole discretion, to change, modify, or otherwise alter these Terms and Conditions at any time. Unless otherwise indicated, amendments will become effective immediately. Please review these Terms and Conditions periodically. Your continued use of the Site following the posting of changes and/or modifications will constitute your acceptance of the revised Terms and Conditions and the reasonableness of these standards for notice of changes. For your information, this page was last updated as of the date at the top of these Terms and Conditions.</p>
+                                                <p>2. <strong>PRIVACY</strong> Please review our Privacy Policy, which also governs your visit to this Site, to understand our practices.</p>
+                                                <p>3. <strong>LINKED SITES</strong> This Site may contain links to other independent third-party Web sites ("Linked Sites"). These Linked Sites are provided solely as a convenience to our visitors. Such Linked Sites are not under our control, and we are not responsible for and do not endorse the content of such Linked Sites, including any information or materials contained on such Linked Sites. You will need to make your own independent judgment regarding your interaction with these Linked Sites.</p>
+                                                <p>4. <strong>FORWARD-LOOKING STATEMENTS</strong> All materials reproduced on this site speak as of the original date of publication or filing. The fact that a document is available on this site does not mean that the information contained in such document has not been modified or superseded by events or by a subsequent document or filing. We have no duty or policy to update any information or statements contained on this site and, therefore, such information or statements should not be relied upon as being current as of the date you access this site.</p>
+                                                <p>5. <strong>DISCLAIMER OF WARRANTIES AND LIMITATION OF LIABILITY</strong></p>
+                                                <p>A. THIS SITE MAY CONTAIN INACCURACIES AND TYPOGRAPHICAL ERRORS. WE DO NOT WARRANT THE ACCURACY OR COMPLETENESS OF THE MATERIALS OR THE RELIABILITY OF ANY ADVICE, OPINION, STATEMENT, OR OTHER INFORMATION DISPLAYED OR DISTRIBUTED THROUGH THE SITE. YOU EXPRESSLY UNDERSTAND AND AGREE THAT: (i) YOUR USE OF THE SITE, INCLUDING ANY RELIANCE ON ANY SUCH OPINION, ADVICE, STATEMENT, MEMORANDUM, OR INFORMATION CONTAINED HEREIN, SHALL BE AT YOUR SOLE RISK; (ii) THE SITE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS; (iii) EXCEPT AS EXPRESSLY PROVIDED HEREIN WE DISCLAIM ALL WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, WORKMANLIKE EFFORT, TITLE, AND NON-INFRINGEMENT; (iv) WE MAKE NO WARRANTY WITH RESPECT TO THE RESULTS THAT MAY BE OBTAINED FROM THIS SITE, THE PRODUCTS OR SERVICES ADVERTISED OR OFFERED OR MERCHANTS INVOLVED; (v) ANY MATERIAL DOWNLOADED OR OTHERWISE OBTAINED THROUGH THE USE OF THE SITE IS DONE AT YOUR OWN DISCRETION AND RISK; and (vi) YOU WILL BE SOLELY RESPONSIBLE FOR ANY DAMAGE THAT RESULTS FROM THE DOWNLOAD OF ANY SUCH MATERIAL.</p>
+                                                <p>B. YOU UNDERSTAND AND AGREE THAT UNDER NO CIRCUMSTANCES, INCLUDING, BUT NOT LIMITED TO, NEGLIGENCE, SHALL WE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, PUNITIVE, EXEMPLARY, OR CONSEQUENTIAL DAMAGES INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR LOSS OF USE, DATA, OR PROFITS, ARISING OUT OF THE USE OR THE INABILITY TO USE THE SITE, WEBSITES LINKED TO THE SITE, THE CONTENT OR THE SERVICES CONTAINED IN OR ACCESSED THROUGH THE SITE, OR ANY SERVICES OR PRODUCTS RECEIVED THROUGH THE SITE. YOU SPECIFICALLY ACKNOWLEDGE AND AGREE THAT WE ARE NOT LIABLE FOR ANY CONDUCT OF ANY USER.</p>
+                                                <p>6. <strong>INDEMNIFICATION</strong> You agree to indemnify and hold us, our parents, subsidiaries, affiliates, officers and employees, harmless from any claim, demand, or damage, including reasonable attorneys' fees, asserted by any third party due to or arising out of your use of or conduct on the Site.</p>
+                                                <p>7. <strong>GENERAL</strong> You agree that all matters relating to your access to or use of the Site shall be governed by the laws of the State of California. You agree and hereby submit to the exclusive personal jurisdiction and venue any court of competent jurisdiction within the State of California with respect to such matters.</p>
+
+                                                <p><strong>Booking and Payment</strong></p>
+                                                <p>1. <strong>Reservation:</strong> Bookings must be made in advance through the Strongr website.</p>
+                                                <p>2. <strong>Payment:</strong> Full payment is required at the time of booking.</p>
+                                                <p>3. <strong>Cancellations and Refunds:</strong> Cancellations made 24 hours before the booking time will receive a full refund. No refunds for cancellations made within 24 hours of the booking.</p>
+
+                                                <p><strong>Usage Policies</strong></p>
+                                                <p>4. <strong>Access:</strong> Booked time slots are strictly adhered to. Please vacate the turf promptly to allow the next group access.</p>
+                                                <p>5. <strong>Conduct:</strong> Users must follow all posted rules and regulations. Strongr reserves the right to remove individuals for inappropriate behavior.</p>
+                                                <p>6. <strong>Safety:</strong> Users must ensure all activities are conducted safely. Strongr is not liable for any injuries or accidents.</p>
+
+                                                <p><strong>Liability</strong></p>
+                                                <p>7. <strong>Responsibility:</strong> Users are responsible for any damage to the turf or facilities during their booking period.</p>
+                                                <p>8. <strong>Insurance:</strong> Strongr recommends users have appropriate insurance coverage for their activities.</p>
+
+                                                <p><strong>Amendments</strong></p>
+                                                <p>9. <strong>Changes to Terms:</strong> Strongr reserves the right to update these terms and conditions at any time. Users will be notified of significant changes.</p>
+
+                                                <p><strong>Contact</strong></p>
+                                                <p>10. <strong>Support:</strong> For any questions or concerns, please contact our customer support team at support@strongr.com.</p>
+
+                                                <p>By using Strongr, you agree to these terms and conditions. Thank you for choosing Strongr for your playground turf booking needs.</p>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -794,7 +806,6 @@
                         {% endfor %}
                     </div>
                 </main>
-
 
                 <!-- Footer -->
                 <footer class="py-4 bg-light mt-auto">
@@ -812,14 +823,10 @@
             </div>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-            crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-            crossorigin="anonymous"></script>
-
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script>
             const $sidebarToggle = document.body.querySelector('#sidebarToggle');
             if (sidebarToggle) {
@@ -844,5 +851,4 @@
             });
         </script>
     </body>
-
 </html>
