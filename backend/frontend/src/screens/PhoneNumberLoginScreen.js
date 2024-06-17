@@ -105,7 +105,7 @@ function PhoneNumberScreen() {
         dispatchLogin();
       })
       .catch((err) => {
-        showOTPInput(false);
+        setShowOTPInput(false);
         console.log(err);
         toast.error("Incorrect OTP. Please try again.");
         setLoading(false);
@@ -125,7 +125,6 @@ function PhoneNumberScreen() {
       toast.error("User does not exist.");
     } else if (phoneValidate && submit) {
       setSubmit(false);
-      setLoading(false);
       onCaptchVerify();
       const appVerifier = window.recaptchaVerifier;
       const formatPh = "+" + ph;
