@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { isAfter } from "date-fns";
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -52,6 +53,8 @@ const Content = styled(Paper)(({ theme }) => ({
 }));
 
 function ProfileScreen() {
+  const today = new Date();
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -142,7 +145,7 @@ function ProfileScreen() {
                   </ul>
                   <ul>
                     <strong>Phone number: </strong>
-                    {customerDetails?.phone_number}
+                    {userInfo?.customer?.phone_number}
                   </ul>
                 </Content>
                 <Button
@@ -252,7 +255,11 @@ function ProfileScreen() {
                                       : "Cancelled"
                                   }
                                 >
-                                  {booking?.booking_status !== 3 ? (
+                                  {booking?.booking_status !== 3 &&
+                                  isAfter(
+                                    new Date(booking.booking_date),
+                                    today
+                                  ) ? (
                                     <IconButton
                                       color="error"
                                       onClick={() => {
