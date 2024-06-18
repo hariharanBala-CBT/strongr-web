@@ -1157,7 +1157,8 @@ class CreateMultipleSlotsView(View):
                         is_booked=False
                     )
                     current_datetime += timedelta(hours=1)
-
+                    
+        messages.success(request, SUCCESS_MESSAGES.get('create_multipleslot'))
         return redirect(reverse('slot-location'))
 
 @method_decorator(login_required, name='dispatch')
@@ -1327,7 +1328,7 @@ class AddMultipleTempSlotsView(View):
                     messages.error(request, 'Location not found.')
                     return redirect('error')
 
-            messages.success(request, SUCCESS_MESSAGES.get('create_slot'))
+            messages.success(request, SUCCESS_MESSAGES.get('create_tempslot'))
             return redirect('temp-slot-list')
         return render(request, self.template_name, {'forms': forms})
 
