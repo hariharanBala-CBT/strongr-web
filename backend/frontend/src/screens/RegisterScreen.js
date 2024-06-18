@@ -120,6 +120,8 @@ function RegisterScreen() {
   useEffect(() => {
     if (!otpLoading) {
       setLoader(false);
+    }else if(otpLoading){
+      setLoader(true);
     }
   }, [otpLoading]);
 

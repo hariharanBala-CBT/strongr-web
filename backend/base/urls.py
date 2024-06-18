@@ -17,6 +17,7 @@ urlpatterns = [
      path('cancelled_bookings/',ListofCancelledBookingView.as_view(), name='cancelled_bookings'),
 
      path('sendotp/', generateOtp, name="generate-otp"),
+     path('sendotp/update/', generateUpdateOtp, name="generate-update-otp"),
 
 
      path('organizationprofile/<int:pk>/' ,OrganizationProfileView.as_view(), name='organization_profile'),

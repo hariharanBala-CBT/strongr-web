@@ -366,7 +366,7 @@ export const logout = () => (dispatch) => {
 };
 
 export const register =
-  (name, email, password, phoneNumber, otp) => async (dispatch) => {
+  (email, name, otp, password, phoneNumber) => async (dispatch) => {
     try {
       dispatch({
         type: USER_REGISTER_REQUEST,
@@ -381,11 +381,11 @@ export const register =
       const { data } = await axios.post(
         "/register/",
         {
-          name: name,
           email: email,
+          name: name,
+          otp: otp,
           password: password,
           phone: phoneNumber,
-          otp: otp,
         },
         config
       );
@@ -813,11 +813,34 @@ export const resetUserPassword = (user) => async (dispatch, getState) => {
 };
 
 
-export const generateOTP = (email, id) => async (dispatch) => {
+export const generateOTP = (email) => async (dispatch) => {
   try {
     dispatch({ type: GENERATE_OTP_REQUEST });
 
     const { data } = await axios.get(`/sendotp/`, {
+      params: { email: email},
+    });
+
+    dispatch({
+      type: GENERATE_OTP_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GENERATE_OTP_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const generateUpdateOTP = (email, id) => async (dispatch) => {
+  try {
+    dispatch({ type: GENERATE_OTP_REQUEST });
+
+    const { data } = await axios.get(`/sendotp/update/`, {
       params: { email: email, id: id },
     });
 

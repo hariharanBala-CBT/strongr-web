@@ -92,6 +92,22 @@ def PhoneLoginView(request):
 @api_view(['GET'])
 def generateOtp(request):
     email = request.query_params.get('email')
+    otp = get_random_string(length=4, allowed_chars='0123456789')
+    subject = 'Welcome to Our Website'
+    message = render_to_string('otp.html', {
+        'otp': otp,
+    })
+
+    from_email = 'testgamefront@gmail.com'
+    recipient_list = [email]
+    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+    request.session['emailedotp'] = otp
+    return Response({'otp': 'sent'})
+
+@api_view(['GET'])
+def generateUpdateOtp(request):
+    email = request.query_params.get('email')
     user_id = request.query_params.get('id')
     otp = get_random_string(length=4, allowed_chars='0123456789')
     user = User.objects.get(id=user_id)
@@ -114,18 +130,18 @@ logger = logging.getLogger(__name__)
 
 @api_view(['POST'])
 def registerUser(request):
-    data = request.data
-    otp_from_session = request.session.get('emailedotp')
-    otp_from_client = data.get('otp')
-    phone = data.get('phone')
-
-    if not otp_from_session or otp_from_session != otp_from_client:
-        return Response({'detail': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
-
-    if not phone:
-        return Response({'detail': 'Phone number is required'}, status=status.HTTP_400_BAD_REQUEST)
-
     try:
+        data = request.data
+        otp_from_session = request.session.get('emailedotp')
+        otp_from_client = data.get('otp')
+        phone = data.get('phone')
+
+        if not otp_from_session or otp_from_session != otp_from_client:
+            return Response({'detail': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not phone:
+            return Response({'detail': 'Phone number is required'}, status=status.HTTP_400_BAD_REQUEST)
+
         if User.objects.filter(email=data['email']).exists():
             return Response({'detail': 'Email is already registered'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -144,14 +160,13 @@ def registerUser(request):
 
         serializer = UserSerializerWithTokenAndCustomer(user, many=False)
         return Response(serializer.data)
-    except Exception as e:
-        print('this is exception', str(e))
-        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    except Exception as e:
+            print('this is exception', str(e))
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 #FOR ORGANIZATION ------------
-
 
 class OrganizationSignupView(CreateView):
     form_class = OrganizationSignupForm
