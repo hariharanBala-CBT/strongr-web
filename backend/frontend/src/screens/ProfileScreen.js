@@ -65,7 +65,6 @@ function ProfileScreen() {
   const { userInfo } = useSelector((state) => state.userLogin);
   const { userbookings } = useSelector((state) => state.userBookingsList);
   const { cancelBooking } = useSelector((state) => state.cancelBooking);
-  const { customerDetails } = useSelector((state) => state.customerDetails);
 
   function getBookingStatusText(status) {
     switch (status) {
@@ -75,6 +74,8 @@ function ProfileScreen() {
         return "Booked";
       case 3:
         return "Cancelled";
+      case 4:
+        return "Completed";
       default:
         return "Unknown";
     }
@@ -194,7 +195,7 @@ function ProfileScreen() {
                           <h4>Details</h4>
                         </TableCell>
                         <TableCell>
-                          <h4>Cancel</h4>
+                          <h4>Action</h4>
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -233,8 +234,10 @@ function ProfileScreen() {
                                       ? "pending-status"
                                       : booking.booking_status === 2
                                       ? "booked-status"
-                                      : booking.booking_status === 3 &&
-                                        "cancelled-status"
+                                      : booking.booking_status === 3
+                                      ? "cancelled-status"
+                                      : booking.booking_status === 4 &&
+                                        "completed-status"
                                   }
                                 >
                                   {getBookingStatusText(booking.booking_status)}
@@ -250,16 +253,44 @@ function ProfileScreen() {
                               <TableCell>
                                 <Tooltip
                                   title={
-                                    booking?.booking_status !== 3
-                                      ? "Cancel booking"
-                                      : "Cancelled"
+                                    booking?.booking_status === 1
+                                      ? "Pending bookings can't be cancelled"
+                                      : booking?.booking_status === 4
+                                      ? "Booking completed"
+                                      : booking?.booking_status === 3
+                                      ? "Cancelled"
+                                      : booking?.booking_status === 2 &&
+                                        isAfter(
+                                          new Date(booking.booking_date),
+                                          today
+                                        )
+                                      ? "Cancel Booking"
+                                      : booking?.booking_status === 2 &&
+                                        !isAfter(
+                                          new Date(booking.booking_date),
+                                          today
+                                        )
+                                      ? "Cancellation is only allowed before one day"
+                                      : "Unknown action"
                                   }
                                 >
-                                  {booking?.booking_status !== 3 &&
-                                  isAfter(
-                                    new Date(booking.booking_date),
-                                    today
-                                  ) ? (
+                                  {booking?.booking_status === 1 ? (
+                                    <IconButton color="default">
+                                      <i class="fas fa-rectangle-xmark"></i>
+                                    </IconButton>
+                                  ) : booking?.booking_status === 4 ? (
+                                    <IconButton color="success">
+                                      <i class="fas fa-square-check"></i>
+                                    </IconButton>
+                                  ) : booking?.booking_status === 3 ? (
+                                    <IconButton color="default">
+                                      <i class="fas fa-rectangle-xmark"></i>
+                                    </IconButton>
+                                  ) : booking?.booking_status === 2 &&
+                                    isAfter(
+                                      new Date(booking.booking_date),
+                                      today
+                                    ) ? (
                                     <IconButton
                                       color="error"
                                       onClick={() => {
@@ -270,7 +301,7 @@ function ProfileScreen() {
                                       <i class="fas fa-rectangle-xmark"></i>
                                     </IconButton>
                                   ) : (
-                                    <IconButton color="default">
+                                    <IconButton color="info">
                                       <i class="fas fa-rectangle-xmark"></i>
                                     </IconButton>
                                   )}

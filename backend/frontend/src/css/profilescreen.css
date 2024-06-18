@@ -17,14 +17,18 @@
     align-self: center;
 }
 
-.booked-status{
-    color: green;
+.booked-status {
+    color: #06aa00;
 }
 
 .pending-status{
-    color: orange;
+    color: #FF9300;
 }
 
 .cancelled-status {
-    color: rgb(214, 10, 10);
+    color: #E50000;
+}
+
+.completed-status{
+    color: #024400;
 }

@@ -17,6 +17,7 @@ import datetime
 from datetime import timedelta
 from django.db import transaction
 from django.contrib.auth.hashers import make_password
+from base.utils import update_completed_bookings
 
 
 @api_view(['GET'])
@@ -170,6 +171,7 @@ def getSlot(request, pk):
 
 @api_view(['GET'])
 def getUserBookings(request, pk):
+    update_completed_bookings();
     booking = Booking.objects.filter(user=pk)
     serializer = UserBookingsSerializer(booking, many=True)
     return Response(serializer.data)
