@@ -16,7 +16,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-
+        <link href="{% static 'css/breadcrumbs.css' %}" rel="stylesheet" />
     </head>
     <style>
         .preview {
@@ -42,27 +42,6 @@
             text-align: center;
             margin: 0;
         }
-        ul.breadcrumb {
-            padding: 10px 16px;
-            list-style: none;
-          }
-          ul.breadcrumb li {
-            display: inline;
-            font-size: 18px;
-          }
-          ul.breadcrumb li+li:before {
-            padding: 8px;
-            color: black;
-            content: "/\00a0";
-          }
-          ul.breadcrumb li a {
-            color: #0275d8;
-            text-decoration: none;
-          }
-          ul.breadcrumb li a:hover {
-            color: #01447e;
-            text-decoration: underline;
-          }
       </style>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -136,14 +115,14 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <ul class="breadcrumb">
-                        <li><a href="{% url 'organization_page' %}">Home</a></li>
-                        <li><a href="{% url 'organization_profile' pk=1 %}">Profile</a></li>
-                        <li><a href="{% url 'organization_locationlist'%}">Location List</a></li>  
-                        <li><a href="{% url 'slot-location' %}">Slot List</a></li>
-                        <li><a href="{% url 'temp-slot-location'%}">Additional Slots</a></li>
-                        <li>Unavailable Slots</li>
-                    </ul>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'organization_profile' pk=1 %}">Profile</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>  
+                        <li class="breadcrumb-item"><a href="{% url 'slot-location' %}">Slot List</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'temp-slot-location'%}">Additional Slots</a></li>
+                        <li class="breadcrumb-item">Unavailable Slots</li>
+                    </ol>
                     <div class="container-fluid px-4 mt-4">
                         <h1 class="mt-4 mb-4" style="margin-left: 40%;">Unavailable Slots</h1>
                         <div class="card mb-4">

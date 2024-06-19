@@ -15,7 +15,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-
+        <link href="{% static 'css/breadcrumbs.css' %}" rel="stylesheet" />
         <style>
            body {
             font-family: 'Poppins', sans-serif;
@@ -148,27 +148,6 @@
         footer a:hover {
             color: #495057;
         } */
-        ul.breadcrumb {
-            padding: 10px 16px;
-            list-style: none;
-          }
-          ul.breadcrumb li {
-            display: inline;
-            font-size: 18px;
-          }
-          ul.breadcrumb li+li:before {
-            padding: 8px;
-            color: black;
-            content: "/\00a0";
-          }
-          ul.breadcrumb li a {
-            color: #0275d8;
-            text-decoration: none;
-          }
-          ul.breadcrumb li a:hover {
-            color: #01447e;
-            text-decoration: underline;
-          }
         </style>
 
     </head>
@@ -244,16 +223,16 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <ul class="breadcrumb">
-                        <li><a href="{% url 'organization_page' %}">Home</a></li>
-                        <li><a href="{% url 'organization_profile' pk=1 %}">Profile</a></li>
-                        <li><a href="{% url 'organization_locationlist'%}">Location List</a></li>  
-                        <li><a href="{% url 'slot-location' %}">Slot List</a></li>
-                        <li><a href="{% url 'temp-slot-location'%}">Additional Slots</a></li>
-                        <li><a href="{% url 'temp-deslot-location'%}">Unavailable Slots</a></li>
-                        <li><a href="{% url 'preview' %}">Preview</a></li>  
-                        <li>Status</li>         
-                    </ul>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'organization_profile' pk=1 %}">Profile</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>  
+                        <li class="breadcrumb-item"><a href="{% url 'slot-location' %}">Slot List</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'temp-slot-location'%}">Additional Slots</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'temp-deslot-location'%}">Unavailable Slots</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'preview' %}">Preview</a></li>  
+                        <li class="breadcrumb-item">Status</li>         
+                    </ol>
                     <h1 class="mt-4 mb-4" style="margin-left: 35%;">Status</h1>
                     <div class="container" style="display: flex; justify-content: center; align-items: center; margin-top: 100px;">
                         <div class="card2">
