@@ -102,6 +102,12 @@ import {
   UNAVAILABLE_SLOT_REQUEST,
   UNAVAILABLE_SLOT_SUCCESS,
   UNAVAILABLE_SLOT_FAIL,
+  PHONE_VALIDATE_REQUEST,
+  PHONE_VALIDATE_SUCCESS,
+  PHONE_VALIDATE_FAIL,
+  USERDETAILS_VALIDATE_REQUEST,
+  USERDETAILS_VALIDATE_SUCCESS,
+  USERDETAILS_VALIDATE_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -363,7 +369,7 @@ export const logout = () => (dispatch) => {
 };
 
 export const register =
-  (name, email, password, phoneNumber, otp) => async (dispatch) => {
+  (email, name, otp, password, phoneNumber) => async (dispatch) => {
     try {
       dispatch({
         type: USER_REGISTER_REQUEST,
@@ -378,11 +384,11 @@ export const register =
       const { data } = await axios.post(
         "/register/",
         {
-          name: name,
           email: email,
+          name: name,
+          otp: otp,
           password: password,
           phone: phoneNumber,
-          otp: otp,
         },
         config
       );
@@ -815,7 +821,30 @@ export const generateOTP = (email) => async (dispatch) => {
     dispatch({ type: GENERATE_OTP_REQUEST });
 
     const { data } = await axios.get(`/sendotp/`, {
-      params: { email: email },
+      params: { email: email},
+    });
+
+    dispatch({
+      type: GENERATE_OTP_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GENERATE_OTP_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const generateUpdateOTP = (email, id) => async (dispatch) => {
+  try {
+    dispatch({ type: GENERATE_OTP_REQUEST });
+
+    const { data } = await axios.get(`/sendotp/update/`, {
+      params: { email: email, id: id },
     });
 
     dispatch({
@@ -1048,6 +1077,61 @@ export const validateUser = (username) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_VALIDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const validateUserDetails = (email, phone) => async (dispatch) => {
+  try {
+    dispatch({ type: USERDETAILS_VALIDATE_REQUEST });
+
+    const { data } = await axios.get("/api/userdetails/validate/", {
+      params: { 
+        email: email,
+        phone: phone,
+       },
+    });
+
+
+    dispatch({
+      type: USERDETAILS_VALIDATE_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: USERDETAILS_VALIDATE_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.detail,
+    });
+  }
+};
+
+export const validatePhone = (phone) => async (dispatch) => {
+  try {
+    dispatch({ type: PHONE_VALIDATE_REQUEST });
+
+    const { data } = await axios.get("/api/phone/validate/", {
+      params: { 
+        phone: phone,
+       },
+    });
+
+
+    dispatch({
+      type: PHONE_VALIDATE_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: PHONE_VALIDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

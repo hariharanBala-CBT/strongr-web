@@ -37,6 +37,8 @@ import {
   validateUserReducer,
   additionalslotsReducer,
   unavailableslotsReducer,
+  validatePhoneReducer,
+  validateUserDetailsReducer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -75,6 +77,8 @@ const reducer = combineReducers({
   suggestedClubs: suggestedClubListReducer,
   suggestedClubsGame : suggestedClubGameListReducer,
   userValidator : validateUserReducer,
+  userDetailsValidator : validateUserDetailsReducer,
+  phoneValidator : validatePhoneReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

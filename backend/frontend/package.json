@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
+    "date-fns": "^3.6.0",
     "firebase": "^10.11.0",
     "lottie-web": "^5.12.2",
     "otp-input-react": "^0.3.0",
