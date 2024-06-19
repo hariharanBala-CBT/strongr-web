@@ -9,7 +9,7 @@ body {
 }
 
 * {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-optical-sizing: auto; 
 }
 
@@ -18,16 +18,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
     font-optical-sizing: auto; 
-}
-
-
-footer {
-  display: flex;
-  justify-content: center;
-  padding: 15px;
-  background-color: black;
-  color: white;
-  margin-top: auto;
 }
 
 .nav-home {
@@ -51,4 +41,36 @@ footer {
   flex-grow: inherit;
   flex-shrink: inherit;
   width: 100%;
+  z-index: 100;
 }
+
+.upload-show-img .upload-images .btn-icon, .file-upload-text .file-upload span, .call-box .call-wrapper .call-items, .chat-attachment-item, .chat-window .chat-cont-right .chat-header .media .media-img-wrap, .chat-window .chat-cont-right .chat-header, .chat-window .chat-cont-left .chat-users-list a.media .media-body > div:last-child .badge, .request-book h4, .request-point, .dashboard-menu.coaurt-menu-dash ul li span.court-notify, .statistics-grid .statistics-icon, .avalbity-review.avalbity-review-list .profile-coache-list li .btn, .coach-btn ul li a, .sortby-section .sorting-info .sortby-filter-group .grid-listview .nav li a, .venue-coach-details.coach-detail .content .move-top .coach-info .info h3 span i, .venue-coach-details .accordion .accordion-item .accordion-header .accordion-button span.icon-bg, .venue-coach-details .venue-options ul li a span, .venue-coach-details .venue-info ul.details .profile-pic .venue-type, .pagination-group .previtem a, .pagination-group .nextlink a, .interset-btn, .ask-questions .faq-info .accordion-button:after, .listing-item .rating-bg, .listing-item .list-reviews, .listing-item .listing-content.list-coche-content a, .work-grid .work-content .btn, .work-grid .work-icon .work-icon-inner, .work-grid .work-icon, .hero-section .section-search .search-box .search-btn .btn, .hero-section .home-banner, div#global-loader, .footer .social-icon ul li a, .align-center {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: center;
+  -webkit-justify-content: center;
+}
+.featured-venues-item:hover .list-coche-content, .header .header-navbar-rht .nav-item .header-reg:hover, .header .header-navbar-rht .nav-item .header-reg, .header .header-navbar-rht .nav-item .header-login:hover, .header .header-navbar-rht .nav-item .header-login, .header.fixed, .header {
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.add-court.venue-coach-details form .accordion-item#includes .accordion-body ul li, .add-court.venue-coach-details form .accordion-item#amenities .accordion-body ul li, .add-court.venue-coach-details form .accordion-item#rules .add-rules, .appointment-available .amount-hour, .appointment-detail, .profile-info-box .profile-contact-info, .profile-groups .profile-detail-box .user-profile-detail ul, .profile-groups .profile-detail-box, .profile-groups, .deactive-modal .account-deactive .convenient-btns .btn span, .deactivate-account-blk, .prefer-role .prefer-list, .booking-days ul, .preview-tab > ul > li .preview-tabcontent .preview-tabname ul, .preview-tab > ul > li .preview-tabcontent, .preview-tab > ul, .add-wallet-amount ul li .add-wallet-checkbox, .add-wallet-amount ul li, .profile-card .profile-contact-details ul, .price-set-price, .profile-set-content ul, .profile-set-img, .profile-set-rating span, .profile-set-rating, .your-card .debit-card-blk, .your-card .your-card-head, .wallet-wrap ul, .wallet-wrap .wallet-bal .wallet-img, .wallet-wrap .wallet-bal, .chat-window .chat-cont-right .chat-footer .form-custom, .chat-window .chat-cont-right .chat-header .media, .chat-window .chat-cont-left .chat-users-list a.media .media-body > div:first-child .user-last-chat, .my-availability, .notification-coach .notify-box, .going-appoinment, .progress-titles ul.need-complete li, .progress-titles ul, .track-statistics .statistic-head, .table-search-top, .coach-active-blk, .court-tab-content .card-body .text-pink a, .academy-card .academy-info .academy-content ul li, .upcoming-card .academy-info .academy-content ul li, .payment-card .payment-info, .academy-info .academy-content ul li, .academy-info .academy-content ul, .academy-info, .appointment-info ul li .appointment-item, .statistics-grid, .dashboard-card .card-header-info, .blog-details .listing-item.blog-info .listing-content .listing-venue-owner.blog-detail-owner .navigation span, .toggle-sidebar .sidebar-header, .sidebar-group, .listing-page .listing-filter-group .listing-content .sidebar-heading, .map-right .available-info li, .avalbity-review.avalbity-review-list, .avalbity-review .avalibity-date span, .avalbity-review .avalibity-date, .avalbity-review ul, .coach-select, .sortby-section .sorting-info .sortby-filter-group .sortbyset, .sortby-section .sorting-info .sortby-filter-group, .venue-coach-details aside .listing-owner li .owner-info p, .venue-coach-details .accordion .accordion-item#includes .accordion-body ul li, .venue-coach-details .accordion .accordion-item#lesson-with-me .accordion-body ul li, .venue-coach-details .venue-info ul li a, .checkout aside .radio .form-check, .pagination-group, .price-wrap .price-card .price-body .features-price-list ul li, .testimonial-group .listing-venue-owner, .service-count-blk, .owl-carousel .owl-nav .owl-next i, .owl-carousel .owl-nav .owl-prev i, .private-venue .earn-list ul li, .start-your-journey .journey-list ul li, .list-reviews.near-review, .listing-item .listing-button .btn, .listing-item .listing-button.read-new span, .listing-item .listing-button.read-new ul li a, .listing-item .listing-details-group li span, .listing-item .listing-content.news-content .listing-venue-owner .navigation, .listing-item .listing-content.news-content .listing-venue-owner.listing-dates, .listing-item .listing-content ul li span, .header .header-navbar-rht.logged-in > li.has-arrow .user-header, .header .header-navbar-rht .nav-item .btn-secondary span, .header .header-navbar-rht .nav-item .btn-secondary, .dropdown-action .dropdown-menu .dropdown-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+}
+
+.add-court.venue-coach-details form .accordion-item#rules .rules-wraper li, .radio-setview .radio .form-check, .request-modal .accordion .accordion-item#location .dull-bg .white-bg, .request-modal .accordion .accordion-item#reviews .review-wrapper .recommended ul li, .request-modal .accordion .accordion-item#reviews .review-wrapper .recommended ul, .sortby-section .sorting-info .sortby-filter-group .grid-listview .nav, .social-medias li, .venue-coach-details aside .availability .icon-bg, .venue-coach-details .accordion .accordion-item#location .dull-bg .white-bg, .venue-coach-details .accordion .accordion-item#reviews .review-wrapper .recommended ul li, .venue-coach-details .accordion .accordion-item#reviews .review-wrapper .recommended ul, .venue-coach-details .venue-info ul.details li, .venue-coach-details .venue-info ul li, .coach.lessons .lesson-types li a, .booking-date .time-slot, .checkout aside ul li, .booking-steps ul li h5 a, .listing-item .listing-button.read-new, .listing-item .listing-button, .header .header-navbar-rht.logged-in > li.has-arrow.logged-item .nav-link, .dropdown-action .action-icon {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+

@@ -76,3 +76,14 @@
   align-self: center;
   margin: 2rem;
 }
+.login-form button{
+  position: relative;
+  width: 400px;
+}
+.login-form .right-arrow{
+  margin-left: 5px;
+}
+.login-form .btn-secondary:hover {
+  background: #097E52 !important;
+  border-color: #097E52 !important;
+}

@@ -95,3 +95,33 @@
 .logins-page .loader {
   align-self: center;
 }
+.react-tel-input .form-control {
+  height: 45px !important;
+  width: 300px !important;
+  margin-bottom: 40px !important;
+}
+.phone-login .shadow-card p{
+  color: black !important;
+  margin-top: 20px;
+}
+.phone-login .shadow-card{
+  padding: 60px !important;
+}
+.phone-login .bottom-text p{
+  color: white !important;
+  font-size: 18px;
+  margin-top: 15px;
+}
+.phonelogin-wrapper{
+  background-image: url(../images/pattern.jpg);
+}
+
+.phonelogin-wrapper .nav-all{
+  display: none;
+}
+.phonelogin-wrapper .content {
+  margin-top: 0%;
+}
+.phonelogin-wrapper .shadow-card{
+  background: linear-gradient(#DADD98, #679267);
+}

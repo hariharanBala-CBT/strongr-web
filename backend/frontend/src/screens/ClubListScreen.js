@@ -163,7 +163,19 @@ function ClubListScreen() {
     <div>
       <Header location="nav-all" />
       <Toaster />
-      <div className="form-section">
+      <section className="breadcrumb breadcrumb-list mb-0">
+        <span className="primary-right-round"></span>
+        <div className="container">
+          <h1 className="text-white">Venue List</h1>
+          <ul>
+            <li>
+              <a>Home</a>
+            </li>
+            <li>Venue List</li>
+          </ul>
+        </div>
+      </section>
+      <div className="form-section game-search-club">
         <form onSubmit={handleSubmit}>
           <div className="check-availability-container-club">
             {gameLoading ? (
@@ -209,11 +221,13 @@ function ClubListScreen() {
           </div>
         </form>
       </div>
-      {clubFilterLoading ? (
-        <CircularProgress />
-      ) : (
-        <>{clubLocationDetails && <Club clubs={clubLocationDetails} />}</>
-      )}
+      <div className="club-list">
+        {clubFilterLoading ? (
+          <CircularProgress />
+        ) : (
+          clubLocationDetails && <Club clubs={clubLocationDetails} />
+        )}
+      </div>
       {clubLocationDetails?.length === 0 && suggestedClubList?.length > 0 && (
         <div>
           <div>

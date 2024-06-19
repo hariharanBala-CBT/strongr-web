@@ -287,3 +287,107 @@
       .bookinginfo-f{
         margin-top: 50px;
       }
+    .book-cage .card {
+        border: 1px solid #EAEDF0;
+        border-radius: 10px;
+        padding: 24px;
+        color: inherit;
+        margin-bottom: 40px;
+    }
+    .master-academy.dull-whitesmoke-bg {
+        background: #F9F9F6;
+        border: none;
+    }
+    .book-cage p{
+        color: #6B7385;
+    }
+    .master-academy.dull-whitesmoke-bg .info {
+        margin-left: 15px;
+    }
+    .master-academy.dull-whitesmoke-bg .info p {
+        margin-bottom: 0;
+    }
+    .dark-yellow-bg {
+        width: 30px;
+        height: 28px;
+        background: #FFAA00;
+        border-radius: 5px;
+        padding: 5px;
+        color: #FFFFFF;
+    }
+    .book-cage li{
+        list-style: none;
+    }
+    .booking-form label.form-label {
+        margin-bottom: 10px;
+    }
+    .booking-form .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #6B7385 !important;
+    }
+    .select2-container{
+        width: 100% !important;
+    }
+    .select2-container .select2-selection--single {
+        border: none;
+        height: 54px;
+        outline: none;
+        outline-color: transparent;
+    }
+
+    .card2 ul.order-sub-total li {
+        margin-bottom: 15px;
+    }
+    .card2 ul.order-sub-total li {
+        display: flex;
+        align-items: center;
+    }
+    .card2 ul.order-sub-total li {
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        height: 60px;
+        line-height: 55px;
+        font-size: 16px;
+        border: none;
+        background: #FAFAFA !important;
+        border-radius: 10px;
+    }
+    .select-date input.form-control {
+        padding: 20px;
+        border-radius: 10px;
+        background: #FAFAFA;
+        border: none;
+    }
+    h3.border-bottom {
+        margin: 0 0 20px 0;
+        padding: 0 0 20px 0;
+    }
+    .book-cage aside .order-total {
+        background: #F9F9F6;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 10px 0 9px 0;
+    }
+    .booking-details .btn-block {
+        margin-top: 5px;
+    }
+    .card2 h3{
+        font-size: 25px;
+    }
+    .card2 p{
+        margin-bottom: 30px;
+    }
+    .card2 button{
+        position: relative;
+        width: 440px;
+    }
+    .sub-title{
+        margin-bottom: 20px !important;
+    }
+    .box-min-height{
+        min-height: 600px;
+    }
+    .css-1wnsr1i{
+        background: linear-gradient(#6C7C59, #D0F0C0) !important;
+    }

@@ -14,12 +14,14 @@ import { toast, Toaster } from "react-hot-toast";
 import OTPInput from "react-otp-input";
 import { CircularProgress } from "@mui/material";
 import { LinkContainer } from "react-router-bootstrap";
+import "../css/registerscreen.css";
+import { User, Eye, EyeOff, Phone } from "react-feather";
 
 const linkStyle = {
-  textDecoration: 'underline',
-  color : 'purple',
-  cursor : 'pointer'
-}
+  textDecoration: "underline",
+  color: "purple",
+  cursor: "pointer",
+};
 
 function PhoneNumberScreen() {
   const [showOTPInput, setShowOTPInput] = useState(false);
@@ -42,7 +44,6 @@ function PhoneNumberScreen() {
       navigate(redirect);
     }
   }, [navigate, userInfo, redirect]);
-
 
   const renderInput = (inputProps) => {
     return (
@@ -91,7 +92,7 @@ function PhoneNumberScreen() {
         setShowOTPInput(true);
       })
       .catch((error) => {
-        console.log("otp error is : ",error);
+        console.log("otp error is : ", error);
         // setLoading(false);
         // setTimeout(()=>{
         //   toast.error("OTP not Sent");
@@ -100,93 +101,118 @@ function PhoneNumberScreen() {
   }
 
   const dispatchLogin = () => {
-    dispatch(loginPhoneNumber(ph))
+    dispatch(loginPhoneNumber(ph));
     setTimeout(() => {
-      if(error){
-        toast.error('User not registered');
+      if (error) {
+        toast.error("User not registered");
       }
-    },1000)
-
+    }, 1000);
   };
 
-
-function onOTPVerify(e) {
-  e.preventDefault();
-  setOTP('');
-  setShowOTPInput(false)
-  setLoading(true);
-  window.confirmationResult
-    .confirm(otp)
-    .then(async (res) => {
-      console.log(res);
-      setLoading(false);
-      dispatchLogin();
-    })
-    .catch((err) => {
-      showOTPInput(false)
-      console.log(err);
-      toast.error("Incorrect OTP. Please try again.");
-      setLoading(false);
-    });
-}
-
+  function onOTPVerify(e) {
+    e.preventDefault();
+    setOTP("");
+    setShowOTPInput(false);
+    setLoading(true);
+    window.confirmationResult
+      .confirm(otp)
+      .then(async (res) => {
+        console.log(res);
+        setLoading(false);
+        dispatchLogin();
+      })
+      .catch((err) => {
+        showOTPInput(false);
+        console.log(err);
+        toast.error("Incorrect OTP. Please try again.");
+        setLoading(false);
+      });
+  }
 
   return (
-    <div>
-      <Header location="nav-all" />
-      <div className="logins-page">
-        <div className="logins-form">
-          <Toaster toastOptions={{ duration: 4000 }} />
-          <div id="recaptcha-container"></div>
-          <h1 className="login-title">LOGIN</h1>
-          {/* {error && <Message variant="danger">{error}</Message>}
-          {(loading || loginLoading) && <Loader />} */}
-          <form>
-            <label>Phone Number</label>
-            <PhoneInput
-              required
-              country={"in"}
-              placeholder="Enter phone number"
-              value={ph}
-              onChange={setPh}
-            />
-            {showOTPInput && (
-              <div className="OTP">
-                <label>Enter OTP</label>
-                <OTPInput
-                  className='otp-input-field'
-                  value={otp}
-                  onChange={setOTP}
-                  numInputs={6}
-                  otpType="number"
-                  autoFocus
-                  // isInputNum
-                  // separator={<span>-</span>}
-                  renderInput={renderInput}
-                />
-              </div>
-            )}
+    <div className="phonelogin-wrapper">
+      {/* <Header location="nav-all" /> */}
+      <div className="main-wrapper authendication-pages">
+        <div className="content blur-ellipses">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6 col-lg-6 mx-auto vph-100 d-flex align-items-center phone-login">
+                <div className="forgot-password w-100">
+                  <div className="shadow-card">
+                    <h2>Login</h2>
+                    <p>Enter Registered Phone Number</p>
 
-            {loading && <CircularProgress className="loader"/>}
-            {!showOTPInput && (
-              <button className="generate-btn" onClick={onSignup}>
-                Generate OTP
-              </button>
-            )}
-            {showOTPInput && (
-              <button className="login-btn" onClick={onOTPVerify}>
-                Login
-              </button>
-            )}
-          </form>
-          <span>
-            Login through username &nbsp;
-          <LinkContainer to="/login" style={linkStyle}><span>login</span></LinkContainer>
-          </span>
-          <span>
-            Don't have an Account?&nbsp;
-            <LinkContainer to="/signup" style={linkStyle}><span>signup</span></LinkContainer>
-          </span>
+                    <form>
+                      <div className="form-group">
+                        <div className="group-img">
+                          <i className="feather-mail"></i>
+                          <PhoneInput
+                            required
+                            country={"in"}
+                            placeholder="Enter phone number"
+                            value={ph}
+                            onChange={setPh}
+                          />
+                        </div>
+                      </div>
+                      {showOTPInput && (
+                        <div className="form-group">
+                          <OTPInput
+                            className="otp-input-field"
+                            value={otp}
+                            onChange={setOTP}
+                            numInputs={6}
+                            otpType="number"
+                            autoFocus
+                            renderInput={renderInput}
+                          />
+                        </div>
+                      )}
+                      {loading && <CircularProgress className="loader" />}
+                      {!showOTPInput && (
+                        <button className="generate-btn" onClick={onSignup}>
+                          Generate OTP
+                        </button>
+                      )}
+                      {showOTPInput && (
+                        <button className="login-btn" onClick={onOTPVerify}>
+                          Login
+                        </button>
+                      )}
+                    </form>
+                  </div>
+                  <div className="bottom-text text-center">
+                    <p>
+                      Login through username &nbsp;
+                      <LinkContainer
+                        to="/login"
+                        style={{
+                          textDecoration: "underline",
+                          color: "white",
+                        }}
+                      >
+                        <span>login</span>
+                      </LinkContainer>
+                    </p>
+                  </div>
+                  <div className="bottom-text text-center">
+                    <p>
+                      Login through username &nbsp;
+                      <LinkContainer
+                        to="/signup"
+                        style={{
+                          textDecoration: "underline",
+                          color: "white",
+                        }}
+                      >
+                        <span>signup</span>
+                      </LinkContainer>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

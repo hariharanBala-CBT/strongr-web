@@ -1,5 +1,4 @@
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import { Container } from "react-bootstrap";
 import HomeScreen from "./screens/HomeScreen";
 import ClubListScreen from "./screens/ClubListScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -22,7 +21,7 @@ function App() {
     <Router>
       <main>
         <HomeProvider>
-          <Container>
+          {/* <Container> */}
             <Routes>
               <Route path="/error/" element={<ErrorScreen />} />
 
@@ -41,7 +40,6 @@ function App() {
               <Route path="/bookinginfo/:id" element={<BookingInfoScreen />} />
               <Route path="/booking/:id" element={<BookingScreen />} />
             </Routes>
-          </Container>
         </HomeProvider>
       </main>
     </Router>

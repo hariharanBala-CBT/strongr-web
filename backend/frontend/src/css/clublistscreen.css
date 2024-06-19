@@ -64,6 +64,7 @@
   flex-direction: row;
   justify-content: flex-start;
   flex-wrap: wrap;
+  margin-bottom: 30px;
 }
 
 .clubs-display{
@@ -90,5 +91,79 @@
 }
 
 .clublist-f{
+  margin-top: 147px;
+}
+.game-search-club{
+  margin-top: 50px;
+}
+.breadcrumb.breadcrumb-list {
+  background: url(../images/sports-banner.jpg) rgba(36, 29, 57, 0.8) no-repeat;
+  background-size: cover;
+}
+.breadcrumb {
+  background: url(../images/sports-banner.jpg) rgba(36, 29, 57, 0.8) no-repeat;
+  background-size: cover;
+  background-blend-mode: multiply;
+  padding: 107px 0;
+  position: relative;
+  height: 400px;
+}
+header.header-sticky {
+  position: sticky;
+}
+.breadcrumb h1 {
   margin-top: 155px;
+}
+.breadcrumb.breadcrumb-list .container {
+  position: relative;
+}
+.breadcrumb ul {
+  position: relative;
+  color: #FFFFFF;
+}
+.breadcrumb ul li {
+  padding-right: 30px;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+.game-search-club{
+  margin-top: 50px;
+}
+.breadcrumb.breadcrumb-list {
+  background: url(../images/sports-banner.jpg) rgba(36, 29, 57, 0.8) no-repeat;
+  background-size: cover;
+}
+.breadcrumb {
+  background: url(../images/sports-banner.jpg) rgba(36, 29, 57, 0.8) no-repeat;
+  background-size: cover;
+  background-blend-mode: multiply;
+  padding: 107px 0;
+  position: relative;
+  height: 400px;
+}
+header.header-sticky {
+  position: sticky;
+}
+.breadcrumb h1 {
+  margin-top: 155px;
+}
+.breadcrumb.breadcrumb-list .container {
+  position: relative;
+}
+.breadcrumb ul {
+  position: relative;
+  color: #FFFFFF;
+}
+.breadcrumb ul li {
+  padding-right: 30px;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+.game-search-club .select-date input.form-control {
+  height: 50px;
+  border-radius: 10px;
+  background: #FAFAFA;
+  border: none;
 }
