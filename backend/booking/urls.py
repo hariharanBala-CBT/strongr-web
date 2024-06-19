@@ -16,6 +16,7 @@ urlpatterns = [
     path('slots/unavailable/', views.getUnavailableSlots, name='get-slots'),
     path('slots/additional/', views.getAdditionalSlots, name='get-slots'),
     path('username/validate/', views.ValidateUser, name='user-validate'),
+    path('userdetails/validate/', views.ValidateUserDetails, name='user-details-validate'),
     path('phone/validate/', views.ValidatePhone, name='phone-validate'),
     path('<str:pk>/', views.getClub, name="club"),
     path('booking/details/<str:pk>/', views.getBookingDetails, name='booking-details'),

@@ -22,35 +22,58 @@ from base.utils import update_completed_bookings
 
 @api_view(['GET'])
 def ValidateUser(request):
-    username = request.GET.get('username')
-
     try:
+        username = request.GET.get('username')
+
         if not username:
             return Response({'detail': 'Username is required'},status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.filter(username=username).first()
-        if not user:
-            return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
-        return Response({'detail': 'User exists'}, status=status.HTTP_200_OK)
+        if user:
+            return Response({'detail': 'User exists with this email'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
 
-    except Exception as e:
-        print(e)
+    except Exception:
+        return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def ValidateUserDetails(request):
+    try:
+        email = request.GET.get('email')
+        phone = request.GET.get('phone')
+
+        if not email:
+            return Response({'detail': 'email is required'},status=status.HTTP_400_BAD_REQUEST)
+        if not phone:
+            return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
+        
+        user = User.objects.filter(email=email)
+        customer = Customer.objects.filter(phone_number = phone)
+
+        if user:
+            return Response({'detail': 'User exists with this email'}, status=status.HTTP_200_OK)
+
+        if customer:
+            return Response({'detail': 'User exists with this phone number'}, status=status.HTTP_200_OK)
+        
+        return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
+
+    except Exception:
         return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def ValidatePhone(request):
-    phone = request.GET.get('phone')
-    phone = phone[2:]
-
     try:
+        phone = request.GET.get('phone')
+        phone = phone[2:]
+
         if not phone:
             return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
-        customer = Customer.objects.get(phone_number = phone)
-        if not customer:
-            return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
-        return Response({'detail': 'User exists'}, status=status.HTTP_200_OK)
+        customer = Customer.objects.filter(phone_number = phone)
+        if customer:
+            return Response({'detail': 'User exists with this phone number'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
 
-    except Exception as e:
-        print(e)
+    except Exception:
         return Response({'detail': 'phone number cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -225,7 +248,6 @@ def filterClubs(request):
 @api_view(['GET'])
 def getSuggestedClub(request):
     selected_area = request.query_params.get('area')
-    print(selected_area)
 
     try:
         selected_area_obj = Area.objects.get(area_name=selected_area)
@@ -295,8 +317,7 @@ def createBooking(request):
             serializer = BookingDetailsSerializer(booking)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            print(e)
+        except Exception:
             return Response({'detail': 'Booking not created'},
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -326,8 +347,7 @@ def createBooking(request):
             serializer = BookingDetailsSerializer(booking)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            print(e)
+        except Exception:
             return Response({'detail': 'Booking not created'},
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -422,8 +442,7 @@ def updateUserProfile(request):
 
         return Response(serializer.data)
 
-    except Exception as e:
-        print(e)
+    except Exception:
         return Response({'detail': 'User profile not updated'}, status=status.HTTP_400_BAD_REQUEST)
 
 

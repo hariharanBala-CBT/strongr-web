@@ -10,7 +10,6 @@ from booking.models import Booking
 def update_completed_bookings():
     current_date = datetime.now()
     current_datetime = current_date.time()
-    print(current_datetime)
 
     bookings_to_update = Booking.objects.filter(
         booking_date__lt=current_date,

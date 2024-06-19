@@ -105,6 +105,9 @@ import {
   PHONE_VALIDATE_REQUEST,
   PHONE_VALIDATE_SUCCESS,
   PHONE_VALIDATE_FAIL,
+  USERDETAILS_VALIDATE_REQUEST,
+  USERDETAILS_VALIDATE_SUCCESS,
+  USERDETAILS_VALIDATE_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -1078,6 +1081,34 @@ export const validateUser = (username) => async (dispatch) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
+    });
+  }
+};
+
+export const validateUserDetails = (email, phone) => async (dispatch) => {
+  try {
+    dispatch({ type: USERDETAILS_VALIDATE_REQUEST });
+
+    const { data } = await axios.get("/api/userdetails/validate/", {
+      params: { 
+        email: email,
+        phone: phone,
+       },
+    });
+
+
+    dispatch({
+      type: USERDETAILS_VALIDATE_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: USERDETAILS_VALIDATE_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.detail,
     });
   }
 };

@@ -19,7 +19,7 @@ class TenantUser(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return str(self.user.first_name)
+        return f"{str(self.user.first_name)} {str(self.user.last_name)}"
 
 class Customer(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.PROTECT)
@@ -28,7 +28,7 @@ class Customer(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return str(self.user.first_name)
+        return f"{str(self.user.first_name)} {str(self.user.last_name)}"
 
 class Country(models.Model):
     tenant = models.ForeignKey(Tenant,on_delete=models.PROTECT)
