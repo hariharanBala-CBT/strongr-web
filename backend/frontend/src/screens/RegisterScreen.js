@@ -101,7 +101,6 @@ function RegisterScreen() {
 
   useEffect(() => {
     if (userInfo) {
-      toast.success("User signup success!");
       navigate("/");
     } else if (registerError) {
       if (registerError === "Email is already registered") {
