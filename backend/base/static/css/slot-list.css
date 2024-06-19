@@ -1,0 +1,14 @@
+#successAlert {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  background-color: #323231;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1050;
+}
+#successAlert p {
+  text-align: center;
+  margin: 0;
+}
