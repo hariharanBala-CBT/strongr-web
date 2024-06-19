@@ -494,6 +494,8 @@ def update_location(request, pk):
 
     return render(request, 'update_location.html', {'form': form, 'pk': pk})
 
+    
+
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationListView(ListView):
     model = OrganizationLocation

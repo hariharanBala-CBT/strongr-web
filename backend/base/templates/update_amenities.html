@@ -75,6 +75,15 @@
           z-index: 1050;
           display: none;
       }
+      .profile-card {
+        padding-right:150px;
+      }
+      #nextTabBtn{
+        display: block;
+        margin: 20px auto 0;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
     </style>
   </head>
   <body class="sb-nav-fixed">
@@ -222,9 +231,10 @@
                     </tr>
                   </tbody>
                 </table>
-                <div class="buttons px-4 py-4" style="margin-left: 20%">
+                {% comment %} <div class="buttons px-4 py-4" style="margin-left: 20%">
                   <button  type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit" style="margin-top: 22px">Update</button>
-                </div>
+                </div> {% endcomment %}
+                <button id="nextTabBtn" class="btn btn-primary">Update</button>
               </form>
               <div class="toast" id="successToast"></div>
               <!-- <div id="confirmationModal" class="modal" aria-hidden="true" tabindex="-1" role="dialog"
@@ -385,6 +395,22 @@
               }, 2000); // Hide after 5000ms or 5 seconds
           }
       });
+      $(document).ready(function () {
+        $('#nextTabBtn').click(function () {
+            const activeTab = $('.tab-button.active');
+            const nextTab = activeTab.next('.tab-button');
+            
+            if (nextTab.length > 0) {
+                activeTab.removeClass('active');
+                nextTab.addClass('active');
+                
+                const url = nextTab.data('url');
+                $('#tab-content').load(url, function () {
+                    initFormSubmission();
+                });
+            }
+        });
+    });
   </script>
   </body>
 </html>

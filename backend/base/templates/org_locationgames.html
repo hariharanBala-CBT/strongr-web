@@ -61,6 +61,15 @@
             text-align: center;
             margin: 0;
         }
+        .profile-card {
+            padding-right:200px;
+          }
+          #nextTabBtn{
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
     </style>
 
 </head>
@@ -190,6 +199,7 @@
                                             {% endfor %}
                                         </tbody>
                                     </table>
+                                    <button id="nextTabBtn" class="btn btn-primary">Next Tab</button>
                                 </div>
                             </div>
                         </div>
@@ -198,6 +208,7 @@
                         <div><a href="{% url 'organization_locationworkingdays' locationpk %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a></div>
                         <div><a href="{% url 'organization_imageslist' locationpk %}" type="submit" class="btn btn-primary" data-toggle="tooltip" title="next"><i class="fa-solid fa-arrow-right-long"></i></a></div>
                     </div> -->
+                   
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
@@ -251,6 +262,22 @@
                         successAlert.style.display = 'none';
                     }, 2500); // Hide after 5000ms or 5 seconds
                 }
+            });
+            $(document).ready(function () {
+                $('#nextTabBtn').click(function () {
+                    const activeTab = $('.tab-button.active');
+                    const nextTab = activeTab.next('.tab-button');
+                    
+                    if (nextTab.length > 0) {
+                        activeTab.removeClass('active');
+                        nextTab.addClass('active');
+                        
+                        const url = nextTab.data('url');
+                        $('#tab-content').load(url, function () {
+                            initFormSubmission();
+                        });
+                    }
+                });
             });
         </script>
 </body>

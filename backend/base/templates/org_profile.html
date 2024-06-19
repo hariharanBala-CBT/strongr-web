@@ -123,6 +123,27 @@
             z-index: 1050;
             display: none;
         }
+        ul.breadcrumb {
+            padding: 10px 16px;
+            list-style: none;
+          }
+          ul.breadcrumb li {
+            display: inline;
+            font-size: 18px;
+          }
+          ul.breadcrumb li+li:before {
+            padding: 8px;
+            color: black;
+            content: "/\00a0";
+          }
+          ul.breadcrumb li a {
+            color: #0275d8;
+            text-decoration: none;
+          }
+          ul.breadcrumb li a:hover {
+            color: #01447e;
+            text-decoration: underline;
+          }
     </style>
 </head>
 
@@ -201,7 +222,11 @@
             </nav>
         </div>
         <div id="layoutSidenav_content">
-            <main>
+            <main>    
+                <ul class="breadcrumb">
+                    <li><a href="{% url 'organization_page' %}">Home</a></li>
+                    <li>Profile</li>
+                </ul>
                 <div class="container-fluid px-4 m">
                     <div class="profile-card">
                         <h1 class="my-4">Profile</h1>

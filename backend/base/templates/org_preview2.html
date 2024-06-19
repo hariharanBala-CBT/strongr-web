@@ -239,7 +239,27 @@
             border-radius: 4px; /* Rounded corners */
             font-weight: bold; /* Bold text */
         }
-
+         ul.breadcrumb {
+            padding: 10px 16px;
+            list-style: none;
+          }
+          ul.breadcrumb li {
+            display: inline;
+            font-size: 18px;
+          }
+          ul.breadcrumb li+li:before {
+            padding: 8px;
+            color: black;
+            content: "/\00a0";
+          }
+          ul.breadcrumb li a {
+            color: #0275d8;
+            text-decoration: none;
+          }
+          ul.breadcrumb li a:hover {
+            color: #01447e;
+            text-decoration: underline;
+          }
 
     </style>
 </head>
@@ -320,13 +340,21 @@
                     <div class="user-email">{{ request.user.email }}</div>
                 </div>
             </nav>
-        </div>
-
+        </div>       
         <!-- Main Content -->
         <div id="layoutSidenav_content">
+            <ul class="breadcrumb">
+                <li><a href="{% url 'organization_page' %}">Home</a></li>
+                <li><a href="{% url 'organization_profile' pk=1 %}">Profile</a></li>
+                <li><a href="{% url 'organization_locationlist'%}">Location List</a></li>  
+                <li><a href="{% url 'slot-location' %}">Slot List</a></li>
+                <li><a href="{% url 'temp-slot-location'%}">Additional Slots</a></li>
+                <li><a href="{% url 'temp-deslot-location'%}">Unavailable Slots</a></li>
+                <li>Preview</li>           
+            </ul>
             <h1 class="mt-4 mb-4" style="margin-left: 40%;">Preview</h1>
             <main class="container-fluid mt-4" style="margin-top: 210px;">
-                <!-- Organization Card -->
+         <!-- Organization Card -->
                 <div class="card mb-4">
                     <div class="card-header bg-primary text-white">
                         <h2 class="m-0">{{ user.first_name }}</h2>

@@ -107,6 +107,27 @@
             border: 1px solid #ddd;
             border-top: none;
         }
+        ul.breadcrumb {
+            padding: 10px 16px;
+            list-style: none;
+          }
+          ul.breadcrumb li {
+            display: inline;
+            font-size: 18px;
+          }
+          ul.breadcrumb li+li:before {
+            padding: 8px;
+            color: black;
+            content: "/\00a0";
+          }
+          ul.breadcrumb li a {
+            color: #0275d8;
+            text-decoration: none;
+          }
+          ul.breadcrumb li a:hover {
+            color: #01447e;
+            text-decoration: underline;
+          }
     </style>
 
     <body class="sb-nav-fixed">
@@ -176,6 +197,12 @@
             <div id="layoutSidenav_content">
                 <main class="main-template">
                     <div class="container-fluid px-4 mt-4">
+                        <ul class="breadcrumb">
+                            <li><a href="{% url 'organization_page' %}">Home</a></li>
+                            <li><a href="{% url 'organization_profile' pk=1 %}">Profile</a></li>
+                            <li><a href="{% url 'organization_locationlist'%}">Location List</a></li>  
+                            <li>Location</li>
+                        </ul>
                         {% if messages %}
                         <div class="alert alert-success" role="alert" id="successAlert">
                             {% for message in messages %}
@@ -222,6 +249,7 @@
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script>
             $(document).ready(function () {
+                // Function to get cookie value
                 function getCookie(name) {
                     let cookieValue = null;
                     if (document.cookie && document.cookie !== '') {
@@ -237,6 +265,7 @@
                     return cookieValue;
                 }
 
+                // Function to initialize form submission via AJAX
                 function initFormSubmission() {
                     $('#tab-content form').submit(function (event) {
                         event.preventDefault();
@@ -253,13 +282,14 @@
                                 'X-CSRFToken': csrftoken,
                                 'X-Requested-With': 'XMLHttpRequest'
                             },
-                            success: function (response) {
-                                if (response.status === 'success') {
-                                    showToast(response.message);
-                                } else {
-                                    showToast(response.message || 'Error submitting form.');
-                                }
-                            },
+                               success: function(response) {
+                            if (response.status === 'success') {
+                                showToast(response.message);
+                                
+                            } else {
+                                showToast(response.message || 'Error submitting form.');
+                            }
+                        },
                             error: function (xhr, status, error) {
                                 console.error('Error:', error);
                                 showToast('Error submitting form. ' + error);
@@ -268,6 +298,7 @@
                     });
                 }
 
+                // Function to show toast messages
                 function showToast(message) {
                     const toast = $('#successToast');
                     toast.text(message);
@@ -277,11 +308,14 @@
                     }, 2000);
                 }
 
+                // Function to set active tab
                 function setActiveTab(tab) {
                     $('.tab-button').removeClass('active');
                     $(tab).addClass('active');
+                    localStorage.setItem('activeTab', $(tab).data('url'));
                 }
 
+                // Handle tab button click
                 $('.tab-button').click(function () {
                     const url = $(this).data('url');
                     setActiveTab(this);
@@ -290,13 +324,34 @@
                     });
                 });
 
-                const initialTab = $('.tab-button.active').data('url');
-                if (initialTab) {
+                // Load the last active tab on page load if location hasn't changed
+                const initialTab = localStorage.getItem('activeTab');
+                const currentLocationPk = '{{ locationpk }}';
+                const savedLocationPk = localStorage.getItem('locationPk');
+
+                if (savedLocationPk !== currentLocationPk) {
+                    localStorage.removeItem('activeTab');
+                    localStorage.setItem('locationPk', currentLocationPk);
+                    const defaultTabElement = $('.tab-button').first();
+                    setActiveTab(defaultTabElement);
+                    $('#tab-content').load(defaultTabElement.data('url'), function () {
+                        initFormSubmission();
+                    });
+                } else if (initialTab) {
+                    const activeTabElement = $(`.tab-button[data-url='${initialTab}']`);
+                    setActiveTab(activeTabElement);
                     $('#tab-content').load(initialTab, function () {
+                        initFormSubmission();
+                    });
+                } else {
+                    const defaultTabElement = $('.tab-button').first();
+                    setActiveTab(defaultTabElement);
+                    $('#tab-content').load(defaultTabElement.data('url'), function () {
                         initFormSubmission();
                     });
                 }
 
+                // Handle location change
                 $('#locationSelect').change(function () {
                     const selectedLocation = $(this).val();
                     if (selectedLocation) {
@@ -304,6 +359,7 @@
                     }
                 });
 
+                // Handle success alert display
                 const successAlert = $('#successAlert');
                 if (successAlert.length) {
                     setTimeout(() => {
@@ -311,11 +367,13 @@
                     }, 2500);
                 }
 
+                // Initialize datatables
                 const datatablesSimple = $('#datatablesSimple');
                 if (datatablesSimple.length) {
                     new simpleDatatables.DataTable(datatablesSimple[0]);
                 }
 
+                // Handle sidebar toggle
                 const sidebarToggle = $('#sidebarToggle');
                 if (sidebarToggle.length) {
                     sidebarToggle.click(function (event) {
@@ -324,6 +382,23 @@
                         localStorage.setItem('sb|sidebar-toggle', $('body').hasClass('sb-sidenav-toggled'));
                     });
                 }
+            });
+
+            $(document).ready(function () {
+                $('#nextTabBtn').click(function () {
+                    const activeTab = $('.tab-button.active');
+                    const nextTab = activeTab.next('.tab-button');
+                    
+                    if (nextTab.length > 0) {
+                        activeTab.removeClass('active');
+                        nextTab.addClass('active');
+                        
+                        const url = nextTab.data('url');
+                        $('#tab-content').load(url, function () {
+                            initFormSubmission();
+                        });
+                    }
+                });
             });
         </script>
     </body>

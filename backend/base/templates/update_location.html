@@ -79,6 +79,15 @@
           background-color: rgba(0, 0, 0, 0.5);
           z-index: 9998;
       }
+      .profile-card {
+        padding-right:250px;
+      }
+      #nextTabBtn{
+        display: block;
+        margin: 20px auto 0;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
         </style>
 
     </head>
@@ -187,11 +196,12 @@
                                         </tbody>
                                     </table>
                                 
-                                    <div class="buttons text-center mt-4 mx-5">
+                                   {% comment %} <div class="buttons text-center mt-4 mx-5">
                                         <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2">Update</button>
                                     </div>
                                 
-                                    <input type="hidden" name="organization" value="{{ request.user.organization.id }}">
+                                    <input type="hidden" name="organization" value="{{ request.user.organization.id }}"> {% endcomment %}
+                                    <button id="nextTabBtn" class="btn btn-primary">Update</button>
                                 </form>                                
                             </div>
                         </div>
@@ -212,7 +222,7 @@
             </div>
         </div>
         <!-- Popup content -->
-            <div class="popup" id="popup">
+            {% comment %} <div class="popup" id="popup">
                 <div class="popup-content">  
                     <h2>Confirm Update</h2>
                     <p>Are you sure you want to continue?</p>
@@ -221,8 +231,8 @@
                         <button onclick="handleNo()">No</button>
                     </div>
                 </div>
-            </div>
-        <div class="overlay" id="overlay"></div>
+            </div>  {% endcomment %}
+    
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
          
@@ -260,7 +270,7 @@
           }
 
           });
-          function handleYes(event){
+          {% comment %} function handleYes(event){
             form = document.getElementById("upd-loc-form");
             form.submit()
         }
@@ -278,7 +288,29 @@
         function closePopup() {
             document.getElementById("popup").style.display = "none";
             document.getElementById("overlay").style.display = "none";
-        }
+        } {% endcomment %}
+
+        $(document).ready(function () {
+            $('#nextTabBtn').click(function () {
+                const activeTab = $('.tab-button.active');
+                const nextTab = activeTab.next('.tab-button');
+                
+                if (nextTab.length > 0) {
+                    activeTab.removeClass('active');
+                    nextTab.addClass('active');
+                    
+                    const url = nextTab.data('url');
+                    $('#tab-content').load(url, function () {
+                        initFormSubmission();
+                        $('.toast').toast('show');
+                    });
+                }
+            });
+        });
+
+        
         </script>
+       
     </body>
 </html>
+
