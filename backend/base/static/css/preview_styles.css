@@ -63,10 +63,10 @@ footer {
     padding: 10px 0;
     text-align: center;
     border-top: 1px solid #e0e0e0;
-}
 
-footer a {
-    color: #007bff;
+    a {
+        color: #007bff;
+    }
 }
 
 .btn-primary {
