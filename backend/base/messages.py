@@ -50,4 +50,6 @@ ERROR_MESSAGES = {
     'form_validation_failed_user_exist_without_group': 'User exist without group ',
     'phone_number_invalid': 'Phone number must be exactly 10 digits.',
     'alt_number_invalid': 'Alternate number must be exactly 10 digits.',
+    'working_days_is_active_failure': 'At least one day must be active.',
+    'working_days_time_failure': 'Active days must have both start and end times.',
 }
