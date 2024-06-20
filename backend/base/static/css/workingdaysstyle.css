@@ -2,30 +2,37 @@ form {
     border-radius: 2%;
     padding: 20px;
 }
+
 table {
     padding: 25px;
     padding-bottom: 0px;
 }
+
 td {
     width: 150px;
     height: 2em;
     padding: 10px;
     align-items: center;
 }
-input, textarea {
+
+input,
+textarea {
     border-radius: 0.2rem;
     border: 1px solid darkgrey;
 }
+
 th {
-    align-items: center;
+    vertical-align: middle;
     padding: 0px;
     margin: 0px;
 }
+
 #id_description {
     resize: none;
     height: 80px;
     width: 300px;
 }
+
 .modal {
     display: none;
     position: fixed;
@@ -37,6 +44,7 @@ th {
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
 }
+
 .modal-content {
     display: flex;
     justify-content: center;
@@ -49,12 +57,15 @@ th {
     border-radius: 0.3rem;
     background-color: #fefefe;
 }
+
 .modal-content h2 {
     margin-bottom: 15px;
 }
+
 .modal-content p {
     margin-bottom: 10px;
 }
+
 .modal-content button {
     display: flex;
     width: 40%;
@@ -69,9 +80,11 @@ th {
     font-size: 16px;
     transition: background 0.3s ease-in-out;
 }
+
 .modal-content button:hover {
     background: #0056b3;
 }
+
 .toast {
     position: fixed;
     top: 60px;
@@ -83,6 +96,7 @@ th {
     z-index: 1050;
     display: none;
 }
+
 #successAlert {
     position: fixed;
     top: 60px;
@@ -94,17 +108,21 @@ th {
     z-index: 1050;
     display: none;
 }
+
 #successAlert p {
     text-align: center;
     margin: 0;
 }
+
 .form-error {
     color: red;
     margin-top: 5px;
 }
-#form-id{
+
+#form-id {
     display: none;
 }
-.button-modal{
+
+.button-modal {
     display: flex;
 }

@@ -4,18 +4,18 @@ body {
     color: #333;
 }
 
-h1{
+h1 {
     margin-left: 40%;
 }
 
-hr{
-    height:2px;
-    border-width:0;
-    color:gray;
-    background-color:gray
+hr {
+    height: 2px;
+    border-width: 0;
+    color: gray;
+    background-color: gray
 }
 
-.my-4{
+.my-4 {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -318,7 +318,7 @@ ul.checkbox-list li input[type="checkbox"] {
     cursor: not-allowed;
 }
 
-.buttons{
+.buttons {
     margin-left: 30%;
     margin-top: 20px;
 }
