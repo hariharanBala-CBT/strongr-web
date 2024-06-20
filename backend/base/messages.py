@@ -6,7 +6,6 @@ SUCCESS_MESSAGES = {
 }
 
 ERROR_MESSAGES = {
-    'form_validation_failed': 'Location update failed. {}',
     'working_days_is_active_failure': 'At least one day must be active.',
     'working_days_time_failure':'Active days must have both start and end times.'
 }

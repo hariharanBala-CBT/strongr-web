@@ -257,7 +257,7 @@ class LoginView(View):
                 if user.groups.filter(name='Customer').exists():
                     return redirect('home_page')
                 elif user.groups.filter(name='Organization').exists():
-                    profile_page_url = reverse('organization_profile', kwargs={'pk': user.organization.pk})
+                    profile_page_url = reverse('organization_profile')
                     return redirect(profile_page_url)
                 elif user.groups.filter(name='Tenant').exists():
                     return redirect('tenantuser_page')
