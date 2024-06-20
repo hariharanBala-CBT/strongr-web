@@ -3,27 +3,19 @@
   display: flex;
   justify-content: center;
 }
+
 td {
   align-items: center;
 }
-#successAlert {
-  position: fixed;
-  top: 70px;
-  right: 20px;
-  background-color: #323231;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  z-index: 1050;
-}
-#successAlert p {
-  text-align: center;
-  margin: 0;
-}
+
+
+
+
 .info-icon {
   cursor: pointer;
   position: relative;
 }
+
 .note {
   display: none;
   position: absolute;
@@ -37,6 +29,7 @@ td {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
 }
+
 .note::before {
   content: "";
   position: absolute;
@@ -46,6 +39,23 @@ td {
   border-style: solid;
   border-color: transparent transparent #f9f9f9 transparent;
 }
+
 .fa-circle-info {
   color: #2a3fb9;
+}
+
+.alert.alert-success {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  background-color: #323231;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1050;
+
+  p {
+    text-align: center;
+    margin: 0;
+  }
 }

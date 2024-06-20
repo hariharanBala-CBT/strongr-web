@@ -9,13 +9,13 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <title>STRONGR</title>
-        
+
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet">
-        <link href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" rel="stylesheet">
+        <link href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" rel="stylesheet">        
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
-        <link href="{% static 'styles.css' %}" rel="stylesheet" />
-        <link href="{% static './css/slot-liststyles.css' %}" rel="stylesheet" />
+        <link href="{% static 'styles.css' %}" rel="stylesheet">
+        <link href="{% static './css/slot-list.css' %}" rel="stylesheet" />
 
     </head>
     <body class="sb-nav-fixed">
@@ -168,7 +168,7 @@
 
         <script>
             window.addEventListener('DOMContentLoaded', event => {
-                const $datatablesSimple = document.getElementById('#datatablesSimple');
+                const $datatablesSimple = document.getElementById('datatablesSimple');
                 if ($datatablesSimple) {
                     new simpleDatatables.DataTable($datatablesSimple);
                 }
@@ -184,6 +184,7 @@
                     });
                 }
             });
+            
             const $successAlert = $('#successAlert');
             if ($successAlert.length) {
                 setTimeout(() => {

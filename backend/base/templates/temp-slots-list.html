@@ -15,7 +15,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
         <link href="{% static 'styles.css' %}" rel="stylesheet">
-        <link href="{% static './css/temp-slots-liststyles.css' %}" rel="stylesheet" />
+        <link href="{% static './css/temp-slots-list.css' %}" rel="stylesheet" />
 
     </head>
     <body class="sb-nav-fixed">
@@ -198,9 +198,11 @@
                     console.error("Form not found");
                 }
             }
+
             function handleNo(){
                 closePopup()
             }
+            
             function openPopup(event, slotId, location, court, date, time) {
                 event.preventDefault();
                 document.getElementById("popup").style.display = "block";
@@ -212,16 +214,19 @@
                 document.getElementById("slot-date").innerText = date;
                 document.getElementById("slot-time").innerText = time;
             }
+
             function closePopup() {
                 document.getElementById("popup").style.display = "none";
                 document.getElementById("overlay").style.display = "none";
             }
+
             window.addEventListener('DOMContentLoaded', event => {
                 const $datatablesSimple = document.getElementById('datatablesSimple');
                 if ($datatablesSimple) {
                     new simpleDatatables.DataTable($datatablesSimple);
                 }
             });
+
             window.addEventListener('DOMContentLoaded', event => {
                 const $sidebarToggle = document.body.querySelector('#sidebarToggle');
                 if ($sidebarToggle) {
@@ -232,6 +237,7 @@
                     });
                 }
             });
+            
             const $successAlert = $('#successAlert');
             if ($successAlert.length) {
                 setTimeout(() => {

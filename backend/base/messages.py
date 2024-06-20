@@ -31,8 +31,8 @@ SUCCESS_MESSAGES = {
 
     #org
     'preview' : 'Preview submitted successfully',
-    'org_status' : 'Organization status updated sucessfully',
-    'orglocation_status' : 'Organization location status updated sucessfully',
+    'org_status' : 'Organization status updated successfully',
+    'orglocation_status' : 'Organization location status updated successfully',
 
     'change_password' : 'Your password was successfully updated',
 }
