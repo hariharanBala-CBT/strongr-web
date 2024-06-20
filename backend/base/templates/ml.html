@@ -105,7 +105,7 @@
                 <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                 Profile
             </a>
-            <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
+            <a class="nav-link" href="{% url 'organization_locationlist'%}">
                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                 Locations
             </a>
@@ -122,7 +122,7 @@
               Customers
             </a>
             <div class="sb-sidenav-menu-heading">Slot</div>
-            <a class="nav-link" href="{% url 'slot-location' %}">
+            <a class="nav-link" href="{% url 'slot-location' %}" style="color: white; background-color: rgb(68, 68, 68);">
               <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
               Slots List
           </a>
@@ -194,17 +194,17 @@
     <script>
       window.addEventListener("DOMContentLoaded", (event) => {
 
-        const datatablesSimple = document.getElementById("datatablesSimple");
-        if (datatablesSimple) {
-          new simpleDatatables.DataTable(datatablesSimple);
+        const $datatablesSimple = document.getElementById("datatablesSimple");
+        if ($datatablesSimple) {
+          new simpleDatatables.DataTable($datatablesSimple);
         }
       });
 
       window.addEventListener("DOMContentLoaded", (event) => {
 
-        const sidebarToggle = document.body.querySelector("#sidebarToggle");
-        if (sidebarToggle) {
-          sidebarToggle.addEventListener("click", (event) => {
+        const $sidebarToggle = document.body.querySelector("#sidebarToggle");
+        if ($sidebarToggle) {
+          $sidebarToggle.addEventListener("click", (event) => {
             event.preventDefault();
             document.body.classList.toggle("sb-sidenav-toggled");
             localStorage.setItem(
