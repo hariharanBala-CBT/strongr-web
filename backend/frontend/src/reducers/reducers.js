@@ -109,6 +109,14 @@ import {
   UNAVAILABLE_SLOT_REQUEST,
   UNAVAILABLE_SLOT_SUCCESS,
   UNAVAILABLE_SLOT_FAIL,
+  PHONE_VALIDATE_REQUEST,
+  PHONE_VALIDATE_SUCCESS,
+  PHONE_VALIDATE_FAIL,
+  PHONE_VALIDATE_RESET,
+  USERDETAILS_VALIDATE_REQUEST,
+  USERDETAILS_VALIDATE_SUCCESS,
+  USERDETAILS_VALIDATE_FAIL,
+  USERDETAILS_VALIDATE_RESET,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -755,6 +763,36 @@ export const validateUserReducer = (state = {}, action) => {
     case USER_VALIDATE_FAIL:
       return { loading: false, userValidateError: true };
     case USER_VALIDATE_RESET:
+      return { };
+    default:
+      return state;
+  }
+};
+
+export const validateUserDetailsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USERDETAILS_VALIDATE_REQUEST:
+      return { loading: true };
+    case USERDETAILS_VALIDATE_SUCCESS:
+      return { loading: false, userDetailsValidate: action.payload };
+    case USERDETAILS_VALIDATE_FAIL:
+      return { loading: false, userDetailsValidateError: action.payload };
+    case USERDETAILS_VALIDATE_RESET:
+      return { };
+    default:
+      return state;
+  }
+};
+
+export const validatePhoneReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PHONE_VALIDATE_REQUEST:
+      return { loading: true };
+    case PHONE_VALIDATE_SUCCESS:
+      return { loading: false, phoneValidate: true };
+    case PHONE_VALIDATE_FAIL:
+      return { loading: false, phoneValidateError: true };
+    case PHONE_VALIDATE_RESET:
       return { };
     default:
       return state;

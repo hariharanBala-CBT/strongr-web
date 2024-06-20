@@ -19,13 +19,16 @@ class TenantUser(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return str(self.user)
+        return f"{str(self.user.first_name)} {str(self.user.last_name)}"
 
 class Customer(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.PROTECT)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.PositiveBigIntegerField(default=None)
     is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{str(self.user.first_name)} {str(self.user.last_name)}"
 
 class Country(models.Model):
     tenant = models.ForeignKey(Tenant,on_delete=models.PROTECT)
@@ -122,7 +125,7 @@ class OrganizationLocation(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.address_line_1
+        return f"{self.organization}-{self.address_line_1}"
 
 class Review(models.Model):
     organization_location = models.ForeignKey(OrganizationLocation, on_delete=models.SET_NULL, null=True)

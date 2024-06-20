@@ -1,4 +1,3 @@
-# Create your views here.from django.shortcuts import render
 from django.db import IntegrityError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -18,25 +17,64 @@ import datetime
 from datetime import timedelta
 from django.db import transaction
 from django.contrib.auth.hashers import make_password
+from base.utils import update_completed_bookings
 
 
 @api_view(['GET'])
 def ValidateUser(request):
-    username = request.GET.get('username')
-
     try:
-        if not username:
-            return Response({'detail': 'Username is required'},
-                            status=status.HTTP_400_BAD_REQUEST)
-        user = User.objects.filter(username=username).first()
-        if not user:
-            return Response({'detail': 'User does not exist'},
-                            status=status.HTTP_404_NOT_FOUND)
-        return Response({'detail': 'User exists'}, status=status.HTTP_200_OK)
+        username = request.GET.get('username')
 
-    except Exception as e:
-        return Response({'detail': 'User cannot be validated'},
-                        status=status.HTTP_400_BAD_REQUEST)
+        if not username:
+            return Response({'detail': 'Username is required'},status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.filter(username=username).first()
+        if user:
+            return Response({'detail': 'User exists with this email'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
+
+    except Exception:
+        return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def ValidateUserDetails(request):
+    try:
+        email = request.GET.get('email')
+        phone = request.GET.get('phone')
+
+        if not email:
+            return Response({'detail': 'email is required'},status=status.HTTP_400_BAD_REQUEST)
+        if not phone:
+            return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
+        
+        user = User.objects.filter(email=email)
+        customer = Customer.objects.filter(phone_number = phone)
+
+        if user:
+            return Response({'detail': 'User exists with this email'}, status=status.HTTP_200_OK)
+
+        if customer:
+            return Response({'detail': 'User exists with this phone number'}, status=status.HTTP_200_OK)
+        
+        return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
+
+    except Exception:
+        return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def ValidatePhone(request):
+    try:
+        phone = request.GET.get('phone')
+        phone = phone[2:]
+
+        if not phone:
+            return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
+        customer = Customer.objects.filter(phone_number = phone)
+        if customer:
+            return Response({'detail': 'User exists with this phone number'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
+
+    except Exception:
+        return Response({'detail': 'phone number cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -156,6 +194,7 @@ def getSlot(request, pk):
 
 @api_view(['GET'])
 def getUserBookings(request, pk):
+    update_completed_bookings();
     booking = Booking.objects.filter(user=pk)
     serializer = UserBookingsSerializer(booking, many=True)
     return Response(serializer.data)
@@ -209,7 +248,6 @@ def filterClubs(request):
 @api_view(['GET'])
 def getSuggestedClub(request):
     selected_area = request.query_params.get('area')
-    print(selected_area)
 
     try:
         selected_area_obj = Area.objects.get(area_name=selected_area)
@@ -279,8 +317,7 @@ def createBooking(request):
             serializer = BookingDetailsSerializer(booking)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            print(e)
+        except Exception:
             return Response({'detail': 'Booking not created'},
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -310,8 +347,7 @@ def createBooking(request):
             serializer = BookingDetailsSerializer(booking)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            print(e)
+        except Exception:
             return Response({'detail': 'Booking not created'},
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -406,8 +442,7 @@ def updateUserProfile(request):
 
         return Response(serializer.data)
 
-    except Exception as e:
-        print(e)
+    except Exception:
         return Response({'detail': 'User profile not updated'}, status=status.HTTP_400_BAD_REQUEST)
 
 

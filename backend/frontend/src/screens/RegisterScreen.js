@@ -9,7 +9,7 @@ import Button from "../components/Button";
 import OTPInput, { ResendOTP } from "otp-input-react";
 import { Box, CircularProgress, Modal } from "@mui/material";
 
-import { generateOTP, register, validateUser } from "../actions/actions";
+import { generateOTP, register, validateUserDetails } from "../actions/actions";
 
 import { USER_LOGOUT } from "../constants/constants";
 
@@ -52,7 +52,7 @@ function RegisterScreen() {
 
   const { userInfo } = useSelector((state) => state.userLogin);
   const { otpLoading } = useSelector((state) => state.generateOtp);
-  const { userValidate, userValidateError } = useSelector((state) => state.userValidator);
+  const { userDetailsValidate, userDetailsValidateError, errorDetails } = useSelector((state) => state.userDetailsValidator);
 
   const otpGenerate = () => {
     setOpenForm(true);
@@ -64,7 +64,7 @@ function RegisterScreen() {
     dispatch(generateOTP(email));
   };
 
-  const validateEmail = (e) => {
+  const validateDetails = (e) => {
     e.preventDefault();
     if (password.length < 8) {
       toast.error("Password must be at least 8 characters");
@@ -72,8 +72,8 @@ function RegisterScreen() {
     } else if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
-    } else {
-      dispatch(validateUser(email));
+    }else {
+      dispatch(validateUserDetails(email, phoneNumber));
       setSubmit(true);
     }
   };
@@ -88,20 +88,19 @@ function RegisterScreen() {
   };
 
   useEffect(() => {
-    if (userValidateError && submit) {
+    if (userDetailsValidateError && submit) {
       otpGenerate();
       setSubmit(false);
-    } else if (userValidate && submit) {
-      toast.error('Email already exists');
+    } else if (userDetailsValidate && submit) {
+      toast.error(userDetailsValidate.detail)
       setLoader(false);
       setOpenForm(false);
       setSubmit(false);
     }
-  }, [userValidate, userValidateError]);
+  }, [userDetailsValidate, userDetailsValidateError, errorDetails]);
 
   useEffect(() => {
     if (userInfo) {
-      toast.success("User signup success!");
       navigate("/");
     } else if (registerError) {
       if (registerError === "Email is already registered") {
@@ -118,6 +117,8 @@ function RegisterScreen() {
   useEffect(() => {
     if (!otpLoading) {
       setLoader(false);
+    }else if(otpLoading){
+      setLoader(true);
     }
   }, [otpLoading]);
 
@@ -130,7 +131,7 @@ function RegisterScreen() {
         <div className="signup-form">
           <h1 className="signup-title">SIGN UP</h1>
 
-          <form method="post" onSubmit={validateEmail}>
+          <form method="post" onSubmit={validateDetails}>
             <div className="div-div">
               <div className="div-1">
                 <label>Name</label>

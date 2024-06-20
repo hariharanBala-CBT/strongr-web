@@ -30,7 +30,7 @@ function LoginScreen() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const { userInfo, LoginError, loading } = useSelector((state) => state.userLogin);
-  const { userValidate } = useSelector((state) => state.userValidator);
+  const { userValidate, userValidateError } = useSelector((state) => state.userValidator);
 
   useEffect(() => {
     dispatch({
@@ -46,7 +46,7 @@ function LoginScreen() {
       setErrorMessage("Incorrect Password");
       setPassword("");
     }
-  }, [ dispatch, LoginError, navigate, userInfo]);
+  }, [dispatch, LoginError, navigate, userInfo]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -82,10 +82,10 @@ function LoginScreen() {
               <label>Username</label>
 
               <TextField
-                error={username.length > 0 && Boolean(userValidate === false)}
+                error={username.length > 0 && userValidateError}
                 helperText={
                   username.length > 0 &&
-                  userValidate === false &&
+                  userValidateError &&
                   "Invalid username"
                 }
                 required
@@ -93,7 +93,7 @@ function LoginScreen() {
                 placeholder="Enter username"
                 value={username}
                 onChange={handleUsername}
-                color={userValidate && "success"}
+                color={userValidateError && "success"}
               />
 
               <label>Password</label>
