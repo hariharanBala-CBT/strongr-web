@@ -1,0 +1,29 @@
+form {
+    border-radius: 2%;
+    padding: 20px;
+}
+
+table {
+    position: relative;
+    padding: 25px;
+    padding-bottom: 0px;
+}
+
+td {
+    width: 50%;
+    height: 2em;
+    padding: 10px;
+}
+
+input,
+textarea,
+select {
+    border-radius: 0.2rem;
+    border: 1px solid darkgrey;
+    width: 250px;
+}
+
+#id_address_line_2,
+#id_address_line_1 {
+    resize: none;
+}

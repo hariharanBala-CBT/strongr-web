@@ -1,0 +1,72 @@
+form {
+    border-radius: 2%;
+    padding: 20px;
+}
+
+table {
+    padding: 25px;
+    padding-bottom: 0px;
+}
+
+td {
+    width: 150px;
+    height: 2em;
+    padding: 10px;
+    align-items: center;
+}
+
+input,
+textarea {
+    border-radius: 0.2rem;
+    border: 1px solid darkgrey;
+}
+
+th {
+    vertical-align: middle;
+    padding: 0px;
+    margin: 0px;
+}
+
+#id_description {
+    resize: none;
+    height: 80px;
+    width: 300px;
+}
+
+.toast {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    background-color: #323231;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1050;
+    display: none;
+}
+
+#successAlert {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    background-color: #323231;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1050;
+    display: none;
+
+    p {
+        text-align: center;
+        margin: 0;
+    }
+}
+
+.form-error {
+    color: red;
+    margin-top: 5px;
+}
+
+#form-id {
+    display: none;
+}

@@ -20,7 +20,7 @@ urlpatterns = [
      path('sendotp/update/', generateUpdateOtp, name="generate-update-otp"),
 
 
-     path('organizationprofile/<int:pk>/' ,OrganizationProfileView.as_view(), name='organization_profile'),
+     path('organizationprofile/' ,OrganizationProfileView.as_view(), name='organization_profile'),
      path('organizationaddlocation/' ,OrganizationAddLocationView.as_view(), name='organization_addlocation'),
      path('organizationupdatelocation/<int:pk>/', update_location, name='organization_updatelocation'),
      path('organizationlocationlist/' ,OrganizationLocationListView.as_view(), name='organization_locationlist'),

@@ -256,7 +256,7 @@ class LoginView(View):
                 if user.groups.filter(name='Customer').exists():
                     return redirect('home_page')
                 elif user.groups.filter(name='Organization').exists():
-                    profile_page_url = reverse('organization_profile', kwargs={'pk': user.organization.pk})
+                    profile_page_url = reverse('organization_profile')
                     return redirect(profile_page_url)
                 elif user.groups.filter(name='Tenant').exists():
                     return redirect('tenantuser_page')
@@ -935,6 +935,8 @@ class PreviewView(FormView):
             context_item['images'] = OrganizationGameImages.objects.filter(
                 organization=location)
             context_item['slots'] = Slot.objects.filter(location_id=location)
+            context_item['has_courts'] = context_item['courts'].exists()
+            context_item['has_slots'] = context_item['slots'].exists()
             locationdetails.append(context_item)
         context['all_locations'] = locationdetails
         profile = Organization.objects.filter(user=self.request.user)
@@ -1513,20 +1515,57 @@ def main_view(request, location_pk=None):
 
     return render(request, 'main_template.html', context)
 
+
 @login_required
 def update_working_days(request, location_pk):
     queryset = OrganizationLocationWorkingDays.objects.filter(organization_location_id=location_pk)
+
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         formset = OrganizationLocationWorkingDaysFormSet(request.POST, queryset=queryset)
+
         if formset.is_valid():
+            instances = formset.save(commit=False)
+
+            has_active = False
+            times_empty = False
+
+            for form in formset:
+                is_active = form.cleaned_data.get('is_active')
+                work_from_time = form.cleaned_data.get('work_from_time')
+                work_to_time = form.cleaned_data.get('work_to_time')
+
+                if is_active:
+                    has_active = True
+                    if not work_from_time or not work_to_time:
+                        times_empty = True
+                        break
+
+            # Check for specific validation conditions
+            if not has_active:
+                return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_is_active_failure')})
+
+            if times_empty:
+                return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_time_failure')})
+
+            # Save instances if validation is successful
+            for instance in instances:
+                instance.save()
+
             formset.save()
             return JsonResponse({'status': 'success', 'message': SUCCESS_MESSAGES.get('update_workingdays')})
         else:
+            errors = {}
+            for i, form in enumerate(formset):
+                if form.errors:
+                    errors.update({f'{form.prefix}-{field}': error for field, error in form.errors.items()})
+
             error_messages = ''.join([f'{error}' for error in formset.errors])
-            return JsonResponse({'status': 'error', 'message': format_html(ERROR_MESSAGES('form_validation_failed'), error_messages)}, status=400)
+            return JsonResponse({'status': 'error', 'message': format_html(ERROR_MESSAGES('form_validation_failed'), error_messages), 'errors': errors}, status=400)
     else:
         formset = OrganizationLocationWorkingDaysFormSet(queryset=queryset)
+
     return render(request, 'update_workingdays.html', {'formset': formset, 'locationpk': location_pk})
+
 
 @login_required
 def update_amenities(request, location_pk):

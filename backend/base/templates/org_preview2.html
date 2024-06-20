@@ -1,688 +1,529 @@
-
 {% load static %}{% load url_filters %}
-
-
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>STRONGR.</title>
 
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>STRONGR.</title>
+        <!-- External CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="{% static 'styles.css' %}" rel="stylesheet" />
+        <link href="{% static './css/preview_styles.css' %}" rel="stylesheet" />
 
-    <!-- External CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="{% static 'styles.css' %}" rel="stylesheet" />
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+        <!-- Font Awesome -->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
-    <!-- Font Awesome -->
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    </head>
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-        }
+    <body class="sb-nav-fixed">
+        <!-- Navbar -->
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                    class="fas fa-bars"></i></button>
+            <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="fas fa-user fa-fw"></i>
+                        {{ user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
 
-        .navbar {
-            background-color: #004085;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        .card-header {
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 8px 8px 0 0;
-            padding: 10px 15px;
-        }
-
-        .card-body {
-            padding: 20px;
-            line-height: 1.6;
-            color: #666;
-        }
-
-        .status-label {
-            padding: 5px 10px;
-            color: #fff;
-            border-radius: 5px;
-            font-size: 0.9rem;
-        }
-
-        .status-approved { background-color: #28a745; }
-        .status-pending { background-color: #ffc107; }
-        .status-in-progress { background-color: #17a2b8; }
-        .status-cancelled { background-color: #dc3545; }
-        .status-unknown { background-color: #6c757d; }
-
-        footer {
-            background-color: #f8f9fa;
-            padding: 10px 0;
-            text-align: center;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        footer a {
-            color: #007bff;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
-        }
-
-        .nav-tabs .nav-link.active {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .nav-tabs .nav-link {
-            border: 1px solid transparent;
-            border-top-left-radius: 0.25rem;
-            border-top-right-radius: 0.25rem;
-            color: #007bff;
-        }
-
-        .nav-tabs .nav-link:hover {
-            border-color: #e0e0e0 #e0e0e0 #fff;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            margin-bottom: 5px;
-            font-size: 16px;
-        }
-
-        li .label {
-            display: inline-block;
-            width: 100px;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-        }
-
-        .navbar-toggler-icon {
-            color: white;
-        }
-
-        /* Style for Disabled Checkbox */
-        input[type="checkbox"]:disabled {
-            opacity: 0.6; /* Reduce opacity for disabled checkboxes */
-            cursor: not-allowed; /* Change cursor to 'not-allowed' for disabled checkboxes */
-        }
-
-        /* Align Disabled Checkbox in a Straight Vertical Line */
-        /* Style for Disabled Checkbox */
-        input[type="checkbox"]:disabled {
-            opacity: 0.6; /* Reduce opacity for disabled checkboxes */
-            cursor: not-allowed; /* Change cursor to 'not-allowed' for disabled checkboxes */
-        }
-
-        /* Custom Checkbox Style */
-
-        .checkbox-custom {
-            display: inline-block;
-            vertical-align: middle;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .checkbox-custom input[type="checkbox"] {
-            display: none; /* Hide the default checkbox */
-        }
-
-        .checkbox-custom span {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            position: relative;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-
-        /* Checked State Style */
-        .checkbox-custom input[type="checkbox"]:checked + span::after {
-            content: "";
-            display: block;
-            width: 8px;
-            height: 16px;
-            border:solid #007bff;
-            border-width: 0 4px 4px 0;
-            position: absolute;
-            top: 0;
-            margin-left: 5px;
-            margin-bottom: 5px;
-            transform: rotate(45deg);
-        }
-
-        /* Align Disabled Checkbox in a Straight Vertical Line */
-        ul.checkbox-list {
-            list-style-type: none; /* Remove default list style */
-            padding-left: 20px; /* Add padding to align checkboxes */
-        }
-
-        ul.checkbox-list li input[type="checkbox"] {
-            margin-right: 10px; /* Add margin right for spacing between checkbox and label */
-        }
-        .status-approved {
-            color: #28a745;
-            background-color: #e6f4ea; /* Light green background */
-            border: 1px solid #28a745; /* Green border */
-            padding: 4px 8px; /* Padding around the text */
-            border-radius: 4px; /* Rounded corners */
-            font-weight: bold; /* Bold text */
-        }
-
-        .status-pending {
-            color: #ffc107;
-            background-color: #fff3cd; /* Light yellow background */
-            border: 1px solid #ffc107; /* Yellow border */
-            padding: 4px 8px; /* Padding around the text */
-            border-radius: 4px; /* Rounded corners */
-            font-weight: bold; /* Bold text */
-        }
-
-        .status-in-progress {
-            color: #007bff;
-            background-color: #d6e4ff; /* Light blue background */
-            border: 1px solid #007bff; /* Blue border */
-            padding: 4px 8px; /* Padding around the text */
-            border-radius: 4px; /* Rounded corners */
-            font-weight: bold; /* Bold text */
-        }
-
-        .status-cancelled {
-            color: #dc3545;
-            background-color: #f8d7da; /* Light red background */
-            border: 1px solid #dc3545; /* Red border */
-            padding: 4px 8px; /* Padding around the text */
-            border-radius: 4px; /* Rounded corners */
-            font-weight: bold; /* Bold text */
-        }
-
-        .status-unknown {
-            color: #6c757d;
-            background-color: #e9ecef; /* Light gray background */
-            border: 1px solid #6c757d; /* Gray border */
-            padding: 4px 8px; /* Padding around the text */
-            border-radius: 4px; /* Rounded corners */
-            font-weight: bold; /* Bold text */
-        }
-
-
-    </style>
-</head>
-
-<body class="sb-nav-fixed">
-    <!-- Navbar -->
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                class="fas fa-bars"></i></button>
-        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="fas fa-user fa-fw"></i>
-                    {{ user.username }}
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <!-- <li><a class="dropdown-item" href="#!">Settings</a></li>
-                    <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                    <li><hr class="dropdown-divider" /></li> -->
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-
-    <!-- Sidebar -->
-    <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <!-- Sidebar Content -->
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="{% url 'organization_page' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-                        <a class="nav-link" href="{% url 'organization_profile' pk=1 %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
-                            Profile
-                        </a>
-                        <a class="nav-link" href="{% url 'organization_locationlist'  %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
-                            Locations
-                        </a>
-                        <a class="nav-link" href="{% url 'preview' %}" style="color: white; background-color: rgb(68, 68, 68);">
-                            <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
-                            Preview
-                        </a>
-                        <a class="nav-link" href="{% url 'status' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></i></div>
-                            Status
-                        </a>
-                        <a class="nav-link" href="{% url 'org_customers_list'%}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Customers
-                        </a>
-                        <div class="sb-sidenav-menu-heading">Slot</div>
-                        <a class="nav-link" href="{% url 'slot-location' %}">
-                            <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
-                            Slots List
-                        </a>
-                        <a class="nav-link" href="{% url 'temp-slot-location'%}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
-                            Additional Slots
-                        </a>
-                        <a class="nav-link" href="{% url 'temp-deslot-location'%}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
-                            Unavailable Slots
-                        </a>
+        <!-- Sidebar -->
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <!-- Sidebar Content -->
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Core</div>
+                            <a class="nav-link" href="{% url 'organization_page' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <a class="nav-link" href="{% url 'organization_profile' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
+                                Profile
+                            </a>
+                            <a class="nav-link" href="{% url 'organization_locationlist'  %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                Locations
+                            </a>
+                            <a class="nav-link" href="{% url 'preview' %}"
+                                style="color: white; background-color: rgb(68, 68, 68);">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
+                                Preview
+                            </a>
+                            <a class="nav-link" href="{% url 'status' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></i></div>
+                                Status
+                            </a>
+                            <a class="nav-link" href="{% url 'org_customers_list'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                Customers
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Slot</div>
+                            <a class="nav-link" href="{% url 'slot-location' %}">
+                                <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
+                                Slots List
+                            </a>
+                            <a class="nav-link" href="{% url 'temp-slot-location'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
+                                Additional Slots
+                            </a>
+                            <a class="nav-link" href="{% url 'temp-deslot-location'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
+                                Unavailable Slots
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <!-- Logged in User -->
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    <div class="user-email">{{ request.user.email }}</div>
-                </div>
-            </nav>
-        </div>
-
-        <!-- Main Content -->
-        <div id="layoutSidenav_content">
-            <h1 class="mt-4 mb-4" style="margin-left: 40%;">Preview</h1>
-            <main class="container-fluid mt-4" style="margin-top: 210px;">
-                <!-- Organization Card -->
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="m-0">{{ user.first_name }}</h2>
+                    <!-- Logged in User -->
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        <div class="user-email">{{ request.user.email }}</div>
                     </div>
-                    <div class="card-body">
-                        <!-- Organization Details -->
-                        <div class="row">
+                </nav>
+            </div>
 
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong>Organization Details</strong></h5>
-                                <ul>
-                                    {% for profile in profiles %}
+            <!-- Main Content -->
+            <div id="layoutSidenav_content">
+                <h1 class="mt-4 mb-4">Preview</h1>
+                <main class="container-fluid mt-4">
+                    <!-- Organization Card -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h2 class="m-0">{{ user.first_name }}</h2>
+                        </div>
+                        <div class="card-body">
+                            <!-- Organization Details -->
+                            <div class="row">
 
-                                        <li><div class="label">Name</div>:&nbsp; {{profile.organization_name}}</li>
-                                        <li><div class="label">Phone</div>:&nbsp; {{profile.phone_number}}</li>
-                                        {% if profile.alt_number %}
-                                            <li><div class="label"> Alternate Phone</div>:&nbsp; {{profile.alt_number}}</li>
-                                        {% endif %}
-                                        {% if profile.description|length  > 0 %}
-                                            <li><div class="label">Description</div>:&nbsp; {{profile.description}}</li>
-                                        {% elif profile.description|length  == 0 %}
-                                            <li><div class="label">Description</div>:&nbsp; None</li>
-                                        {% endif %}
-                                        <li><div class="label">Status</div>:&nbsp;
-                                            {% if profile.status == 1 %}
-                                                <span class="status-approved"style="margin: left 10px;" >Approved</span>
-                                            {% elif profile.status == 2 %}
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><strong>Organization Details</strong></h5>
+                                        <ul>
+                                            {% for profile in profiles %}
+
+                                            <li>
+                                                <div class="label">Name</div>:&nbsp; {{profile.organization_name}}
+                                            </li>
+                                            <li>
+                                                <div class="label">Phone</div>:&nbsp; {{profile.phone_number}}
+                                            </li>
+                                            {% if profile.alt_number %}
+                                            <li>
+                                                <div class="label"> Alternate Phone</div>:&nbsp; {{profile.alt_number}}
+                                            </li>
+                                            {% endif %}
+                                            {% if profile.description|length > 0 %}
+                                            <li>
+                                                <div class="label">Description</div>:&nbsp; {{profile.description}}
+                                            </li>
+                                            {% elif profile.description|length == 0 %}
+                                            <li>
+                                                <div class="label">Description</div>:&nbsp; None
+                                            </li>
+                                            {% endif %}
+                                            <li>
+                                                <div class="label">Status</div>:&nbsp;
+                                                {% if profile.status == 1 %}
+                                                <span class="status-approved">Approved</span>
+                                                {% elif profile.status == 2 %}
                                                 <span class="status-pending">Pending</span>
-                                            {% elif profile.status == 3 %}
+                                                {% elif profile.status == 3 %}
                                                 <span class="status-in-progress">In Progress</span>
-                                            {% elif profile.status == 4 %}
+                                                {% elif profile.status == 4 %}
                                                 <span class="status-cancelled">Cancelled</span>
-                                            {% else %}
+                                                {% else %}
                                                 <span class="status-unknown">Unknown</span>
                                                 <p>Please Contact the Service Provider.</p>
-                                            {% endif %}
-                                        </li>
+                                                {% endif %}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Locations -->
+                                <h3 class="mb-4">Locations</h3>
+
+                                <!-- Tab Navigation -->
+                                <ul class="nav nav-tabs" id="locationTabs" role="tablist">
+                                    {% for location_item in all_locations %}
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link {% if forloop.first %}active{% endif %}"
+                                            id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}-tab"
+                                            data-bs-toggle="tab"
+                                            data-bs-target="#{{ location_item.location.area|slugify }}-{{ location_item.location.id }}"
+                                            type="button" role="tab"
+                                            aria-controls="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}"
+                                            aria-selected="{{ forloop.first }}">{{ location_item.location.area }}</button>
+                                    </li>
                                     {% endfor %}
                                 </ul>
-                            </div>
-                        </div>
 
-                        <!-- Locations -->
-                        <h3 class="mb-4">Locations</h3>
-
-                        <!-- Tab Navigation -->
-                        <ul class="nav nav-tabs" id="locationTabs" role="tablist">
-                            {% for location_item in all_locations %}
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" type="button" role="tab" aria-controls="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">{{ location_item.location.area }}</button>
-                                </li>
-                            {% endfor %}
-                        </ul>
-
-                        <!-- Tab Content -->
-                        <div class="tab-content" id="locationTabsContent">
-                            {% for location_item in all_locations %}
-                                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}-tab">
-                                    <div class="row">
-                                        <div class="card mb-4">
-                                            <div class="card-body">
-                                                <li style="list-style: none;">
-                                                    <div class="label">Status</div>:&nbsp;
-                                                    {% if location_item.location.status == 1 %}
+                                <!-- Tab Content -->
+                                <div class="tab-content" id="locationTabsContent">
+                                    {% for location_item in all_locations %}
+                                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+                                        id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}"
+                                        role="tabpanel"
+                                        aria-labelledby="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}-tab">
+                                        <div class="row">
+                                            <div class="card mb-4">
+                                                <div class="card-body">
+                                                    <!-- Content for each tab -->
+                                                    <li>
+                                                        <div class="label">Status</div>:&nbsp;
+                                                        {% if location_item.location.status == 1 %}
                                                         <span class="status-approved">Approved</span>
-                                                    {% elif location_item.location.status == 2 %}
+                                                        {% elif location_item.location.status == 2 %}
                                                         <span class="status-pending">Pending</span>
-                                                    {% elif location_item.location.status == 3 %}
+                                                        {% elif location_item.location.status == 3 %}
                                                         <span class="status-in-progress">In Progress</span>
-                                                    {% elif location_item.location.status == 4 %}
+                                                        {% elif location_item.location.status == 4 %}
                                                         <span class="status-cancelled">Cancelled</span>
-                                                    {% else %}
+                                                        {% else %}
                                                         <span class="status-unknown">Unknown</span>
                                                         <p>Please Contact the Service Provider.</p>
-                                                    {% endif %}
-                                                </li>
-
-
-                                                <!-- Location Address -->
-                                                <div class="card2">
-                                                    <h5><strong>Address:</strong></h5>
-                                                    <ul>
-                                                        {{ location_item.location.address_line_1 }}<br>
-                                                        {{ location_item.location.address_line_2 }}<br>
-                                                        {{ location_item.location.area }}-{{ location_item.location.pincode }}
-                                                    </ul>
-                                                </div>
-                                                <!-- Games -->
-                                                <h5><strong>Games:</strong></h5>
-                                                <ul>
-                                                    {% for game in location_item.games %}
-                                                        <ul>
-                                                            <strong>{{ game.game_type }}</strong>
-                                                            <li><div class="label">Pricing</div>: {{ game.pricing }}</li>
-                                                            {% if game.description|length  > 0 %}
-                                                                <li><div class="label">Description</div>: {{ game.description }}</li>
-                                                            {% elif game.description|length  == 0 %}
-                                                                <li><div class="label">Description</div>: None</li>
-                                                            {% endif %}
-                                                        </ul>
-                                                    {% endfor %}
-                                                </ul>
-                                                <!-- Amenities -->
-                                                <h5><strong>Amenities:</strong></h5>
-                                                <ul class="checkbox-list">
-                                                    {% for amenity in location_item.amenities %}
-                                                    <li>
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled>
-                                                            <span></span> Parking
-                                                        </label><br>
-
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled>
-                                                            <span></span> Restroom
-                                                        </label><br>
-
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled>
-                                                            <span></span> Changeroom
-                                                        </label><br>
-
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled>
-                                                            <span></span> Power Backup
-                                                        </label><br>
-
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled>
-                                                            <span></span> Beverage
-                                                        </label><br>
-
-                                                        <label class="checkbox-custom">
-                                                            <input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled>
-                                                            <span></span> Coaching
-                                                        </label><br>
-
-
-                                                        {% if amenity.description|length  > 0 %}
-                                                            <li><div class="label">Description</div>: {{ amenity.description }}</li>
-                                                        {% elif amenity.description|length  == 0 %}
-                                                            <li><div class="label">Description</div>: None</li>
                                                         {% endif %}
                                                     </li>
-                                                    {% endfor %}
-                                                </ul>
 
-                                                <!-- Working Times -->
-                                                <h5><strong>Working Times:</strong></h5>
+                                                    <!-- Location Address -->
+                                                    <div class="card2">
+                                                        <h5><strong>Address:</strong></h5>
+                                                        <ul>
+                                                            {{ location_item.location.address_line_1 }}<br>
+                                                            {{ location_item.location.address_line_2 }}<br>
+                                                            {{ location_item.location.area }}-{{location_item.location.pincode }}
+                                                        </ul>
+                                                    </div>
 
-                                                <form action="post">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Days</th>
-                                                                <th>Opening Time</th>
-                                                                <th>Closing Time</th>
-                                                                <th>Availability</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for workingtime in location_item.workingtimes %}
+                                                    <!-- Games -->
+                                                    <h5><strong>Games:</strong></h5>
+                                                    <ul>
+                                                        {% for game in location_item.games %}
+                                                        <ul>
+                                                            <strong>{{ game.game_type }}</strong>
+                                                            <li>
+                                                                <div class="label">Pricing</div>: {{ game.pricing }}
+                                                            </li>
+                                                            <li>
+                                                                <div class="label">Description</div>:
+                                                                {% if game.description%}
+                                                                    {{ game.description }}
+                                                                {% else %}
+                                                                    None
+                                                                {% endif %}
+                                                            </li>
+                                                        </ul>
+                                                        {% endfor %}
+                                                    </ul>
+
+                                                    <h5><strong>Amenities:</strong></h5>
+                                                    <ul class="checkbox-list">
+                                                        {% for amenity in location_item.amenities %}
+                                                        <li>
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox"
+                                                                {% if amenity.is_parking %}
+                                                                    checked
+                                                                {%endif %} disabled>
+                                                                <span></span> Parking
+                                                            </label><br>
+
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox"
+                                                                {% if amenity.is_restrooms %}
+                                                                    checked
+                                                                {% endif %} disabled>
+                                                                <span></span> Restroom
+                                                            </label><br>
+
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox"
+                                                                {% if amenity.is_changerooms %}
+                                                                    checked
+                                                                {% endif %} disabled>
+                                                                <span></span> Changeroom
+                                                            </label><br>
+
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox"
+                                                                {% if amenity.is_powerbackup %}
+                                                                    checked
+                                                                {% endif %} disabled>
+                                                                <span></span> Power Backup
+                                                            </label><br>
+
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox"
+                                                                {% if amenity.is_beverages_facility %}
+                                                                    checked
+                                                                {% endif %} disabled>
+                                                                <span></span> Beverage
+                                                            </label><br>
+
+                                                            <label class="checkbox-custom">
+                                                                <input type="checkbox"
+                                                                {% if amenity.is_coaching_facilities %}
+                                                                    checked
+                                                                {% endif %} disabled>
+                                                                <span></span> Coaching
+                                                            </label><br>
+                                                            {% if amenity.description %}
+                                                        <li>
+                                                            <div class="label">Description</div>: {{ amenity.description }}
+                                                        </li>
+                                                        {% else %}
+                                                        <li>
+                                                            <div class="label">Description</div>: None
+                                                        </li>
+                                                        {% endif %}
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <!-- Working Times -->
+                                                    <h5><strong>Working Times:</strong></h5>
+
+                                                    <form action="post">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Days</th>
+                                                                    <th>Opening Time</th>
+                                                                    <th>Closing Time</th>
+                                                                    <th>Availability</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for workingtime in location_item.workingtimes %}
                                                                 <tr>
                                                                     <td>{{ workingtime.get_days_display }}</td>
                                                                     <td>{{ workingtime.work_from_time }}</td>
                                                                     <td>{{ workingtime.work_to_time }}</td>
 
                                                                     <td>
-                                                                    {% if workingtime.is_active %}
+                                                                        {% if workingtime.is_active %}
                                                                         <label class="checkbox-custom">
                                                                             <input type="checkbox" checked disabled>
                                                                             <span></span>
                                                                         </label>
                                                                         {% else %}
                                                                         <label class="checkbox-custom">
-                                                                            <input type="checkbox" unchecked disabled >
+                                                                            <input type="checkbox" unchecked disabled>
                                                                             <span></span>
                                                                         </label>
-                                                                    {% endif %}
+                                                                        {% endif %}
                                                                     </td>
                                                                 </tr>
-                                                            {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                </form>
-                                                <!-- Courts -->
-                                                <h5><strong>Courts</strong></h5>
-                                                <ul>
-                                                    {% for court in location_item.courts %}
-                                                        <li>{{ court.name }}</li>
-                                                    {% empty %}
-                                                        <li>No Courts Addded</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <!-- Images -->
-                                                <h5><strong>Images</strong></h5>
-                                                <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
-                                                    {% for image in location_item.images %}
-                                                        <img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
-                                                    {% empty %}
-                                                        <li>No images Addded</li>
-                                                    {% endfor %}
-                                                </ul>
-                                                <!-- Slots -->
-                                                <h5><strong>Slots</strong></h5>
-                                                <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
-                                                    {% if location_item.slots %}
-                                                        <li><a href="{% url 'slot-list' locationpk=location_item.location.pk %}">Slot list</a></li>
-                                                    {% else %}
-                                                        <li>No Slot Added</li>
-                                                    {% endif %}
-                                                </ul>
-                                                <div class="text-center mb-4">
-                                                    {% for profile in profiles %}
-                                                        {% if profile.status == 1 %}
-                                                            {% if location_item.location.status != 1 and location_item.location.status != 3 %}
-                                                                <div class="btn-group" role="group">
-                                                                    <form method="post" action="{% url 'change_location_status' location_item.location.id '3' %}">
-                                                                        {% csrf_token %}
-                                                                        <button type="submit" class="btn btn-success me-2">Submit</button>
-                                                                    </form>
-
-                                                                </div>
-                                                            {% endif %}
-                                                        {% elif profile.status != 1 %}
-                                                                <p>Note: can submit only if organization status is active !!!</p>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </form>
+                                                    <!-- Courts -->
+                                                    <h5><strong>Courts</strong></h5>
+                                                    <ul class="court-list context-courts" id="court-list-{{ location_item.location.id }}">
+                                                        {% for court in location_item.courts %}
+                                                            <li>{{ court.name }}</li>
+                                                        {% empty %}
+                                                            <li class="empty">No Courts Added</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <!-- Images -->
+                                                    <h5><strong>Images</strong></h5>
+                                                    <div class="context-images" id="slots-list-{{ location_item.location.id }}">
+                                                        {% for image in location_item.images %}
+                                                            <img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
+                                                        {% empty %}
+                                                            <li class="empty">No images Addded</li>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <!-- Slots -->
+                                                    <h5><strong>Slots</strong></h5>
+                                                    <ul class="slots-list context-slots" id="slots-list-{{ location_item.location.id }}">
+                                                        {% if location_item.slots %}
+                                                            <li><a href="{% url 'slot-list' locationpk=location_item.location.pk %}">Slot list</a></li>
+                                                        {% else %}
+                                                            <li class="empty">No Slot Added</li>
                                                         {% endif %}
-                                                    {% endfor %}
+                                                    </ul>
+                                                    <div class="text-center mb-4">
+                                                        {% for profile in profiles %}
+                                                            {% if profile.status == 1 %}
+                                                                {% if location_item.location.status != 1 and location_item.location.status != 3 %}
+                                                                <div class="btn-group" role="group">
+                                                                    <form method="post"
+                                                                        action="{% url 'change_location_status' location_item.location.id '3' %}">
+                                                                        {% csrf_token %}
+                                                                        <button type="submit"
+                                                                            class="btn btn-success me-2 submit-button"
+                                                                            id="submit-btn-{{ location_item.location.id }}"
+                                                                            {% if not location_item.has_courts or not location_item.has_slots %}
+                                                                                disabled
+                                                                                data-bs-toggle="tooltip"
+                                                                                data-bs-placement="top"
+                                                                                title="Please add all details before submitting"
+                                                                            {% endif %}
+                                                                        >
+                                                                        Submit
+                                                                        </button>
+
+                                                                    </form>
+                                                                </div>
+                                                                {% endif %}
+                                                            {% else %}
+                                                                <p>Note: can submit only if organization status is active !!!</p>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                    {% endfor %}
 
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                {% for profile in profiles %}
-                    {% if profile.status == 2 or profile.status == 4 %}
-                        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
-                        <div class="my-4"
-                            style="  display: flex;justify-content: center;align-items: center; flex-direction: row;">
-                            <div>
-                                <form method="post">
-                                    {% csrf_token %}
-                                    <input type="checkbox" id="agree" name="agree" required>
-                                    <label for="agree">By checking this box you agree to our Terms
-                                        of Service</label>
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms &amp; Conditions</a>
-                                        <div class="buttons" style="margin-left: 30%; margin-top: 20px;">
-                                            <div><a href="{% url 'organization_locationlist' %}" class="btn btn-primary"><i
-                                                        class="fas fa-edit"></i>&nbsp;Edit</a></div>
+                        {% for profile in profiles %}
+                            {% if profile.status == 2 or profile.status == 4 %}
+                            <hr>
+                            <div class="my-4">
+                                <div>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="checkbox" id="agree" name="agree" required>
+                                        <label for="agree">By checking this box you agree to our Terms
+                                            of Service</label>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms &amp;
+                                            Conditions</a>
+                                        <div class="buttons">
+                                            <div><a href="{% url 'organization_locationlist' %}" class="btn btn-primary"><i class="fas fa-edit"></i>&nbsp;Edit</a></div>
                                             <div><button type="submit" class="btn btn-primary">Submit</button></div>
                                         </div>
-                                </form>
-                            </div>
-                        <!-- Terms and Conditions Modal -->
-                        <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- Here you can include the terms and conditions text -->
-                                        <p><strong>General Site Usage</strong></p>
-                                        <p>Last Revised: December 16, 2013</p>
-                                        <p>Welcome to www.lorem-ipsum.info. This site is provided as a service to our visitors and may be used for informational purposes only. Because the Terms and Conditions contain legal obligations, please read them carefully.</p>
-                                        <p>1. YOUR AGREEMENT By using this Site, you agree to be bound by, and to comply with, these Terms and Conditions. If you do not agree to these Terms and Conditions, please do not use this site.</p>
-                                        <p>PLEASE NOTE: We reserve the right, at our sole discretion, to change, modify or otherwise alter these Terms and Conditions at any time. Unless otherwise indicated, amendments will become effective immediately. Please review these Terms and Conditions periodically. Your continued use of the Site following the posting of changes and/or modifications will constitute your acceptance of the revised Terms and Conditions and the reasonableness of these standards for notice of changes. For your information, this page was last updated as of the date at the top of these terms and conditions.</p>
-                                        <p>2. PRIVACY Please review our Privacy Policy, which also governs your visit to this Site, to understand our practices.</p>
-                                        <p>3. LINKED SITES This Site may contain links to other independent third-party Web sites ("Linked Sites”). These Linked Sites are provided solely as a convenience to our visitors. Such Linked Sites are not under our control, and we are not responsible for and does not endorse the content of such Linked Sites, including any information or materials contained on such Linked Sites. You will need to make your own independent judgment regarding your interaction with these Linked Sites.</p>
-                                        <p>4. FORWARD LOOKING STATEMENTS All materials reproduced on this site speak as of the original date of publication or filing. The fact that a document is available on this site does not mean that the information contained in such document has not been modified or superseded by events or by a subsequent document or filing. We have no duty or policy to update any information or statements contained on this site and, therefore, such information or statements should not be relied upon as being current as of the date you access this site.</p>
-                                        <p>5. DISCLAIMER OF WARRANTIES AND LIMITATION OF LIABILITY A. THIS SITE MAY CONTAIN INACCURACIES AND TYPOGRAPHICAL ERRORS. WE DOES NOT WARRANT THE ACCURACY OR COMPLETENESS OF THE MATERIALS OR THE RELIABILITY OF ANY ADVICE, OPINION, STATEMENT OR OTHER INFORMATION DISPLAYED OR DISTRIBUTED THROUGH THE SITE. YOU EXPRESSLY UNDERSTAND AND AGREE THAT: (i) YOUR USE OF THE SITE, INCLUDING ANY RELIANCE ON ANY SUCH OPINION, ADVICE, STATEMENT, MEMORANDUM, OR INFORMATION CONTAINED HEREIN, SHALL BE AT YOUR SOLE RISK; (ii) THE SITE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS; (iii) EXCEPT AS EXPRESSLY PROVIDED HEREIN WE DISCLAIM ALL WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, WORKMANLIKE EFFORT, TITLE AND NON-INFRINGEMENT; (iv) WE MAKE NO WARRANTY WITH RESPECT TO THE RESULTS THAT MAY BE OBTAINED FROM THIS SITE, THE PRODUCTS OR SERVICES ADVERTISED OR OFFERED OR MERCHANTS INVOLVED; (v) ANY MATERIAL DOWNLOADED OR OTHERWISE OBTAINED THROUGH THE USE OF THE SITE IS DONE AT YOUR OWN DISCRETION AND RISK; and (vi) YOU WILL BE SOLELY RESPONSIBLE FOR ANY DAMAGE THAT RESULTS FROM THE DOWNLOAD OF ANY SUCH MATERIAL.</p>
-                                        <p>B. YOU UNDERSTAND AND AGREE THAT UNDER NO CIRCUMSTANCES, INCLUDING, BUT NOT LIMITED TO, NEGLIGENCE, SHALL WE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, PUNITIVE, EXEMPLARY, OR CONSEQUENTIAL DAMAGES INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR LOSS OF USE, DATA, OR PROFITS, ARISING OUT OF THE USE OR THE INABILITY TO USE THE SITE, WEBSITES LINKED TO THE SITE, THE CONTENT OR THE SERVICES CONTAINED IN OR ACCESSED THROUGH THE SITE, OR ANY SERVICES OR PRODUCTS RECEIVED THROUGH THE SITE. YOU SPECIFICALLY ACKNOWLEDGE AND AGREE THAT WE ARE NOT LIABLE FOR ANY CONDUCT OF ANY USER.</p>
-                                        <p>6. INDEMNIFICATION You agree to indemnify and hold us, our parents, subsidiaries, affiliates, officers and employees, harmless from any claim, demand, or damage, including reasonable attorneys' fees, asserted by any third party due to or arising out of your use of or conduct on the Site.</p>
-                                        <p>7. GENERAL You agree that all matters relating to your access to or use of the Site shall be governed by the laws of the State of California. You agree and hereby submit to the exclusive personal jurisdiction and venue any court of competent jurisdiction within the State of California with respect to such matters.</p>
-                                    </div>
-                                    <!-- <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div> -->
+                                    </form>
                                 </div>
+                                <!-- Terms and Conditions Modal -->
+                                <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>Introduction</strong></p>
+                                                <p>Welcome to Strongr, the premier playground turf booking site. By using our services, you agree to abide by the following terms and conditions.</p>
+
+                                                <p><strong>General Site Usage</strong></p>
+                                                <p>Last Revised: June 17, 2024</p>
+                                                <p>Welcome to www.strongr.com. This site is provided as a service to our visitors and may be used for informational purposes only. Because the Terms and Conditions contain legal obligations, please read them carefully.</p>
+                                                <p>1. <strong>YOUR AGREEMENT</strong> By using this Site, you agree to be bound by, and to comply with, these Terms and Conditions. If you do not agree to these Terms and Conditions, please do not use this site.</p>
+                                                <p><strong>PLEASE NOTE:</strong> We reserve the right, at our sole discretion, to change, modify, or otherwise alter these Terms and Conditions at any time. Unless otherwise indicated, amendments will become effective immediately. Please review these Terms and Conditions periodically. Your continued use of the Site following the posting of changes and/or modifications will constitute your acceptance of the revised Terms and Conditions and the reasonableness of these standards for notice of changes. For your information, this page was last updated as of the date at the top of these Terms and Conditions.</p>
+                                                <p>2. <strong>PRIVACY</strong> Please review our Privacy Policy, which also governs your visit to this Site, to understand our practices.</p>
+                                                <p>3. <strong>LINKED SITES</strong> This Site may contain links to other independent third-party Web sites ("Linked Sites"). These Linked Sites are provided solely as a convenience to our visitors. Such Linked Sites are not under our control, and we are not responsible for and do not endorse the content of such Linked Sites, including any information or materials contained on such Linked Sites. You will need to make your own independent judgment regarding your interaction with these Linked Sites.</p>
+                                                <p>4. <strong>FORWARD-LOOKING STATEMENTS</strong> All materials reproduced on this site speak as of the original date of publication or filing. The fact that a document is available on this site does not mean that the information contained in such document has not been modified or superseded by events or by a subsequent document or filing. We have no duty or policy to update any information or statements contained on this site and, therefore, such information or statements should not be relied upon as being current as of the date you access this site.</p>
+                                                <p>5. <strong>DISCLAIMER OF WARRANTIES AND LIMITATION OF LIABILITY</strong></p>
+                                                <p>A. THIS SITE MAY CONTAIN INACCURACIES AND TYPOGRAPHICAL ERRORS. WE DO NOT WARRANT THE ACCURACY OR COMPLETENESS OF THE MATERIALS OR THE RELIABILITY OF ANY ADVICE, OPINION, STATEMENT, OR OTHER INFORMATION DISPLAYED OR DISTRIBUTED THROUGH THE SITE. YOU EXPRESSLY UNDERSTAND AND AGREE THAT: (i) YOUR USE OF THE SITE, INCLUDING ANY RELIANCE ON ANY SUCH OPINION, ADVICE, STATEMENT, MEMORANDUM, OR INFORMATION CONTAINED HEREIN, SHALL BE AT YOUR SOLE RISK; (ii) THE SITE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS; (iii) EXCEPT AS EXPRESSLY PROVIDED HEREIN WE DISCLAIM ALL WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, WORKMANLIKE EFFORT, TITLE, AND NON-INFRINGEMENT; (iv) WE MAKE NO WARRANTY WITH RESPECT TO THE RESULTS THAT MAY BE OBTAINED FROM THIS SITE, THE PRODUCTS OR SERVICES ADVERTISED OR OFFERED OR MERCHANTS INVOLVED; (v) ANY MATERIAL DOWNLOADED OR OTHERWISE OBTAINED THROUGH THE USE OF THE SITE IS DONE AT YOUR OWN DISCRETION AND RISK; and (vi) YOU WILL BE SOLELY RESPONSIBLE FOR ANY DAMAGE THAT RESULTS FROM THE DOWNLOAD OF ANY SUCH MATERIAL.</p>
+                                                <p>B. YOU UNDERSTAND AND AGREE THAT UNDER NO CIRCUMSTANCES, INCLUDING, BUT NOT LIMITED TO, NEGLIGENCE, SHALL WE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, PUNITIVE, EXEMPLARY, OR CONSEQUENTIAL DAMAGES INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR LOSS OF USE, DATA, OR PROFITS, ARISING OUT OF THE USE OR THE INABILITY TO USE THE SITE, WEBSITES LINKED TO THE SITE, THE CONTENT OR THE SERVICES CONTAINED IN OR ACCESSED THROUGH THE SITE, OR ANY SERVICES OR PRODUCTS RECEIVED THROUGH THE SITE. YOU SPECIFICALLY ACKNOWLEDGE AND AGREE THAT WE ARE NOT LIABLE FOR ANY CONDUCT OF ANY USER.</p>
+                                                <p>6. <strong>INDEMNIFICATION</strong> You agree to indemnify and hold us, our parents, subsidiaries, affiliates, officers and employees, harmless from any claim, demand, or damage, including reasonable attorneys' fees, asserted by any third party due to or arising out of your use of or conduct on the Site.</p>
+                                                <p>7. <strong>GENERAL</strong> You agree that all matters relating to your access to or use of the Site shall be governed by the laws of the State of California. You agree and hereby submit to the exclusive personal jurisdiction and venue any court of competent jurisdiction within the State of California with respect to such matters.</p>
+
+                                                <p><strong>Booking and Payment</strong></p>
+                                                <p>1. <strong>Reservation:</strong> Bookings must be made in advance through the Strongr website.</p>
+                                                <p>2. <strong>Payment:</strong> Full payment is required at the time of booking.</p>
+                                                <p>3. <strong>Cancellations and Refunds:</strong> Cancellations made 24 hours before the booking time will receive a full refund. No refunds for cancellations made within 24 hours of the booking.</p>
+
+                                                <p><strong>Usage Policies</strong></p>
+                                                <p>4. <strong>Access:</strong> Booked time slots are strictly adhered to. Please vacate the turf promptly to allow the next group access.</p>
+                                                <p>5. <strong>Conduct:</strong> Users must follow all posted rules and regulations. Strongr reserves the right to remove individuals for inappropriate behavior.</p>
+                                                <p>6. <strong>Safety:</strong> Users must ensure all activities are conducted safely. Strongr is not liable for any injuries or accidents.</p>
+
+                                                <p><strong>Liability</strong></p>
+                                                <p>7. <strong>Responsibility:</strong> Users are responsible for any damage to the turf or facilities during their booking period.</p>
+                                                <p>8. <strong>Insurance:</strong> Strongr recommends users have appropriate insurance coverage for their activities.</p>
+
+                                                <p><strong>Amendments</strong></p>
+                                                <p>9. <strong>Changes to Terms:</strong> Strongr reserves the right to update these terms and conditions at any time. Users will be notified of significant changes.</p>
+
+                                                <p><strong>Contact</strong></p>
+                                                <p>10. <strong>Support:</strong> For any questions or concerns, please contact our customer support team at support@strongr.com.</p>
+
+                                                <p>By using Strongr, you agree to these terms and conditions. Thank you for choosing Strongr for your playground turf booking needs.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
-
-                        </div>
-                        {% endif %}
-                        <!-- <button onclick="topFunction()" id="backToTopBtn" title="Go to top">&#10148;</button> -->
+                            {% endif %}
                         {% endfor %}
-                </div>
-            </main>
+                    </div>
+                </main>
 
-
-            <!-- Footer -->
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
-                            &middot;
-                            <a href="{% url 'termsconditions' %}">Terms &amp; Conditions</a>
+                <!-- Footer -->
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div>
+                                <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
+                                &middot;
+                                <a href="{% url 'termsconditions' %}">Terms &amp; Conditions</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </footer>
+                </footer>
+            </div>
         </div>
-    </div>
 
-    <!-- Bootstrap and Chart.js Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-
-    <!-- Custom Scripts -->
-    <script>
-         // Get the button
-         // Toggle the side navigation
-        const $sidebarToggle = document.body.querySelector('#sidebarToggle');
-        if (sidebarToggle) {
-             sidebarToggle.addEventListener('click', event => {
-                 event.preventDefault();
-                 document.body.classList.toggle('sb-sidenav-toggled');
-                 localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-             });
-        }
-
-        var backToTopBtn = document.getElementById("backToTopBtn");
-        // When the user scrolls down 20px from the top of the document, show the button
-        window.onscroll = function() {scrollFunction()};
-
-        function scrollFunction() {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                backToTopBtn.style.display = "block";
-            } else {
-                backToTopBtn.style.display = "none";
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+        <script>
+            const $sidebarToggle = document.body.querySelector('#sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', event => {
+                    event.preventDefault();
+                    document.body.classList.toggle('sb-sidenav-toggled');
+                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+                });
             }
-        }
 
-        // When the user clicks on the button, scroll to the top of the document
-        function topFunction() {
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-        }
+            window.addEventListener('DOMContentLoaded', event => {
+                const datatablesSimple = document.getElementById('datatablesSimple');
+                if (datatablesSimple) {
+                    new simpleDatatables.DataTable(datatablesSimple);
+                }
 
-        window.addEventListener('DOMContentLoaded', event => {
-            // Simple-DataTables
-            const datatablesSimple = document.getElementById('datatablesSimple');
-            if (datatablesSimple) {
-                new simpleDatatables.DataTable(datatablesSimple);
-            }
-        });
-    </script>
-</body>
-
+                var submitButton = document.getElementById("submit-btn-{{ location_item.location.id }}");
+                if (submitButton.getAttribute("disabled")) {
+                    // Initialize tooltip if button is disabled
+                    new bootstrap.Tooltip(submitButton);
+                }
+            });
+        </script>
+    </body>
 </html>
