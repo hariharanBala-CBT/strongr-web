@@ -179,7 +179,7 @@
                         <a class="nav-link" href="{% url 'org_customers_list'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Customers
-                        </a>   
+                        </a>
                         <div class="sb-sidenav-menu-heading">Slot</div>
                         <a class="nav-link" href="{% url 'slot-location' %}">
                             <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
@@ -202,7 +202,7 @@
             </nav>
         </div>
         <div id="layoutSidenav_content">
-            <main>    
+            <main>
                 <ol class="breadcrumb mb-4">
                     <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
                     <li class="breadcrumb-item active">Profile</li>
@@ -314,7 +314,7 @@
                     new simpleDatatables.DataTable(datatablesSimple);
                 }
             });
-        
+
             window.addEventListener('DOMContentLoaded', event => {
                 const sidebarToggle = document.body.querySelector('#sidebarToggle');
                 if (sidebarToggle) {
@@ -325,35 +325,35 @@
                     });
                 }
             });
-        
+
             var modal = document.getElementById('confirmationModal');
             var updateButton = document.querySelector('#profile_updateForm');
             var confirmButton = document.getElementById('confirmUpdateButton');
             var cancelButton = document.getElementById('cancelUpdateButton');
             const form = document.getElementById('profile_updateForm');
             var toast = document.getElementById('successToast');
-        
+
             updateButton.addEventListener('submit', function (event) {
                 event.preventDefault();
                 modal.style.display = "block";
                 modal.setAttribute('aria-hidden', 'false');
                 return false;
             });
-        
+
             window.onclick = function (event) {
                 if (event.target == modal) {
                     modal.style.display = "none";
                     modal.setAttribute('aria-hidden', 'true');
                 }
             }
-        
+
             confirmButton.addEventListener('click', function (e) {
                 e.preventDefault();
                 modal.style.display = "none";
                 modal.setAttribute('aria-hidden', "true");
                 submitFormData();
             });
-        
+
             function showToast(message) {
                 toast.textContent = message;
                 toast.style.display = 'block';
@@ -361,7 +361,7 @@
                     toast.style.display = 'none';
                 }, 2000); // Hide toast after 2 seconds
             }
-        
+
             function submitFormData() {
                 const formData = new FormData(form);
                 fetch(form.action, {
@@ -396,7 +396,7 @@
                     showToast('Error submitting form. ' + error.message);
                 });
             }
-        
+
             function displayFormErrors(errors) {
                 Object.keys(errors).forEach(field => {
                     const errorMessages = errors[field].join(', ');
@@ -407,13 +407,13 @@
                     }
                 });
             }
-        
+
             cancelButton.addEventListener('click', function (e) {
                 e.preventDefault();
                 modal.style.display = "none";
                 modal.setAttribute('aria-hidden', "true");
             });
-        
+
             window.addEventListener('DOMContentLoaded', (event) => {
                 const successAlert = document.getElementById('message');
                 if (successAlert) {

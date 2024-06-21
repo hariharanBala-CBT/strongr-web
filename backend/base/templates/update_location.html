@@ -46,9 +46,9 @@
           position: absolute;
           top: 50%;
           left: 50%;
-          transform: translate(-19%, -27%);                
+          transform: translate(-19%, -27%);
           background-color: #fff;
-          padding: 40px 40px;                
+          padding: 40px 40px;
           border: 2px solid #888;
           border-radius: 5px;
           /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); */
@@ -146,7 +146,7 @@
                             <a class="nav-link" href="{% url 'org_customers_list'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                 Customers
-                            </a>   
+                            </a>
                             <div class="sb-sidenav-menu-heading">Slot</div>
                             <a class="nav-link" href="{% url 'slot-location' %}">
                                 <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
@@ -171,9 +171,9 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4 m">
-                        <div class="profile-card"> 
+                        <div class="profile-card">
                             <!-- <h1 class="my-4">Update Location</h1> -->
-                            <div>                          
+                            <div>
                                 <form id="upd-loc-form" method="post" action="{% url 'organization_updatelocation' pk=pk %}">
                                     {% csrf_token %}
                                     <table>
@@ -195,14 +195,14 @@
                                             {% endfor %}
                                         </tbody>
                                     </table>
-                                
+
                                    {% comment %} <div class="buttons text-center mt-4 mx-5">
                                         <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2">Update</button>
                                     </div>
-                                
+
                                     <input type="hidden" name="organization" value="{{ request.user.organization.id }}"> {% endcomment %}
                                     <button id="nextTabBtn" class="btn btn-primary">Update</button>
-                                </form>                                
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -223,7 +223,7 @@
         </div>
         <!-- Popup content -->
             {% comment %} <div class="popup" id="popup">
-                <div class="popup-content">  
+                <div class="popup-content">
                     <h2>Confirm Update</h2>
                     <p>Are you sure you want to continue?</p>
                     <div style="display: flex; justify-content: space-between;">
@@ -232,15 +232,15 @@
                     </div>
                 </div>
             </div>  {% endcomment %}
-    
+
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-         
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-         
-          
+
+
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-          
+
 
         <script>
         window.addEventListener('DOMContentLoaded', event => {
@@ -294,23 +294,19 @@
             $('#nextTabBtn').click(function () {
                 const activeTab = $('.tab-button.active');
                 const nextTab = activeTab.next('.tab-button');
-                
+
                 if (nextTab.length > 0) {
                     activeTab.removeClass('active');
                     nextTab.addClass('active');
-                    
+
                     const url = nextTab.data('url');
                     $('#tab-content').load(url, function () {
                         initFormSubmission();
-                        $('.toast').toast('show');
                     });
                 }
             });
-        });
-
-        
+        })
         </script>
-       
     </body>
 </html>
 

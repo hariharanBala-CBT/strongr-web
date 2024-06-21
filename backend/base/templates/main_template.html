@@ -180,7 +180,7 @@
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
                             <li class="breadcrumb-item"><a href="{% url 'organization_profile' pk=1 %}">Profile</a></li>
-                            <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>  
+                            <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
                             <li class="breadcrumb-item">Location</li>
                         </ol>
                         {% if messages %}
@@ -213,8 +213,8 @@
                                 <button tabindex="0" data-url="{% url 'organization_locationgamelist' locationpk %}" class="tab-button">Game</button>
                                 <button tabindex="0" data-url="{% url 'court-list' locationpk %}" class="tab-button">Court</button>
                                 <button tabindex="0" data-url="{% url 'organization_imageslist' locationpk %}" class="tab-button">Images</button>
-                                <button tabindex="0" data-url="{% url 'organization_locationamenities' locationpk %}" class="tab-button">Amenities</button>
                                 <button tabindex="0" data-url="{% url 'organization_locationworkingdays' locationpk %}" class="tab-button">Working Days</button>
+                                <button tabindex="0" data-url="{% url 'organization_locationamenities' locationpk %}" class="tab-button">Amenities</button>
                             </div>
                             <div id="tab-content"></div>
                         </div>
@@ -265,7 +265,7 @@
                                success: function(response) {
                             if (response.status === 'success') {
                                 showToast(response.message);
-                                
+
                             } else {
                                 showToast(response.message || 'Error submitting form.');
                             }
@@ -368,11 +368,11 @@
                 $('#nextTabBtn').click(function () {
                     const activeTab = $('.tab-button.active');
                     const nextTab = activeTab.next('.tab-button');
-                    
+
                     if (nextTab.length > 0) {
                         activeTab.removeClass('active');
                         nextTab.addClass('active');
-                        
+
                         const url = nextTab.data('url');
                         $('#tab-content').load(url, function () {
                             initFormSubmission();
