@@ -67,14 +67,14 @@ function RegisterScreen() {
   const validateDetails = (e) => {
     e.preventDefault();
     if (password.length < 8) {
-      toast.error("Pasword must be atleast 8 characters");
+      toast.error("Password must be at least 8 characters");
       return;
     } else if (password !== confirmPassword) {
       toast.error("Passwords do not match");
-      return
+      return;
     }else {
       dispatch(validateUserDetails(email, phoneNumber));
-      setSubmit('true')
+      setSubmit(true);
     }
   };
 
@@ -143,6 +143,7 @@ function RegisterScreen() {
                   onChange={(e) => {
                     setName(e.target.value);
                   }}
+                  autoComplete="off"
                 />
 
                 <label>Phone Number</label>
@@ -154,6 +155,7 @@ function RegisterScreen() {
                   onChange={(e) => {
                     setPhoneNumber(e.target.value);
                   }}
+                  autoComplete="off"
                 />
 
                 <label>Email</label>
@@ -165,6 +167,7 @@ function RegisterScreen() {
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
+                  autoComplete="off"
                 />
               </div>
 
@@ -178,6 +181,7 @@ function RegisterScreen() {
                   onChange={(e) => {
                     setPassword(e.target.value);
                   }}
+                  autoComplete="new-password"
                 />
 
                 <label>Confirm Password</label>
@@ -189,6 +193,7 @@ function RegisterScreen() {
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
                   }}
+                  autoComplete="off"
                 />
               </div>
             </div>

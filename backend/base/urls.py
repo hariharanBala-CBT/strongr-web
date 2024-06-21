@@ -50,7 +50,7 @@ urlpatterns = [
      path('update-slot/<int:pk>/', SlotUpdateView.as_view(), name='update-slot'),
      path('delete-slot/<int:pk>/', SlotDeleteView.as_view(), name='delete-slot'),
 
-     path('error/', TemplateView.as_view(template_name='error.html'), name='error_view'),
+     path('error/', TemplateView.as_view(template_name='error.html'), name='error'),
      path('multiple-slot/<int:location_pk>', CreateMultipleSlotsView.as_view(), name='multiple-slot'),
      path('organizationlocationamenities/<int:location_pk>/' ,update_amenities, name='organization_locationamenities'),
      path('organizationlocationworkingdays/<int:location_pk>/' , update_working_days, name='organization_locationworkingdays'),

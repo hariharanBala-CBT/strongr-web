@@ -2,17 +2,17 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>STRONGR</title>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet">
-    <link href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" rel="stylesheet">
-    <link href="{% static 'styles.css' %}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>STRONGR</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet">
+        <link href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
         <link href="{% static 'styles.css' %}" rel="stylesheet">
         <link href="{% static './css/temp-slots-list.css' %}" rel="stylesheet" />
@@ -97,9 +97,7 @@
                             </div>
                         {% endif %}
                         <div class="profile-card">
-                            {% for slot in tempSlots %}
-                                <h3 class="my-4">Temporary Slots for {{ slot.location }}</h3>
-                            {% endfor %}
+                            <h3 class="my-4">Temporary Slots</h3>
                             <h6 class="mb-5">Available Additional Temporary Slots are:</h6>
                         </div>
                         <div class="card mb-4">
@@ -143,115 +141,109 @@
                                                             <input type="hidden" name="slot_id" value="{{ slot.id }}">
                                                             <button type="button" class="btn btn-danger" onclick="openPopup(event, '{{ slot.id }}', '{{ slot.location }}', '{{ slot.court.name }}', '{{ slot.date }}', '{{ slot.start_time }} - {{ slot.end_time }}')"><i class="fa-solid fa-trash"></i></button>
 
-                                                    </form>
-                                                </td>                                           
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    0</table>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="buttons px-4 py-4" style="margin-left: 40%;">
-                    <div><a href="{% url 'temp-slot-location' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i></a></div>
-                </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="footer-text">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
-                            &middot;
-                            <a href="{% url 'termsconditions' %}" class="footer-text">Terms &amp; Conditions</a>
+                    <div class="buttons px-4 py-4" style="margin-left: 40%;">
+                        <div><a href="{% url 'temp-slot-location' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i></a></div>
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="footer-text">Copyright &copy; Your Website 2023</div>
+                            <div>
+                                <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
+                                &middot;
+                                <a href="{% url 'termsconditions' %}" class="footer-text">Terms &amp; Conditions</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </footer>
+                </footer>
+            </div>
         </div>
-    </div>
-    <div class="popup" id="popup">
-        <h2>Confirm Delete:</h2>
-        <p>Slot ID: <span id="slot-id"></span></p>
-        <p>Location: <span id="slot-location"></span></p>
-        <p>Court: <span id="slot-court"></span></p>
-        <p>Date: <span id="slot-date"></span></p>
-        <p>Time: <span id="slot-time"></span></p>
-        <p>Are you sure you want to delete?</p>
-        <div style="display: flex; justify-content: space-between;">
-            <button onclick="handleNo()">No</button>
-            <button onclick="handleYes()">Yes</button>
+        <div class="popup" id="popup">
+            <h2>Confirm Delete:</h2>
+            <p>Slot ID: <span id="slot-id"></span></p>
+            <p>Location: <span id="slot-location"></span></p>
+            <p>Court: <span id="slot-court"></span></p>
+            <p>Date: <span id="slot-date"></span></p>
+            <p>Time: <span id="slot-time"></span></p>
+            <p>Are you sure you want to delete?</p>
+            <div style="display: flex; justify-content: space-between;">
+                <button onclick="handleNo()">No</button>
+                <button onclick="handleYes()">Yes</button>
+            </div>
         </div>
-    </div>
-    
-    <div class="overlay" id="overlay"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
-    <script>
-        function handleYes(event){
-            const slotId = document.getElementById("popup").getAttribute("data-slot-id");
-            const form = document.getElementById("delform-" + slotId);
-            if (form) {
-                form.submit();
-            } else {
-                console.error("Form not found");
+        <div class="overlay" id="overlay"></div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
+
+        <script>
+            function handleYes(event){
+                const slotId = document.getElementById("popup").getAttribute("data-slot-id");
+                const form = document.getElementById("delform-" + slotId);
+                if (form) {
+                    form.submit();
+                } else {
+                    console.error("Form not found");
+                }
             }
-        }
 
-        function handleNo(){
-            closePopup()
-        }
-
-        function openPopup(event, slotId, location, court, date, time) {
-            event.preventDefault();
-            document.getElementById("popup").style.display = "block";
-            document.getElementById("overlay").style.display = "block";
-            document.getElementById("popup").setAttribute("data-slot-id", slotId);
-            document.getElementById("slot-id").innerText = slotId;
-            document.getElementById("slot-location").innerText = location;
-            document.getElementById("slot-court").innerText = court;
-            document.getElementById("slot-date").innerText = date;
-            document.getElementById("slot-time").innerText = time;
-        }
-
-
-        function closePopup() {
-            document.getElementById("popup").style.display = "none";
-            document.getElementById("overlay").style.display = "none";
-        }
-
-        window.addEventListener('DOMContentLoaded', event => {
-            const datatablesSimple = document.getElementById('datatablesSimple');
-            if (datatablesSimple) {
-                new simpleDatatables.DataTable(datatablesSimple);
+            function handleNo(){
+                closePopup()
             }
-        });
-
-        window.addEventListener('DOMContentLoaded', event => {
-            const sidebarToggle = document.body.querySelector('#sidebarToggle');
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', event => {
-                    event.preventDefault();
-                    document.body.classList.toggle('sb-sidenav-toggled');
-                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-                });
+            
+            function openPopup(event, slotId, location, court, date, time) {
+                event.preventDefault();
+                document.getElementById("popup").style.display = "block";
+                document.getElementById("overlay").style.display = "block";
+                document.getElementById("popup").setAttribute("data-slot-id", slotId);
+                document.getElementById("slot-id").innerText = slotId;
+                document.getElementById("slot-location").innerText = location;
+                document.getElementById("slot-court").innerText = court;
+                document.getElementById("slot-date").innerText = date;
+                document.getElementById("slot-time").innerText = time;
             }
-        });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const messages = document.querySelectorAll('.messages li');
-            messages.forEach(function(message) {
-                setTimeout(function() {
-                    message.style.opacity = '0';
-                    message.style.transition = 'opacity 0.5s ease';
-                    setTimeout(function() {
-                        message.style.display = 'none';
-                    }, 500);
-                }, 3000); // Adjust the timeout as needed
+            function closePopup() {
+                document.getElementById("popup").style.display = "none";
+                document.getElementById("overlay").style.display = "none";
+            }
+
+            window.addEventListener('DOMContentLoaded', event => {
+                const $datatablesSimple = document.getElementById('datatablesSimple');
+                if ($datatablesSimple) {
+                    new simpleDatatables.DataTable($datatablesSimple);
+                }
             });
-        });
 
-    </script>
-</body>
+            window.addEventListener('DOMContentLoaded', event => {
+                const $sidebarToggle = document.body.querySelector('#sidebarToggle');
+                if ($sidebarToggle) {
+                    $sidebarToggle.addEventListener('click', event => {
+                        event.preventDefault();
+                        document.body.classList.toggle('sb-sidenav-toggled');
+                        localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+                    });
+                }
+            });
+            
+            const $successAlert = $('#successAlert');
+            if ($successAlert.length) {
+                setTimeout(() => {
+                    $successAlert.hide();
+                }, 2500);
+            }
+        </script>
+    </body>
 </html>
