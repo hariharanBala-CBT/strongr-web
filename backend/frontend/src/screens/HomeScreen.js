@@ -19,6 +19,16 @@ import toast, { Toaster } from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Form } from "react-bootstrap";
 import Footer from "../components/Footer";
+import cockImage from "../images/icons/work-cock.svg";
+import workImage from "../images/icons/work-icon1.svg";
+import workImage2 from "../images/icons/work-icon2.svg";
+import workImage3 from "../images/icons/work-icon3.svg";
+import venueImage1 from "../images/venue1.jpg";
+import venueImage2 from "../images/venue2.jpg";
+import venueImage3 from "../images/venue3.jpg";
+import profileIcon from "../images/profile.jpg";
+import Venue from "../components/Venue";
+import Testimonial from "../components/Testimonial";
 
 function HomeScreen(history) {
   const dispatch = useDispatch();
@@ -43,7 +53,7 @@ function HomeScreen(history) {
     dispatch(filterLocation(areaName, gameName, date));
     navigate("/clubs");
   };
-  const { keyword, setKeyword  } = useHomeContext();
+  const { keyword, setKeyword } = useHomeContext();
 
   const [gameName, setGameName] = useState(games[0]?.game_name);
   const [areaName, setAreaName] = useState(areas[0]?.area_name);
@@ -117,7 +127,6 @@ function HomeScreen(history) {
     }
   }, [areaError, gameError]);
 
-
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -149,6 +158,91 @@ function HomeScreen(history) {
           </div>
         </div>
       </div>
+      <section className="section work-section">
+        <div className="work-cock-img">
+          <img src={cockImage} alt="Icon" />
+        </div>
+        <div className="work-img">
+          <div className="work-img-right">
+            <img src={cockImage} alt="Icon" />
+          </div>
+        </div>
+        <div className="container">
+          <div className="section-heading aos" data-aos="fade-up">
+            <h2>
+              How It <span>Works</span>
+            </h2>
+            <p className="sub-title">
+              Simplifying the booking process for coaches, venues, and athletes.
+            </p>
+          </div>
+          <div className="row justify-content-center ">
+            <div className="col-lg-4 col-md-6 d-flex">
+              <div className="work-grid w-100 aos" data-aos="fade-up">
+                <div className="work-icon">
+                  <div className="work-icon-inner">
+                    <img src={workImage} alt="Icon" />
+                  </div>
+                </div>
+                <div className="work-content">
+                  <h5>
+                    <a href="register.html">Join Us</a>
+                  </h5>
+                  <p>
+                    Quick and Easy Registration: Get started on our software
+                    platform with a simple account creation process.
+                  </p>
+                  <a className="btn" href="register.html">
+                    Register Now <i className="feather-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 col-md-6 d-flex">
+              <div className="work-grid w-100 aos" data-aos="fade-up">
+                <div className="work-icon">
+                  <div className="work-icon-inner">
+                    <img src={workImage2} alt="Icon" />
+                  </div>
+                </div>
+                <div className="work-content">
+                  <h5>
+                    <a href="coaches-list.html">Select Coaches/Venues</a>
+                  </h5>
+                  <p>
+                    Book Badminton coaches and venues for expert guidance and
+                    premium facilities.
+                  </p>
+                  <a className="btn" href="coaches-list.html">
+                    Go To Coaches <i className="feather-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 col-md-6 d-flex">
+              <div className="work-grid w-100 aos" data-aos="fade-up">
+                <div className="work-icon">
+                  <div className="work-icon-inner">
+                    <img src={workImage3} alt="Icon" />
+                  </div>
+                </div>
+                <div className="work-content">
+                  <h5>
+                    <a href="coach-details.html">Booking Process</a>
+                  </h5>
+                  <p>
+                    Easily book, pay, and enjoy a seamless experience on our
+                    user-friendly platform.
+                  </p>
+                  <a className="btn" href="coach-details.html">
+                    Book Now <i className="feather-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section ref={sectionRef} className="section1-container" id="section1-id">
         <div>
@@ -230,8 +324,42 @@ function HomeScreen(history) {
             />
           </div>
         </form>
+        {/* <div className="search-box">
+          <form>
+            <div className="search-input line">
+              <div className="form-group mb-0">
+                <label>Search for</label>
+                <select className="form-control select">
+                  <option>Courts</option>
+                  <option>Coaches</option>
+                </select>
+              </div>
+            </div>
+            <div className="search-input">
+              <div className="form-group mb-0">
+                <label>Where </label>
+                <select className="form-control select">
+                  <option value>Choose Location</option>
+                  <option>Germany</option>
+                  <option>Russia</option>
+                  <option>France</option>
+                  <option>UK</option>
+                  <option>Colombia</option>
+                </select>
+              </div>
+            </div>
+            <div className="search-btn">
+              <button className="btn" type="submit">
+                <i className="feather-search"></i>
+                <span className="search-text">Search</span>
+              </button>
+            </div>
+          </form>
+        </div> */}
       </section>
-      <Footer/>
+      <Venue />
+      <Testimonial />
+      <Footer />
     </div>
   );
 }

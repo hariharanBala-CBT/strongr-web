@@ -26,9 +26,23 @@ import {
   createClubReview,
   listClubReviews,
   login,
-  } from "../actions/actions";
+} from "../actions/actions";
 
 import { CLUB_CREATE_REVIEW_RESET } from "../constants/constants";
+import {
+  Calendar,
+  CheckSquare,
+  MapPin,
+  Phone,
+  Mail,
+  AlertOctagon,
+} from "react-feather";
+import venueTypeImage from "../images/icons/venue-type.svg";
+import profileImage from "../images/profile.jpg";
+import venueImage from "../images/owner-venue.jpg";
+import venueImage2 from "../images/owner-venue2.jpg";
+import noImage1 from "../images/venue2.jpg";
+import noImage2 from "../images/venue3.jpg";
 
 import "../css/clubdetailscreen.css";
 
@@ -51,7 +65,6 @@ const style = {
 };
 
 function ClubDetailScreen() {
-
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -74,7 +87,7 @@ function ClubDetailScreen() {
   const { clubReviews } = useSelector((state) => state.clubReviews);
 
   const { loading: loadingclubReview, success: successclubReview } =
-  clubReviewCreate;
+    clubReviewCreate;
 
   const gameName = localStorage.getItem("selectedGame");
 
@@ -121,7 +134,6 @@ function ClubDetailScreen() {
       });
     });
   };
-
 
   const handlePopupToggle = () => {
     setPopupVisible(!isPopupVisible);
@@ -192,224 +204,926 @@ function ClubDetailScreen() {
   }, [clubImage]);
 
   return (
-    <div>
+    <div className="venue-club-details">
       <Header location="nav-all" />
       <Toaster />
-      <div className="club-detail">
-        <div className="carousel-container">
-          <Carousel
-            className="cc"
-            autoPlay
-            infiniteLoop
-            transition="crossfade"
-            width={600}
-            showThumbs={false}
-          >
-            {clubImage ? (
-              clubImage?.map((image) => (
-                <div key={image.id}>
-                  <img
-                    src={image.image}
-                    alt="carousel-img"
-                    className="carousel-img"
-                  />
-                </div>
-              ))
-            ) : (
-              <>
-                <div>
-                  <img
-                    src="https://source.unsplash.com/Jr5x1CAWySo"
-                    alt="carousel-img"
-                    className="carousel-img"
-                  />
-                </div>
-                <div>
-                  <img
-                    src="https://source.unsplash.com/Jr5x1CAWySo"
-                    alt="carousel-img"
-                    className="carousel-img"
-                  />
-                </div>
-              </>
-            )}
-          </Carousel>
+      <section className="breadcrumb breadcrumb-list mb-0">
+        <span className="primary-right-round"></span>
+        <div className="container">
+          <h1 className="text-white">Venue Details</h1>
+          <ul>
+            <li>
+              <a>Home</a>
+            </li>
+            <li>Venue Details</li>
+          </ul>
         </div>
-
-        <div className="details">
-          <h1>{clubLocation?.organization?.organization_name}</h1>
-          <div className="rating">
-            <Rating
-              value={clubLocation?.rating}
-              text={`${clubLocation?.numRatings} reviews`}
-              color={"#f8e825"}
-            />
-          </div>
-          <h3>Games:</h3>
-          {clubGame?.map((game) => (
-            <span key={game.id}>
-              {game.game_type.game_name}: ₹{game.pricing}
-              <br />
-            </span>
-          ))}
-          <div>
-            <h3 className="fs-5 mt-5 fw-bolder">Location:</h3>
-            <div className="lead">
-              <span>
-                {clubLocation?.address_line_1}
-                <br />
-                {clubLocation?.address_line_2}
-                <br />
-                {clubLocation?.pincode}
-              </span>
+      </section>
+      <div className="venue-info white-bg d-block">
+        <div className="container">
+          <div className="row">
+            <div className="col-12 col-sm-12 col-md-12 col-lg-6">
+              <h1 className="d-flex align-items-center justify-content-start">
+                {clubLocation?.organization?.organization_name}
+                <span className="d-flex justify-content-center align-items-center">
+                  <i className="fas fa-check-double"></i>
+                </span>
+              </h1>
+              <ul className="d-sm-flex justify-content-start align-items-center">
+                <li>
+                  <i className="feather-map-pin">
+                    <MapPin />
+                  </i>
+                  {clubLocation?.address_line_1}, {clubLocation?.address_line_2}
+                  ,{clubLocation?.pincode}
+                </li>
+                <li>
+                  <i className="feather-phone-call">
+                    <Phone />
+                  </i>
+                  9999999999
+                </li>
+                <li>
+                  <i className="feather-mail">
+                    <Mail />
+                  </i>
+                  <a href="/cdn-cgi/l/email-protection#acd5c3d9dec1cdc5c0ecc9d4cdc1dcc0c982cfc3c1">
+                    {" "}
+                    <span
+                      className="__cf_email__"
+                      data-cfemail="c6bfa9b3b4aba7afaa86a3bea7abb6aaa3e8a5a9ab"
+                    >
+                      strongrtest@gmail.com
+                    </span>
+                  </a>
+                </li>
+              </ul>
             </div>
-          </div>
-          <div className="mt-4 mb-3">
-            <button className="popup1" onClick={handlePopupToggle}>
-              View Timings
-            </button>
-            {isPopupVisible && (
-              <div className="popup-overlay" onClick={handleOverlayClick}>
-                <div className="popup-content">
-                  <IoMdCloseCircleOutline
-                    onClick={handlePopupToggle}
-                    style={{ float: "right" }}
-                  />
-                  <h4>Working Timings</h4>
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Day</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {clubWorking?.map((day) => (
-                        <tr key={day.id}>
-                          <td>{day.days}</td>
-                          <td>{day.work_from_time}</td>
-                          <td>{day.work_to_time}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-            <div>
-              <h3>Amenities:</h3>
-              <ul>
-                {clubAmenity?.is_parking === true && <li>Parking</li>}
-                {clubAmenity?.is_restrooms === true && <li>Restrooms</li>}
-                {clubAmenity?.is_changerooms === true && <li>ChangeRooms</li>}
-                {clubAmenity?.is_powerbackup === true && <li>Power Backup</li>}
-                {clubAmenity?.is_beverages_facility === true && (
-                  <li>Beverages Facility</li>
-                )}
-                {clubAmenity?.is_coaching_facilities === true && (
-                  <li>Coaching Facility</li>
-                )}
+            <div className="col-12 col-sm-12 col-md-12 col-lg-6 text-right">
+              <ul className="social-options float-lg-end d-sm-flex justify-content-start align-items-center">
+                <li className="venue-review-info d-flex justify-content-start align-items-center">
+                  <span className="d-flex justify-content-center align-items-center">
+                    5.0
+                  </span>
+                  <div className="review">
+                    <div className="rating">
+                      <i className="fas fa-star filled"></i>
+                      <i className="fas fa-star filled"></i>
+                      <i className="fas fa-star filled"></i>
+                      <i className="fas fa-star filled"></i>
+                      <i className="fas fa-star filled"></i>
+                    </div>
+                    <p className="mb-0">
+                      <a href="javascript:;">
+                        {clubLocation?.numRatings} reviews
+                      </a>
+                    </p>
+                  </div>
+                  <i className="fa-regular fa-comments"></i>
+                </li>
               </ul>
             </div>
           </div>
-
-          <button onClick={handleClick} className="btn1">
-            Book Now
-          </button>
-        </div>
-      </div>
-      <div>
-        <div className="review-section">
-          <h4>Reviews</h4>
-          {clubLocation?.numRatings === 0 && <span>No Reviews</span>}
-
-          <div className="review-list">
-            {clubReviews?.map((review) => (
-              <div key={review.id} className="review-item">
-                <strong>{review.name}</strong>
-                <Rating value={review.rating} color="#f8e825" />
-                <p>{review.createdAt.substring(0, 10)}</p>
-                <p>{review.comment}</p>
+          <hr />
+          <div className="row bottom-row d-flex align-items-center">
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+              <ul className="d-sm-flex details">
+                <li>
+                  <div className="profile-pic">
+                    <a href="javascript:void(0);" className="venue-type">
+                      <img
+                        className="img-fluid"
+                        src={venueTypeImage}
+                        alt="Icon"
+                      />
+                    </a>
+                  </div>
+                  <div className="ms-2 venuetype-container">
+                    <p>Venue Type</p>
+                    <h6 className="mb-0">Indoor</h6>
+                  </div>
+                </li>
+                <li>
+                  <div className="profile-pic">
+                    <a href="javascript:void(0);">
+                      <img
+                        className="img-fluid"
+                        src={profileImage}
+                        alt="Icon"
+                      />
+                    </a>
+                  </div>
+                  <div className="ms-2 addedtype-container">
+                    <p>Added By</p>
+                    <h6 className="mb-0">Hendry Williams</h6>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+              <div className="d-flex float-sm-end align-items-center">
+                <p className="d-inline-block me-2 mb-0">Starts From :</p>
+                <h3 className="primary-text mb-0 d-inline-block">
+                  ₹150<span>/ hr</span>
+                </h3>
               </div>
-            ))}
-          </div>
-
-          <div className="write-review">
-            <h4>Write a review</h4>
-
-            {loadingclubReview && <Loader />}
-
-            {userInfo ? (
-              <form onSubmit={submitHandler}>
-                <label htmlFor="rating">Rating</label>
-                <select
-                  className="form-control"
-                  value={rating}
-                  onChange={(e) => setRating(e.target.value)}
-                >
-                  <option value="">Select...</option>
-                  <option value="1">1 - Poor</option>
-                  <option value="2">2 - Fair</option>
-                  <option value="3">3 - Good</option>
-                  <option value="4">4 - Very Good</option>
-                  <option value="5">5 - Excellent</option>
-                </select>
-
-                <label htmlFor="comment">Review</label>
-                <textarea
-                  rows="5"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  required
-                ></textarea>
-
-                <div>
-                  <button
-                    disabled={loadingclubReview}
-                    type="submit"
-                    className="btn1"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <span>
-                Please{" "}
-                <a href="#" onClick={handleSubmit}>
-                  login
-                </a>{" "}
-                to write a review
-              </span>
-            )}
+            </div>
           </div>
         </div>
       </div>
-      <div className="similar-clubs">
-        {/* <h1>Similar Club</h1>
-        <div>
-          <Club link="/" />
-          <Club link="/" />
-          <Club link="/" />
-          <Club link="/" />
-        </div> */}
+
+      <div className="content">
+        <div className="container">
+          <div className="row">
+            <div className="col-12 col-sm-12 col-md-12 col-lg-8">
+              <div className="accordion" id="accordionPanel">
+                <div className="accordion-item mb-4" id="overview">
+                  <h4 className="accordion-header" id="panelsStayOpen-overview">
+                    <button
+                      className="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#panelsStayOpen-collapseOne"
+                      aria-expanded="true"
+                      aria-controls="panelsStayOpen-collapseOne"
+                    >
+                      Overview
+                    </button>
+                  </h4>
+                  <div
+                    id="panelsStayOpen-collapseOne"
+                    className="accordion-collapse collapse show"
+                    aria-labelledby="panelsStayOpen-overview"
+                  >
+                    <div className="accordion-body">
+                      <div className="text show-more-height">
+                        <p>
+                          Badminton Academy is a renowned sports facility
+                          situated in Sacramento, CA. With a commitment to
+                          providing high-quality services, we offer a range of
+                          amenities and equipment to support athletes in their
+                          training and development.
+                        </p>
+                        <p>
+                          Our facility is equipped with state-of-the-art
+                          features, ensuring a conducive environment for
+                          athletes to excel in their respective sports.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="accordion-item mb-4" id="includes">
+                  <h4 className="accordion-header" id="panelsStayOpen-includes">
+                    <button
+                      className="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#panelsStayOpen-collapseTwo"
+                      aria-expanded="false"
+                      aria-controls="panelsStayOpen-collapseTwo"
+                    >
+                      Includes
+                    </button>
+                  </h4>
+                  <div
+                    id="panelsStayOpen-collapseTwo"
+                    className="accordion-collapse collapse show"
+                    aria-labelledby="panelsStayOpen-includes"
+                  >
+                    <div className="accordion-body">
+                      <ul className="clearfix">
+                        <li>
+                          <i className="feather-check-square">
+                            <CheckSquare />
+                          </i>
+                          Badminton Racket Unlimited
+                        </li>
+                        <li>
+                          <i className="feather-check-square">
+                            <CheckSquare />
+                          </i>
+                          Bats
+                        </li>
+                        <li>
+                          <i className="feather-check-square">
+                            <CheckSquare />
+                          </i>
+                          Hitting Machines
+                        </li>
+                        <li>
+                          <i className="feather-check-square">
+                            <CheckSquare />
+                          </i>
+                          Multiple Courts
+                        </li>
+                        <li>
+                          <i className="feather-check-square">
+                            <CheckSquare />
+                          </i>
+                          Spare Players
+                        </li>
+                        <li>
+                          <i className="feather-check-square">
+                            <CheckSquare />
+                          </i>
+                          Instant Racket
+                        </li>
+                        <li>
+                          <i className="feather-check-square">
+                            <CheckSquare />
+                          </i>
+                          Green Turfs
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="accordion-item mb-4" id="rules">
+                  <h4 className="accordion-header" id="panelsStayOpen-rules">
+                    <button
+                      className="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#panelsStayOpen-collapseThree"
+                      aria-expanded="false"
+                      aria-controls="panelsStayOpen-collapseThree"
+                    >
+                      Rules
+                    </button>
+                  </h4>
+                  <div
+                    id="panelsStayOpen-collapseThree"
+                    className="accordion-collapse collapse show"
+                    aria-labelledby="panelsStayOpen-rules"
+                  >
+                    <div className="accordion-body">
+                      <ul>
+                        <li>
+                          <p>
+                            <i className="feather-alert-octagon">
+                              <AlertOctagon />
+                            </i>
+                            Non Marking Shoes are recommended not mandatory for
+                            Badminton.
+                          </p>
+                        </li>
+                        <li>
+                          <p>
+                            <i className="feather-alert-octagon">
+                              <AlertOctagon />
+                            </i>
+                            A maximum number of members per booking per
+                            badminton court is admissible fixed by Venue Vendors
+                          </p>
+                        </li>
+                        <li>
+                          <p>
+                            <i className="feather-alert-octagon">
+                              <AlertOctagon />
+                            </i>
+                            No pets, no seeds, no gum, no glass, no hitting or
+                            swinging outside of the cage
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="accordion-item mb-4" id="amenities">
+                  <h4
+                    className="accordion-header"
+                    id="panelsStayOpen-amenities"
+                  >
+                    <button
+                      className="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#panelsStayOpen-collapseFour"
+                      aria-expanded="false"
+                      aria-controls="panelsStayOpen-collapseFour"
+                    >
+                      Amenities
+                    </button>
+                  </h4>
+                  <div
+                    id="panelsStayOpen-collapseFour"
+                    className="accordion-collapse collapse show"
+                    aria-labelledby="panelsStayOpen-amenities"
+                  >
+                    <div className="accordion-body">
+                      <ul className="d-md-flex justify-content-between align-items-center">
+                        {clubAmenity?.is_parking === true && (
+                          <li>
+                            <i
+                              className="fa fa-check-circle"
+                              aria-hidden="true"
+                            ></i>
+                            <span>Parking</span>
+                          </li>
+                        )}
+                        {clubAmenity?.is_restrooms === true && (
+                          <li>
+                            <i
+                              className="fa fa-check-circle"
+                              aria-hidden="true"
+                            ></i>
+                            <span>Restrooms</span>
+                          </li>
+                        )}
+                        {clubAmenity?.is_changerooms === true && (
+                          <li>
+                            <i
+                              className="fa fa-check-circle"
+                              aria-hidden="true"
+                            ></i>
+                            <span>ChangeRooms</span>
+                          </li>
+                        )}
+                        {clubAmenity?.is_powerbackup === true && (
+                          <li>
+                            <i
+                              className="fa fa-check-circle"
+                              aria-hidden="true"
+                            ></i>
+                            <span>Power Backup</span>
+                          </li>
+                        )}
+                        {clubAmenity?.is_beverages_facility === true && (
+                          <li>
+                            <i
+                              className="fa fa-check-circle"
+                              aria-hidden="true"
+                            ></i>
+                            <span>Beverages Facility</span>
+                          </li>
+                        )}
+                        {clubAmenity?.is_coaching_facilities === true && (
+                          <li>
+                            <i
+                              className="fa fa-check-circle"
+                              aria-hidden="true"
+                            ></i>
+                            <span>Coaching Facility</span>
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="accordion-item mb-4" id="gallery">
+                  <h4 className="accordion-header" id="panelsStayOpen-gallery">
+                    <button
+                      className="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#panelsStayOpen-collapseFive"
+                      aria-expanded="false"
+                      aria-controls="panelsStayOpen-collapseFive"
+                    >
+                      Gallery
+                    </button>
+                  </h4>
+                  <div
+                    id="panelsStayOpen-collapseFive"
+                    className="accordion-collapse collapse show"
+                    aria-labelledby="panelsStayOpen-gallery"
+                  >
+                    <div className="accordion-body">
+                      <div className="carousel-container">
+                        <Carousel
+                          className="cc"
+                          autoPlay
+                          infiniteLoop
+                          transition="crossfade"
+                          width={600}
+                          showThumbs={false}
+                        >
+                          {clubImage ? (
+                            clubImage?.map((image) => (
+                              <div key={image.id}>
+                                <img
+                                  src={image.image}
+                                  alt="carousel-img"
+                                  className="carousel-img"
+                                />
+                              </div>
+                            ))
+                          ) : (
+                            <>
+                              <div>
+                                <img
+                                  src={noImage1}
+                                  alt="carousel-img"
+                                  className="carousel-img"
+                                />
+                              </div>
+                              <div>
+                                <img
+                                  src={noImage2}
+                                  alt="carousel-img"
+                                  className="carousel-img"
+                                />
+                              </div>
+                            </>
+                          )}
+                        </Carousel>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="accordion-item mb-4" id="reviews">
+                  <div className="accordion-header" id="panelsStayOpen-reviews">
+                    <div
+                      className="accordion-button d-flex justify-content-between align-items-center"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#panelsStayOpen-collapseSix"
+                      aria-controls="panelsStayOpen-collapseSix"
+                    >
+                      <span className="w-75 mb-0">Reviews</span>
+                      <a
+                        href="javascript:void(0);"
+                        className="btn btn-gradient pull-right write-review add-review"
+                        data-bs-toggle="modal"
+                        data-bs-target="#add-review"
+                      >
+                        Write a review
+                      </a>
+                    </div>
+                  </div>
+                  <div className="write-review">
+                    <h4>Write a review</h4>
+
+                    {loadingclubReview && <Loader />}
+
+                    {userInfo ? (
+                      <form onSubmit={submitHandler}>
+                        <label htmlFor="rating">Rating</label>
+                        <select
+                          className="form-control"
+                          value={rating}
+                          onChange={(e) => setRating(e.target.value)}
+                        >
+                          <option value="">Select...</option>
+                          <option value="1">1 - Poor</option>
+                          <option value="2">2 - Fair</option>
+                          <option value="3">3 - Good</option>
+                          <option value="4">4 - Very Good</option>
+                          <option value="5">5 - Excellent</option>
+                        </select>
+
+                        <label htmlFor="comment">Review</label>
+                        <textarea
+                          rows="5"
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                          required
+                        ></textarea>
+
+                        <div>
+                          <button
+                            disabled={loadingclubReview}
+                            type="submit"
+                            className="btn1"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <span>
+                        Please{" "}
+                        <a href="#" onClick={handleSubmit}>
+                          login
+                        </a>{" "}
+                        to write a review
+                      </span>
+                    )}
+                  </div>
+                  <div
+                    id="panelsStayOpen-collapseSix"
+                    className="accordion-collapse collapse show"
+                    aria-labelledby="panelsStayOpen-reviews"
+                  >
+                    <div className="accordion-body">
+                      <div className="row review-wrapper">
+                        <div className="col-lg-3">
+                          <div className="ratings-info corner-radius-10 text-center">
+                            <h3>4.8</h3>
+                            <span>out of 5.0</span>
+                            <div className="rating">
+                              <i className="fas fa-star filled"></i>
+                              <i className="fas fa-star filled"></i>
+                              <i className="fas fa-star filled"></i>
+                              <i className="fas fa-star filled"></i>
+                              <i className="fas fa-star filled"></i>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-lg-9">
+                          <div className="recommended">
+                            <h5>Recommended by 97% of Players</h5>
+                            <div className="row">
+                              <div className="col-12 col-sm-12 col-md-4 col-lg-4 mb-3">
+                                <p className="mb-0">Quality of service</p>
+                                <ul>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <span>5.0</span>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="col-12 col-sm-12 col-md-4 col-lg-4 mb-3">
+                                <p className="mb-0">Quality of service</p>
+                                <ul>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <span>5.0</span>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="col-12 col-sm-12 col-md-4 col-lg-4 mb-3">
+                                <p className="mb-0">Quality of service</p>
+                                <ul>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <span>5.0</span>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <p className="mb-0">Quality of service</p>
+                                <ul>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <span>5.0</span>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="col-12 col-sm-12 col-md-4 col-lg-4">
+                                <p className="mb-0">Quality of service</p>
+                                <ul>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <i></i>
+                                  </li>
+                                  <li>
+                                    <span>5.0</span>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="review-box d-md-flex">
+                        <div className="review-profile">
+                          <img src={profileImage} alt="User" />
+                        </div>
+                        <div className="review-info">
+                          <h6 className="mb-2 tittle">
+                            Amanda Booked on 06/04/2023
+                          </h6>
+                          <div className="rating">
+                            <i className="fas fa-star filled"></i>
+                            <i className="fas fa-star filled"></i>
+                            <i className="fas fa-star filled"></i>
+                            <i className="fas fa-star filled"></i>
+                            <i className="fas fa-star filled"></i>
+                            <span className>5.0</span>
+                          </div>
+                          <span className="success-text">
+                            <i className="feather-check"></i>Yes, I would book
+                            again.
+                          </span>
+                          <h6>Absolutely perfect</h6>
+                          <p>
+                            If you are looking for a perfect place for friendly
+                            matches with your friends or a competitive match, It
+                            is the best place.
+                          </p>
+                          <span className="post-date">Sent on 11/03/2023</span>
+                        </div>
+                      </div>
+
+                      <div className="review-box d-md-flex">
+                        <div className="review-profile">
+                          <img src={profileImage} alt="User" />
+                        </div>
+                        <div className="review-info">
+                          <h6 className="mb-2 tittle">
+                            Amanda Booked on 06/04/2023
+                          </h6>
+                          <div className="rating">
+                            <i className="fas fa-star filled"></i>
+                            <i className="fas fa-star filled"></i>
+                            <i className="fas fa-star filled"></i>
+                            <i className="fas fa-star filled"></i>
+                            <i className="fas fa-star filled"></i>
+                            <span className>5.0</span>
+                          </div>
+                          <span className="warning-text">
+                            <i className="feather-x"></i>No, I dont want to book
+                            again.
+                          </span>
+                          <h6>Awesome. Its very convenient to play.</h6>
+                          <p>
+                            If you are looking for a perfect place for friendly
+                            matches with your friends or a competitive match, It
+                            is the best place.
+                          </p>
+                          <div className="dull-bg">
+                            <p>
+                              Experience badminton excellence at Badminton
+                              Academy. Top-notch facilities, well-maintained
+                              courts, and a friendly atmosphere. Highly
+                              recommended for an exceptional playing experience
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="accordion-item" id="location">
+                  <h4 className="accordion-header" id="panelsStayOpen-location">
+                    <button
+                      className="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#panelsStayOpen-collapseSeven"
+                      aria-expanded="false"
+                      aria-controls="panelsStayOpen-collapseSeven"
+                    >
+                      Location
+                    </button>
+                  </h4>
+                  <div
+                    id="panelsStayOpen-collapseSeven"
+                    className="accordion-collapse collapse show"
+                    aria-labelledby="panelsStayOpen-location"
+                  >
+                    <div className="accordion-body">
+                      <div className="google-maps">
+                        <iframe
+                          className="googlemap-wrapper"
+                          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7773.992402442258!2d80.2071307443307!3d13.03591355151243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5266de74ad88a3%3A0xd842d88783c1bd4!2sAshok%20Nagar%2C%20Chennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1717758943230!5m2!1sen!2sin"
+                          width="600"
+                          height="450"
+                          allowfullscreen=""
+                          loading="lazy"
+                          referrerpolicy="no-referrer-when-downgrade"
+                        ></iframe>
+                      </div>
+                      <div className="dull-bg d-flex justify-content-start align-items-center mt-3">
+                        <div className="white-bg me-2">
+                          <i className="fas fa-location-arrow"></i>
+                        </div>
+                        <div className>
+                          <h6>Our Venue Location</h6>
+                          <p>
+                            {clubLocation?.address_line_1},
+                            {clubLocation?.address_line_2},
+                            {clubLocation?.pincode}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <aside className="col-12 col-sm-12 col-md-12 col-lg-4 theiaStickySidebar">
+              <div className="white-bg d-flex justify-content-start align-items-center availability">
+                <div>
+                  <span className="icon-bg">
+                    <Calendar size={35} color={"#097E52"} />
+                  </span>
+                </div>
+                <div className="club-timings">
+                  <h4>
+                    <a onClick={handleOverlayClick}>View Timings</a>
+                  </h4>
+                  {isPopupVisible && (
+                    <div className="popup-overlay" onClick={handleOverlayClick}>
+                      <div className="popup-content">
+                        <IoMdCloseCircleOutline
+                          onClick={handlePopupToggle}
+                          style={{ float: "right" }}
+                        />
+                        <h4>Working Timings</h4>
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th>Day</th>
+                              <th>Start Time</th>
+                              <th>End Time</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {clubWorking?.map((day) => (
+                              <tr key={day.id}>
+                                <td>{day.days}</td>
+                                <td>{day.work_from_time}</td>
+                                <td>{day.work_to_time}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="white-bg d-flex justify-content-start align-items-center availability">
+                <div className="gamesList">
+                  <h4>Games</h4>
+                  {clubGame?.map((game) => (
+                    <span key={game.id}>
+                      {game.game_type.game_name}: ₹{game.pricing}
+                      <br />
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="white-bg book-court">
+                <h4 className="border-bottom">Book A Court</h4>
+                <h5 className="d-inline-block">Badminton Academy,</h5>
+                <p className="d-inline-block"> available Now</p>
+                <ul className="d-sm-flex align-items-center justify-content-evenly">
+                  <li>
+                    <h3 className="d-inline-block primary-text">₹150</h3>
+                    <span>/hr</span>
+                    <p>up to 1 guests</p>
+                  </li>
+                  <li>
+                    <span>
+                      <i className="feather-plus"></i>
+                    </span>
+                  </li>
+                  <li>
+                    <h4 className="d-inline-block primary-text">₹500</h4>
+                    <span>/hr</span>
+                    <p>
+                      each additional guest <br />
+                      up to 4 guests max
+                    </p>
+                  </li>
+                </ul>
+                <div className="d-grid btn-block mt-3">
+                  <a
+                    className="btn btn-secondary d-inline-flex justify-content-center align-items-center booknow-wrapper"
+                    onClick={handleClick}
+                  >
+                    <i className="feather-calendar">
+                      <Calendar />
+                    </i>
+                    Book Now
+                  </a>
+                </div>
+              </div>
+              <div className="white-bg listing-owner">
+                <h4 className="border-bottom">Listing By Owner</h4>
+                <ul>
+                  <li className="d-flex justify-content-start align-items-center">
+                    <div className>
+                      <a href="blog-details.html">
+                        <img
+                          className="img-fluid"
+                          alt="Venue"
+                          src={venueImage}
+                        />
+                      </a>
+                    </div>
+                    <div className="owner-info">
+                      <h5>
+                        <a href="blog-details.html">Manchester Academy</a>
+                      </h5>
+                      <p>
+                        <i className="feather-map-pin"></i>
+                        <span>Sacramento, CA</span>
+                      </p>
+                      <p className="mb-0">
+                        <i className="feather-calendar"></i>
+                        <span>Next Availablity : </span>
+                        <span className="primary-text">15 May 2023</span>
+                      </p>
+                    </div>
+                  </li>
+                  <li className="d-flex justify-content-start align-items-center">
+                    <div className>
+                      <a href="blog-details.html">
+                        <img
+                          className="img-fluid"
+                          alt="Venue"
+                          src={venueImage2}
+                        />
+                      </a>
+                    </div>
+                    <div className="owner-info">
+                      <h5>
+                        <a href="blog-details.html">Sarah Sports Academy</a>
+                      </h5>
+                      <p>
+                        <i className="feather-map-pin"></i>
+                        <span>Sacramento, CA</span>
+                      </p>
+                      <p className="mb-0">
+                        <i className="feather-calendar"></i>
+                        <span>Next Availablity : </span>
+                        <span className="primary-text">15 May 2023</span>
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </aside>
+          </div>
+        </div>
       </div>
-      <Modal
+      {/* <Modal
         open={openForm}
         onClose={() => setOpenForm(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         {loader ? (
-          <Box sx={style} className="otp-loader">
+          <Box sx={style} classNameName="otp-loader">
             <CircularProgress />
           </Box>
         ) : (
           <Box sx={style}>
             <Alert severity="info">Login to write a review</Alert>
-            <form onSubmit={loginAndRedirect} className="booking-login-form">
-              <h2 className="login-title">Login</h2>
+            <form onSubmit={loginAndRedirect} classNameName="booking-login-form">
+              <h2 classNameName="login-title">Login</h2>
 
               <label>Username</label>
               <input
@@ -433,10 +1147,10 @@ function ClubDetailScreen() {
                 }}
               />
 
-              <div className="login-button">
+              <div classNameName="login-button">
                 <Button
                   type="submit"
-                  className="btn-check-availability-home"
+                  classNameName="btn-check-availability-home"
                   text="Login"
                 />
               </div>
@@ -447,7 +1161,7 @@ function ClubDetailScreen() {
             </form>
           </Box>
         )}
-      </Modal>
+      </Modal> */}
       <Footer />
     </div>
   );

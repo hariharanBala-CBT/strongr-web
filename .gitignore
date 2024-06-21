@@ -1,4 +1,5 @@
 /myenv
+/myenv
 /venv
 /backend/backend/__pycache__
 backend/backend/migrations
@@ -12,3 +13,5 @@ backend/static/images/
 node_modules
 /backend/.env
 /backend/backend/local_settings.py
+/backend/frontend/node_modules
+/node_modules
