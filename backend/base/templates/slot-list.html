@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,62 +10,16 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>STRONGR</title>
+
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" rel="stylesheet">
-    <link href="{% static 'styles.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <!-- <style>
-        .location-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .btn-success {
-            background-color: #28a745 !important;
-            border-color: #28a745 !important;
-        }
-        .btn-success:hover {
-            background-color: #218838 !important;
-            border-color: #1e7e34 !important;
-        }
-        .table {
-            background-color: #ffffff !important;
-        }
-        th, td {
-            
-            padding: 1rem;
-        }
-        th {
-            background-color: #f8f9fa;
-        }
-        .btn-primary {
-            background-color: #007bff !important;
-            border-color: #007bff !important;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3 !important;
-            border-color: #0056b3 !important;
-        }
-        .btn-danger {
-            background-color: #dc3545 !important;
-            border-color: #dc3545 !important;
-        }
-        .btn-danger:hover {
-            background-color: #c82333 !important;
-            border-color: #bd2130 !important;
-        }
-        .py-4 {
-            padding-top: 1.5rem !important;
-            padding-bottom: 1.5rem !important;
-        }
-        .mt-auto {
-            margin-top: auto !important;
-        }
-        .footer-text {
-            color: #6c757d;
-        }
-    </style> -->
+
+    <link href="{% static 'styles.css' %}" rel="stylesheet">
+    <link href="{% static './css/slot-list.css' %}" rel="stylesheet" />
+
 </head>
+
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR</a>
@@ -73,13 +28,11 @@
         </button>
         <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>{{ user.username }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <!-- <li><a class="dropdown-item" href="#!">Settings</a></li>
-                    <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                    <li><hr class="dropdown-divider" /></li> -->
                     <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </li>
@@ -99,7 +52,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                             Profile
                         </a>
-                        <a class="nav-link" href="{% url 'organization_locationlist'%}" >
+                        <a class="nav-link" href="{% url 'organization_locationlist'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                             Locations
                         </a>
@@ -114,9 +67,10 @@
                         <a class="nav-link" href="{% url 'org_customers_list'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Customers
-                        </a>   
+                        </a>
                         <div class="sb-sidenav-menu-heading">Slot</div>
-                        <a class="nav-link" href="{% url 'slot-location' %}" style="color: white; background-color: rgb(68, 68, 68);">
+                        <a class="nav-link" href="{% url 'slot-location' %}"
+                            style="color: white; background-color: rgb(68, 68, 68);">
                             <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
                             Slots List
                         </a>
@@ -139,6 +93,13 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4 mt-4">
+                    {% if messages %}
+                    <div class="alert alert-success" role="alert" id="successAlert">
+                        {% for message in messages %}
+                        <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <div class="profile-card">
                         <h3 class="my-4">Slots</h3>
                         <h6 class="mb-5">Available Slots are:</h6>
@@ -147,7 +108,8 @@
                         <div class="location-card card-header">
                             <div>Slots</div>
                             <div>
-                                <a href="{% url 'add-slot' locationpk %}" class="btn btn-success align-self-end" data-toggle="tooltip" title="Add slot"><i class="fa-solid fa-plus"></i></a>
+                                <a href="{% url 'add-slot' locationpk %}" class="btn btn-success align-self-end"
+                                    data-toggle="tooltip" title="Add slot"><i class="fa-solid fa-plus"></i></a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -170,15 +132,17 @@
                                     </tfoot>
                                     <tbody>
                                         {% for slot in slots %}
-                                            <tr>
-                                                <td>{{ slot.court.name }} ({{ slot.get_days_display }} -- {{ slot.start_time }} - {{ slot.end_time }})</td>
-                                                <td>
-                                                    <a href="{% url 'update-slot' slot.pk %}" class="btn btn-primary"><i class="fas fa-pen-to-square"></i></a>
-                                                </td>
-                                                <td>
-                                                    <a href="{% url 'delete-slot' slot.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
-                                                </td>
-                                            </tr>
+                                        <tr>
+                                            <td>{{ slot.court.name }} ({{ slot.get_days_display }} -- {{ slot.start_time }} - {{ slot.end_time }})</td>
+                                            <td>
+                                                <a href="{% url 'update-slot' slot.pk %}" class="btn btn-primary"><i
+                                                        class="fas fa-pen-to-square"></i></a>
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'delete-slot' slot.pk %}" class="btn btn-danger"><i
+                                                        class="fa-solid fa-trash"></i></a>
+                                            </td>
+                                        </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
@@ -187,7 +151,8 @@
                     </div>
                 </div>
                 <div class="buttons px-4 py-4" style="margin-left: 40%;">
-                    <div><a href="{% url 'slot-location'  %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a></div>
+                    <div><a href="{% url 'slot-location'  %}" class="btn btn-secondary" data-toggle="tooltip"
+                            title="back"><i class="fa-solid fa-arrow-left-long"></i></a></div>
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
@@ -204,18 +169,21 @@
             </footer>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
+
     <script>
         window.addEventListener('DOMContentLoaded', event => {
-            const datatablesSimple = document.getElementById('datatablesSimple');
-            if (datatablesSimple) {
-                new simpleDatatables.DataTable(datatablesSimple);
+            const $datatablesSimple = document.getElementById('datatablesSimple');
+            if ($datatablesSimple) {
+                new simpleDatatables.DataTable($datatablesSimple);
             }
         });
 
         window.addEventListener('DOMContentLoaded', event => {
-            const sidebarToggle = document.body.querySelector('#sidebarToggle');
+            const $sidebarToggle = document.body.querySelector('#sidebarToggle');
             if (sidebarToggle) {
                 sidebarToggle.addEventListener('click', event => {
                     event.preventDefault();
@@ -224,6 +192,14 @@
                 });
             }
         });
+
+        const $successAlert = $('#successAlert');
+        if ($successAlert.length) {
+            setTimeout(() => {
+                $successAlert.hide();
+            }, 2500);
+        }
     </script>
 </body>
+
 </html>
