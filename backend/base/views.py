@@ -831,8 +831,13 @@ class SlotUpdateView(UpdateView):
     form_class = SlotUpdateForm
 
     def form_invalid(self, form):
-        error_messages = ''.join([f'{error}' for error in form.errors.values()])
-        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
+        # Custom error message for a specific validation error
+        if any('A slot with the same details already exists.' in error for error in form.errors.values()):
+            messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed_slot'))
+        else:
+            # General form validation failed message
+            error_messages = ''.join([f'{error}' for error in form.errors.values()])
+            messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed_slot'))
         return self.render_to_response(
             self.get_context_data(form=form, error=form.errors.as_text())
         )
@@ -1215,8 +1220,9 @@ class OrganizationListView(ListView):
     context_object_name = 'organizations'
 
     def get_queryset(self):
-        return Organization.objects.filter(tenant = self.request.user.id)
-
+        objects =  Organization.objects.filter(tenant__user = self.request.user.id)
+        print(objects, 'user id', self.request.user.id)
+        return objects
 @method_decorator(login_required, name='dispatch')
 class LocationListView(ListView):
     model = OrganizationLocation
@@ -1224,7 +1230,9 @@ class LocationListView(ListView):
     context_object_name = 'organizationlocations'
 
     def get_queryset(self):
-        return OrganizationLocation.objects.filter(organization__tenant = self.request.user.id)
+        objects =  OrganizationLocation.objects.filter(organization__tenant__user = self.request.user.id)
+        print(objects, 'user id', self.request.user.id)
+        return objects
 
 @method_decorator(login_required, name='dispatch')
 class CancelOrganizationListView(ListView):
@@ -1233,7 +1241,7 @@ class CancelOrganizationListView(ListView):
     context_object_name = 'organizations'
 
     def get_queryset(self):
-        return Organization.objects.filter(tenant = self.request.user.id)
+        return Organization.objects.filter(tenant__user = self.request.user.id)
 
 @method_decorator(login_required, name='dispatch')
 class PendingOrganizationListView(ListView):
@@ -1242,7 +1250,7 @@ class PendingOrganizationListView(ListView):
     context_object_name = 'organizations'
 
     def get_queryset(self):
-        return Organization.objects.filter(tenant = self.request.user.id)
+        return Organization.objects.filter(tenant__user = self.request.user.id)
 
 @method_decorator(login_required, name='dispatch')
 class WaitingOrganizationListView(ListView):
@@ -1251,7 +1259,7 @@ class WaitingOrganizationListView(ListView):
     context_object_name = 'organizations'
 
     def get_queryset(self):
-        return Organization.objects.filter(tenant = self.request.user.id)
+        return Organization.objects.filter(tenant__user = self.request.user.id)
 
 @method_decorator(login_required, name='dispatch')
 class ConfirmOrganizationListView(ListView):
@@ -1260,7 +1268,7 @@ class ConfirmOrganizationListView(ListView):
     context_object_name = 'organizations'
 
     def get_queryset(self):
-        return Organization.objects.filter(tenant = self.request.user.id)
+        return Organization.objects.filter(tenant__user = self.request.user.id)
 
 class TenantOrganizationPreviewView(DetailView):
     model = Organization
