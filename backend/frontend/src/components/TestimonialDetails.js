@@ -1,7 +1,6 @@
 import React from "react";
-import { Calendar, MapPin, Heart } from "react-feather";
 const TestimonialDetails = ({ testiMonialDetail }) => {
-  const { title, name, description, gametype, img } = testiMonialDetail;
+  const { description, gametype, img, name, title } = testiMonialDetail;
   return (
     <div className="testimonial-group">
       <div className="testimonial-review">

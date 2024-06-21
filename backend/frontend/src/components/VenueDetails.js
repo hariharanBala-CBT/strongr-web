@@ -12,7 +12,7 @@ const VenueDetails = ({ testiMonialDetail }) => {
           <div className="fav-item-venues">
             <span className="tag tag-blue">Featured</span>
             <h5 className="tag tag-primary">
-              $450<span>/hr</span>
+              ₹450<span>/hr</span>
             </h5>
           </div>
         </div>
@@ -39,7 +39,7 @@ const VenueDetails = ({ testiMonialDetail }) => {
                   <i className="feather-map-pin">
                     <MapPin />
                   </i>
-                  Port Alsworth, AK
+                  {address}
                 </span>
               </li>
               <li>

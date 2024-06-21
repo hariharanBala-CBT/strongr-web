@@ -1,11 +1,9 @@
-import "../css/header.css";
 import { LinkContainer } from "react-router-bootstrap";
+import { LogOut } from "react-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/actions";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
+import "../css/header.css";
 import Logo from "../images/logo.png";
-import { User, LogOut } from "react-feather";
 
 function Header({ location }) {
   const dispatch = useDispatch();

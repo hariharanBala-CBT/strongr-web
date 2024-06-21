@@ -1,48 +1,42 @@
 import React from "react";
 import VenueDetails from "./VenueDetails";
-import $ from "jquery";
 import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
-// import userPic from "../../image/user-one.png";
 import "../css/venue.css";
 import venueImage1 from "../images/venue1.jpg";
 import venueImage2 from "../images/venue2.jpg";
 import venueImage3 from "../images/venue3.jpg";
 import venueImage4 from "../images/venue4.jpg";
 
-// Ensure jQuery is available globally
-window.jQuery = $;
-window.$ = $;
-
 const Venue = () => {
   const Venues = [
     {
       name: "Rekob Ramya",
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.",
-      address: "USA",
+        "outdoor sports, concerts, or other events and consists of a field or stage completely surrounded by a tiered structure designed to allow spectators to stand or sit and view the event.",
+      address: "Ashok Nagar",
       img: venueImage1,
     },
     {
       name: "Brandon Savage",
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.",
-      address: "USA",
+        "outdoor sports, concerts, or other events and consists of a field or stage completely surrounded by a tiered structure designed to allow spectators to stand or sit and view the event.",
+      address: "Ashok Nagar",
       img: venueImage2,
     },
     {
       name: "Steve Burns",
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.",
-      address: "USA",
+        "outdoor sports, concerts, or other events and consists of a field or stage completely surrounded by a tiered structure designed to allow spectators to stand or sit and view the event.",
+      address: "Ashok Nagar",
       img: venueImage3,
     },
     {
       name: "Kevin Canlas",
       description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.",
-      address: "USA",
+        "outdoor sports, concerts, or other events and consists of a field or stage completely surrounded by a tiered structure designed to allow spectators to stand or sit and view the event.",
+      address: "Ashok Nagar",
       img: venueImage4,
     },
   ];
@@ -93,9 +87,10 @@ const Venue = () => {
                   <div className="item">
                     <div className="shadow-effect">
                       <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna.
+                        The most fascinating thing about the ground is the crowd
+                        support. It is common knowledge that the Chepauk crowd
+                        is the most unbiased and the most knowledgeable crowd in
+                        the country.
                       </p>
                     </div>
                     <div className="testimonial-name">

@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
+import { ArrowRight } from "react-feather";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import toast, { Toaster } from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Form } from "react-bootstrap";
 import "../css/homescreen.css";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Message from "../components/Message";
 import SelectInput from "../components/SelectInput";
 import DateInput from "../components/DateInput";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import {
   listAreas,
   listGames,
@@ -15,9 +19,6 @@ import {
 } from "../actions/actions";
 import { useHomeContext } from "../context/HomeContext";
 import { CircularProgress } from "@mui/material";
-import toast, { Toaster } from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Form } from "react-bootstrap";
 import Footer from "../components/Footer";
 import cockImage from "../images/icons/work-cock.svg";
 import workImage from "../images/icons/work-icon1.svg";
@@ -192,7 +193,10 @@ function HomeScreen(history) {
                     platform with a simple account creation process.
                   </p>
                   <a className="btn" href="javascript:void(0);">
-                    Register Now <i className="feather-arrow-right"></i>
+                    Register Now{" "}
+                    <span>
+                      <ArrowRight />
+                    </span>
                   </a>
                 </div>
               </div>
@@ -213,7 +217,10 @@ function HomeScreen(history) {
                     premium facilities.
                   </p>
                   <a className="btn" href="javascript:void(0);">
-                    Go To Coaches <i className="feather-arrow-right"></i>
+                    Go To Coaches{" "}
+                    <span>
+                      <ArrowRight />
+                    </span>
                   </a>
                 </div>
               </div>
@@ -234,7 +241,10 @@ function HomeScreen(history) {
                     user-friendly platform.
                   </p>
                   <a className="btn" href="javascript:void(0);">
-                    Book Now <i className="feather-arrow-right"></i>
+                    Book Now{" "}
+                    <span>
+                      <ArrowRight />
+                    </span>
                   </a>
                 </div>
               </div>

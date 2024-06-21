@@ -1,6 +1,6 @@
 import React from "react";
+import { Mail, Phone } from "react-feather";
 import "../css/footer.css";
-import { Phone, Mail } from "react-feather";
 
 function Footer({ name }) {
   return (
@@ -134,7 +134,8 @@ function Footer({ name }) {
               <div className="col-md-6">
                 <div className="copyright-text">
                   <p className="mb-0">
-                    &copy; 2024 STRONGR - All rights reserved.
+                    Copyright &copy; {new Date().getFullYear()} Strongr. All
+                    rights reserved.
                   </p>
                 </div>
               </div>

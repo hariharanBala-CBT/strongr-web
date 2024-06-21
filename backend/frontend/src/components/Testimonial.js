@@ -1,15 +1,10 @@
 import React from "react";
-import TestimonialDetails from "./TestimonialDetails";
-import $ from "jquery";
 import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import "../css/testimonial.css";
+import TestimonialDetails from "./TestimonialDetails";
 import testimonialProfile from "../images/profile.jpg";
-
-// Ensure jQuery is available globally
-window.jQuery = $;
-window.$ = $;
 
 const Testimonial = () => {
   const testiMonials = [
@@ -17,7 +12,7 @@ const Testimonial = () => {
       title: "Personalized Attention",
       name: "Ariyan Rusov",
       description:
-        "DreamSports' coaching services enhanced my badminton skills. Personalized attention from knowledgeable coaches propelled my game to new heights.",
+        "StrongrSports' coaching services enhanced my badminton skills. Personalized attention from knowledgeable coaches propelled my game to new heights.",
       gametype: "Badminton",
       img: testimonialProfile,
     },
@@ -25,7 +20,7 @@ const Testimonial = () => {
       title: "Quality Matters !",
       name: "Darren Valdez",
       description:
-        "DreamSports' advanced badminton equipment has greatly improved my performance on the court. Their quality range of rackets and shoes made a significant impact.",
+        "StrongrSports' advanced badminton equipment has greatly improved my performance on the court. Their quality range of rackets and shoes made a significant impact.",
       gametype: "Badminton",
       img: testimonialProfile,
     },
@@ -33,7 +28,7 @@ const Testimonial = () => {
       title: "Excellent Professionalism !",
       name: "Elinor Dunn",
       description:
-        "DreamSports' unmatched professionalism and service excellence left a positive experience. Highly recommended for court rentals and equipment purchases.",
+        "StrongrSports' unmatched professionalism and service excellence left a positive experience. Highly recommended for court rentals and equipment purchases.",
       gametype: "Badminton",
       img: testimonialProfile,
     },
@@ -41,7 +36,7 @@ const Testimonial = () => {
       title: "Personalized Attention",
       name: "Ariyan Rusov",
       description:
-        "DreamSports' coaching services enhanced my badminton skills. Personalized attention from knowledgeable coaches propelled my game to new heights.",
+        "StrongrSports' coaching services enhanced my badminton skills. Personalized attention from knowledgeable coaches propelled my game to new heights.",
       gametype: "Badminton",
       img: testimonialProfile,
     },
@@ -102,7 +97,7 @@ const Testimonial = () => {
                       </div>
                       <h5>Personalized Attention</h5>
                       <p>
-                        DreamSports' coaching services enhanced my badminton
+                        StrongrSports' coaching services enhanced my badminton
                         skills. Personalized attention from knowledgeable
                         coaches propelled my game to new heights.
                       </p>
