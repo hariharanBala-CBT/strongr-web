@@ -4,7 +4,21 @@ import random
 import string
 
 from datetime import datetime
+from booking.models import Booking
 
+
+def update_completed_bookings():
+    current_date = datetime.now()
+    current_datetime = current_date.time()
+
+    bookings_to_update = Booking.objects.filter(
+        booking_date__lt=current_date,
+        booking_status__in=[Booking.CONFIRMED],
+        slot__start_time__lt=current_datetime)
+
+    for booking in bookings_to_update:
+        booking.booking_status = 4
+        booking.save()
 
 def create_directory(directory_path):
     """Create a directory if it doesn't exist."""

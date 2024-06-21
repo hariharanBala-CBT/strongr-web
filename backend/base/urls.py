@@ -17,9 +17,10 @@ urlpatterns = [
      path('cancelled_bookings/',ListofCancelledBookingView.as_view(), name='cancelled_bookings'),
 
      path('sendotp/', generateOtp, name="generate-otp"),
+     path('sendotp/update/', generateUpdateOtp, name="generate-update-otp"),
 
 
-     path('organizationprofile/<int:pk>/' ,OrganizationProfileView.as_view(), name='organization_profile'),
+     path('organizationprofile/' ,OrganizationProfileView.as_view(), name='organization_profile'),
      path('organizationaddlocation/' ,OrganizationAddLocationView.as_view(), name='organization_addlocation'),
      path('organizationupdatelocation/<int:pk>/', update_location, name='organization_updatelocation'),
      path('organizationlocationlist/' ,OrganizationLocationListView.as_view(), name='organization_locationlist'),
@@ -49,7 +50,7 @@ urlpatterns = [
      path('update-slot/<int:pk>/', SlotUpdateView.as_view(), name='update-slot'),
      path('delete-slot/<int:pk>/', SlotDeleteView.as_view(), name='delete-slot'),
 
-     path('error/', TemplateView.as_view(template_name='error.html'), name='error_view'),
+     path('error/', TemplateView.as_view(template_name='error.html'), name='error'),
      path('multiple-slot/<int:location_pk>', CreateMultipleSlotsView.as_view(), name='multiple-slot'),
      path('organizationlocationamenities/<int:location_pk>/' ,update_amenities, name='organization_locationamenities'),
      path('organizationlocationworkingdays/<int:location_pk>/' , update_working_days, name='organization_locationworkingdays'),

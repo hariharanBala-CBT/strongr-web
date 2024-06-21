@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginPhoneNumber } from "../actions/actions";
-// import Loader from "../components/Loader";
-// import Message from "../components/Message";
+import { toast, Toaster } from "react-hot-toast";
+import { LinkContainer } from "react-router-bootstrap";
 import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
-import "../css/phonenumscreen.css";
+import OTPInput from "react-otp-input";
+
+import Header from "../components/Header";
+
+import { CircularProgress } from "@mui/material";
+
 import { auth } from "../firebase.config";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { toast, Toaster } from "react-hot-toast";
-import OTPInput from "react-otp-input";
-import { CircularProgress } from "@mui/material";
-import { LinkContainer } from "react-router-bootstrap";
+
+import { loginPhoneNumber, validatePhone } from "../actions/actions";
+
+import "../css/phonenumscreen.css";
+import "react-phone-input-2/lib/style.css";
 import "../css/registerscreen.css";
 import { User, Eye, EyeOff, Phone } from "react-feather";
 
@@ -24,26 +27,26 @@ const linkStyle = {
 };
 
 function PhoneNumberScreen() {
-  const [showOTPInput, setShowOTPInput] = useState(false);
-  const [otp, setOTP] = useState("");
-  // const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [ph, setPh] = useState("");
-
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [otp, setOTP] = useState("");
+  const [ph, setPh] = useState("");
+  const [showOTPInput, setShowOTPInput] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submit, setSubmit] = useState(false);
+
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { error, userInfo } = userLogin;
+  const { userInfo } = useSelector((state) => state.userLogin);
+  const { phoneValidate, phoneValidateError } = useSelector(
+    (state) => state.phoneValidator
+  );
 
-  useEffect(() => {
-    if (userInfo) {
-      navigate(redirect);
-    }
-  }, [navigate, userInfo, redirect]);
+  const dispatchLogin = () => {
+    dispatch(loginPhoneNumber(ph));
+  };
 
   const renderInput = (inputProps) => {
     return (
@@ -54,6 +57,13 @@ function PhoneNumberScreen() {
         maxLength={1}
       />
     );
+  };
+
+  const handlePhoneNumberChange = () => {
+    setOTP("");
+    setShowOTPInput(false);
+    setLoading(false);
+    setSubmit(false);
   };
 
   function onCaptchVerify() {
@@ -75,39 +85,14 @@ function PhoneNumberScreen() {
 
   function onSignup(e) {
     e.preventDefault();
+    setSubmit(true);
     if (ph.length < 10) {
-      alert("Please enter a phone number!");
+      toast.error("Please enter a phone number!");
       return;
     }
     setLoading(true);
-    onCaptchVerify();
-    // setShowOTPInput(true);
-    const appVerifier = window.recaptchaVerifier;
-    const formatPh = "+" + ph;
-    signInWithPhoneNumber(auth, formatPh, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-        toast.success("OTP Sent Successfully");
-        setLoading(false);
-        setShowOTPInput(true);
-      })
-      .catch((error) => {
-        console.log("otp error is : ", error);
-        // setLoading(false);
-        // setTimeout(()=>{
-        //   toast.error("OTP not Sent");
-        // },5000)
-      });
+    dispatch(validatePhone(ph));
   }
-
-  const dispatchLogin = () => {
-    dispatch(loginPhoneNumber(ph));
-    setTimeout(() => {
-      if (error) {
-        toast.error("User not registered");
-      }
-    }, 1000);
-  };
 
   function onOTPVerify(e) {
     e.preventDefault();
@@ -122,12 +107,47 @@ function PhoneNumberScreen() {
         dispatchLogin();
       })
       .catch((err) => {
-        showOTPInput(false);
+        setShowOTPInput(false);
         console.log(err);
         toast.error("Incorrect OTP. Please try again.");
         setLoading(false);
       });
   }
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, redirect, userInfo]);
+
+  useEffect(() => {
+    if (phoneValidateError && submit) {
+      setSubmit(false);
+      setLoading(false);
+      toast.error("User does not exist.");
+    } else if (phoneValidate && submit) {
+      setSubmit(false);
+      onCaptchVerify();
+      const appVerifier = window.recaptchaVerifier;
+      const formatPh = "+" + ph;
+      signInWithPhoneNumber(auth, formatPh, appVerifier)
+        .then((confirmationResult) => {
+          window.confirmationResult = confirmationResult;
+          toast.success("OTP Sent Successfully");
+          setShowOTPInput(true);
+        })
+        .catch((error) => {
+          console.log("OTP error:", error);
+          toast.error("Failed to send OTP. Please refresh page and try again.");
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [ph, phoneValidate, phoneValidateError, submit]);
 
   return (
     <div className="phonelogin-wrapper">

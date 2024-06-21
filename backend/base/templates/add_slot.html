@@ -107,11 +107,11 @@ form {
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-                        <a class="nav-link" href="{% url 'organization_profile' pk=1 %}">
+                        <a class="nav-link" href="{% url 'organization_profile' %}"
                             <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                             Profile
                         </a>
-                        <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
+                        <a class="nav-link" href="{% url 'organization_locationlist'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                             Locations
                         </a>
@@ -128,7 +128,7 @@ form {
                             Customers
                         </a>   
                         <div class="sb-sidenav-menu-heading">Slot</div>
-                        <a class="nav-link" href="{% url 'slot-location' %}">
+                        <a class="nav-link" href="{% url 'slot-location' %}" style="color: white; background-color: rgb(68, 68, 68);">
                             <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
                             Slots List
                         </a>

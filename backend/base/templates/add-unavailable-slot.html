@@ -70,11 +70,11 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-                        <a class="nav-link" href="{% url 'organization_profile' pk=1 %}">
+                        <a class="nav-link" href="{% url 'organization_profile' %}"
                             <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                             Profile
                         </a>
-                        <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
+                        <a class="nav-link" href="{% url 'organization_locationlist'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                             Locations
                         </a>
@@ -172,9 +172,9 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script>
         window.addEventListener('DOMContentLoaded', event => {
-            const sidebarToggle = document.body.querySelector('#sidebarToggle');
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', event => {
+            const $sidebarToggle = document.body.querySelector('#sidebarToggle');
+            if ($sidebarToggle) {
+                $sidebarToggle.addEventListener('click', event => {
                     event.preventDefault();
                     document.body.classList.toggle('sb-sidenav-toggled');
                     localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));

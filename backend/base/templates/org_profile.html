@@ -158,7 +158,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-                        <a class="nav-link" href="{% url 'organization_profile' organization.pk %}"
+                        <a class="nav-link" href="{% url 'organization_profile' %}"
                             style="color: white; background-color: rgb(68, 68, 68);">
                             <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                             Profile
@@ -178,7 +178,7 @@
                         <a class="nav-link" href="{% url 'org_customers_list'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Customers
-                        </a>   
+                        </a>
                         <div class="sb-sidenav-menu-heading">Slot</div>
                         <a class="nav-link" href="{% url 'slot-location' %}">
                             <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
@@ -304,12 +304,12 @@
         crossorigin="anonymous"></script>
         <script>
             window.addEventListener('DOMContentLoaded', event => {
-                const datatablesSimple = document.getElementById('datatablesSimple');
-                if (datatablesSimple) {
-                    new simpleDatatables.DataTable(datatablesSimple);
+                const $datatablesSimple = document.getElementById('datatablesSimple');
+                if ($datatablesSimple) {
+                    new simpleDatatables.DataTable($datatablesSimple);
                 }
             });
-        
+
             window.addEventListener('DOMContentLoaded', event => {
                 const sidebarToggle = document.body.querySelector('#sidebarToggle');
                 if (sidebarToggle) {
@@ -320,35 +320,35 @@
                     });
                 }
             });
-        
+
             var modal = document.getElementById('confirmationModal');
             var updateButton = document.querySelector('#profile_updateForm');
             var confirmButton = document.getElementById('confirmUpdateButton');
             var cancelButton = document.getElementById('cancelUpdateButton');
             const form = document.getElementById('profile_updateForm');
             var toast = document.getElementById('successToast');
-        
+
             updateButton.addEventListener('submit', function (event) {
                 event.preventDefault();
                 modal.style.display = "block";
                 modal.setAttribute('aria-hidden', 'false');
                 return false;
             });
-        
+
             window.onclick = function (event) {
                 if (event.target == modal) {
                     modal.style.display = "none";
                     modal.setAttribute('aria-hidden', 'true');
                 }
             }
-        
+
             confirmButton.addEventListener('click', function (e) {
                 e.preventDefault();
                 modal.style.display = "none";
                 modal.setAttribute('aria-hidden', "true");
                 submitFormData();
             });
-        
+
             function showToast(message) {
                 toast.textContent = message;
                 toast.style.display = 'block';
@@ -356,7 +356,7 @@
                     toast.style.display = 'none';
                 }, 2000); // Hide toast after 2 seconds
             }
-        
+
             function submitFormData() {
                 const formData = new FormData(form);
                 fetch(form.action, {
@@ -372,8 +372,8 @@
                         return response.json().then(data => {
                             if (data.errors) {
                                 displayFormErrors(data.errors);
+                                throw new Error(`HTTP error! status: ${response.status}`, displayFormErrors(data.errors));
                             }
-                            // throw new Error(`HTTP error! status: ${response.status}, ${data.message}`);
                         });
                     }
                     return response.json();
@@ -391,7 +391,7 @@
                     showToast('Error submitting form. ' + error.message);
                 });
             }
-        
+
             function displayFormErrors(errors) {
                 Object.keys(errors).forEach(field => {
                     const errorMessages = errors[field].join(', ');
@@ -402,18 +402,18 @@
                     }
                 });
             }
-        
+
             cancelButton.addEventListener('click', function (e) {
                 e.preventDefault();
                 modal.style.display = "none";
                 modal.setAttribute('aria-hidden', "true");
             });
-        
+
             window.addEventListener('DOMContentLoaded', (event) => {
-                const successAlert = document.getElementById('message');
-                if (successAlert) {
+                const $successAlert = document.getElementById('message');
+                if ($successAlert) {
                     setTimeout(() => {
-                        successAlert.style.display = 'none';
+                        $successAlert.style.display = 'none';
                     }, 2000); // Hide after 5000ms or 5 seconds
                 }
             });
