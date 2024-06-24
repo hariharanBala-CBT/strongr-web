@@ -948,3 +948,7 @@ header.header-sticky.fixed-top {
 .header-nav .log-clublist {
   position: relative;
 }
+
+.header-right-banner .log-register .icon-button {
+  margin-right: 5px;
+}

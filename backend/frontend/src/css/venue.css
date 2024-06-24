@@ -611,3 +611,8 @@
     height: 100%;
     object-fit: cover !important;
   }
+
+  .venue-wrapper .listing-details-group .gameicon {
+    margin-left: 10px;
+    color: #a0a0a0;
+  }

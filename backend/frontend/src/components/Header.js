@@ -112,8 +112,8 @@ function Header({ location }) {
                 >
                   <span>
                     <LogOut />
-                    Logout
                   </span>
+                  Logout
                 </div>
               )}
             </li>

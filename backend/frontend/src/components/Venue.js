@@ -12,10 +12,10 @@ import venueImage4 from "../images/venue4.jpg";
 const Venue = () => {
   const Venues = [
     {
-      name: "Rekob Ramya",
+      name: "Ramesh Kumar",
       description:
         "outdoor sports, concerts, or other events and consists of a field or stage completely surrounded by a tiered structure designed to allow spectators to stand or sit and view the event.",
-      address: "Ashok Nagar",
+      address: "Ramapuram",
       img: venueImage1,
     },
     {

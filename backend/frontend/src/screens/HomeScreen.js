@@ -159,6 +159,9 @@ function HomeScreen(history) {
         </div>
       </div>
       <section className="section work-section">
+        <div class="work-cock-img">
+          <img src={workImage2} alt="Icon" />
+        </div>
         <div className="work-cock-img">
           <img src={cockImage} alt="Icon" />
         </div>
@@ -254,11 +257,13 @@ function HomeScreen(history) {
       </section>
 
       <section ref={sectionRef} className="section1-container" id="section1-id">
-        <div>
-          <h1 style={{ color: "black" }}>
-            We offer you the best Grounds <br />
-            with <span style={{ color: "midnightblue" }}>best deals.</span>
-          </h1>
+        <div className="section-heading aos" data-aos="fade-up">
+          <h2>
+            Best <span>Deals</span>
+          </h2>
+          <p className="sub-title">
+            We offer you the best grounds with best deals.
+          </p>
         </div>
         <div className="form-section">
           <Form onSubmit={submitHandler} inline>

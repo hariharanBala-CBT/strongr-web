@@ -1,5 +1,7 @@
 import React from "react";
 import { Calendar, MapPin, Heart } from "react-feather";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHockeyPuck, faTableTennis } from "@fortawesome/free-solid-svg-icons";
 const VenueDetails = ({ testiMonialDetail }) => {
   const { name, address, description, img } = testiMonialDetail;
   return (
@@ -29,7 +31,7 @@ const VenueDetails = ({ testiMonialDetail }) => {
             </a>
           </div>
           <h3 className="listing-title">
-            <a href="venue-details.html">Sarah Sports Academy</a>
+            <a href="venue-details.html">D'Pearl sports academy</a>
           </h3>
           <div className="listing-details-group">
             <p>{description}</p>
@@ -45,10 +47,13 @@ const VenueDetails = ({ testiMonialDetail }) => {
               <li>
                 <span>
                   <i className="feather-calendar">
-                    <Calendar />
+                    <FontAwesomeIcon icon={faHockeyPuck} size={"1x"} />
                   </i>
-                  Next Availablity :{" "}
-                  <span className="primary-text">15 May 2023</span>
+                  Game :{" "}
+                  <span className="gameicon">
+                    <FontAwesomeIcon icon={faTableTennis} size={"1x"} />
+                  </span>{" "}
+                  <span className="primary-text">Badminton</span>
                 </span>
               </li>
             </ul>
@@ -60,7 +65,7 @@ const VenueDetails = ({ testiMonialDetail }) => {
                 {name}
               </a>
             </div>
-            <a href="venue-details.html" className="user-book-now">
+            <a href="javascript:void(0);" className="user-book-now">
               <span>
                 <i className="feather-calendar me-2">
                   <Calendar />
