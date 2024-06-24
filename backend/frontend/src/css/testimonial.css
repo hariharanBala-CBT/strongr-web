@@ -1,0 +1,120 @@
+  .our-testimonials {
+    background: #F9F9F6;
+  }
+
+  .our-testimonials:before {
+    content: "";
+    background-image: url(../images/icons/testimonial-icon.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 141px;
+    height: 123px;
+    position: absolute;
+    top: 50px;
+    right: 50px;
+  }
+
+  @media (max-width: 1199.98px) {
+    .our-testimonials:before {
+      width: 100px;
+      height: 100px;
+      background-size: 100px;
+    }
+  }
+
+  @media (max-width: 991.98px) {
+    .our-testimonials:before {
+      display: none;
+    }
+  }
+
+  .testimonial-group .testimonial-review {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .testimonial-group .testimonial-review p {
+    color:#6B7385;
+    margin-bottom: 0;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+  }
+
+  .testimonial-group .listing-venue-owner img {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+  }
+
+  .testimonial-group .listing-venue-owner .testimonial-content h5 {
+    margin-bottom: 5px;
+  }
+
+  .testimonial-group .listing-venue-owner .testimonial-content h5 a {
+    color: #192335;
+  }
+
+  .testimonial-group .listing-venue-owner .testimonial-content h5 a:hover {
+    color: #097E52;
+  }
+
+  .testimonial-group .listing-venue-owner .testimonial-content .btn {
+    padding: 1px 6px;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 50px;
+  }
+
+  .rating-point {
+    margin-bottom: 20px;
+  }
+
+  .rating-point i {
+    font-size: 14px;
+    color: #A8A8A8;
+  }
+
+  .rating-point .filled {
+    color: #FFAA00;
+  }
+
+  .rating-point span {
+    margin-left: 5px;
+    color: #6B7385;
+    font-size: 14px;
+  }
+
+  .rating-point h5 {
+    margin-bottom: 15px;
+  }
+
+  .testimonial-group .testimonial-content .btn-primary {
+    padding: 1px 6px !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    border-radius: 50px !important;
+  }
+
+  .testimonial-content a {
+    color: #6B7385;
+    cursor: pointer;
+    text-decoration: none;
+    -webkit-transition: all 0.5s ease-in-out 0s;
+    -ms-transition: all 0.5s ease-in-out 0s;
+    transition: all 0.5s ease-in-out 0s;
+  }
+
+  .testimonial-content .btn-primary {
+    color: #FFFFFF;
+    background: #097E52;
+    border-color: #097E52;
+  }
+
+  .testimonial-wrapper {
+    margin-right: 24px;
+  }
