@@ -44,6 +44,7 @@ function ClubListScreen() {
   const [gameName, setGameName] = useState(selectedGame);
   const [areaName, setAreaName] = useState(selectedArea);
   const [date, setDate] = useState(selectedDate);
+  const [loading, setLoading] = useState(false);
 
   const { areaError, areaLoading, areas } = useSelector(
     (state) => state.areaList
@@ -54,20 +55,14 @@ function ClubListScreen() {
   const { clubFilterLoading, clubLocationDetails } = useSelector(
     (state) => state.filterClubLocations
   );
-  const { suggestedClubList } = useSelector((state) => state.suggestedClubs);
-  const { suggestedClubGameList } = useSelector(
-    (state) => state.suggestedClubsGame
-  );
+  const { suggestedClubList, loadingSuggestedClub } = useSelector((state) => state.suggestedClubs);
+  const { suggestedClubGameList, loadingSuggestedClubGame } = useSelector((state) => state.suggestedClubsGame);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     dispatch(filterLocation(areaName, gameName, date));
     navigate("/clubs");
-  };
-
-  const handleDateChange = (selectedDate) => {
-    setDate(selectedDate);
   };
 
   useEffect(() => {
@@ -159,6 +154,14 @@ function ClubListScreen() {
     }
   }, [areaName, areas, games, clubLocationDetails, dispatch, gameName]);
 
+  useEffect(() => {
+    if (clubFilterLoading || loadingSuggestedClub || loadingSuggestedClubGame) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [clubFilterLoading, loadingSuggestedClub, loadingSuggestedClubGame]);
+
   return (
     <div>
       <Header location="nav-all" />
@@ -175,7 +178,10 @@ function ClubListScreen() {
                 id="game"
                 label="Game"
                 value={gameName}
-                onChange={(value) => setGameName(value)}
+                onChange={(value) => {
+                  setLoading(true);
+                  setGameName(value);
+                }}
                 options={games?.map((game) => ({
                   id: game?.id,
                   name: game?.game_name,
@@ -192,7 +198,10 @@ function ClubListScreen() {
                 id="area"
                 label="Area"
                 value={areaName}
-                onChange={(value) => setAreaName(value)}
+                onChange={(value) => {
+                  setLoading(true);
+                  setAreaName(value);
+                }}
                 options={areas?.map((area) => ({
                   id: area?.id,
                   name: area?.area_name,
@@ -204,52 +213,65 @@ function ClubListScreen() {
               id="date"
               label="Date"
               value={date}
-              onChange={handleDateChange}
+              onChange={(value) => {
+                setLoading(true);
+                setDate(value);
+              }}
             />
           </div>
         </form>
       </div>
-      {clubFilterLoading ? (
-        <CircularProgress />
+      {loading ? (
+        <div className="clubs-filter-loader">
+          <CircularProgress />
+        </div>
       ) : (
-        <>{clubLocationDetails && <Club clubs={clubLocationDetails} />}</>
-      )}
-      {clubLocationDetails?.length === 0 && suggestedClubList?.length > 0 && (
-        <div>
-          <div>
-            <div className="clubs-error">
-              <NoDataAnimation url={NoDataAnimationUrl} />
-            </div>
+        <>
+          {clubLocationDetails.length > 0 ? (
+            <>
+              <Club clubs={clubLocationDetails} />
+            </>
+          ) : (
+            <>
+              {clubLocationDetails?.length === 0 &&
+              suggestedClubList?.length > 0 ? (
+                <>
+                  <div className="clubs-error">
+                    <NoDataAnimation url={NoDataAnimationUrl} />
+                  </div>
 
-            <div className="suggested-clubs">
-              <h3>Suggested Clubs in {areaName}</h3>
-              <Club clubs={suggestedClubList} />
-            </div>
-          </div>
-        </div>
+                  <div className="suggested-clubs">
+                    <h3>Suggested Clubs in {areaName}</h3>
+                    <Club clubs={suggestedClubList} />
+                  </div>
+                </>
+              ) : (
+                <>
+                  {suggestedClubList?.length === 0 &&
+                  suggestedClubGameList?.length > 0 ? (
+                    <>
+                      <div className="clubs-error">
+                        <NoDataAnimation url={NoDataAnimationUrl} />
+                      </div>
+
+                      <div className="suggested-clubs">
+                        <h3>Suggested Clubs for {gameName}</h3>
+                        <Club clubs={suggestedClubGameList} />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="clubs-error">
+                        <NoDataAnimation url={NoDataAnimationUrl} />
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </>
       )}
-      {suggestedClubList?.length === 0 && suggestedClubGameList?.length > 0 && (
-        <div>
-          <div>
-            <div className="clubs-error">
-              <NoDataAnimation url={NoDataAnimationUrl} />
-            </div>
-            <div className="suggested-clubs">
-              <h3>Suggested Clubs for {gameName}</h3>
-              <Club clubs={suggestedClubGameList} />
-            </div>
-          </div>
-        </div>
-      )}
-      {clubLocationDetails?.length === 0 &&
-        suggestedClubList?.length === 0 &&
-        suggestedClubGameList?.length === 0 && (
-          <div>
-            <div className="clubs-error">
-              <NoDataAnimation url={NoDataAnimationUrl} />
-            </div>
-          </div>
-        )}
       <Footer name="clublist-f" />
     </div>
   );

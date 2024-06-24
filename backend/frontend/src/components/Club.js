@@ -7,12 +7,24 @@ import Card from "react-bootstrap/Card";
 import Rating from "./Rating";
 
 import "../css/club.css";
+import { useHomeContext } from "../context/HomeContext";
 
 function Club({ clubs }) {
 
   const navigate = useNavigate();
 
+  const { recentlySearchedKeywords, setRecentlySearchedKeywords } = useHomeContext();
+
   const handleViewDetails = (club) => {
+    if (club) {
+      const updatedKeywords = [
+        club.id,
+        ...(Array.isArray(recentlySearchedKeywords)
+          ? recentlySearchedKeywords.filter((k) => k !== club.id).slice(0, 3)
+          : []),
+      ];
+      setRecentlySearchedKeywords(updatedKeywords);
+    }
     navigate(`/club/${club.id}`);
   };
 
@@ -35,19 +47,6 @@ function Club({ clubs }) {
                     <Card.Title>
                       {club.organization.organization_name}
                     </Card.Title>
-                    {/* <Card.Text
-                      style={{ textDecoration: "none", color: "gray" }}
-                    >
-                      {club.numRatings > 0 && (
-                        <Rating
-                          value={club.rating}
-                          text={`${club.numRatings} reviews`}
-                          color={"#f8e825"}
-                        />
-                      )}
-
-                      <div>{club.address_line_1}</div>
-                    </Card.Text> */}
                   </Card.Body>
                 </div>
               </Card>
