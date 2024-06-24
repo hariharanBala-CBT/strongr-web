@@ -616,3 +616,7 @@
     margin-left: 10px;
     color: #a0a0a0;
   }
+
+  .venue-wrapper .gametype {
+    color: #192335 !important;
+  }

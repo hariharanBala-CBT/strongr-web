@@ -158,13 +158,7 @@ function HomeScreen(history) {
           </div>
         </div>
       </div>
-      <section className="section work-section">
-        <div class="work-cock-img">
-          <img src={workImage2} alt="Icon" />
-        </div>
-        <div className="work-cock-img">
-          <img src={cockImage} alt="Icon" />
-        </div>
+      <section className="section work-section" ref={sectionRef}>
         <div className="work-img">
           <div className="work-img-right">
             <img src={cockImage} alt="Icon" />
@@ -256,7 +250,7 @@ function HomeScreen(history) {
         </div>
       </section>
 
-      <section ref={sectionRef} className="section1-container" id="section1-id">
+      <section className="section1-container" id="section1-id">
         <div className="section-heading aos" data-aos="fade-up">
           <h2>
             Best <span>Deals</span>

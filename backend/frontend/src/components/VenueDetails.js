@@ -2,6 +2,8 @@ import React from "react";
 import { Calendar, MapPin, Heart } from "react-feather";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHockeyPuck, faTableTennis } from "@fortawesome/free-solid-svg-icons";
+import { GiShuttlecock } from "react-icons/gi";
+import { IoIosFootball } from "react-icons/io";
 const VenueDetails = ({ testiMonialDetail }) => {
   const { name, address, description, img } = testiMonialDetail;
   return (
@@ -46,12 +48,9 @@ const VenueDetails = ({ testiMonialDetail }) => {
               </li>
               <li>
                 <span>
-                  <i className="feather-calendar">
-                    <FontAwesomeIcon icon={faHockeyPuck} size={"1x"} />
-                  </i>
-                  Game :{" "}
+                  <i className="gametype">Game : </i>
                   <span className="gameicon">
-                    <FontAwesomeIcon icon={faTableTennis} size={"1x"} />
+                    <GiShuttlecock size="2em" />
                   </span>{" "}
                   <span className="primary-text">Badminton</span>
                 </span>
