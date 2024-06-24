@@ -1,13 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useHomeContext } from "../context/HomeContext";
+
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 
 import Rating from "./Rating";
 
 import "../css/club.css";
-import { useHomeContext } from "../context/HomeContext";
 
 function Club({ clubs }) {
 

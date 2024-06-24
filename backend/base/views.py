@@ -2,9 +2,6 @@ from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.utils.html import format_html
-
-from backend.production_settings import *
-from backend.local_settings import *
 from .utils import generate_password
 from .messages import SUCCESS_MESSAGES, ERROR_MESSAGES
 
@@ -50,6 +47,14 @@ from django.utils.crypto import get_random_string
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from dotenv import load_dotenv
+load_dotenv()
+DEBUG = os.environ.get('DJANGO_DEBUG')
+if DEBUG:
+    from backend.local_settings import *
+else:
+    from backend.production_settings import *
 
 #FOR CUSTOMER ------------
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
