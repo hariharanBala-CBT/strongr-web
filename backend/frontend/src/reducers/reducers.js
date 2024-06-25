@@ -695,15 +695,11 @@ export const searchOrganizationListReducer = (
 ) => {
   switch (action.type) {
     case SEARCH_ORGANIZATIONS_REQUEST:
-      return { loading: true, filteredClubLocations: [] };
+      return { loadingSearchLocations: true, filteredClubLocations: [] };
     case SEARCH_ORGANIZATIONS_SUCCESS:
-      return {
-        loading: false,
-        filteredClubLocations: action.payload,
-        searchSuccess: true,
-      };
+      return { loadingSearchLocations: false, filteredClubLocations: action.payload, searchSuccess: true };
     case SEARCH_ORGANIZATIONS_FAIL:
-      return { loading: false, error: action.payload };
+      return { loadingSearchLocations: false, error: action.payload };
     default:
       return state;
   }
@@ -712,11 +708,11 @@ export const searchOrganizationListReducer = (
 export const RecentSearchReducer = (state = { filteredData: [] }, action) => {
   switch (action.type) {
     case RECENT_SEARCH_REQUEST:
-      return { loading: true, filteredData: [] };
+      return { loadingSearchClubs: true, filteredData: [] };
     case RECENT_SEARCH_SUCCESS:
-      return { loading: false, filteredData: action.payload };
+      return { loadingSearchClubs: false, filteredData: action.payload };
     case RECENT_SEARCH_FAIL:
-      return { loading: false, error: action.payload };
+      return { loadingSearchClubs: false, error: action.payload };
     default:
       return state;
   }
@@ -728,11 +724,11 @@ export const suggestedClubListReducer = (
 ) => {
   switch (action.type) {
     case SUGGESTED_CLUB_REQUEST:
-      return { loading: true, suggestedClubList: [] };
+      return { loadingSuggestedClub: true, suggestedClubList: [] };
     case SUGGESTED_CLUB_SUCCESS:
-      return { loading: false, suggestedClubList: action.payload };
+      return { loadingSuggestedClub: false, suggestedClubList: action.payload };
     case SUGGESTED_CLUB_FAIL:
-      return { loading: false, suggestedClubListerror: action.payload };
+      return { loadingSuggestedClub: false, suggestedClubListerror: action.payload };
     default:
       return state;
   }
@@ -744,11 +740,11 @@ export const suggestedClubGameListReducer = (
 ) => {
   switch (action.type) {
     case SUGGESTED_CLUBGAME_REQUEST:
-      return { loading: true, suggestedClubGameList: [] };
+      return { loadingSuggestedClubGame: true, suggestedClubGameList: [] };
     case SUGGESTED_CLUBGAME_SUCCESS:
-      return { loading: false, suggestedClubGameList: action.payload };
+      return { loadingSuggestedClubGame: false, suggestedClubGameList: action.payload };
     case SUGGESTED_CLUBGAME_FAIL:
-      return { loading: false, error: action.payload };
+      return { loadingSuggestedClubGame: false, error: action.payload };
     default:
       return state;
   }
