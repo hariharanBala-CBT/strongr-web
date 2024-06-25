@@ -5,8 +5,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { LinkContainer } from "react-router-bootstrap";
 import PhoneInput from "react-phone-input-2";
 import OTPInput from "react-otp-input";
-
-import Header from "../components/Header";
+import "react-phone-input-2/lib/style.css";
 
 import { CircularProgress } from "@mui/material";
 
@@ -16,13 +15,6 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { loginPhoneNumber, validatePhone } from "../actions/actions";
 
 import "../css/phonenumscreen.css";
-import "react-phone-input-2/lib/style.css";
-
-const linkStyle = {
-  textDecoration: "underline",
-  color: "purple",
-  cursor: "pointer",
-};
 
 function PhoneNumberScreen() {
   const location = useLocation();
@@ -148,70 +140,94 @@ function PhoneNumberScreen() {
   }, [ph, phoneValidate, phoneValidateError, submit]);
 
   return (
-    <div>
-      <Header location="nav-all" />
-      <div className="logins-page">
-        <div className="logins-form">
-          <Toaster toastOptions={{ duration: 4000 }} />
-          <div id="recaptcha-container"></div>
-          <h1 className="login-title">LOGIN</h1>
-          <form>
-            <label id="phone">
-              Phone Number
-              <PhoneInput
-                id="phone"
-                required
-                country={"in"}
-                placeholder="Enter phone number"
-                value={ph}
-                onChange={(value) => {
-                  handlePhoneNumberChange();
-                  setPh(value);
-                }}
-              />
-            </label>
-            {showOTPInput && (
-              <div className="otp-box">
-                <label id="otp">
-                  Enter OTP
-                  <OTPInput
-                    id="otp"
-                    className="otp-input-field"
-                    value={otp}
-                    onChange={setOTP}
-                    numInputs={6}
-                    otpType="number"
-                    autoFocus
-                    renderInput={renderInput}
-                  />
-                </label>
-              </div>
-            )}
+    <div className="phonelogin-wrapper">
+      <Toaster />
+      <div className="main-wrapper authendication-pages">
+        <div className="content blur-ellipses">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6 col-lg-6 mx-auto vph-100 d-flex align-items-center phone-login">
+                <div className="forgot-password w-100">
+                  <div className="shadow-card">
+                    <h2>Login</h2>
+                    <p className="phone-textp">Enter Registered Phone Number</p>
 
-            {loading && <CircularProgress className="loader" />}
-            {!showOTPInput && (
-              <button className="generate-btn" onClick={onSignup}>
-                Generate OTP
-              </button>
-            )}
-            {showOTPInput && (
-              <button className="login-btn" onClick={onOTPVerify}>
-                Login
-              </button>
-            )}
-          </form>
-          <span>
-            Login through username &nbsp;
-            <LinkContainer to="/login" style={linkStyle}>
-              <span>login</span>
-            </LinkContainer>
-          </span>
-          <span>
-            Don't have an Account?&nbsp;
-            <LinkContainer to="/signup" style={linkStyle}>
-              <span>signup</span>
-            </LinkContainer>
-          </span>
+                    <form>
+                      <div className="form-group">
+                        <div className="group-img">
+                          <i className="feather-mail"></i>
+                          <PhoneInput
+                            required
+                            country={"in"}
+                            placeholder="Enter phone number"
+                            value={ph}
+                            onChange={(value) => {
+                              handlePhoneNumberChange();
+                              setPh(value);
+                            }}
+                          />
+                        </div>
+                      </div>
+                      {showOTPInput && (
+                        <div className="form-group">
+                          <OTPInput
+                            className="otp-input-field"
+                            value={otp}
+                            onChange={setOTP}
+                            numInputs={6}
+                            otpType="number"
+                            autoFocus
+                            renderInput={renderInput}
+                          />
+                        </div>
+                      )}
+                      {loading && <CircularProgress className="loader" />}
+                      {!showOTPInput && (
+                        <button className="generate-btn" onClick={onSignup}>
+                          Generate OTP
+                        </button>
+                      )}
+                      {showOTPInput && (
+                        <button className="login-btn" onClick={onOTPVerify}>
+                          Login
+                        </button>
+                      )}
+                    </form>
+                    <div className="bottom-paras">
+                      <p>
+                        Login through username &nbsp;
+                        <LinkContainer
+                          to="/login"
+                          style={{
+                            textDecoration: "underline",
+                            color: "#00416A",
+                            fontWeight: 700,
+                            fontSize: "17px",
+                          }}
+                        >
+                          <span>Login</span>
+                        </LinkContainer>
+                      </p>
+                      <p>
+                        Login through username &nbsp;
+                        <LinkContainer
+                          to="/signup"
+                          style={{
+                            textDecoration: "underline",
+                            color: "#00416A",
+                            fontWeight: 700,
+                            fontSize: "17px",
+                          }}
+                        >
+                          <span>Signup</span>
+                        </LinkContainer>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

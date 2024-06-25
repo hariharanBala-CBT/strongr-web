@@ -1,6 +1,6 @@
 .generate-btn,
 .login-btn {
-  padding: 8px 14px;
+  padding: 10px 18px;
   font-size: 15px;
   color: white;
   background: black;
@@ -10,95 +10,86 @@
   align-self: center;
 }
 
-
-.logins-form .otp-input-field {
-  margin: 10px;
-  height: 30px;
-  width: 30px !important;
-  border-radius: 5px;
-  border-width: 1px;
-  align-items: center;
+.react-tel-input .form-control {
+  height: 45px !important;
+  width: 300px !important;
+  margin-bottom: 40px !important;
 }
 
-
-.logins-page{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.phone-login .shadow-card .phone-textp {
+  color: black !important;
+  margin-top: 20px;
 }
 
-.logins-page .login-title{
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  flex-grow: inherit;
-  flex-shrink: inherit;
+.phone-login .shadow-card {
+  padding: 60px !important;
 }
 
-.logins-page .logins-form {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid beige;
-  margin-top: 3rem;
-  padding: 2rem;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.17);
-  border-radius: 8px;
-  flex-wrap: wrap;
-  flex-grow: inherit;
-  flex-shrink: inherit;
+.phone-login .bottom-text p {
+  color: white !important;
+  font-size: 18px;
+  margin-top: 15px;
+}
+
+.phonelogin-wrapper {
+  background-image: url(../images/pattern.jpg);
+}
+
+.phonelogin-wrapper .nav-all {
+  display: none;
+}
+
+.phonelogin-wrapper .content {
+  margin-top: 0%;
+}
+
+.phonelogin-wrapper .shadow-card {
+  background: linear-gradient(#DADD98, #679267);
+}
+
+.shadow-card .bottom-paras {
+  margin-top: 30px;
+}
+
+.shadow-card .bottom-paras p {
+  margin-bottom: 0.5rem !important;
+  color: black;
+}
+
+.shadow-card .bottom-paras span:hover{
+  color: #DADD98 !important;
 }
 
 @media (max-width: 770px) {
-  .logins-page .logins-form {
-    box-shadow: 0;
+  .react-tel-input .form-control {
+    width: 230px !important;
   }
 }
 
-.logins-form form {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  flex-grow: inherit;
-  flex-shrink: inherit;
+@media (max-width: 770px) {
+  .phonelogin-wrapper .phone-login {
+    background: linear-gradient(#DADD98, #679267);
+  }
 }
 
-.logins-page form label {
-  margin: 0.5rem;
+@media (max-width: 770px) {
+  .css-1wnsr1i {
+    width: 94% !important;
+    border: unset !important;
+    height: 80%;
+  }
 }
 
-.logins-page button {
-  width: fit-content;
-  margin: 1.5rem;
+@media (max-width: 770px) {
+  .title-auth h5 {
+    font-weight: 700;
+    font-size: 20px;
+}
 }
 
-.logins-page .login-button {
-  align-items: center;
-  justify-content: center;
-  display: flex;
+@media (max-width: 770px) {
+  
+.title-auth p {
+  font-size: 15px;
 }
-
-.logins-page span{
-  display: flex;
-  justify-content: center;
-}
-
-.logins-page .loader{
-  align-self: center;
-  margin: 2rem;
-}
-
-.logins-page .loader {
-  align-self: center;
-}
-
-.logins-page .phone-label {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-}
-
-.logins-page .otp-box{
-  margin-top: 2rem;
-  margin-bottom: -10%;
 }
