@@ -232,7 +232,7 @@
                   </tbody>
                 </table>
                  <div class="buttons px-4 py-4" style="margin-left: 20%">
-                  <button  type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit" style="margin-top: 22px">Update</button>
+                  <button id="nextTabBtn" type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit" style="margin-top: 22px">Update</button>
                 </div>
                 {% comment %} <button id="nextTabBtn" class="btn btn-primary">Next</button> {% endcomment %}
               </form>
@@ -395,7 +395,7 @@
               }, 2000); // Hide after 5000ms or 5 seconds
           }
       });
-      $(document).ready(function () {
+      {% comment %} $(document).ready(function () {
         $('#nextTabBtn').click(function () {
             const activeTab = $('.tab-button.active');
             const nextTab = activeTab.next('.tab-button');
@@ -410,7 +410,7 @@
                 });
             }
         });
-    });
+    }); {% endcomment %}
   </script>
   </body>
 </html>
