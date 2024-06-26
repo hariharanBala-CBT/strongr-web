@@ -108,6 +108,7 @@ function RegisterScreen() {
       } else {
         toast.error(registerError);
       }
+      setOpenForm(false); 
       dispatch({
         type: USER_LOGOUT,
       });
