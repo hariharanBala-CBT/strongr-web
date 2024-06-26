@@ -3,10 +3,18 @@ import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-
-import Header from "../components/Header";
-import Button from "../components/Button";
+import {
+  User,
+  Mail,
+  Eye,
+  EyeOff,
+  Phone,
+  ArrowRightCircle,
+} from "react-feather";
 import OTPInput, { ResendOTP } from "otp-input-react";
+
+import Button from "../components/Button";
+import registerImage from "../images/strongr.png";
 import { Box, CircularProgress, Modal } from "@mui/material";
 
 import { generateOTP, register, validateUserDetails } from "../actions/actions";
@@ -27,12 +35,6 @@ const style = {
   p: 4,
 };
 
-const linkStyle = {
-  textDecoration: "underline",
-  color: "purple",
-  cursor: "pointer",
-};
-
 function RegisterScreen() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -45,6 +47,16 @@ function RegisterScreen() {
   const [loader, setLoader] = useState(false);
   const [otp, setOtp] = useState("");
   const [submit, setSubmit] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   const { registerError, registerUserLoading } = useSelector(
     (state) => state.userRegister
@@ -52,7 +64,8 @@ function RegisterScreen() {
 
   const { userInfo } = useSelector((state) => state.userLogin);
   const { otpLoading } = useSelector((state) => state.generateOtp);
-  const { userDetailsValidate, userDetailsValidateError, errorDetails } = useSelector((state) => state.userDetailsValidator);
+  const { userDetailsValidate, userDetailsValidateError, errorDetails } =
+    useSelector((state) => state.userDetailsValidator);
 
   const otpGenerate = () => {
     setOpenForm(true);
@@ -72,7 +85,7 @@ function RegisterScreen() {
     } else if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
-    }else {
+    } else {
       dispatch(validateUserDetails(email, phoneNumber));
       setSubmit(true);
     }
@@ -92,7 +105,7 @@ function RegisterScreen() {
       otpGenerate();
       setSubmit(false);
     } else if (userDetailsValidate && submit) {
-      toast.error(userDetailsValidate.detail)
+      toast.error(userDetailsValidate.detail);
       setLoader(false);
       setOpenForm(false);
       setSubmit(false);
@@ -104,7 +117,9 @@ function RegisterScreen() {
       navigate("/");
     } else if (registerError) {
       if (registerError === "Email is already registered") {
-        toast.error("This email is already registered. Please use a different email.");
+        toast.error(
+          "This email is already registered. Please use a different email."
+        );
       } else {
         toast.error(registerError);
       }
@@ -118,146 +133,256 @@ function RegisterScreen() {
   useEffect(() => {
     if (!otpLoading) {
       setLoader(false);
-    }else if(otpLoading){
+    } else if (otpLoading) {
       setLoader(true);
     }
   }, [otpLoading]);
 
-
   return (
-    <div>
-      <Header location="nav-all" />
+    <div className="register-page">
       <Toaster />
-      <div className="signup-page">
-        <div className="signup-form">
-          <h1 className="signup-title">SIGN UP</h1>
-
-          <form method="post" onSubmit={validateDetails}>
-            <div className="div-div">
-              <div className="div-1">
-                <label>Name</label>
-                <input
-                  required
-                  type="text"
-                  placeholder="Enter name"
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                  autoComplete="off"
-                />
-
-                <label>Phone Number</label>
-                <input
-                  required
-                  type="tel"
-                  placeholder="Enter phone number"
-                  value={phoneNumber}
-                  onChange={(e) => {
-                    setPhoneNumber(e.target.value);
-                  }}
-                  autoComplete="off"
-                />
-
-                <label>Email</label>
-                <input
-                  required
-                  type="email"
-                  placeholder="Enter email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  autoComplete="off"
-                />
+      <div className="main-wrapper authendication-pages">
+        <div className="register-content">
+          <div className="container wrapper no-padding">
+            <div className="row no-margin vph-100">
+              <div className="col-12 col-sm-12 col-md-12 col-lg-6 no-padding">
+                <div className="banner-bg register">
+                  <div className="row no-margin h-100">
+                    <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
+                      <div className="h-100 d-flex justify-content-center align-items-center">
+                        <img src={registerImage} className="register-image" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <div className="col-12 col-sm-12 col-md-12 col-lg-6 no-padding">
+                <div className="dull-pg">
+                  <div className="row no-margin vph-100 d-flex align-items-center justify-content-center signup-right-banner">
+                    <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
+                      <div className="shadow-card">
+                        <h2>Get Started With Strongr</h2>
+                        <div className="tab-content" id="myTabContent">
+                          <div
+                            className="tab-pane fade show active"
+                            id="user"
+                            role="tabpanel"
+                            aria-labelledby="user-tab"
+                          >
+                            <form onSubmit={validateDetails} method="post">
+                              <div className="form-group">
+                                <div className="group-img">
+                                  <i className="feather-user">
+                                    <User color="black" size={20} />
+                                  </i>
+                                  <input
+                                    className="form-control pass-input"
+                                    required
+                                    type="text"
+                                    placeholder="Enter name"
+                                    value={name}
+                                    onChange={(e) => {
+                                      setName(e.target.value);
+                                    }}
+                                    autoComplete="off"
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-group">
+                                <div className="group-img">
+                                  <i className="feather-mail">
+                                    <Mail color="black" size={20} />
+                                  </i>
 
-              <div className="div-2">
-                <label>Password</label>
-                <input
-                  required
-                  type="password"
-                  placeholder="Enter password"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                  autoComplete="new-password"
-                />
+                                  <input
+                                    className="form-control pass-input"
+                                    required
+                                    type="email"
+                                    placeholder="Enter email"
+                                    value={email}
+                                    onChange={(e) => {
+                                      setEmail(e.target.value);
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-group">
+                                <div className="group-img">
+                                  <i className="feather-mail">
+                                    <Phone color="black" size={20} />
+                                  </i>
 
-                <label>Confirm Password</label>
-                <input
-                  required
-                  type="password"
-                  placeholder="Repeat password"
-                  value={confirmPassword}
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                  }}
-                  autoComplete="off"
-                />
+                                  <input
+                                    className="form-control pass-input"
+                                    required
+                                    type="tel"
+                                    placeholder="Enter phone number"
+                                    value={phoneNumber}
+                                    onChange={(e) => {
+                                      setPhoneNumber(e.target.value);
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-group">
+                                <div className="pass-group group-img">
+                                  <i className="toggle-password feather-eye-off"></i>
+                                  <input
+                                    type={showPassword ? "text" : "password"}
+                                    className="form-control pass-input"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => {
+                                      setPassword(e.target.value);
+                                    }}
+                                    autoComplete="new-password"
+                                  />
+                                  <span
+                                    onClick={togglePasswordVisibility}
+                                    className="feather-icon-wrapper"
+                                  >
+                                    {showPassword ? (
+                                      <EyeOff size={20} />
+                                    ) : (
+                                      <Eye size={20} />
+                                    )}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="form-group">
+                                <div className="pass-group group-img">
+                                  <i className="toggle-password-confirm feather-eye-off"></i>
+                                  <input
+                                    type={
+                                      showConfirmPassword ? "text" : "password"
+                                    }
+                                    className="form-control pass-confirm"
+                                    placeholder="Confirm Password"
+                                    value={confirmPassword}
+                                    onChange={(e) => {
+                                      setConfirmPassword(e.target.value);
+                                    }}
+                                    autoComplete="off"
+                                  />
+                                  <span
+                                    onClick={toggleConfirmPasswordVisibility}
+                                    className="feather-icon-wrapper"
+                                  >
+                                    {showConfirmPassword ? (
+                                      <EyeOff size={20} />
+                                    ) : (
+                                      <Eye size={20} />
+                                    )}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="form-check d-flex justify-content-start align-items-center policy">
+                                <div className="d-inline-block">
+                                  <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    value
+                                    id="policy"
+                                  />
+                                </div>
+                                <label
+                                  className="form-check-label"
+                                  for="policy"
+                                >
+                                  By continuing you indicate that you read and
+                                  agreed to the{" "}
+                                  <a href="terms-condition.html">
+                                    Terms of Use
+                                  </a>
+                                </label>
+                              </div>
+                              <button
+                                className="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block"
+                                type="submit"
+                              >
+                                Create Account
+                                <span className="right-arrow">
+                                  <ArrowRightCircle size={20} />
+                                </span>
+                              </button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bottom-text text-center">
+                        <p>
+                          Have an account?
+                          <LinkContainer
+                            to="/login"
+                            style={{
+                              textDecoration: "underline",
+                              color: "#045a3a",
+                            }}
+                          >
+                            <span> login</span>
+                          </LinkContainer>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div className="signup-button">
-              <Button
-                type="submit"
-                className="btn-check-availability-home"
-                text="Sign Up"
-              />
-            </div>
-          </form>
-
-          <Modal
-            open={openForm}
-            onClose={() => setOpenForm(false)}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            {loader ? (
-              <Box sx={style} className="otp-loader">
-                <span>Sending OTP...</span>
-                <CircularProgress />
-              </Box>
-            ) : (
-              <Box sx={style}>
-                {registerUserLoading ? (
-                  <CircularProgress className="loader" />
+              <Modal
+                open={openForm}
+                onClose={() => setOpenForm(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                {loader ? (
+                  <Box sx={style} className="otp-loader">
+                    <span>sending otp...</span>
+                    <CircularProgress />
+                  </Box>
                 ) : (
-                  <form onSubmit={handleSubmit} className="otp-form">
-                    <div className="otp-input">
-                      <label>Enter OTP sent to email</label>
-                      <OTPInput
-                        className="otp-input-field"
-                        value={otp}
-                        onChange={setOtp}
-                        autoFocus
-                        OTPLength={4}
-                        otpType="number"
-                        disabled={false}
-                        secure
-                      />
-                      <ResendOTP onResendClick={regenerateOtp} />
-                    </div>
-                    <div className="otp-button">
-                      <Button
-                        type="submit"
-                        className="btn-check-availability-home"
-                        text="Submit"
-                      />
-                    </div>
-                  </form>
-                )}
-              </Box>
-            )}
-          </Modal>
+                  <Box sx={style}>
+                    {registerUserLoading ? (
+                      <CircularProgress className="loader" />
+                    ) : (
+                      <div className="login">
+                        <div className="title-auth">
+                          <h5>OTP Authentication</h5>
+                          <p>Enter the 4 digit OTP sent to your email.</p>
+                        </div>
 
-          <span>
-            Already have an Account?
-            <LinkContainer to="/login" style={linkStyle}>
-              <span> Login</span>
-            </LinkContainer>
-          </span>
+                        <form onSubmit={handleSubmit} className="otp-form">
+                          <div className="otp-input">
+                            <OTPInput
+                              className="otp-input-field"
+                              value={otp}
+                              onChange={setOtp}
+                              autoFocus
+                              OTPLength={4}
+                              otpType="number"
+                              disabled={false}
+                              secure
+                            />
+                          </div>
+                          <Button
+                            type="submit"
+                            className="otp-login-btn"
+                            text="submit"
+                          />
+                        </form>
+
+                        <div className="auth-footer">
+                          Didn’t receive an OTP.
+                          <ResendOTP
+                            onResendClick={regenerateOtp}
+                            className="resend-btn"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </Box>
+                )}
+              </Modal>
+            </div>
+          </div>
         </div>
       </div>
     </div>
