@@ -32,6 +32,7 @@ urlpatterns = [
     path('club/reviews/<str:pk>', views.createProductReview, name="club-review"),
     path('club/suggested/', views.getSuggestedClub, name="suggested-club"),
     path('club/suggestedgame/', views.getSuggestedClubGame, name="suggested-club"),
+    path('clubs/rated/', views.getHighRatedClubs, name="rated-clubs"),
     path('clubworking/<str:pk>/', views.getClubWorkingDays, name="club-working-days"),
     path('slot/<str:pk>/', views.getSlot, name='get-slot'),
     path('userbookings/<str:pk>/', views.getUserBookings, name='user-bookings'),

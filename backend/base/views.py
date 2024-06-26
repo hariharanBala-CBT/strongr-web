@@ -51,7 +51,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from dotenv import load_dotenv
 load_dotenv()
 DEBUG = os.environ.get('DJANGO_DEBUG')
-if DEBUG:
+if DEBUG == 'True':
+    print('local')
     from backend.local_settings import *
 else:
     from backend.production_settings import *
@@ -162,7 +163,7 @@ def registerUser(request):
         )
 
         customer = Customer.objects.create(
-            tenant=Tenant.objects.get(id=1),
+            tenant=Tenant.objects.get(tenant_name = TENANT),
             user=user,
             phone_number=data.get('phone'),
         )
@@ -212,7 +213,7 @@ class OrganizationSignupView(CreateView):
 
             organization = Organization.objects.create(
                 phone_number=phone_number,
-                tenant=Tenant.objects.get(id=1),
+                tenant=Tenant.objects.get(tenant_name = TENANT),
                 organization_name=organization_name,
                 user=user
             )
@@ -222,6 +223,7 @@ class OrganizationSignupView(CreateView):
                 request.session['first_login_' + str(user.id)] = True
 
             current_site = get_current_site(request)
+            print(current_site, 'is the current site')
             subject = 'Welcome to Our Website'
             message = render_to_string(
                 'email_generate.html', {

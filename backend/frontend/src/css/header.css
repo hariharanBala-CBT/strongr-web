@@ -4,7 +4,7 @@
 -----------------------*/
 
 .header {
-  position: fixed;
+  position: relative;
   left: 0;
   top: 0;
   width: 100%;
@@ -381,7 +381,7 @@
 
 @media (max-width: 1399.98px) {
   .header .main-menu-wrapper .main-nav > li {
-    margin-right: 15px !important;
+    /* margin-right: 15px !important; */
   }
 }
 

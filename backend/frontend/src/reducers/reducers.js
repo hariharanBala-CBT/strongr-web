@@ -117,6 +117,10 @@ import {
   USERDETAILS_VALIDATE_SUCCESS,
   USERDETAILS_VALIDATE_FAIL,
   USERDETAILS_VALIDATE_RESET,
+  TOPRATED_CLUBS_REQUEST,
+  TOPRATED_CLUBS_SUCCESS,
+  TOPRATED_CLUBS_FAIL,
+  TOPRATED_CLUBS_RESET,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -794,3 +798,18 @@ export const validatePhoneReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const topRatedClubsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TOPRATED_CLUBS_REQUEST:
+      return { loadingTopRatedClubs: true };
+    case TOPRATED_CLUBS_SUCCESS:
+      return { loadingTopRatedClubs: false, topRatedClubs: action.payload }
+    case TOPRATED_CLUBS_FAIL:
+      return { loadingTopRatedClubs: false, errorTopRatedClubs: action.payload }
+    case TOPRATED_CLUBS_RESET:
+      return { };
+    default:
+      return state;
+  }
+}

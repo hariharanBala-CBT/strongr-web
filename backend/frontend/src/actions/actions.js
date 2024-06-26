@@ -108,6 +108,9 @@ import {
   USERDETAILS_VALIDATE_REQUEST,
   USERDETAILS_VALIDATE_SUCCESS,
   USERDETAILS_VALIDATE_FAIL,
+  TOPRATED_CLUBS_REQUEST,
+  TOPRATED_CLUBS_SUCCESS,
+  TOPRATED_CLUBS_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -1123,7 +1126,6 @@ export const validatePhone = (phone) => async (dispatch) => {
        },
     });
 
-
     dispatch({
       type: PHONE_VALIDATE_SUCCESS,
       payload: data,
@@ -1133,8 +1135,28 @@ export const validatePhone = (phone) => async (dispatch) => {
     dispatch({
       type: PHONE_VALIDATE_FAIL,
       payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const getTopRatedClubs = () => async (dispatch) => {
+  try {
+    dispatch({ type: TOPRATED_CLUBS_REQUEST });
+
+    const { data } = await axios.get("api/clubs/rated/");
+
+    dispatch({ type: TOPRATED_CLUBS_SUCCESS, payload: data });
+
+  } catch (error) {
+
+    dispatch({
+      type: TOPRATED_CLUBS_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
           : error.message,
     });
   }
