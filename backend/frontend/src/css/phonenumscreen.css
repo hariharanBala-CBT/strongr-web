@@ -17,7 +17,7 @@
 }
 
 .phone-login .shadow-card .phone-textp {
-  color: black !important;
+  color: #fff !important;
   margin-top: 20px;
 }
 
@@ -44,7 +44,7 @@
 }
 
 .phonelogin-wrapper .shadow-card {
-  background: linear-gradient(#DADD98, #679267);
+  background: linear-gradient(#1a9f73, #07605c);
 }
 
 .shadow-card .bottom-paras {
@@ -53,7 +53,7 @@
 
 .shadow-card .bottom-paras p {
   margin-bottom: 0.5rem !important;
-  color: black;
+  color: #fff !important;
 }
 
 .shadow-card .bottom-paras span:hover{
@@ -68,7 +68,8 @@
 
 @media (max-width: 770px) {
   .phonelogin-wrapper .phone-login {
-    background: linear-gradient(#DADD98, #679267);
+    padding-left: unset;
+    padding-right: unset;
   }
 }
 
@@ -92,4 +93,8 @@
 .title-auth p {
   font-size: 15px;
 }
+}
+
+.phone-login h2 {
+  color: #fff;
 }

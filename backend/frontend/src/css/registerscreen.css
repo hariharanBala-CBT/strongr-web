@@ -14,21 +14,21 @@
 }
 
 @media (max-width: 767.98px) {
-  
+
 .authendication-pages .register-content .bottom-text p {
   color: black !important;
 }
 }
 
 @media (max-width: 767.98px) {
-  
+
   .bottom-text span {
     color: black !important;
   }
 }
 
 .signup-right-banner {
-  background: linear-gradient(#1CAC78, #004953);
+  background: #ffffff;
 }
 
 .login-right-banner {
@@ -88,7 +88,7 @@
 .authendication-pages .register-content .wrapper .banner-bg {
   background-repeat: no-repeat;
   /* background-size: cover; */
-  background-position: center;  
+  background-position: center;
   overflow: hidden;
   height: 100%;
   width: 100%;
@@ -97,11 +97,11 @@
 }
 
 .authendication-pages .register-content .wrapper .banner-bg.register{
-  background: linear-gradient(#96dfc5, #198754);
+  background: linear-gradient(#1ca876, #035457);
 }
 
 .authendication-pages .register-content .wrapper .banner-bg.loginpage {
-  background-image: url(../images/strongr-login-new.png);
+  background: linear-gradient(#1ca876, #035457);
 }
 
 @media (max-width: 991.98px) {
@@ -290,12 +290,13 @@
 }
 
 .authendication-pages .register-content form .form-check label {
-  color: #6B7385;
+  color: #ffffff;
   font-size: 14px;
 }
 
 .authendication-pages .register-content form .form-check label a {
-  color: #097E52;
+  color: #fff;
+  font-weight: 600;
 }
 
 .authendication-pages .register-content form .form-check label a:hover {
@@ -478,7 +479,7 @@
 }
 
 .login-right-banner .shadow-card {
-  background: linear-gradient(#004526, #6C7C59);
+  background: linear-gradient(#1ca876, #035457);
   border-radius: 10px;
   padding: 24px;
   box-shadow: 0px 4px 44px rgba(211, 211, 211, 0.25);
@@ -492,4 +493,45 @@
   .shadow-card {
     padding: 20px;
   }
+  .signup-right-banner .shadow-card {
+    background: #ffffff !important;
+  }
+  .signup-right-banner .shadow-card h2 {
+    color: black !important;
+  }
+  .authendication-pages .register-content form .form-check label {
+    color: black !important;
+  }
+  .authendication-pages .register-content form .form-check label a {
+    color: black !important;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .login-right-banner .shadow-card {
+    background: #ffffff !important;
+  }
+  .login-right-banner .shadow-card h2,p {
+    color: black !important;
+  }
+}
+
+.signup-right-banner .shadow-card {
+  background: linear-gradient(#1a9f73, #07605c);
+}
+
+.signup-right-banner .shadow-card h2 {
+  color: white;
+  margin-bottom: 15px;
+}
+
+.signup-right-banner .bottom-text p{
+  color: black !important;
+}
+
+.authendication-pages .register .register-image {
+  width: 100%;
+  min-height: 70%;
+  object-fit: cover;
 }

@@ -16,3 +16,9 @@
 .register-content .toppage-container {
   padding-left: unset;
 }
+
+.loginpage .login-image {
+  width: 100%;
+  min-height: 70%;
+  object-fit: cover;
+}

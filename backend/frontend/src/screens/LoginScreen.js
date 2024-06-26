@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { User, Eye, EyeOff, ArrowRightCircle } from "react-feather";
-
+import loginImage from "../images/strongr-login-new.png";
 import { CircularProgress } from "@mui/material";
 
 import { login, validateUser } from "../actions/actions";
@@ -80,7 +80,9 @@ function LoginScreen() {
                 <div className="banner-bg loginpage">
                   <div className="row no-margin h-100">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
-                      <div className="h-100 d-flex justify-content-center align-items-center"></div>
+                      <div className="h-100 d-flex justify-content-center align-items-center">
+                        <img src={loginImage} className="login-image" />
+                      </div>
                     </div>
                   </div>
                 </div>

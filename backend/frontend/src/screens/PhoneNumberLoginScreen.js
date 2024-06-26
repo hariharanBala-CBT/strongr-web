@@ -200,8 +200,8 @@ function PhoneNumberScreen() {
                           to="/login"
                           style={{
                             textDecoration: "underline",
-                            color: "#00416A",
-                            fontWeight: 700,
+                            color: "black",
+                            fontWeight: 500,
                             fontSize: "17px",
                           }}
                         >
@@ -214,8 +214,8 @@ function PhoneNumberScreen() {
                           to="/signup"
                           style={{
                             textDecoration: "underline",
-                            color: "#00416A",
-                            fontWeight: 700,
+                            color: "black",
+                            fontWeight: 500,
                             fontSize: "17px",
                           }}
                         >

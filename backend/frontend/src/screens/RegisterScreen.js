@@ -149,7 +149,7 @@ function RegisterScreen() {
                   <div className="row no-margin h-100">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
                       <div className="h-100 d-flex justify-content-center align-items-center">
-                        <img src={registerImage} />
+                        <img src={registerImage} className="register-image" />
                       </div>
                     </div>
                   </div>
@@ -315,7 +315,7 @@ function RegisterScreen() {
                             to="/login"
                             style={{
                               textDecoration: "underline",
-                              color: "white",
+                              color: "#045a3a",
                             }}
                           >
                             <span> login</span>
