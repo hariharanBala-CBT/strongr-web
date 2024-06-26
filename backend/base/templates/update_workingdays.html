@@ -134,10 +134,10 @@
           }
           #nextTabBtn{
             display: block;
-            margin: 20px auto 0;
-            padding: 10px 20px;
+            margin: -39px auto 0;
+            padding: 7px 20px;
             font-size: 16px;
-            width: 125px;
+            width: 90px;
         }
         </style>
 
@@ -249,10 +249,10 @@
                                         <!-- <div class="col-md-6">
                                             <a  href="{% url 'organization_updatelocation' pk=locationpk %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a>
                                         </div> -->
-                                        {% comment %} <div class="col-md-6 text-end">
+                                        <div class="col-md-6 text-end">
                                             <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit">Update</button>
-                                        </div> {% endcomment %}
-                                        <button id="nextTabBtn" class="btn btn-primary">Update</button>
+                                            <button id="nextTabBtn" class="btn btn-primary">Next</button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -273,7 +273,7 @@
                 </footer>
             </div>
         </div>
-        <div class="modal" id="confirmationModal">
+        {% comment %} <div class="modal" id="confirmationModal">
             <div class="modal-content">
                 <h2>Confirm Update</h2>
                 <p>Are you sure you want to update the working day details?</p>
@@ -282,7 +282,7 @@
                     <button id="confirmButton">Confirm</button>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
 
         <div class="toast" id="successToast"></div>
 
@@ -397,14 +397,15 @@
                 }
             });
             $(document).ready(function () {
-                $('#nextTabBtn').click(function () {
+                $('#nextTabBtn').click(function (event) {
+                    event.preventDefault(); 
                     const activeTab = $('.tab-button.active');
                     const nextTab = activeTab.next('.tab-button');
-
+            
                     if (nextTab.length > 0) {
                         activeTab.removeClass('active');
                         nextTab.addClass('active');
-
+            
                         const url = nextTab.data('url');
                         $('#tab-content').load(url, function () {
                             initFormSubmission();
