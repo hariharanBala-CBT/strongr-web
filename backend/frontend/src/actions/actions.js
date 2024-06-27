@@ -1146,7 +1146,7 @@ export const getTopRatedClubs = () => async (dispatch) => {
   try {
     dispatch({ type: TOPRATED_CLUBS_REQUEST });
 
-    const { data } = await axios.get("api/clubs/rated/");
+    const { data } = await axios.get("/api/clubs/rated/");
 
     dispatch({ type: TOPRATED_CLUBS_SUCCESS, payload: data });
 
