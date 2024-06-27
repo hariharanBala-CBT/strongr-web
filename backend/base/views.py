@@ -52,7 +52,6 @@ from dotenv import load_dotenv
 load_dotenv()
 DEBUG = os.environ.get('DJANGO_DEBUG')
 if DEBUG == 'True':
-    print('local')
     from backend.local_settings import *
 else:
     from backend.production_settings import *
@@ -223,7 +222,6 @@ class OrganizationSignupView(CreateView):
                 request.session['first_login_' + str(user.id)] = True
 
             current_site = get_current_site(request)
-            print(current_site, 'is the current site')
             subject = 'Welcome to Our Website'
             message = render_to_string(
                 'email_generate.html', {
