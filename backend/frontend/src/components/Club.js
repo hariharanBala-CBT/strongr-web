@@ -24,6 +24,7 @@ function Club({ clubs }) {
           ? recentlySearchedKeywords.filter((k) => k !== club.id).slice(0, 3)
           : []),
       ];
+      setRecentlySearchedKeywords([]);
       setRecentlySearchedKeywords(updatedKeywords);
     }
     navigate(`/club/${club.id}`);

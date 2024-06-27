@@ -58,7 +58,11 @@ export const HomeProvider = ({ children }) => {
   }, [keyword]);
 
   useEffect(() => {
+    try{ 
     localStorage.setItem("recentlySearchedKeywords", JSON.stringify(recentlySearchedKeywords));
+    } catch (e) {
+      console.log(e);
+    }
   }, [recentlySearchedKeywords]);
 
   const contextValue = {

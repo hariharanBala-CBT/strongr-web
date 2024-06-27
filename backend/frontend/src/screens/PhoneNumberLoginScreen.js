@@ -16,6 +16,13 @@ import { loginPhoneNumber, validatePhone } from "../actions/actions";
 
 import "../css/phonenumscreen.css";
 
+const linkStyle = {
+  textDecoration: "underline",
+  color: "black",
+  fontWeight: 500,
+  fontSize: "17px",
+};
+
 function PhoneNumberScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -141,7 +148,6 @@ function PhoneNumberScreen() {
 
   return (
     <div className="phonelogin-wrapper">
-      <Toaster />
       <div className="main-wrapper authendication-pages">
         <div className="content blur-ellipses">
           <div className="container">
@@ -149,27 +155,26 @@ function PhoneNumberScreen() {
               <div className="col-md-6 col-lg-6 mx-auto vph-100 d-flex align-items-center phone-login">
                 <div className="forgot-password w-100">
                   <div className="shadow-card">
-                    <h2>Login</h2>
-                    <p className="phone-textp">Enter Registered Phone Number</p>
-
+                    <Toaster toastOptions={{ duration: 4000 }} />
+                    <div id="recaptcha-container"></div>
+                    <h2 className="login-title">Login</h2>
                     <form>
-                      <div className="form-group">
-                        <div className="group-img">
-                          <i className="feather-mail"></i>
-                          <PhoneInput
-                            required
-                            country={"in"}
-                            placeholder="Enter phone number"
-                            value={ph}
-                            onChange={(value) => {
-                              handlePhoneNumberChange();
-                              setPh(value);
-                            }}
-                          />
-                        </div>
-                      </div>
+                      <label className="phone-textp">
+                        Enter Registered Phone Number
+                      </label>
+                      <PhoneInput
+                        required
+                        country={"in"}
+                        placeholder="Enter phone number"
+                        value={ph}
+                        onChange={(value) => {
+                          handlePhoneNumberChange();
+                          setPh(value);
+                        }}
+                      />
                       {showOTPInput && (
-                        <div className="form-group">
+                        <div className="OTP">
+                          <label>Enter OTP</label>
                           <OTPInput
                             className="otp-input-field"
                             value={otp}
@@ -181,44 +186,36 @@ function PhoneNumberScreen() {
                           />
                         </div>
                       )}
-                      {loading && <CircularProgress className="loader" />}
+                      {loading && (
+                        <div className="otp-loader">
+                          <CircularProgress className="loader" />{" "}
+                        </div>
+                      )}
                       {!showOTPInput && (
-                        <button className="generate-btn" onClick={onSignup}>
-                          Generate OTP
-                        </button>
+                        <div className="my-buttons">
+                          <button className="generate-btn" onClick={onSignup}>
+                            Generate OTP
+                          </button>
+                        </div>
                       )}
                       {showOTPInput && (
-                        <button className="login-btn" onClick={onOTPVerify}>
-                          Login
-                        </button>
+                        <div className="my-buttons">
+                          <button className="login-btn" onClick={onOTPVerify}>
+                            Login
+                          </button>
+                        </div>
                       )}
                     </form>
                     <div className="bottom-paras">
                       <p>
                         Login through username &nbsp;
-                        <LinkContainer
-                          to="/login"
-                          style={{
-                            textDecoration: "underline",
-                            color: "black",
-                            fontWeight: 500,
-                            fontSize: "17px",
-                          }}
-                        >
+                        <LinkContainer to="/login" style={linkStyle}>
                           <span>Login</span>
                         </LinkContainer>
                       </p>
                       <p>
-                        Login through username &nbsp;
-                        <LinkContainer
-                          to="/signup"
-                          style={{
-                            textDecoration: "underline",
-                            color: "black",
-                            fontWeight: 500,
-                            fontSize: "17px",
-                          }}
-                        >
+                        Don't have an Account?&nbsp;
+                        <LinkContainer to="/signup" style={linkStyle}>
                           <span>Signup</span>
                         </LinkContainer>
                       </p>
