@@ -12,3 +12,4 @@ backend/static/images/
 node_modules
 /backend/.env
 /backend/backend/local_settings.py
+staticfiles

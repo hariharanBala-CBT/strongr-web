@@ -26,6 +26,7 @@ import workImage2 from "../images/icons/work-icon2.svg";
 import workImage3 from "../images/icons/work-icon3.svg";
 import Venue from "../components/Venue";
 import Testimonial from "../components/Testimonial";
+import customerGuide from "../guide/customer.pdf";
 
 function HomeScreen(history) {
   const dispatch = useDispatch();
@@ -166,9 +167,12 @@ function HomeScreen(history) {
         </div>
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
+              
             <h2>
               How It <span>Works</span>
             </h2>
+            <Button href={customerGuide} className="guide" text="Guide" download />
+            
             <p className="sub-title">
               Simplifying the booking process for coaches, venues, and athletes.
             </p>

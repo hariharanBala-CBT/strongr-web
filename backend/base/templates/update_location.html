@@ -12,10 +12,10 @@
 
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+
     <link href="{% static 'styles.css' %}" rel="stylesheet" />
     <link href="{% static './css/update_location.css' %}" rel="stylesheet" />
 
@@ -91,7 +91,6 @@
                 <main>
                     <div class="container-fluid px-4 m">
                         <div class="profile-card">
-                            <!-- <h1 class="my-4">Update Location</h1> -->
                             <div>
                                 <form id="upd-loc-form" method="post" action="{% url 'organization_updatelocation' pk=pk %}">
                                     {% csrf_token %}
@@ -104,11 +103,6 @@
                                                     </td>
                                                     <td>
                                                         {{ field }}
-                                                        {% if field.errors %}
-                                                            <div class="text-danger">
-                                                                {{ field.errors|join:", " }}
-                                                            </div>
-                                                        {% endif %}
                                                     </td>
                                                 </tr>
                                             {% endfor %}
