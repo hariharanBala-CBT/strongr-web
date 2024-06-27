@@ -59,12 +59,12 @@ function Header({ location }) {
               </li>
               <li className="has-submenu">
                 <a href="#">
-                  User <i className="fas"></i>
+                  User
                 </a>
               </li>
               <li className="has-submenu">
                 <a href="#">
-                  Pages <i className="fas"></i>
+                  Pages
                 </a>
               </li>
               <li>

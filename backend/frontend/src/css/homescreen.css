@@ -548,6 +548,9 @@
 }
 
 .home .banner .content {
-  margin-top: 22.5rem !important;
+  height: 90vh;
+  width: 100%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
 }
-

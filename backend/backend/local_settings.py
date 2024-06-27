@@ -33,7 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+TENANT = 'CBT'
 # Application definition
 
 INSTALLED_APPS = [
