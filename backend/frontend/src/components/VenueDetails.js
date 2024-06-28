@@ -33,9 +33,7 @@ const VenueDetails = ({ club }) => {
           <div className="fav-item-venues">
             <span className="tag tag-blue">Featured</span>
             {/* <h5 className="tag tag-primary">
-            {/* <h5 className="tag tag-primary">
               ₹450<span>/hr</span>
-            </h5> */}
             </h5> */}
           </div>
         </div>
@@ -57,10 +55,8 @@ const VenueDetails = ({ club }) => {
           </div>
           <h3 className="listing-title">
             <a href="venue-details.html">{organization.organization_name}</a>
-            <a href="venue-details.html">{organization.organization_name}</a>
           </h3>
           <div className="listing-details-group">
-            <p>{organization.description}</p>
             <p>{organization.description}</p>
             <ul>
               <li>
