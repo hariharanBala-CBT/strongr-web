@@ -1,93 +1,537 @@
-.signup-page{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+ /*---------------------
+    30. Authentication
+-----------------------*/
+@media (max-width: 767.98px) {
+  .authendication-pages h2 {
+    font-size: 24px;
   }
-  
-  .signup-page .signup-title{
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    flex-grow: inherit;
-    flex-shrink: inherit;
-    margin: 0;
-  }
-  
-  .signup-page .signup-form {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid beige;
-    margin-top: 2.5rem;
-    padding: 2rem;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.17);
-    border-radius: 8px;
-    flex-wrap: wrap;
-    flex-grow: inherit;
-    flex-shrink: inherit;
-  }
-  
-  @media (max-width: 770px) {
-    .signup-page .signup-form {
-      box-shadow: 0;
-    }
-  }
-  
-  .signup-form form {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    flex-grow: inherit;
-    flex-shrink: inherit;
-  }
-  
-  .signup-page input{
-    padding: 0.5rem;
-    margin: 1rem;
-    margin-top: 0;
-    display: flex;
-    flex-wrap: wrap;
-    flex-grow: inherit;
-    flex-shrink: inherit;
-  }
-  
-  .signup-page form label {
-    margin: 0.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    flex-grow: inherit;
-    flex-shrink: inherit;
-  }
-  
-  .signup-page button {
-    width: fit-content;
-    margin: 0.5rem;
-  }
-  
-  .signup-page .signup-button {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-  }
+}
 
-  .signup-page span{
-    display: flex;
-    justify-content: center;
-    margin-top: 0.5rem;
-    align-items: baseline;
+@media (max-width: 767.98px) {
+  .signup-right-banner {
+    background: #ffffff !important;
   }
+}
 
-  .signup-page .div-div {
-    display: flex;
-    flex-direction: row;
-  }
+@media (max-width: 767.98px) {
 
-  .signup-page .div1 {
-    display: flex;
-    flex-direction: column;
-  }
+.authendication-pages .register-content .bottom-text p {
+  color: black !important;
+}
+}
 
-  .signup-page .div2 {
-    display: flex;
-    flex-direction: column;
+@media (max-width: 767.98px) {
+
+  .bottom-text span {
+    color: black !important;
   }
+}
+
+.signup-right-banner {
+  background: #ffffff;
+}
+
+.login-right-banner {
+  background-color: white;
+}
+
+.authendication-pages .register-content {
+  padding: 0;
+}
+
+.authendication-pages .register-content.blur-ellipses:before {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: rgba(9, 126, 82, 0.04);
+  filter: blur(47px);
+  border-radius: 100%;
+  content: "";
+  top: -400px;
+  right: 0;
+  z-index: -1;
+}
+
+@media (max-width: 991.98px) {
+  .authendication-pages .register-content.blur-ellipses:before {
+    display: none;
+  }
+}
+
+.authendication-pages .register-content.blur-ellipses .shadow-card {
+  position: relative;
+}
+
+.authendication-pages .register-content.blur-ellipses .shadow-card:after {
+  width: 393px;
+  height: 393px;
+  border-radius: 393px;
+  background: rgba(245, 3, 3, 0.05);
+  filter: blur(47px);
+  position: absolute;
+  bottom: -150px;
+  left: -150px;
+  content: "";
+  z-index: -1;
+}
+
+@media (max-width: 991.98px) {
+  .authendication-pages .register-content.blur-ellipses .shadow-card:after {
+    display: none;
+  }
+}
+
+.authendication-pages .register-content .wrapper {
+  max-width: 100%;
+}
+
+.authendication-pages .register-content .wrapper .banner-bg {
+  background-repeat: no-repeat;
+  /* background-size: cover; */
+  background-position: center;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  width: 50%;
+}
+
+.authendication-pages .register-content .wrapper .banner-bg.register{
+  background: linear-gradient(#1ca876, #035457);
+}
+
+.authendication-pages .register-content .wrapper .banner-bg.loginpage {
+  background: linear-gradient(#1ca876, #035457);
+}
+
+@media (max-width: 991.98px) {
+  .authendication-pages .register-content .wrapper .banner-bg {
+    display: none;
+  }
+}
+
+.authendication-pages .register-content .wrapper header {
+  margin-top: 80px;
+}
+
+@media (max-width: 991.98px) {
+  .authendication-pages .register-content .wrapper header {
+    margin: 24px 0;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .authendication-pages .register-content .wrapper header img {
+    max-width: 180px;
+  }
+}
+
+.authendication-pages .register-content .wrapper p {
+  font-size: 20px;
+}
+
+.authendication-pages .register-content .wrapper .shadow-card {
+  margin: 40px 0;
+}
+
+@media (max-width: 991.98px) {
+  .authendication-pages .register-content .wrapper .shadow-card {
+    margin: 0 0 24px 0;
+  }
+}
+
+.authendication-pages .register-content .wrapper .text-bg {
+  backdrop-filter: blur(50px);
+  padding: 40px;
+  border-radius: 10px;
+}
+
+.authendication-pages .register-content .wrapper .text-bg.register {
+  background: rgba(255, 242, 242, 0.13);
+}
+
+.authendication-pages .register-content .wrapper .text-bg.loginpage {
+  background: rgba(255, 242, 242, 0.13);
+}
+
+.authendication-pages .register-content .wrapper .text-bg p {
+  color: #FFFFFF;
+  margin-bottom: 0;
+}
+
+.authendication-pages .register-content .wrapper .nav-tabs {
+  margin: 40px 0;
+  border-bottom: 0;
+}
+
+.authendication-pages .register-content .wrapper .nav-tabs .nav-item {
+  margin-right: 14px;
+}
+
+.authendication-pages .register-content .wrapper .nav-tabs .nav-item:last-child {
+  margin-right: 0;
+}
+
+@media (max-width: 767.98px) {
+  .authendication-pages .register-content .wrapper .nav-tabs .nav-item {
+    margin-right: 5px;
+  }
+}
+
+.authendication-pages .register-content .wrapper .nav-tabs .nav-item .nav-link {
+  padding: 20px 24px;
+  font-size: 14px;
+  border-width: 2px;
+  border-color: transparent;
+  border-radius: 10px;
+  color: #192335;
+}
+
+@media (max-width: 767.98px) {
+  .authendication-pages .register-content .wrapper .nav-tabs .nav-item .nav-link {
+    padding: 12px 10px;
+  }
+}
+
+.authendication-pages .register-content .wrapper .nav-tabs .nav-item .nav-link span {
+  width: 12px;
+  height: 12px;
+  border-radius: 12px;
+  border: 1px solid #EAEDF0;
+  display: inline-block;
+  margin-right: 10px;
+  position: relative;
+}
+
+.authendication-pages .register-content .wrapper .nav-tabs .nav-item .nav-link span:after {
+  width: 6px;
+  height: 6px;
+  border-radius: 6px;
+  background: #097E52;
+  opacity: 0;
+  -webkit-transition: all 0.5s ease-in-out 0s;
+  -ms-transition: all 0.5s ease-in-out 0s;
+  transition: all 0.5s ease-in-out 0s;
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  content: "";
+}
+
+.authendication-pages .register-content .wrapper .nav-tabs .nav-item .nav-link.active {
+  border-color: #097E52;
+  background: #F9F9F6;
+  color: #097E52;
+}
+
+.authendication-pages .register-content .wrapper .nav-tabs .nav-item .nav-link.active span:after {
+  opacity: 1;
+}
+
+.authendication-pages .register-content form .form-group {
+  margin-bottom: 34px;
+}
+
+.authendication-pages .register-content form .form-group .group-img {
+  position: relative;
+}
+
+.authendication-pages .register-content form .form-group .group-img i {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #A0A0A0;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.authendication-pages .register-content form .form-group .group-img input {
+  padding: 20px;
+}
+
+.authendication-pages .register-content form .form-group .login-options .text {
+  text-align: center;
+  text-transform: lowercase;
+  font-size: 13px;
+  color: #192335;
+  position: relative;
+}
+
+.authendication-pages .register-content form .form-group .login-options .text:before, .authendication-pages .register-content form .form-group .login-options .text:after {
+  width: 100%;
+  content: "";
+  border-top: 1px solid #DBDBDB;
+  position: absolute;
+  top: 50%;
+}
+
+.authendication-pages .register-content form .form-group .login-options .text:before {
+  left: -100px;
+}
+
+@media (max-width: 991.98px) {
+  .authendication-pages .register-content form .form-group .login-options .text:before {
+    left: -95px;
+  }
+}
+
+.authendication-pages .register-content form .form-group .login-options .text:after {
+  right: -100px;
+}
+
+@media (max-width: 991.98px) {
+  .authendication-pages .register-content form .form-group .login-options .text:after {
+    right: -95px;
+  }
+}
+
+.authendication-pages .register-content form .form-check label {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.authendication-pages .register-content form .form-check label a {
+  color: #fff;
+  font-weight: 600;
+}
+
+.authendication-pages .register-content form .form-check label a:hover {
+  color: #192335;
+}
+
+.authendication-pages .register-content form .form-check.form-switch .form-check-input {
+  height: 20px;
+  border-width: 2px;
+  position: relative;
+  background-image: none;
+}
+
+.authendication-pages .register-content form .form-check.form-switch .form-check-input:checked {
+  background: none;
+  border-color: #097E52;
+}
+
+.authendication-pages .register-content form .form-check.form-switch .form-check-input:checked:after {
+  left: 50%;
+}
+
+.authendication-pages .register-content form .form-check.form-switch .form-check-input:not(:checked) {
+  border-color: #6B7385;
+}
+
+.authendication-pages .register-content form .form-check.form-switch .form-check-input:after {
+  position: absolute;
+  left: 3px;
+  top: 2.5px;
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  border: 2px solid #097E52;
+  -webkit-transition: all 0.5s ease-in-out 0s;
+  -ms-transition: all 0.5s ease-in-out 0s;
+  transition: all 0.5s ease-in-out 0s;
+}
+
+.authendication-pages .register-content form .forgot-pass {
+  color: #D93F21;
+}
+
+@media (max-width: 767.98px) {
+  .authendication-pages .register-content form .forgot-pass {
+    margin-top: 10px;
+    display: inline-block;
+  }
+}
+
+.authendication-pages .register-content form .forgot-pass:hover {
+  color: #192335;
+}
+
+.authendication-pages .register-content form .btn-block {
+  margin: 40px 0 0px 0;
+}
+
+.authendication-pages .register-content form .social-login li {
+  margin-right: 14px;
+}
+
+.authendication-pages .register-content form .social-login li:last-child {
+  margin-right: 0;
+}
+
+.authendication-pages .register-content form .social-login li .btn-social {
+  padding: 0 24px;
+  min-height: 43px;
+  border: 1px solid #DEDEDE;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.authendication-pages .register-content form .social-login li .btn-social:hover {
+  color: #192335;
+  border-color: #20DC49;
+}
+
+.authendication-pages .register-content form .social-login li .btn-social img {
+  margin-right: 5px;
+}
+
+.authendication-pages .register-content .forgot-password header, .authendication-pages .register-content .change-password header {
+  padding-bottom: 40px;
+  padding-top: 60px;
+}
+
+@media (max-width: 767.98px) {
+  .authendication-pages .register-content .forgot-password header, .authendication-pages .register-content .change-password header {
+    padding-bottom: 24px;
+    padding-top: 24px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .authendication-pages .register-content .forgot-password header img, .authendication-pages .register-content .change-password header img {
+    max-width: 180px;
+  }
+}
+
+.authendication-pages .register-content .forgot-password .form-group, .authendication-pages .register-content .change-password .form-group {
+  margin: 40px 0;
+}
+
+.authendication-pages .register-content .forgot-password .bottom-text, .authendication-pages .register-content .change-password .bottom-text {
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+
+.authendication-pages .register-content .bottom-text {
+  margin-bottom: 80px;
+}
+.authendication-pages .register-content .bottom-text-one {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 991.98px) {
+  .authendication-pages .register-content .bottom-text .bottom-text-one .bottom-text-two{
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+}
+
+.authendication-pages .register-content .bottom-text p {
+  font-size: 16px;
+  margin-bottom: 0;
+  color: white;
+  font-weight: 700;
+}
+
+.authendication-pages .register-content .bottom-texts p {
+  font-size: 16px;
+  margin-bottom: 0;
+  color: black;
+  font-weight: 700;
+}
+
+.authendication-pages .register-content .bottom-texts span {
+  color: #0e5072 !important;
+}
+
+.toppage-container {
+  background-color: #0e5072;
+}
+
+.feather-icon-wrapper {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.authendication-pages .register-content .bottom-text p a {
+  color: white;
+}
+
+.authendication-pages .register-content .bottom-text p a:hover {
+  color: #19C83F;
+}
+
+.no-padding {
+  padding-left: 0;
+  padding-right: 0;
+  padding-left: unset !important;
+}
+
+.no-margin {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.shadow-card {
+  background: #FFFFFF;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0px 4px 44px rgba(211, 211, 211, 0.25);
+}
+
+.login-right-banner .shadow-card {
+  background: linear-gradient(#1ca876, #035457);
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0px 4px 44px rgba(211, 211, 211, 0.25);
+}
+
+.login-right-banner h2,p {
+  color: white;
+}
+
+@media (max-width: 767.98px) {
+  .shadow-card {
+    padding: 20px;
+  }
+  .signup-right-banner .shadow-card {
+    background: #ffffff !important;
+  }
+  .signup-right-banner .shadow-card h2 {
+    color: black !important;
+  }
+  .authendication-pages .register-content form .form-check label {
+    color: black !important;
+  }
+  .authendication-pages .register-content form .form-check label a {
+    color: black !important;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .login-right-banner .shadow-card {
+    background: #ffffff !important;
+  }
+  .login-right-banner .shadow-card h2,p {
+    color: black !important;
+  }
+}
+
+.signup-right-banner .shadow-card {
+  background: linear-gradient(#1a9f73, #07605c);
+}
+
+.signup-right-banner .shadow-card h2 {
+  color: white;
+  margin-bottom: 15px;
+}
+
+.signup-right-banner .bottom-text p{
+  color: black !important;
+}
+
+.authendication-pages .register .register-image {
+  width: 100%;
+  min-height: 70%;
+  object-fit: cover;
+}

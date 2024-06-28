@@ -3,23 +3,15 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
-import Header from "../components/Header";
-import Button from "../components/Button";
-
-import { CircularProgress, TextField } from "@mui/material";
+import { User, Eye, EyeOff, ArrowRightCircle } from "react-feather";
+import loginImage from "../images/strongr-login-new.png";
+import { CircularProgress } from "@mui/material";
 
 import { login, validateUser } from "../actions/actions";
 
 import { USER_LOGIN_RESET } from "../constants/constants";
 
 import "../css/loginscreen.css";
-
-const linkStyle = {
-  textDecoration: "underline",
-  color: "purple",
-  cursor: "pointer",
-};
 
 function LoginScreen() {
   const dispatch = useDispatch();
@@ -28,9 +20,14 @@ function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const { userInfo, LoginError, loading } = useSelector((state) => state.userLogin);
-  const { userValidate, userValidateError } = useSelector((state) => state.userValidator);
+  const { userInfo, LoginError, loading } = useSelector(
+    (state) => state.userLogin
+  );
+  const { userValidate, userValidateError } = useSelector(
+    (state) => state.userValidator
+  );
 
   useEffect(() => {
     dispatch({
@@ -68,69 +65,154 @@ function LoginScreen() {
     setErrorMessage("");
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div>
-      <Header location="nav-all" />
+    <div className="register-page">
       <Toaster />
-      <div className="login-page">
-        <div className="login-form">
-          <h1 className="login-title">LOGIN</h1>
-          {loading ? (
-            <CircularProgress className="loader" />
-          ) : (
-            <form onSubmit={handleSubmit}>
-              <label>Username</label>
-
-              <TextField
-                error={username.length > 0 && userValidateError}
-                helperText={
-                  username.length > 0 &&
-                  userValidateError &&
-                  "Invalid username"
-                }
-                required
-                type="text"
-                placeholder="Enter username"
-                value={username}
-                onChange={handleUsername}
-                color={userValidateError && "success"}
-              />
-
-              <label>Password</label>
-              <TextField
-                error={LoginError && errorMessage.length > 0}
-                helperText={
-                  errorMessage.length > 0 && LoginError && errorMessage
-                }
-                required
-                type="password"
-                placeholder="Enter password"
-                value={password}
-                onChange={handlePassword}
-              />
-
-              <div className="login-button">
-                <Button
-                  type="submit"
-                  className="btn-check-availability-home"
-                  text="Login"
-                />
+      <div className="main-wrapper authendication-pages">
+        <div className="register-content">
+          <div className="container wrapper no-padding">
+            <div className="row no-margin vph-100">
+              <div className="col-12 col-sm-12 col-md-12 col-lg-6 no-padding toppage-container">
+                <div className="banner-bg loginpage">
+                  <div className="row no-margin h-100">
+                    <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
+                      <div className="h-100 d-flex justify-content-center align-items-center">
+                        <img src={loginImage} className="login-image" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </form>
-          )}
-          <span>
-            Login using Phone number?&nbsp;
-            <LinkContainer to="/phonenumberlogin" style={linkStyle}>
-              <span>login</span>
-            </LinkContainer>
-          </span>
-
-          <span>
-            Dont you have an Account?&nbsp;
-            <LinkContainer to="/signup" style={linkStyle}>
-              <span>signup</span>
-            </LinkContainer>
-          </span>
+              <div className="col-12 col-sm-12 col-md-12 col-lg-6 no-padding">
+                <div className="dull-pg">
+                  <div className="row no-margin vph-100 d-flex align-items-center justify-content-center login-right-banner">
+                    <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
+                      <div className="shadow-card">
+                        <h2>Welcome Back</h2>
+                        <p>Login into your account</p>
+                        {loading ? (
+                          <CircularProgress className="loader" />
+                        ) : (
+                          <div className="tab-content" id="myTabContent">
+                            <div
+                              className="tab-pane fade show active"
+                              id="user"
+                              role="tabpanel"
+                              aria-labelledby="user-tab"
+                            >
+                              <form
+                                onSubmit={handleSubmit}
+                                className="login-form"
+                              >
+                                <div className="form-group">
+                                  <div className="group-img">
+                                    <i className="feather-user">
+                                      <User color="black" size={20} />
+                                    </i>
+                                    <input
+                                      error={
+                                        username.length > 0 && userValidateError
+                                      }
+                                      helperText={
+                                        username.length > 0 &&
+                                        userValidateError &&
+                                        "Invalid username"
+                                      }
+                                      required
+                                      className="form-control pass-input"
+                                      type="text"
+                                      placeholder="Enter username"
+                                      value={username}
+                                      onChange={handleUsername}
+                                      color={userValidateError && "success"}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="form-group">
+                                  <div className="pass-group group-img">
+                                    <i className="toggle-password feather-eye-off"></i>
+                                    <input
+                                      error={
+                                        LoginError && errorMessage.length > 0
+                                      }
+                                      helperText={
+                                        errorMessage.length > 0 &&
+                                        LoginError &&
+                                        errorMessage
+                                      }
+                                      required
+                                      type={showPassword ? "text" : "password"}
+                                      className="form-control pass-input"
+                                      placeholder="Enter password"
+                                      value={password}
+                                      onChange={handlePassword}
+                                    />
+                                    <span
+                                      onClick={togglePasswordVisibility}
+                                      className="feather-icon-wrapper"
+                                    >
+                                      {showPassword ? (
+                                        <EyeOff size={20} color="black" />
+                                      ) : (
+                                        <Eye size={20} color="black" />
+                                      )}
+                                    </span>
+                                  </div>
+                                </div>
+                                <button
+                                  className="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block"
+                                  type="submit"
+                                >
+                                  Login
+                                  <span className="right-arrow">
+                                    <ArrowRightCircle size={20} />
+                                  </span>
+                                </button>
+                              </form>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="bottom-texts">
+                        <div className="bottom-text-one text-center">
+                          <p>
+                            Login using Phone number?&nbsp;
+                            <LinkContainer
+                              to="/phonenumberlogin"
+                              style={{
+                                textDecoration: "underline",
+                                color: "white",
+                              }}
+                            >
+                              <span>Login</span>
+                            </LinkContainer>
+                          </p>
+                        </div>
+                        <div className="bottom-text-two text-center">
+                          <p>
+                            Dont you have an Account?&nbsp;
+                            <LinkContainer
+                              to="/signup"
+                              style={{
+                                textDecoration: "underline",
+                                color: "white",
+                              }}
+                            >
+                              <span>signup</span>
+                            </LinkContainer>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
