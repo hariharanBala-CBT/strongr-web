@@ -20,6 +20,7 @@ import {
 } from "../actions/actions";
 import { useHomeContext } from "../context/HomeContext";
 import { CircularProgress } from "@mui/material";
+import { fixImageUrls } from "../utils/imageUtils";
 import Footer from "../components/Footer";
 import cockImage from "../images/icons/work-cock.svg";
 import workImage from "../images/icons/work-icon1.svg";
@@ -128,6 +129,10 @@ function HomeScreen(history) {
       toast.error("error in fetching games");
     }
   }, [areaError, gameError]);
+
+  useEffect(() => {
+    fixImageUrls();
+  }, [topRatedClubs]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
