@@ -553,3 +553,22 @@ def PhoneLoginView(request):
     except KeyError:
         message = {'phone_number is required'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+from django.db.models import Avg, Count
+
+@api_view(['GET'])
+def getHighRatedClubs(request):
+    try:
+        locations_with_avg_rating = OrganizationLocation.objects.annotate(
+            avg_rating=Avg('review__rating'),
+            num_reviews=Count('review')
+        ).filter(is_active=True)
+
+        locations_sorted = locations_with_avg_rating.order_by('-avg_rating')
+        top_locations = locations_sorted[:6]
+        serializer = ClubSerializerWithImages(top_locations, many=True)
+        return Response(serializer.data)
+
+    except Exception as e:
+        print(e)
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)

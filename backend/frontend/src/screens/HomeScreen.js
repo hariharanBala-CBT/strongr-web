@@ -16,6 +16,7 @@ import {
   listGames,
   filterLocation,
   listOrganizations,
+  getTopRatedClubs,
 } from "../actions/actions";
 import { useHomeContext } from "../context/HomeContext";
 import { CircularProgress } from "@mui/material";
@@ -44,6 +45,9 @@ function HomeScreen(history) {
   const { gameError, gameLoading, games } = useSelector(
     (state) => state.gameList
   );
+  const { loadingTopRatedClubs, topRatedClubs } = useSelector(
+    (state) => state.topRatedClubs
+  );
 
   const handleSubmit = (event) => {
     // event.preventDefault();
@@ -69,6 +73,7 @@ function HomeScreen(history) {
   useEffect(() => {
     dispatch(listGames());
     dispatch(listAreas());
+    dispatch(getTopRatedClubs());
 
     const dtToday = new Date();
     const month = dtToday.getMonth() + 1;
@@ -333,7 +338,13 @@ function HomeScreen(history) {
           </div>
         </form>
       </section>
-      <Venue />
+      {loadingTopRatedClubs ? (
+        <CircularProgress />
+      ) : topRatedClubs && topRatedClubs.length === 0 ? (
+        <p>No top rated clubs found.</p>
+      ) : (
+        <Venue />
+      )}
       <Testimonial />
       <Footer />
     </div>

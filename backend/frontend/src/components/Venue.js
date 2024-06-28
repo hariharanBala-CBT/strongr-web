@@ -8,8 +8,14 @@ import venueImage1 from "../images/venue1.jpg";
 import venueImage2 from "../images/venue2.jpg";
 import venueImage3 from "../images/venue3.jpg";
 import venueImage4 from "../images/venue4.jpg";
+import { useSelector } from "react-redux";
 
 const Venue = () => {
+
+  const { topRatedClubs } = useSelector(
+    (state) => state.topRatedClubs
+  );
+
   const Venues = [
     {
       name: "Ramesh Kumar",
@@ -68,7 +74,7 @@ const Venue = () => {
       <div className="container">
         <div className="section-heading aos" data-aos="fade-up">
           <h2>
-            Featured <span>Venues</span>
+            Featured <span>Clubs</span>
           </h2>
           <p className="sub-title">
             Advanced sports venues offer the latest facilities, dynamic and
@@ -83,7 +89,7 @@ const Venue = () => {
                 className="owl-carousel owl-theme"
                 {...options}
               >
-                {Venues.length === 0 ? (
+                { topRatedClubs && topRatedClubs.length === 0 ? (
                   <div className="item">
                     <div className="shadow-effect">
                       <p>
@@ -99,14 +105,9 @@ const Venue = () => {
                     </div>
                   </div>
                 ) : (
-                  Venues.map((testiMonialDetail) => {
-                    return (
-                      <VenueDetails
-                        testiMonialDetail={testiMonialDetail}
-                        key={testiMonialDetail._key}
-                      />
-                    );
-                  })
+                  topRatedClubs?.map((club) => (
+                    <VenueDetails club={club} key={club.id} />
+                  ))
                 )}
               </OwlCarousel>
             </div>

@@ -381,7 +381,7 @@
 
 @media (max-width: 1399.98px) {
   .header .main-menu-wrapper .main-nav > li {
-    margin-right: 15px !important;
+    /* margin-right: 15px !important; */
   }
 }
 
