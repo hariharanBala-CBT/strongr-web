@@ -171,7 +171,7 @@ function HomeScreen(history) {
             <h2>
               How It <span>Works</span>
             </h2>
-            <Button href={customerGuide} className="guide" text="Guide" download />
+            <a href={customerGuide} className="guide">Guide</a>
             
             <p className="sub-title">
               Simplifying the booking process for coaches, venues, and athletes.
