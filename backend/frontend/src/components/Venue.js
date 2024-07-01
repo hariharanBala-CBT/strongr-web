@@ -69,6 +69,7 @@ const Venue = () => {
       },
     },
   };
+
   return (
     <section className="section featured-venues">
       <div className="container">

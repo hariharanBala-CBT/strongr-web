@@ -1,9 +1,6 @@
 import React from "react";
 import { Calendar, MapPin, Heart } from "react-feather";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHockeyPuck, faTableTennis } from "@fortawesome/free-solid-svg-icons";
 import { GiShuttlecock } from "react-icons/gi";
-import { IoIosFootball } from "react-icons/io";
 import { LinkContainer } from "react-router-bootstrap";
 
 const VenueDetails = ({ club }) => {
@@ -16,17 +13,15 @@ const VenueDetails = ({ club }) => {
           <a href="venue-details.html">
             {organization_images ? (
               <img
+              className="club-images"
                 src={organization_images}
                 alt="Venue"
-                height="200"
-                width="200"
               />
             ) : (
               <img
+              className="club-images"
                 src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
                 alt="Venue"
-                height="200"
-                width="200"
               />
             )}
           </a>
