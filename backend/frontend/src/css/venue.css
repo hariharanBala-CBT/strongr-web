@@ -602,11 +602,11 @@
     margin-right: 24px;
   }
 
-  .clubs-display .featured-venues-item.venue-list-item .listing-item .listing-img img {
+  .featured-venues-item.venue-list-item .listing-item .listing-img img {
     border-radius: 10px 0 0 10px;
   }
 
-  .clubs-display .listing-item-grid .listing-img img {
+  .listing-item-grid .listing-img img {
     width: 100%;
     height: 100%;
     object-fit: cover !important;
@@ -619,4 +619,8 @@
 
   .venue-wrapper .gametype {
     color: #192335 !important;
+  }
+
+  .listing-item-grid {
+    margin: 0 0 24px;
   }

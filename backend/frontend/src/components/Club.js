@@ -1,20 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import { GiShuttlecock } from "react-icons/gi";
+import { Calendar, MapPin } from "react-feather";
 import { useHomeContext } from "../context/HomeContext";
-
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-
-import Rating from "./Rating";
+import profileImage from "../images/profile.jpg";
+import venueImage from "../images/venue3.jpg";
 
 import "../css/club.css";
 
 function Club({ clubs }) {
-
   const navigate = useNavigate();
 
-  const { recentlySearchedKeywords, setRecentlySearchedKeywords } = useHomeContext();
+  const { recentlySearchedKeywords, setRecentlySearchedKeywords } =
+    useHomeContext();
 
   const handleViewDetails = (club) => {
     if (club) {
@@ -30,53 +28,108 @@ function Club({ clubs }) {
   };
 
   return (
-    <div className={clubs && "clubs-display"}>
-      {clubs &&
-        clubs.map((club) => (
-          <div className="flip-card" onClick={() => handleViewDetails(club)}>
-            <div className="flip-card-inner">
-              <Card key={club.id} className="flip-card-front">
-                <div className="flip-card-front">
-                  <Card.Img
-                    variant="top"
-                    src={club && club?.organization_images}
-                    alt="Image"
-                    className="image"
-                  />
-
-                  <Card.Body>
-                    <Card.Title>
-                      {club.organization.organization_name}
-                    </Card.Title>
-                  </Card.Body>
+    <div className="container">
+      <div className="content listing-list-page">
+        <div className="container">
+          <div className="row justify-content-center">
+            {clubs &&
+              clubs.map((club) => (
+                <div
+                  className="col-lg-12 col-md-12"
+                  onClick={() => handleViewDetails(club)}
+                >
+                  <div className="featured-venues-item venue-list-item">
+                    <div className="listing-item listing-item-grid">
+                      <div className="listing-img">
+                        <a>
+                          {club && club.organization_images ? (
+                            <img
+                              src={club.organization_images}
+                              alt="Organization"
+                            />
+                          ) : (
+                            <img src={venueImage} alt="Organization" />
+                          )}
+                        </a>
+                        <div className="fav-item-venues">
+                          <span className="tag tag-blue">Featured</span>
+                          <h5 className="tag tag-primary">
+                            $450<span>/hr</span>
+                          </h5>
+                        </div>
+                      </div>
+                      <div className="listing-content">
+                        <div className="list-reviews">
+                          <div className="d-flex align-items-center">
+                            <span className="rating-bg">4.2</span>
+                            <span>300 Reviews</span>
+                          </div>
+                          <a href="javascript:void(0)" className="fav-icon">
+                            <i className="feather-heart"></i>
+                          </a>
+                        </div>
+                        <h3 className="listing-title">
+                          <a href="venue-details.html">
+                            {club.organization.organization_name}
+                          </a>
+                        </h3>
+                        <div className="listing-details-group">
+                          <p>
+                            Elevate your athletic journey at Sarah Sports
+                            Academy, where excellence meets opportunity.
+                          </p>
+                          <ul className="listing-details-info">
+                            <li>
+                              <span>
+                                <i className="feather-map-pin">
+                                  <MapPin />
+                                </i>
+                                {club.address_line_1},{club?.area?.area_name}
+                              </span>
+                            </li>
+                            <li>
+                              <span>
+                                <i className="gametype">Game : </i>
+                                <span className="gameicon">
+                                  <GiShuttlecock size="2em" />
+                                </span>{" "}
+                                <span className="primary-text">Badminton</span>
+                              </span>
+                            </li>
+                          </ul>
+                        </div>
+                        <div className="listing-button">
+                          <div className="listing-venue-owner">
+                            <a className="navigation">
+                              <img src={profileImage} alt="User" />
+                              Mart Sublin
+                            </a>
+                          </div>
+                          <a
+                            onClick={() => handleViewDetails(club)}
+                            className="user-book-now"
+                          >
+                            <span>
+                              <i className="feather-calendar me-2">
+                                <Calendar />
+                              </i>
+                            </span>
+                            Book Now
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </Card>
-              <Card key={club.id} className="flip-card-back">
-                <Card.Body className="content">
-                  <Card.Title>{club.organization.organization_name}</Card.Title>
-                  <Card.Text style={{ textDecoration: "none", color: "gray" }}>
-                    {club.numRatings >= 0 && (
-                      <Rating
-                        value={club.rating}
-                        text={`${club.numRatings} reviews`}
-                        color={"#f8e825"}
-                      />
-                    )}
-
-                    <div>{club.address_line_1}</div>
-                    <strong>{club?.area?.area_name}</strong>
-                    <Button
-                      variant="outline-dark"
-                      onClick={() => handleViewDetails(club)}
-                    >
-                      View Details
-                    </Button>
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+              ))}
+            <div className="col-12 text-center">
+              <div className="more-details">
+                {/* <a href="#" className="btn btn-load">Load More Coaches <img src="assets/img/icons/u_plus-square.svg" className="ms-2" alt="Icon"></a> */}
+              </div>
             </div>
           </div>
-        ))}
+        </div>
+      </div>
     </div>
   );
 }
