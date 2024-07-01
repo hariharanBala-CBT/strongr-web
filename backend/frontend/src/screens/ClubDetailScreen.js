@@ -26,7 +26,8 @@ import {
   createClubReview,
   listClubReviews,
   login,
-  } from "../actions/actions";
+} from "../actions/actions";
+import { fixImageUrls } from "../utils/imageUtils";
 
 import { CLUB_CREATE_REVIEW_RESET } from "../constants/constants";
 
@@ -178,16 +179,6 @@ function ClubDetailScreen() {
   }, [isLogin, userLoginSuccess]);
 
   useEffect(() => {
-    const fixImageUrls = () => {
-      const images = document.querySelectorAll("img");
-      images.forEach((img) => {
-        const src = img.getAttribute("src");
-        if (src && src.startsWith("https//")) {
-          img.setAttribute("src", src.replace("https//", "https://"));
-        }
-      });
-    };
-
     fixImageUrls();
   }, [clubImage]);
 

@@ -1,13 +1,9 @@
 import React from "react";
 import { Calendar, MapPin, Heart } from "react-feather";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHockeyPuck, faTableTennis } from "@fortawesome/free-solid-svg-icons";
 import { GiShuttlecock } from "react-icons/gi";
-import { IoIosFootball } from "react-icons/io";
 import { LinkContainer } from "react-router-bootstrap";
 
 const VenueDetails = ({ club }) => {
-
   const { address_line_1, organization, organization_images } = club;
 
   return (
@@ -15,10 +11,19 @@ const VenueDetails = ({ club }) => {
       <div className="listing-item mb-0">
         <div className="listing-img">
           <a href="venue-details.html">
-            {organization_images ?
-            <img src={organization_images} alt="Venue" height="200" width="200" />
-            :<img src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg" alt="Venue" height="200" width="200" />
-            }
+            {organization_images ? (
+              <img
+              className="club-images"
+                src={organization_images}
+                alt="Venue"
+              />
+            ) : (
+              <img
+              className="club-images"
+                src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
+                alt="Venue"
+              />
+            )}
           </a>
           <div className="fav-item-venues">
             <span className="tag tag-blue">Featured</span>
@@ -30,8 +35,12 @@ const VenueDetails = ({ club }) => {
         <div className="listing-content">
           <div className="list-reviews">
             <div className="d-flex align-items-center">
-              {club.rating && <><span className="rating-bg">{club.rating}</span>
-              <span>{club.numRatings} reviews</span></>}
+              {club.rating && (
+                <>
+                  <span className="rating-bg">{club.rating}</span>
+                  <span>{club.numRatings} reviews</span>
+                </>
+              )}
             </div>
             <a href="javascript:void(0)" className="fav-icon">
               <i className="feather-heart">
@@ -67,15 +76,22 @@ const VenueDetails = ({ club }) => {
           <div className="listing-button">
             <div className="listing-venue-owner">
               <a className="navigation" href="coach-detail.html">
-                <img src={organization_images} alt="Venue" />
+                {organization_images ? (
+                  <img src={organization_images} alt="Venue" />
+                ) : (
+                  <img
+                    src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
+                    alt="Venue"
+                  />
+                )}
                 {organization.organization_name}
               </a>
             </div>
             <LinkContainer to={`/club/${club.id}`} className="user-book-now">
-                <i className="feather-calendar me-2">
-                  <Calendar />
-                  Book Now
-                </i>
+              <i className="feather-calendar me-2">
+                <Calendar />
+                Book Now
+              </i>
             </LinkContainer>
           </div>
         </div>

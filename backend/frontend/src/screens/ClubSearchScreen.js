@@ -13,6 +13,7 @@ import { CircularProgress } from "@mui/material";
 import { useHomeContext } from "../context/HomeContext";
 
 import { listOrganizations, RecentSearch } from "../actions/actions";
+import { fixImageUrls } from "../utils/imageUtils";
 
 import "../css/clubsearchscreen.css";
 
@@ -34,16 +35,6 @@ function ClubSearchScreen() {
   };
 
   useEffect(() => {
-    const fixImageUrls = () => {
-      const images = document.querySelectorAll("img");
-      images.forEach((img) => {
-        const src = img.getAttribute("src");
-        if (src && src.startsWith("https//")) {
-          img.setAttribute("src", src.replace("https//", "https://"));
-        }
-      });
-    };
-
     fixImageUrls();
   }, [filteredClubLocations, filteredData]);
 

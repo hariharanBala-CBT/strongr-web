@@ -620,3 +620,8 @@
   .venue-wrapper .gametype {
     color: #192335 !important;
   }
+
+  .club-images {
+    width: 100% !important;
+    height: 200px !important;
+  }

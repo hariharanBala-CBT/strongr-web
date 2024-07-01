@@ -89,7 +89,7 @@ def search(request):
     organization_locations = OrganizationLocation.objects.filter(
         organization__in=organizations, status=1, organization__status=1)
 
-    serializer = ClubSerializerWithImages(organization_locations, many=True)
+    serializer = ClubLocationSerializerWithImages(organization_locations, many=True)
     serialized_data = serializer.data
     return Response(serialized_data)
 
@@ -101,7 +101,7 @@ def recentSearch(request):
     organization_locations = OrganizationLocation.objects.filter(
         id__in=stored_keywords)
 
-    serializer = ClubSerializerWithImages(organization_locations, many=True)
+    serializer = ClubLocationSerializerWithImages(organization_locations, many=True)
     return Response(serializer.data)
 
 
@@ -241,7 +241,7 @@ def filterClubs(request):
         org_game_name.organization_location for org_game_name in game_names
     ]
 
-    serializer = ClubSerializerWithImages(organizationlocations, many=True)
+    serializer = ClubLocationSerializerWithImages(organizationlocations, many=True)
     return Response(serializer.data)
 
 
@@ -253,7 +253,7 @@ def getSuggestedClub(request):
         selected_area_obj = Area.objects.get(area_name=selected_area)
         organizationlocations = OrganizationLocation.objects.filter(
             area=selected_area_obj, status=1, organization__status=1)
-        serializer = ClubSerializerWithImages(organizationlocations, many=True)
+        serializer = ClubLocationSerializerWithImages(organizationlocations, many=True)
         return Response(serializer.data)
 
     except Area.DoesNotExist:
@@ -276,7 +276,7 @@ def getSuggestedClubGame(request):
             if ogt.organization_location.status == 1
         ]
 
-        serializer = ClubSerializerWithImages(organization_locations,
+        serializer = ClubLocationSerializerWithImages(organization_locations,
                                               many=True)
         return Response(serializer.data)
 
@@ -566,7 +566,7 @@ def getHighRatedClubs(request):
 
         locations_sorted = locations_with_avg_rating.order_by('-avg_rating')
         top_locations = locations_sorted[:6]
-        serializer = ClubSerializerWithImages(top_locations, many=True)
+        serializer = ClubLocationSerializerWithImages(top_locations, many=True)
         return Response(serializer.data)
 
     except Exception as e:
