@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { User, Eye, EyeOff, ArrowRightCircle } from "react-feather";
-import loginImage from "../images/strongr-login-new.png";
 import { CircularProgress } from "@mui/material";
-
+import logoImage from "../images/logo-color.png";
 import { login, validateUser } from "../actions/actions";
 
 import { USER_LOGIN_RESET } from "../constants/constants";
@@ -81,7 +80,20 @@ function LoginScreen() {
                   <div className="row no-margin h-100">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
                       <div className="h-100 d-flex justify-content-center align-items-center">
-                        <img src={loginImage} className="login-image" />
+                        <div className="text-bg register text-center image-color-wrapper">
+                          <button
+                            type="button"
+                            className="btn btn-limegreen text-capitalize"
+                          >
+                            <i className="fa-solid fa-thumbs-up me-3"></i>Login
+                            User
+                          </button>
+                          <p>
+                            Log in right away for our advanced sports software
+                            solutions, created to address issues in regular
+                            sporting events and activities.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -91,9 +103,16 @@ function LoginScreen() {
                 <div className="dull-pg">
                   <div className="row no-margin vph-100 d-flex align-items-center justify-content-center login-right-banner">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
+                      <header class="text-center">
+                        <LinkContainer to="/">
+                          <a href="#">
+                            <img src={logoImage} class="img-fluid" alt="Logo" />
+                          </a>
+                        </LinkContainer>
+                      </header>
                       <div className="shadow-card">
                         <h2>Welcome Back</h2>
-                        <p>Login into your account</p>
+                        <p>Login into your Account</p>
                         {loading ? (
                           <CircularProgress className="loader" />
                         ) : (
@@ -125,7 +144,7 @@ function LoginScreen() {
                                       required
                                       className="form-control pass-input"
                                       type="text"
-                                      placeholder="Enter username"
+                                      placeholder="Enter Username"
                                       value={username}
                                       onChange={handleUsername}
                                       color={userValidateError && "success"}
@@ -147,7 +166,7 @@ function LoginScreen() {
                                       required
                                       type={showPassword ? "text" : "password"}
                                       className="form-control pass-input"
-                                      placeholder="Enter password"
+                                      placeholder="Enter Password"
                                       value={password}
                                       onChange={handlePassword}
                                     />
@@ -180,12 +199,12 @@ function LoginScreen() {
                       <div className="bottom-texts">
                         <div className="bottom-text-one text-center">
                           <p>
-                            Login using Phone number?&nbsp;
+                            Login using Phone Number?&nbsp;
                             <LinkContainer
                               to="/phonenumberlogin"
                               style={{
                                 textDecoration: "underline",
-                                color: "white",
+                                color: "#192335",
                               }}
                             >
                               <span>Login</span>
@@ -194,15 +213,15 @@ function LoginScreen() {
                         </div>
                         <div className="bottom-text-two text-center">
                           <p>
-                            Dont you have an Account?&nbsp;
+                            Don’t have an Account?&nbsp;
                             <LinkContainer
                               to="/signup"
                               style={{
                                 textDecoration: "underline",
-                                color: "white",
+                                color: "#192335",
                               }}
                             >
-                              <span>signup</span>
+                              <span>Signup</span>
                             </LinkContainer>
                           </p>
                         </div>

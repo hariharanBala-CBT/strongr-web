@@ -56,8 +56,12 @@ function ClubListScreen() {
   const { clubFilterLoading, clubLocationDetails } = useSelector(
     (state) => state.filterClubLocations
   );
-  const { suggestedClubList, loadingSuggestedClub } = useSelector((state) => state.suggestedClubs);
-  const { suggestedClubGameList, loadingSuggestedClubGame } = useSelector((state) => state.suggestedClubsGame);
+  const { suggestedClubList, loadingSuggestedClub } = useSelector(
+    (state) => state.suggestedClubs
+  );
+  const { suggestedClubGameList, loadingSuggestedClubGame } = useSelector(
+    (state) => state.suggestedClubsGame
+  );
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -154,10 +158,22 @@ function ClubListScreen() {
   }, [clubFilterLoading, loadingSuggestedClub, loadingSuggestedClubGame]);
 
   return (
-    <div>
+    <div className="header-breadcrumb">
       <Header location="nav-all" />
       <Toaster />
-      <div className="form-section">
+      <section className="breadcrumb breadcrumb-list mb-0">
+        <span className="primary-right-round"></span>
+        <div className="container">
+          <h1 className="text-white">Venue List</h1>
+          <ul>
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>Venue List</li>
+          </ul>
+        </div>
+      </section>
+      <div className="form-section game-search-club">
         <form onSubmit={handleSubmit}>
           <div className="check-availability-container-club">
             {gameLoading ? (
@@ -213,14 +229,14 @@ function ClubListScreen() {
         </form>
       </div>
       {loading ? (
-        <div className="clubs-filter-loader">
-          <CircularProgress />
-        </div>
+        <CircularProgress />
       ) : (
         <>
           {clubLocationDetails.length > 0 ? (
             <>
-              <Club clubs={clubLocationDetails} />
+              <div className="club-list">
+                <Club clubs={clubLocationDetails} />
+              </div>
             </>
           ) : (
             <>
@@ -263,6 +279,7 @@ function ClubListScreen() {
           )}
         </>
       )}
+
       <Footer name="clublist-f" />
     </div>
   );

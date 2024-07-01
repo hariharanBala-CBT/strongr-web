@@ -12,9 +12,8 @@ import {
   ArrowRightCircle,
 } from "react-feather";
 import OTPInput, { ResendOTP } from "otp-input-react";
-
+import logoImage from "../images/logo-color.png";
 import Button from "../components/Button";
-import registerImage from "../images/strongr.png";
 import { Box, CircularProgress, Modal } from "@mui/material";
 
 import { generateOTP, register, validateUserDetails } from "../actions/actions";
@@ -123,7 +122,7 @@ function RegisterScreen() {
       } else {
         toast.error(registerError);
       }
-      setOpenForm(false); 
+      setOpenForm(false);
       dispatch({
         type: USER_LOGOUT,
       });
@@ -150,7 +149,20 @@ function RegisterScreen() {
                   <div className="row no-margin h-100">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
                       <div className="h-100 d-flex justify-content-center align-items-center">
-                        <img src={registerImage} className="register-image" />
+                        <div class="text-bg register text-center image-color-wrapper">
+                          <button
+                            type="button"
+                            className="btn btn-limegreen text-capitalize"
+                          >
+                            <i className="fa-solid fa-thumbs-up me-3"></i>
+                            register Now
+                          </button>
+                          <p>
+                            Register now for our innovative sports software
+                            solutions, designed to tackle challenges in everyday
+                            sports activities and events.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -160,6 +172,13 @@ function RegisterScreen() {
                 <div className="dull-pg">
                   <div className="row no-margin vph-100 d-flex align-items-center justify-content-center signup-right-banner">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
+                      <header class="text-center">
+                        <LinkContainer to="/">
+                          <a href="#">
+                            <img src={logoImage} class="img-fluid" alt="Logo" />
+                          </a>
+                        </LinkContainer>
+                      </header>
                       <div className="shadow-card">
                         <h2>Get Started With Strongr</h2>
                         <div className="tab-content" id="myTabContent">
@@ -179,7 +198,7 @@ function RegisterScreen() {
                                     className="form-control pass-input"
                                     required
                                     type="text"
-                                    placeholder="Enter name"
+                                    placeholder="Username"
                                     value={name}
                                     onChange={(e) => {
                                       setName(e.target.value);
@@ -198,7 +217,7 @@ function RegisterScreen() {
                                     className="form-control pass-input"
                                     required
                                     type="email"
-                                    placeholder="Enter email"
+                                    placeholder="Email"
                                     value={email}
                                     onChange={(e) => {
                                       setEmail(e.target.value);
@@ -216,7 +235,7 @@ function RegisterScreen() {
                                     className="form-control pass-input"
                                     required
                                     type="tel"
-                                    placeholder="Enter phone number"
+                                    placeholder="Phone Number"
                                     value={phoneNumber}
                                     onChange={(e) => {
                                       setPhoneNumber(e.target.value);
@@ -300,7 +319,7 @@ function RegisterScreen() {
                                 className="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block"
                                 type="submit"
                               >
-                                Create Account
+                                Signup
                                 <span className="right-arrow">
                                   <ArrowRightCircle size={20} />
                                 </span>
@@ -311,15 +330,9 @@ function RegisterScreen() {
                       </div>
                       <div className="bottom-text text-center">
                         <p>
-                          Have an account?
-                          <LinkContainer
-                            to="/login"
-                            style={{
-                              textDecoration: "underline",
-                              color: "#045a3a",
-                            }}
-                          >
-                            <span> login</span>
+                          Have an Account?
+                          <LinkContainer to="/login">
+                            <span> Login</span>
                           </LinkContainer>
                         </p>
                       </div>

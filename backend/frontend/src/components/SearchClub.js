@@ -22,32 +22,38 @@ function SearchClub({ clubs, onClubClick }) {
 
   return (
     <div className="clubs-display">
-      {clubs && clubs.map((club) => (
-        <Card key={club.id} onMouseEnter={showButton} onMouseLeave={hideButton}>
-          {isButtonVisible && (
-            <LinkContainer to={`/club/${club.id}`}>
-              <Button variant="outline-dark" onClick={() => handleViewDetails(club)}>
-                View Details
-              </Button>
-            </LinkContainer>
-          )}
+      {clubs &&
+        clubs.map((club) => (
+          <Card
+            key={club.id}
+            onMouseEnter={showButton}
+            onMouseLeave={hideButton}
+          >
+            {isButtonVisible && (
+              <LinkContainer to={`/club/${club.id}`}>
+                <Button
+                  variant="outline-dark"
+                  onClick={() => handleViewDetails(club)}
+                >
+                  View Details
+                </Button>
+              </LinkContainer>
+            )}
 
-          <Card.Img
-            variant="top"
-            src="https://source.unsplash.com/Jr5x1CAWySo"
-            alt="Image"
-          />
+            <Card.Img
+              variant="top"
+              src="https://source.unsplash.com/Jr5x1CAWySo"
+              alt="Image"
+            />
 
-          <Card.Body>
-            <Card.Title>
-              {club.organization_name}
-            </Card.Title>
-            <Card.Text style={{ textDecoration: "none", color: "gray" }}>
-              <div>{club.address_line_1}</div>
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      ))}
+            <Card.Body>
+              <Card.Title>{club.organization_name}</Card.Title>
+              <Card.Text style={{ textDecoration: "none", color: "gray" }}>
+                <div>{club.address_line_1}</div>
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        ))}
     </div>
   );
 }
