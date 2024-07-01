@@ -198,7 +198,7 @@ function RegisterScreen() {
                                     className="form-control pass-input"
                                     required
                                     type="text"
-                                    placeholder="Enter Name"
+                                    placeholder="Username"
                                     value={name}
                                     onChange={(e) => {
                                       setName(e.target.value);
@@ -217,7 +217,7 @@ function RegisterScreen() {
                                     className="form-control pass-input"
                                     required
                                     type="email"
-                                    placeholder="Enter Email"
+                                    placeholder="Email"
                                     value={email}
                                     onChange={(e) => {
                                       setEmail(e.target.value);
@@ -235,7 +235,7 @@ function RegisterScreen() {
                                     className="form-control pass-input"
                                     required
                                     type="tel"
-                                    placeholder="Enter Phone Number"
+                                    placeholder="Phone Number"
                                     value={phoneNumber}
                                     onChange={(e) => {
                                       setPhoneNumber(e.target.value);

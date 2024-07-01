@@ -1,18 +1,25 @@
 .generate-btn,
 .login-btn {
-  padding: 10px 18px;
-  font-size: 15px;
+  padding: 10px 100px;
+  font-size: 18px;
   color: white;
   background: black;
   border: 2px;
   border-radius: 25px;
   cursor: pointer;
   align-self: center;
+  
+}
+
+.generate-btn:hover {
+  background: #097E52;
+  border-color: #097E52 !important;
+  color: #fff;
 }
 
 .react-tel-input .form-control {
   height: 45px !important;
-  width: 300px !important;
+  width: 400px !important;
   margin-bottom: 40px !important;
 }
 
@@ -49,8 +56,8 @@
   backdrop-filter: blur(2px);
 }
 
-.shadow-card .bottom-paras {
-  margin-top: 30px;
+.phone-login-right-banner .shadow-card .bottom-paras {
+  margin-top: 50px;
 }
 
 .bottom-paras p{
@@ -65,7 +72,10 @@
 
 @media (max-width: 770px) {
   .react-tel-input .form-control {
-    width: 230px !important;
+    width: 290px !important;
+  }
+  .generate-btn {
+    padding: 10px 80px;
   }
 }
 
@@ -104,7 +114,37 @@ input.otp-input-field {
 
 .bottom-paras .links {
   text-decoration: underline;
-  color: black;
-  font-weight: 500;
-  font-size: 17px;
+  color: #0e5072;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.bottom-paras .links:hover {
+  color: #097E52 !important;
+}
+
+.authendication-pages .register-content .wrapper .banner-bg.phone-login {
+  background-image: url(../images/strongr-phone-login.jpg);
+}
+
+.phone-login-right-banner .shadow-card h2 {
+  color: #192335;
+  font-weight: 700;
+  font-size: 32px;
+}
+
+.phone-login-right-banner .phone-textp {
+  color: #6B7385;
+  margin-bottom: 1rem;
+  font-size: 20px !important;
+}
+
+.phone-login-right-banner .shadow-card {
+  display: grid;
+  justify-content: center;
+}
+
+.phone-login-right-banner .bottom-paras p {
+  font-size: 16px !important;
+  font-weight: 600 !important;
 }

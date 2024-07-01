@@ -13,7 +13,7 @@ import { auth } from "../firebase.config";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 import { loginPhoneNumber, validatePhone } from "../actions/actions";
-
+import logoImage from "../images/logo-color.png";
 import "../css/phonenumscreen.css";
 
 function PhoneNumberScreen() {
@@ -141,77 +141,151 @@ function PhoneNumberScreen() {
 
   return (
     <div className="phonelogin-wrapper">
+      <Toaster />
       <div className="main-wrapper authendication-pages">
-        <div className="content blur-ellipses">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-6 col-lg-6 mx-auto vph-100 d-flex align-items-center phone-login">
-                <div className="forgot-password w-100">
-                  <div className="shadow-card">
-                    <Toaster toastOptions={{ duration: 4000 }} />
-                    <div id="recaptcha-container"></div>
-                    <h2 className="login-title">Login</h2>
-                    <form>
-                      <label className="phone-textp">
-                        Enter Registered Phone Number
-                      </label>
-                      <PhoneInput
-                        required
-                        country={"in"}
-                        placeholder="Enter phone number"
-                        value={ph}
-                        onChange={(value) => {
-                          handlePhoneNumberChange();
-                          setPh(value);
-                        }}
-                      />
-                      {showOTPInput && (
-                        <div className="OTP">
-                          <label>Enter OTP</label>
-                          <OTPInput
-                            className="otp-input-field"
-                            value={otp}
-                            onChange={setOTP}
-                            numInputs={6}
-                            otpType="number"
-                            autoFocus
-                            renderInput={renderInput}
+        <div className="register-content">
+          <div className="container wrapper no-padding">
+            <div className="row no-margin vph-100">
+              <div className="col-12 col-sm-12 col-md-12 col-lg-6 no-padding toppage-container">
+                <div className="banner-bg phone-login">
+                  <div className="row no-margin h-100">
+                    <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
+                      <div className="h-100 d-flex justify-content-center align-items-center">
+                        <div className="text-bg register text-center image-color-wrapper">
+                          <button
+                            type="button"
+                            className="btn btn-limegreen text-capitalize"
+                          >
+                            <i className="fa-solid fa-thumbs-up me-3"></i>Login
+                            User
+                          </button>
+                          <p>
+                            Log in right away for our advanced sports software
+                            solutions, created to address issues in regular
+                            sporting events and activities.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 col-sm-12 col-md-12 col-lg-6 no-padding">
+                <div className="dull-pg">
+                  <div className="row no-margin vph-100 d-flex align-items-center justify-content-center phone-login-right-banner">
+                    <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
+                      <header class="text-center">
+                        <LinkContainer to="/">
+                          <a href="#">
+                            <img src={logoImage} class="img-fluid" alt="Logo" />
+                          </a>
+                        </LinkContainer>
+                      </header>
+                      <div className="shadow-card">
+                        <Toaster toastOptions={{ duration: 4000 }} />
+                        <div id="recaptcha-container"></div>
+                        <h2 className="login-title">
+                          Get Started With Strongr
+                        </h2>
+                        <form>
+                          <label className="phone-textp">
+                            Enter Registered Phone Number
+                          </label>
+                          <PhoneInput
+                            required
+                            country={"in"}
+                            placeholder="Enter phone number"
+                            value={ph}
+                            onChange={(value) => {
+                              handlePhoneNumberChange();
+                              setPh(value);
+                            }}
                           />
+                          {showOTPInput && (
+                            <div className="OTP">
+                              <label>Enter OTP</label>
+                              <OTPInput
+                                className="otp-input-field"
+                                value={otp}
+                                onChange={setOTP}
+                                numInputs={6}
+                                otpType="number"
+                                autoFocus
+                                renderInput={renderInput}
+                              />
+                            </div>
+                          )}
+                          {loading && (
+                            <div className="otp-loader">
+                              <CircularProgress className="loader" />{" "}
+                            </div>
+                          )}
+                          {!showOTPInput && (
+                            <div className="my-buttons">
+                              <button
+                                className="generate-btn"
+                                onClick={onSignup}
+                              >
+                                Generate OTP
+                              </button>
+                            </div>
+                          )}
+                          {showOTPInput && (
+                            <div className="my-buttons">
+                              <button
+                                className="login-btn"
+                                onClick={onOTPVerify}
+                              >
+                                Login
+                              </button>
+                            </div>
+                          )}
+                        </form>
+                        <div className="bottom-paras">
+                          <p>
+                            Login through Username &nbsp;
+                            <LinkContainer to="/login" className="links">
+                              <span>Login</span>
+                            </LinkContainer>
+                          </p>
+                          <p>
+                            Don't have an Account?&nbsp;
+                            <LinkContainer to="/signup" className="links">
+                              <span>Signup</span>
+                            </LinkContainer>
+                          </p>
                         </div>
-                      )}
-                      {loading && (
-                        <div className="otp-loader">
-                          <CircularProgress className="loader" />{" "}
+                      </div>
+                      {/* <div className="bottom-texts">
+                        <div className="bottom-text-one text-center">
+                          <p>
+                            Login using Phone Number?&nbsp;
+                            <LinkContainer
+                              to="/phonenumberlogin"
+                              style={{
+                                textDecoration: "underline",
+                                color: "#192335",
+                              }}
+                            >
+                              <span>Login</span>
+                            </LinkContainer>
+                          </p>
                         </div>
-                      )}
-                      {!showOTPInput && (
-                        <div className="my-buttons">
-                          <button className="generate-btn" onClick={onSignup}>
-                            Generate OTP
-                          </button>
+                        <div className="bottom-text-two text-center">
+                          <p>
+                            Don’t have an Account?&nbsp;
+                            <LinkContainer
+                              to="/signup"
+                              style={{
+                                textDecoration: "underline",
+                                color: "#192335",
+                              }}
+                            >
+                              <span>Signup</span>
+                            </LinkContainer>
+                          </p>
                         </div>
-                      )}
-                      {showOTPInput && (
-                        <div className="my-buttons">
-                          <button className="login-btn" onClick={onOTPVerify}>
-                            Login
-                          </button>
-                        </div>
-                      )}
-                    </form>
-                    <div className="bottom-paras">
-                      <p>
-                        Login through username &nbsp;
-                        <LinkContainer to="/login" className="links">
-                          <span>Login</span>
-                        </LinkContainer>
-                      </p>
-                      <p>
-                        Don't have an Account?&nbsp;
-                        <LinkContainer to="/signup" className="links">
-                          <span>Signup</span>
-                        </LinkContainer>
-                      </p>
+                      </div> */}
                     </div>
                   </div>
                 </div>
