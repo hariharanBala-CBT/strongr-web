@@ -14,7 +14,7 @@ SUCCESS_MESSAGES = {
 
     #update
     'update_profile' : 'Profile updated successfully',
-    'update_location' : 'Location updated successfully',
+    'update_location' : 'Address updated successfully',
     'update_game' : 'Game updated successfully',
     'update_image' : 'Image updated successfully',
     'update_court' : 'Court updated successfully',
