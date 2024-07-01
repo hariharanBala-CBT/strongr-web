@@ -624,3 +624,8 @@
   .listing-item-grid {
     margin: 0 0 24px;
   }
+
+  .club-images {
+    width: 100% !important;
+    height: 200px !important;
+  }

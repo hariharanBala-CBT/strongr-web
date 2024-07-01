@@ -23,6 +23,7 @@ import {
   listSuggestedClub,
   listSuggestedClubGame,
 } from "../actions/actions";
+import { fixImageUrls } from "../utils/imageUtils";
 
 import "../css/clublistscreen.css";
 
@@ -70,16 +71,6 @@ function ClubListScreen() {
   };
 
   useEffect(() => {
-    const fixImageUrls = () => {
-      const images = document.querySelectorAll("img");
-      images.forEach((img) => {
-        const src = img.getAttribute("src");
-        if (src && src.startsWith("https//")) {
-          img.setAttribute("src", src.replace("https//", "https://"));
-        }
-      });
-    };
-
     fixImageUrls();
   }, [suggestedClubGameList, suggestedClubList, clubLocationDetails]);
 

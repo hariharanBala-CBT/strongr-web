@@ -1,30 +1,46 @@
 import React from "react";
 import { Calendar, MapPin, Heart } from "react-feather";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHockeyPuck, faTableTennis } from "@fortawesome/free-solid-svg-icons";
 import { GiShuttlecock } from "react-icons/gi";
-import { IoIosFootball } from "react-icons/io";
-const VenueDetails = ({ testiMonialDetail }) => {
-  const { name, address, description, img } = testiMonialDetail;
+import { LinkContainer } from "react-router-bootstrap";
+
+const VenueDetails = ({ club }) => {
+  const { address_line_1, organization, organization_images } = club;
+
   return (
     <div className="venue-wrapper">
       <div className="listing-item mb-0">
         <div className="listing-img">
           <a href="venue-details.html">
-            <img src={img} alt="Venue" />
+            {organization_images ? (
+              <img
+              className="club-images"
+                src={organization_images}
+                alt="Venue"
+              />
+            ) : (
+              <img
+              className="club-images"
+                src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
+                alt="Venue"
+              />
+            )}
           </a>
           <div className="fav-item-venues">
             <span className="tag tag-blue">Featured</span>
-            <h5 className="tag tag-primary">
+            {/* <h5 className="tag tag-primary">
               ₹450<span>/hr</span>
-            </h5>
+            </h5> */}
           </div>
         </div>
         <div className="listing-content">
           <div className="list-reviews">
             <div className="d-flex align-items-center">
-              <span className="rating-bg">4.2</span>
-              <span>300 Reviews</span>
+              {club.rating && (
+                <>
+                  <span className="rating-bg">{club.rating}</span>
+                  <span>{club.numRatings} reviews</span>
+                </>
+              )}
             </div>
             <a href="javascript:void(0)" className="fav-icon">
               <i className="feather-heart">
@@ -33,17 +49,17 @@ const VenueDetails = ({ testiMonialDetail }) => {
             </a>
           </div>
           <h3 className="listing-title">
-            <a href="venue-details.html">D'Pearl sports academy</a>
+            <a href="venue-details.html">{organization.organization_name}</a>
           </h3>
           <div className="listing-details-group">
-            <p>{description}</p>
+            <p>{organization.description}</p>
             <ul>
               <li>
                 <span>
                   <i className="feather-map-pin">
                     <MapPin />
                   </i>
-                  {address}
+                  {address_line_1}
                 </span>
               </li>
               <li>
@@ -60,18 +76,23 @@ const VenueDetails = ({ testiMonialDetail }) => {
           <div className="listing-button">
             <div className="listing-venue-owner">
               <a className="navigation" href="coach-detail.html">
-                <img src={img} alt="Venue" />
-                {name}
+                {organization_images ? (
+                  <img src={organization_images} alt="Venue" />
+                ) : (
+                  <img
+                    src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
+                    alt="Venue"
+                  />
+                )}
+                {organization.organization_name}
               </a>
             </div>
-            <a href="javascript:void(0);" className="user-book-now">
-              <span>
-                <i className="feather-calendar me-2">
-                  <Calendar />
-                </i>
-              </span>
-              Book Now
-            </a>
+            <LinkContainer to={`/club/${club.id}`} className="user-book-now">
+              <i className="feather-calendar me-2">
+                <Calendar />
+                Book Now
+              </i>
+            </LinkContainer>
           </div>
         </div>
       </div>

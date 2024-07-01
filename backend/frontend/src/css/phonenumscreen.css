@@ -17,7 +17,6 @@
 }
 
 .phone-login .shadow-card .phone-textp {
-  color: #fff !important;
   margin-top: 20px;
 }
 
@@ -26,7 +25,6 @@
 }
 
 .phone-login .bottom-text p {
-  color: white !important;
   font-size: 18px;
   margin-top: 15px;
 }
@@ -43,21 +41,26 @@
   margin-top: 0%;
 }
 
+.phonelogin-wrapper .content{
+  background: linear-gradient(#1a9f73, #07605c) !important;
+}
+
 .phonelogin-wrapper .shadow-card {
-  background: linear-gradient(#1a9f73, #07605c);
+  backdrop-filter: blur(2px);
 }
 
 .shadow-card .bottom-paras {
   margin-top: 30px;
 }
 
-.shadow-card .bottom-paras p {
+.bottom-paras p{
   margin-bottom: 0.5rem !important;
-  color: #fff !important;
+  color: #000000 !important;
 }
 
-.shadow-card .bottom-paras span:hover{
-  color: #DADD98 !important;
+.bottom-paras span:hover{
+  color: #5a5a5a !important;
+  cursor: pointer;
 }
 
 @media (max-width: 770px) {
@@ -95,6 +98,13 @@
 }
 }
 
-.phone-login h2 {
-  color: #fff;
+input.otp-input-field {
+  width: 1.5em !important;
+}
+
+.bottom-paras .links {
+  text-decoration: underline;
+  color: black;
+  font-weight: 500;
+  font-size: 17px;
 }

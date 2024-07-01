@@ -16,9 +16,11 @@ import {
   listGames,
   filterLocation,
   listOrganizations,
+  getTopRatedClubs,
 } from "../actions/actions";
 import { useHomeContext } from "../context/HomeContext";
 import { CircularProgress } from "@mui/material";
+import { fixImageUrls } from "../utils/imageUtils";
 import Footer from "../components/Footer";
 import cockImage from "../images/icons/work-cock.svg";
 import workImage from "../images/icons/work-icon1.svg";
@@ -43,6 +45,9 @@ function HomeScreen(history) {
   );
   const { gameError, gameLoading, games } = useSelector(
     (state) => state.gameList
+  );
+  const { loadingTopRatedClubs, topRatedClubs } = useSelector(
+    (state) => state.topRatedClubs
   );
 
   const handleSubmit = (event) => {
@@ -69,6 +74,7 @@ function HomeScreen(history) {
   useEffect(() => {
     dispatch(listGames());
     dispatch(listAreas());
+    dispatch(getTopRatedClubs());
 
     const dtToday = new Date();
     const month = dtToday.getMonth() + 1;
@@ -123,6 +129,10 @@ function HomeScreen(history) {
       toast.error("error in fetching games");
     }
   }, [areaError, gameError]);
+
+  useEffect(() => {
+    fixImageUrls();
+  }, [topRatedClubs]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -333,7 +343,13 @@ function HomeScreen(history) {
           </div>
         </form>
       </section>
-      <Venue />
+      {loadingTopRatedClubs ? (
+        <CircularProgress />
+      ) : topRatedClubs && topRatedClubs.length === 0 ? (
+        <p>No top rated clubs found.</p>
+      ) : (
+        <Venue />
+      )}
       <Testimonial />
       <Footer />
     </div>

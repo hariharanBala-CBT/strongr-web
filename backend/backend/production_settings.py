@@ -15,6 +15,8 @@ ALLOWED_HOSTS = ['*']
 
 BASE_URL = 'http://35.232.95.159'
 
+TENANT = 'CBT'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import { IconButton } from "@mui/material";
 
 import { getBookingDetails } from "../actions/actions";
+import { fixImageUrls } from "../utils/imageUtils";
 
 import { BOOKING_CREATE_RESET } from "../constants/constants";
 
@@ -68,16 +69,6 @@ function BookingScreen() {
   }, [success, dispatch]);
 
   useEffect(() => {
-    const fixImageUrls = () => {
-      const images = document.querySelectorAll("img");
-      images.forEach((img) => {
-        const src = img.getAttribute("src");
-        if (src && src.startsWith("https//")) {
-          img.setAttribute("src", src.replace("https//", "https://"));
-        }
-      });
-    };
-
     fixImageUrls();
   }, [bookingDetails]);
 
