@@ -101,3 +101,10 @@
 input.otp-input-field {
   width: 1.5em !important;
 }
+
+.bottom-paras .links {
+  text-decoration: underline;
+  color: black;
+  font-weight: 500;
+  font-size: 17px;
+}

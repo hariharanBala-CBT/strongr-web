@@ -16,13 +16,6 @@ import { loginPhoneNumber, validatePhone } from "../actions/actions";
 
 import "../css/phonenumscreen.css";
 
-const linkStyle = {
-  textDecoration: "underline",
-  color: "black",
-  fontWeight: 500,
-  fontSize: "17px",
-};
-
 function PhoneNumberScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -209,13 +202,13 @@ function PhoneNumberScreen() {
                     <div className="bottom-paras">
                       <p>
                         Login through username &nbsp;
-                        <LinkContainer to="/login" style={linkStyle}>
+                        <LinkContainer to="/login" className="links">
                           <span>Login</span>
                         </LinkContainer>
                       </p>
                       <p>
                         Don't have an Account?&nbsp;
-                        <LinkContainer to="/signup" style={linkStyle}>
+                        <LinkContainer to="/signup" className="links">
                           <span>Signup</span>
                         </LinkContainer>
                       </p>
