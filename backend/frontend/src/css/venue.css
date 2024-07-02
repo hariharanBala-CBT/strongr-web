@@ -318,6 +318,10 @@
     border-radius: 10px 10px 0 0;
   }
 
+  .clublist-wrapper .listing-item .listing-img {
+    width: 40%;
+  }
+
   .listing-item .listing-img img {
     border-radius: 10px 10px 0 0;
     -webkit-transition: ease all 0.5s;
@@ -346,6 +350,9 @@
   @media (max-width: 1399.98px) {
     .listing-item .fav-item-venues {
       padding: 20px;
+    }
+    .clublist-wrapper .listing-item .listing-img {
+      width: 100%;
     }
   }
 

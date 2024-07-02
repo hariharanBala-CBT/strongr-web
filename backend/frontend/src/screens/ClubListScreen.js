@@ -158,7 +158,7 @@ function ClubListScreen() {
   }, [clubFilterLoading, loadingSuggestedClub, loadingSuggestedClubGame]);
 
   return (
-    <div className="header-breadcrumb">
+    <div className="header-breadcrumb clublist-wrapper">
       <Header location="nav-all" />
       <Toaster />
       <section className="breadcrumb breadcrumb-list mb-0">
@@ -248,7 +248,9 @@ function ClubListScreen() {
                   </div>
 
                   <div className="suggested-clubs">
-                    <h3>Suggested Clubs in {areaName}</h3>
+                    <h3 className="title-suggested">
+                      Suggested Clubs in {areaName}
+                    </h3>
                     <Club clubs={suggestedClubList} />
                   </div>
                 </>
@@ -262,7 +264,9 @@ function ClubListScreen() {
                       </div>
 
                       <div className="suggested-clubs">
-                        <h3>Suggested Clubs for {gameName}</h3>
+                        <h3 className="title-suggested">
+                          Suggested Clubs for {gameName}
+                        </h3>
                         <Club clubs={suggestedClubGameList} />
                       </div>
                     </>
