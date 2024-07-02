@@ -1,6 +1,5 @@
 {% load static %}{% load url_filters %}
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +13,7 @@
   <link href="{% static 'css/signupstyle.css' %}" rel="stylesheet" />
   <link href="{% static 'css/vendor.bundle.base.css' %}" rel="stylesheet" />
   <link href="{% static 'css/materialdesignicons.min.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <!-- End layout styles -->
 
   <style>
@@ -32,8 +32,25 @@
     .text-center button {
       width: 100%;
     }
+
     .error {
       color: #DB1417;
+    }
+
+    .input-icon {
+      position: relative;
+    }
+
+    .input-icon i {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+    }
+
+    .input-icon input {
+      padding-left: 30px;
     }
   </style>
 
@@ -51,19 +68,31 @@
                 {% csrf_token %}
                 <div class="form-group mt-3 mb-3">
                   <label for="{{ form.first_name.id_for_label }}">First Name</label>
-                  {{ form.first_name }}
+                  <div class="input-icon">
+                    <i class="fas fa-user"></i>
+                    {{ form.first_name }}
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="{{ form.last_name.id_for_label }}">Last Name</label>
-                  {{ form.last_name }}
+                  <div class="input-icon">
+                    <i class="fas fa-user"></i>
+                    {{ form.last_name }}
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="{{ form.organization_name.id_for_label }}">Organization Name</label>
-                  {{ form.organization_name }}
+                  <div class="input-icon">
+                    <i class="fas fa-building"></i>
+                    {{ form.organization_name }}
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="{{ form.email.id_for_label }}">Email</label>
-                  {{ form.email }}
+                  <div class="input-icon">
+                    <i class="fas fa-envelope"></i>
+                    {{ form.email }}
+                  </div>
                   {% if form.email.errors %}
                     <div class="error">
                       {% for error in form.email.errors %}
@@ -74,7 +103,10 @@
                 </div>
                 <div class="form-group">
                   <label for="{{ form.phone_number.id_for_label }}">Phone number</label>
-                  {{ form.phone_number }}
+                  <div class="input-icon">
+                    <i class="fas fa-phone"></i>
+                    {{ form.phone_number }}
+                  </div>
                   {% if form.phone_number.errors %}
                     <div class="error">
                       {% for error in form.phone_number.errors %}

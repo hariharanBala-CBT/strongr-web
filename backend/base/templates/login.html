@@ -1,4 +1,4 @@
-{% load static %}{% load url_filters %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,10 +10,8 @@
     <meta name="author" content="">
     <title>STRONGR-Login</title>
     <!-- Custom fonts and styles -->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { font-family: "Poppins", sans-serif; }
@@ -31,6 +29,32 @@
         }
         .text-center { text-decoration: none; margin-bottom: 0.7rem; }
         a:hover { text-decoration: none; }
+        .form-group {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .icon-container {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #6e707e;
+        }
+        .input-with-icon {
+            padding-right: 2.5rem;
+        }
+        .alert{
+            padding:0px;
+            border:0;
+        }
+
     </style>
 </head>
 <body class="bg-gradient-primary">
@@ -45,12 +69,15 @@
                                 <div class="p-5">
                                     <div class="text-center">
                                         <a class="h4 text-gray-900 mb-4" href="/" style="font-weight: 900;">STRONGR.</a>
-                                        <h6 style="margin-top: 0.5rem;">login</h6>
+                                        <h6 style="margin-top: 0.5rem;">Login</h6>
                                     </div>
                                     <form class="user" method="post">
                                         {% csrf_token %}
                                         <div class="form-group">
-                                            {{ form.username }}
+                                            {{ form.username}}
+                                            <span class="icon-container">
+                                                <i class="fa fa-user"></i>
+                                            </span>
                                             {% if form.username.errors %}
                                                 <div role="alert" aria-live="assertive" class="alert alert-danger" id="errors">
                                                     {{ form.username.errors }}
@@ -58,19 +85,18 @@
                                             {% endif %}
                                         </div>
                                         <div class="form-group">
-                                            {{ form.password }}
+                                            <div style="position: relative;">
+                                                {{ form.password }}
+                                                <span id="toggle-password" class="toggle-password" onclick="togglePasswordVisibility()">
+                                                    <i class="fas fa-eye" id="toggle-password-icon"></i>
+                                                </span>
+                                            </div>
                                             {% if form.password.errors %}
                                                 <div role="alert" aria-live="assertive" class="alert alert-danger" id="errors">
                                                     {{ form.password.errors }}
                                                 </div>
                                             {% endif %}
                                         </div>
-                                        <!-- <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
-                                            </div>
-                                        </div> -->
                                         <button class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
@@ -98,18 +124,25 @@
         </div>
     </div>
     <!-- Scripts -->
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="./js/sb-admin-2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', (event) => {
-            const Alert = document.getElementById('errors');
-            if (Alert) {
-                setTimeout(() => {
-                    Alert.style.display = 'none';
-                }, 2000); //2 seconds
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('id_password');
+            const icon = document.getElementById('toggle-password-icon');
+            if (passwordField && icon) {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            } else {
+                console.error('Element not found');
             }
-        });
+        }
     </script>
-
 </body>
 </html>
