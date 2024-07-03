@@ -103,6 +103,15 @@
             <!-- Main Content -->
             <div id="layoutSidenav_content">
                 <h1 class="mt-4 mb-4">Preview</h1>
+
+                {% if messages %}
+                    <div class="alert alert-success" role="alert" id="successAlert">
+                        {% for message in messages %}
+                        <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <main class="container-fluid mt-4">
                     <!-- Organization Card -->
                     <div class="card mb-4">
@@ -112,7 +121,6 @@
                         <div class="card-body">
                             <!-- Organization Details -->
                             <div class="row">
-
                                 <div class="card mb-4">
                                     <div class="card-body">
                                         <h5 class="card-title"><strong>Organization Details</strong></h5>
@@ -510,6 +518,13 @@
                     document.body.classList.toggle('sb-sidenav-toggled');
                     localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
                 });
+            }
+
+            const $successAlert = $('#successAlert');
+            if ($successAlert.length) {
+                setTimeout(() => {
+                    $successAlert.hide();
+                }, 2500);
             }
 
             window.addEventListener('DOMContentLoaded', event => {
