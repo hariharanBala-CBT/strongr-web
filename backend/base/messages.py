@@ -44,6 +44,8 @@ ERROR_MESSAGES = {
     'form_validation_failed_image': 'Image update failed ',
     'form_validation_failed_court': 'Court update failed ',
     'form_validation_failed_slot': 'Slot update failed ',
+    'form_validation_failed_slot_1': 'A slot with the same details already exists',
+    'form_validation_failed_slot_2': 'Time difference between slots must exactly be one hour ',
     'form_validation_failed_working_days': 'Working days update failed ',
     'form_validation_failed_amenities': 'Amenities update failed ',
     'form_validation_failed_generic': 'Please correct the error below ',

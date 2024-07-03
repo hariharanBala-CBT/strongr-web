@@ -836,42 +836,29 @@ class SlotUpdateView(UpdateView):
     form_class = SlotUpdateForm
 
     def form_invalid(self, form):
-        # Custom error message for a specific validation error
-        if any('A slot with the same details already exists.' in error for error in form.errors.values()):
-            messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed_slot'))
+        custom_error_message_1 = 'A slot with the same details already exists.'
+        custom_error_message_2 = 'Time difference between slots must exactly be one hour'
+
+        # Extract error messages
+        error_list = [str(error) for error in form.errors.values()]
+        flat_error_list = ' '.join(error_list).replace('<ul class="errorlist nonfield"><li>', '').replace('</li></ul>', '').replace('</li><li>', ' ')
+
+        if custom_error_message_1 in flat_error_list:
+            error_message = ERROR_MESSAGES.get('form_validation_failed_slot_1')
+        elif custom_error_message_2 in flat_error_list:
+            error_message = ERROR_MESSAGES.get('form_validation_failed_slot_2')
         else:
-            # General form validation failed message
-            error_messages = ''.join([f'{error}' for error in form.errors.values()])
-            messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed_slot'))
-        return self.render_to_response(
-            self.get_context_data(form=form, error=form.errors.as_text())
-        )
+            error_message = flat_error_list
+
+        # Pass the error message to the context
+        return self.render_to_response(self.get_context_data(form=form, error=error_message))
 
     def form_valid(self, form):
-        selected_day = form.cleaned_data.get('days')
-        try:
-            working_day = OrganizationLocationWorkingDays.objects.get(
-                organization_location=self.object.location, days=selected_day
-            )
-            pk = self.request.session.get('locationpk')
-
-            if not working_day.is_active:
-                return self.render_to_response(
-                    self.get_context_data(
-                        form=form, error='Selected working day is not active'
-                    )
-                )
-            # Save the form and update the slot
-            self.object = form.save()
-            messages.success(self.request, SUCCESS_MESSAGES.get('update_slot'))
-            return HttpResponseRedirect(reverse('slot-list', kwargs={'locationpk': pk}))
-
-        except OrganizationLocationWorkingDays.DoesNotExist:
-            return self.render_to_response(
-                self.get_context_data(
-                    form=form, error='Selected working day does not exist'
-                )
-            )
+        pk = self.request.session.get('locationpk')
+        # Save the form and update the slot
+        self.object = form.save()
+        messages.success(self.request, SUCCESS_MESSAGES.get('update_slot'))
+        return HttpResponseRedirect(reverse('slot-list', kwargs={'locationpk': pk}))
 
 @method_decorator(login_required, name='dispatch')
 class SlotDeleteView(DeleteView):
@@ -1192,7 +1179,7 @@ class CreateMultipleSlotsView(View):
                         is_booked=False
                     )
                     current_datetime += timedelta(hours=1)
-                    
+
         messages.success(request, SUCCESS_MESSAGES.get('create_multipleslot'))
         return redirect(reverse('slot-location'))
 
