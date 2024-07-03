@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { LinkContainer } from "react-router-bootstrap";
-import venueImage from "../images/owner-venue2.jpg";
 import { MapPin } from "react-feather";
+import venueImage from "../images/owner-venue2.jpg";
 import { useHomeContext } from "../context/HomeContext";
 
 import Footer from "../components/Footer";

@@ -5,10 +5,12 @@
     color: inherit;
     margin-top: 40px;
 }
+
 .booked-page .breadcrumb.breadcrumb-list {
     background: url(../images/checkout-bg.jpg) rgba(36, 29, 57, 0.8) no-repeat;
     background-size: cover;
 }
+
 .booked-cage .card {
     border: 1px solid #EAEDF0;
     border-radius: 10px;
@@ -16,42 +18,53 @@
     color: inherit;
     margin-bottom: 40px;
 }
-.booked-cage p{
+
+.booked-cage p {
     color: #6B7385;
 }
-.booked-cage li{
+
+.booked-cage li {
     list-style: none;
 }
+
 .booked-cage aside .order-total {
     background: #F9F9F6;
     padding: 15px;
     border-radius: 10px;
     margin: 10px 0 9px 0;
 }
+
 .booking-order-confirmation h5 {
     font-weight: 600;
     font-size: 18px;
 }
+
 .booked-cage .booking-order-confirmation ul li h6 {
     margin-bottom: 8px;
 }
+
 .booked-cage .booking-order-confirmation ul li p {
     margin-bottom: 0;
 }
+
 .booked-cage .booking-order-confirmation ul {
     border-bottom: 1px solid #EAEDF0;
     margin: 0 0 24px 0;
     padding: 0 0 24px 0;
 }
+
 .booked-cage .booking-order-confirmation ul.contact-info li, .booking-order-confirmation ul.payment-info li {
     padding-right: 6.25rem;
 }
-.booking-order-confirmation .pending-status{
+
+.booking-order-confirmation .pending-status {
     color: orange;
 }
-.booking-order-confirmation .booked-status{
+
+.booking-order-confirmation .booked-status {
     color: green;
 }
-.booking-order-confirmation .cancelled-status{
+
+.booking-order-confirmation .cancelled-status {
     color: red;
 }

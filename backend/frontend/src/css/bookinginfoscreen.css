@@ -97,7 +97,6 @@
     flex-grow: inherit;
 }
 
-
 .bookinginfo-content .card1 .select, .bookinginfo-content .card1 .hour-field {
     /* padding: 1rem; */
     display: flex;
@@ -210,41 +209,39 @@
     
 }
 
-
-      
-    .booking-login-form .login-title{
+.booking-login-form .login-title{
     margin-bottom: 1rem;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     flex-grow: inherit;
     flex-shrink: inherit;
-    }
-    
-    .booking-login-form {
+}
+
+.booking-login-form {
     display: flex;
     flex-direction: column;
     margin-top: 3rem;
     flex-wrap: wrap;
     flex-grow: inherit;
     flex-shrink: inherit;
-    }
-    
-    @media (max-width: 770px) {
+}
+
+@media (max-width: 770px) {
     .booking-login-form {
         box-shadow: 0;
     }
-    }
-    
-    .booking-login-form form {
+}
+
+.booking-login-form form {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     flex-grow: inherit;
     flex-shrink: inherit;
-    }
-    
-    .booking-login-form input{
+}
+
+.booking-login-form input{
     padding: 0.5rem;
     margin: 1rem;
     margin-top: 0;
@@ -253,197 +250,217 @@
     flex-wrap: wrap;
     flex-grow: inherit;
     flex-shrink: inherit;
-    }
-    
-    .booking-login-form form label {
+}
+
+.booking-login-form form label {
     margin: 0.5rem;
     display: flex;
     flex-wrap: wrap;
     flex-grow: inherit;
     flex-shrink: inherit;
-    }
-    
-    .booking-login-form button {
+}
+
+.booking-login-form button {
     width: fit-content;
     margin: 1.5rem;
-    }
-    
-    .booking-login-form .login-button {
+}
+
+.booking-login-form .login-button {
     align-items: center;
     justify-content: center;
     display: flex;
-    }
-    
-    .booking-login-form span{
+}
+
+.booking-login-form span {
     display: flex;
     justify-content: center;
-    }
-    
-    .booking-login-form .loader{
+}
+
+.booking-login-form .loader {
     align-self: center;
     margin: 2rem;
-    }
+}
 
-    .bookinginfo-f{
+.bookinginfo-f {
     margin-top: 50px;
-    }
-    .book-cage .card {
-        border: 1px solid #EAEDF0;
-        border-radius: 10px;
-        padding: 24px;
-        color: inherit;
-        margin-bottom: 40px;
-    }
-    .master-academy.dull-whitesmoke-bg {
-        background: #F9F9F6;
-        border: none;
-    }
-    .book-cage p{
-        color: #6B7385;
-    }
-    .master-academy.dull-whitesmoke-bg .info {
-        margin-left: 15px;
-    }
-    .master-academy.dull-whitesmoke-bg .info p {
-        margin-bottom: 0;
-    }
-    .dark-yellow-bg {
-        width: 30px;
-        height: 28px;
-        background: #FFAA00;
-        border-radius: 5px;
-        padding: 5px;
-        color: #FFFFFF;
-    }
-    .book-cage li{
-        list-style: none;
-    }
-    .booking-form label.form-label {
-        margin-bottom: 10px;
-    }
-    .booking-form .select2-container--default .select2-selection--single .select2-selection__rendered {
-        color: #6B7385 !important;
-    }
-    .select2-container{
-        width: 100% !important;
-    }
-    .select2-container .select2-selection--single {
-        border: none;
-        height: 54px;
-        outline: none;
-        outline-color: transparent;
-    }
+}
 
-    .card2 ul.order-sub-total li {
-        margin-bottom: 15px;
-    }
-    .card2 ul.order-sub-total li {
-        display: flex;
-        align-items: center;
-    }
-    .card2 ul.order-sub-total li {
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-    }
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        height: 60px;
-        line-height: 55px;
-        font-size: 16px;
-        border: none;
-        background: #FAFAFA !important;
-        border-radius: 10px;
-    }
-    .select-date input.form-control {
-        padding: 20px;
-        border-radius: 10px;
-        background: #FAFAFA;
-        border: none;
-    }
-    h3.border-bottom {
-        margin: 0 0 20px 0;
-        padding: 0 0 20px 0;
-    }
-    .book-cage aside .order-total {
-        background: #F9F9F6;
-        padding: 15px;
-        border-radius: 10px;
-        margin: 10px 0 9px 0;
-    }
-    .booking-details .btn-block {
-        margin-top: 5px;
-    }
-    .card2 h3{
-        font-size: 25px;
-    }
-    .card2 p{
-        margin-bottom: 30px;
-    }
-    .card2 button{
-        position: relative;
-        width: 100%;
-    }
-    .sub-title{
-        margin-bottom: 20px !important;
-    }
-    .box-min-height{
-        min-height: 600px;
-    }
-  
-    .booking-details .btn-primary {
-        color: #FFFFFF;
-        background: #097E52;
-        border-color: #097E52;
-    }
-    .booking-details .btn-primary:hover {
-        background: #192335;
-        border-color: #192335;
-    }
+.book-cage .card {
+    border: 1px solid #EAEDF0;
+    border-radius: 10px;
+    padding: 24px;
+    color: inherit;
+    margin-bottom: 40px;
+}
 
+.master-academy.dull-whitesmoke-bg {
+    background: #F9F9F6;
+    border: none;
+}
 
+.book-cage p {
+    color: #6B7385;
+}
 
+.master-academy.dull-whitesmoke-bg .info {
+    margin-left: 15px;
+}
 
+.master-academy.dull-whitesmoke-bg .info p {
+    margin-bottom: 0;
+}
 
+.dark-yellow-bg {
+    width: 30px;
+    height: 28px;
+    background: #FFAA00;
+    border-radius: 5px;
+    padding: 5px;
+    color: #FFFFFF;
+}
 
-    .radio-group{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
+.book-cage li {
+    list-style: none;
+}
 
-    }
-    .radio-group input[type="radio"] {
-        display: none;
-    }
+.booking-form label.form-label {
+    margin-bottom: 10px;
+}
 
-    .radio-group label {
-        width: max-content;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        background-color: #ddd;
-        padding: 10px 5px;
-        font-family: sans-serif, Arial;
-        font-size: 16px;
-        border: 2px solid #444;
-        border-radius: 5px;
-        margin: 10px;
-    }
+.booking-form .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #6B7385 !important;
+}
 
-    .radio-group input[type="radio"]:checked + label {
-        color: #FFFFFF;
-        background: #097E52;
-        border-color: #097E52;
-    }
+.select2-container{
+    width: 100% !important;
+}
 
-    .radio-group input[type="radio"]:checked + label:hover {
-        cursor: pointer;
-        background: #192335;
-        border-color: #192335;
-    }
-    
-    .radio-group label:hover {
-        cursor: pointer;
-        background-color: #dfd;
-    }
+.select2-container .select2-selection--single {
+    border: none;
+    height: 54px;
+    outline: none;
+    outline-color: transparent;
+}
+
+.card2 ul.order-sub-total li {
+    margin-bottom: 15px;
+}
+
+.card2 ul.order-sub-total li {
+    display: flex;
+    align-items: center;
+}
+
+.card2 ul.order-sub-total li {
+-ms-flex-pack: justify;
+justify-content: space-between;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    height: 60px;
+    line-height: 55px;
+    font-size: 16px;
+    border: none;
+    background: #FAFAFA !important;
+    border-radius: 10px;
+}
+
+.select-date input.form-control {
+    padding: 20px;
+    border-radius: 10px;
+    background: #FAFAFA;
+    border: none;
+}
+
+h3.border-bottom {
+    margin: 0 0 20px 0;
+    padding: 0 0 20px 0;
+}
+
+.book-cage aside .order-total {
+    background: #F9F9F6;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px 0 9px 0;
+}
+
+.booking-details .btn-block {
+    margin-top: 5px;
+}
+
+.card2 h3 {
+    font-size: 25px;
+}
+
+.card2 p {
+    margin-bottom: 30px;
+}
+
+.card2 button {
+    position: relative;
+    width: 100%;
+}
+
+.sub-title {
+    margin-bottom: 20px !important;
+}
+
+.box-min-height{
+    min-height: 600px;
+}
+
+.booking-details .btn-primary {
+    color: #FFFFFF;
+    background: #097E52;
+    border-color: #097E52;
+}
+
+.booking-details .btn-primary:hover {
+    background: #192335;
+    border-color: #192335;
+}
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+
+}
+
+.radio-group input[type="radio"] {
+    display: none;
+}
+
+.radio-group label {
+    width: max-content;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #ddd;
+    padding: 10px 5px;
+    font-family: sans-serif, Arial;
+    font-size: 16px;
+    border: 2px solid #ced9ce;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.radio-group input[type="radio"]:checked + label {
+    color: #FFFFFF;
+    background: #097E52;
+    border-color: #097E52;
+}
+
+.radio-group input[type="radio"]:checked + label:hover {
+    cursor: pointer;
+    background: #192335;
+    border-color: #192335;
+}
+
+.radio-group label:hover {
+    cursor: pointer;
+    background-color: #dfd;
+}
 
 .booking-info-card{
     border: 1px solid #EAEDF0;
