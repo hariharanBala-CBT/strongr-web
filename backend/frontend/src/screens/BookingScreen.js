@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
-
+import { MapPin } from "react-feather";
+import { MdSportsEsports } from "react-icons/md";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-import { IconButton } from "@mui/material";
+import venueImage from "../images/owner-venue2.jpg";
 
 import { getBookingDetails } from "../actions/actions";
 import { fixImageUrls } from "../utils/imageUtils";
@@ -73,134 +74,166 @@ function BookingScreen() {
   }, [bookingDetails]);
 
   return (
-    <div>
+    <div className="booked-page">
       <Header location="nav-all" />
       <Toaster />
-
-      <div className="booking-content">
-        <IconButton
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          <i class="fa-regular fa-circle-left"></i>
-        </IconButton>
-        <h2 style={{ display: "flex", flex: "auto", justifyContent: "center" }}>
-          <span>Booking : &nbsp;{bookingDetails?.id}</span>
-        </h2>
-
-        <div className="card-1">
-          <div className="ul booking booking-details">
-            <h3 className="heading">Booking Details</h3>
-            <div className="li ">
-              <div>
-                <h3>{bookingDetails?.organization_name}</h3>
-                <span>{bookingDetails?.organization_location}</span>
+      <section className="breadcrumb breadcrumb-list mb-0">
+        <span className="primary-right-round"></span>
+        <div className="container">
+          <h1 className="text-white">Booked Court</h1>
+          <ul>
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>Booked Court</li>
+          </ul>
+        </div>
+      </section>
+      <div className="content booked-cage">
+        <div className="container">
+          <section className="card mb-40">
+            <div className="text-center mb-40">
+              <h3 className="mb-1">Order Confirmation</h3>
+              <p className="sub-title mb-0">
+                Thank you for your order! We're excited to fulfill it with care
+                and efficiency.
+              </p>
+            </div>
+            <div className="master-academy dull-whitesmoke-bg card">
+              <div className="row d-flex align-items-center justify-content-center">
+                <div className="col-12 col-sm-12 col-md-12 col-lg-6">
+                  <div className="d-sm-flex justify-content-start align-items-center">
+                    <a href="javascript:void(0);">
+                      <img
+                        className="corner-radius-10"
+                        src={venueImage}
+                        alt="Venue"
+                      />
+                    </a>
+                    <div className="info">
+                      <div className="d-flex justify-content-start align-items-center mb-3">
+                        <span className="text-white dark-yellow-bg color-white me-2 d-flex justify-content-center align-items-center">
+                          4.5
+                        </span>
+                        <span>300 Reviews</span>
+                      </div>
+                      <h3 className="mb-2">
+                        {bookingDetails?.organization_name}
+                      </h3>
+                      <p>
+                        {bookingDetails?.organization_name}: Where dreams meet
+                        excellence in sports education and training.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-12 col-sm-12 col-md-12 col-lg-6">
+                  <ul className="d-sm-flex align-items-center justify-content-evenly">
+                    <li>
+                      <h3 className="d-inline-block">
+                        <span>
+                          <MapPin />
+                        </span>
+                        {bookingDetails?.organization_location}
+                      </h3>
+                    </li>
+                    <li>
+                      <h3 className="d-inline-block">
+                        <span>
+                          <MdSportsEsports />
+                        </span>
+                        {bookingDetails?.game_type}
+                      </h3>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <small>{bookingDetails?.court?.name}</small>
             </div>
-            <div className="li">
-              <div>
-                <h4>{bookingDetails?.game_type}</h4>
-              </div>
-
-              <small>
-                <strong>Date: </strong>
-                <span>{bookingDetails?.booking_date}</span>
-                <br />
-                {bookingDetails?.additional_slot?.start_time && (
-                  <>
-                    <strong>Time: </strong>
-                    <span>
-                      (
-                      {bookingDetails?.additional_slot?.start_time?.slice(0, 5)}
-                      -{bookingDetails?.additional_slot?.end_time?.slice(0, 5)})
-                    </span>
-                  </>
-                )}
-                {bookingDetails?.slot?.start_time && (
-                  <>
-                    <strong>Time: </strong>
-                    <span>
-                      ({bookingDetails?.slot?.start_time?.slice(0, 5)}-
-                      {bookingDetails?.slot?.end_time?.slice(0, 5)})
-                    </span>
-                  </>
-                )}
-              </small>
-            </div>
-            <div className="li">
-              <div>
-                <h4>GST</h4>
-                <small>state tax and Central tax</small>
-              </div>
-              <span>
-                <i className="fa fa-inr"></i>
-                {bookingDetails?.tax_price}
-              </span>
-            </div>
-            <div className="li">
-              <h4>Total (INR)</h4>
-              <strong>
-                <i className="fa fa-inr"></i>
-                {bookingDetails?.total_price}
-              </strong>
-            </div>
-          </div>
-          <div className="ul booking-image">
-            <div className="li">
-              <img
-                src={bookingDetails?.image}
-                alt="booked-courts-images"
-                className="image"
-              />
-            </div>
-          </div>
-
-          <div className="ul booking user-details">
-            <h3 className="heading">User Details</h3>
-            <div className="li">
-              <h3>{bookingDetails?.name}</h3>
-              <small>
-                <strong>phone: </strong>
-                <span>{bookingDetails?.phone_number}</span>
-              </small>
-            </div>
-            <div className="li">
-              <h4>Booking status</h4>
-              <small
-                className={
-                  bookingDetails?.booking_status === 1
-                    ? "pending-status"
-                    : bookingDetails?.booking_status === 2
-                    ? "booked-status"
-                    : bookingDetails?.booking_status === 3 && "cancelled-status"
-                }
-              >
-                {getBookingStatusText(bookingDetails?.booking_status)}
-              </small>
-            </div>
-            <div className="li">
-              <h4>Payment status</h4>
-              <small
-                className={
-                  bookingDetails?.payment_status === 1
-                    ? "pending-status"
-                    : bookingDetails?.payment_status === 2
-                    ? "booked-status"
-                    : bookingDetails?.payment_status === 3 && "cancelled-status"
-                }
-              >
-                {getPaymentStatusText(bookingDetails?.payment_status)}
-              </small>
-              <strong>
-                <i className="fa fa-inr"></i>
-                {bookingDetails?.total_price}
-              </strong>
-            </div>
-          </div>
+          </section>
+          <section className="card booking-order-confirmation">
+            <h5 className="mb-3">Booking Details</h5>
+            <ul className="booking-info d-lg-flex justify-content-between align-items-center">
+              <li>
+                <h6>Court Name</h6>
+                <p>Standard Synthetic Court 1</p>
+              </li>
+              <li>
+                <h6>Appointment Date</h6>
+                <p>{bookingDetails?.booking_date}</p>
+              </li>
+              <li>
+                <h6>Appointment Start time</h6>
+                <p>{bookingDetails?.slot?.start_time?.slice(0, 5)}</p>
+              </li>
+              <li>
+                <h6>Appointment End time</h6>
+                <p>{bookingDetails?.slot?.end_time?.slice(0, 5)}</p>
+              </li>
+              <li>
+                <h6>Area</h6>
+                <p>{bookingDetails?.organization_location}</p>
+              </li>
+            </ul>
+            <h5 className="mb-3">Contact Information</h5>
+            <ul className="contact-info d-lg-flex justify-content-start align-items-center">
+              <li>
+                <h6>Name</h6>
+                <p>{bookingDetails?.name}</p>
+              </li>
+              <li>
+                <h6>Contact Email Address</h6>
+                <p>{"test@gmail.com"}</p>
+              </li>
+              <li>
+                <h6>Phone Number</h6>
+                <p>{bookingDetails?.phone_number}</p>
+              </li>
+              <li>
+                <h6>Booking status</h6>
+                <p
+                  className={
+                    bookingDetails?.booking_status === 1
+                      ? "pending-status"
+                      : bookingDetails?.booking_status === 2
+                      ? "booked-status"
+                      : bookingDetails?.booking_status === 3 &&
+                        "cancelled-status"
+                  }
+                >
+                  {getBookingStatusText(bookingDetails?.booking_status)}
+                </p>
+              </li>
+            </ul>
+            <h5 className="mb-3">Payment Information</h5>
+            <ul className="payment-info d-lg-flex justify-content-start align-items-center">
+              <li>
+                <h6>GST</h6>
+                <p className="primary-text">{bookingDetails?.tax_price}</p>
+              </li>
+              <li>
+                <h6>Total (INR)</h6>
+                <p className="primary-text">{bookingDetails?.total_price}</p>
+              </li>
+              <li>
+                <h6>Payment status</h6>
+                <p
+                  className={
+                    bookingDetails?.payment_status === 1
+                      ? "pending-status"
+                      : bookingDetails?.payment_status === 2
+                      ? "booked-status"
+                      : bookingDetails?.payment_status === 3 &&
+                        "cancelled-status"
+                  }
+                >
+                  {getPaymentStatusText(bookingDetails?.payment_status)}
+                </p>
+              </li>
+            </ul>
+          </section>
         </div>
       </div>
+
       <Footer />
     </div>
   );
