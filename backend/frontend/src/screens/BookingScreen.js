@@ -208,11 +208,15 @@ function BookingScreen() {
             <ul className="payment-info d-lg-flex justify-content-start align-items-center">
               <li>
                 <h6>GST</h6>
-                <p className="primary-text">{bookingDetails?.tax_price}</p>
+                <p className="primary-text">
+                  {"\u20B9"} {bookingDetails?.tax_price}
+                </p>
               </li>
               <li>
                 <h6>Total (INR)</h6>
-                <p className="primary-text">{bookingDetails?.total_price}</p>
+                <p className="primary-text">
+                  {"\u20B9"} {bookingDetails?.total_price}
+                </p>
               </li>
               <li>
                 <h6>Payment status</h6>

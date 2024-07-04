@@ -222,6 +222,7 @@ function BookingInfoScreen() {
   }, [clubGame, clubLocation, courts]);
 
   const handleSubmit = async (event) => {
+    console.log("handlesub...");
     event.preventDefault();
     if (selectedSlot) {
       const parts = selectedSlot.split("-");
@@ -475,7 +476,7 @@ function BookingInfoScreen() {
                           id: slot.id,
                           name: `${slot.start_time}-${slot.end_time}`,
                         }))}
-                        label="slot"
+                        label="Slot"
                         addSlots={additionalSlots?.map((slot) => ({
                           id: slot.id,
                           name: `${slot.start_time}-${slot.end_time}`,

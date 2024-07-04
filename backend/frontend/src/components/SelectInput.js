@@ -39,7 +39,7 @@ function SelectInput({
   if (useRadioButtons) {
     return (
       <>
-        <label>{label}</label>
+        <label className="form-label">{label}</label>
         <div className="radio-group">
           {options?.map((option) => (
             <div key={option.id}>
