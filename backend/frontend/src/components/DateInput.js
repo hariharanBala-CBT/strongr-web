@@ -1,9 +1,9 @@
 import React from "react";
 
-function DateInput({ id, value, onChange, required }) {
+function DateInput({ label, id, value, onChange, required }) {
   return (
     <div className='select-date' style={{ display: "flex", flexDirection: "row" }}>
-      <label htmlFor={id}>Date:</label>
+      <label htmlFor={id}>{label}:</label>
       <input
         type="date"
         id={id}

@@ -23,16 +23,21 @@ const LanguageSelector = () => {
 
   return (
     <div className="dropdown-container">
-      <select
-        value={selectedLanguage}
-        onChange={(e) => changeLanguage(e.target.value)}
-      >
-        {languages.map((lng) => (
-          <option key={lng.code} value={lng.code}>
-            {lng.lang}
-          </option>
-        ))}
-      </select>
+      <div className="language-selector">
+        <i className="fas fa-globe"></i>
+        <label htmlFor="language-select"> Select Language:</label>
+        <select
+          id="language-select"
+          value={selectedLanguage}
+          onChange={(e) => changeLanguage(e.target.value)}
+        >
+          {languages.map((lng) => (
+            <option key={lng.code} value={lng.code}>
+              {lng.lang}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 };

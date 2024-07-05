@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/actions";
 import "../css/header.css";
 import Logo from "../images/logo.png";
+import LanguageSelector from "./LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 function Header({ location }) {
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
+  const { t } = useTranslation("header");
   const logoutHandler = () => {
     dispatch(logout());
   };
@@ -55,24 +57,25 @@ function Header({ location }) {
             </div>
             <ul className="main-nav">
               <li className="active">
-                <a href="#/">Home</a>
+                <a href="#/">{t("home")}</a>
               </li>
               <li className="has-submenu">
-                <a href="#">
-                  User
-                </a>
+                <a href="#">{t("user")}</a>
               </li>
               <li className="has-submenu">
-                <a href="#">
-                  Pages
-                </a>
+                <a href="#">{t("pages")}</a>
               </li>
               <li>
-                <a href="#">Contact Us</a>
+                <a href="#">{t("contactUs")}</a>
               </li>
             </ul>
           </div>
           <ul className="nav header-navbar-rht header-right-banner">
+            <li>
+              <div className="link language-dropdown">
+                <LanguageSelector />
+              </div>
+            </li>
             <li className="nav-item">
               <div className="nav-link btn btn-white log-register">
                 {userInfo ? (
@@ -85,7 +88,7 @@ function Header({ location }) {
                 ) : (
                   <LinkContainer to="/login">
                     <div className="link">
-                      <i className="fas fa-user icon-button"></i> Login
+                      <i className="fas fa-user icon-button"></i> {t("login")}
                     </div>
                   </LinkContainer>
                 )}
@@ -100,7 +103,7 @@ function Header({ location }) {
                   <span>
                     <i className="feather-check-circle"></i>
                   </span>
-                  Work with us
+                  {t("workWithUs")}
                 </a>
               )}
             </li>
@@ -113,7 +116,7 @@ function Header({ location }) {
                   <span>
                     <LogOut />
                   </span>
-                  Logout
+                  {t("logout")}
                 </div>
               )}
             </li>
