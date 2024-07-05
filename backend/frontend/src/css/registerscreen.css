@@ -160,8 +160,7 @@
   color: #fff ;
     font-size: 22px;
     font-weight: 500;
-    margin-bottom: 0;
-}
+    margin-bottom: 55px !important;}
 
 .authendication-pages .loginpage .text-bg p {
   color: #182234 !important;
