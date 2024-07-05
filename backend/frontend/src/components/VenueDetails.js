@@ -2,28 +2,36 @@ import React from "react";
 import { Calendar, MapPin, Heart } from "react-feather";
 import { GiShuttlecock } from "react-icons/gi";
 import { LinkContainer } from "react-router-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const VenueDetails = ({ club }) => {
   const { address_line_1, organization, organization_images } = club;
+  const navigate = useNavigate();
 
   return (
     <div className="venue-wrapper">
       <div className="listing-item mb-0">
         <div className="listing-img">
-          <a href="venue-details.html">
-            {organization_images ? (
-              <img
-              className="club-images"
-                src={organization_images}
-                alt="Venue"
-              />
-            ) : (
-              <img
-              className="club-images"
-                src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
-                alt="Venue"
-              />
-            )}
+          <a
+            onClick={() => {
+              navigate(`/club/${club.id}`);
+            }}
+          >
+            <>
+              {organization_images ? (
+                <img
+                  className="club-images"
+                  src={organization_images}
+                  alt="Venue"
+                />
+              ) : (
+                <img
+                  className="club-images"
+                  src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
+                  alt="Venue"
+                />
+              )}
+            </>
           </a>
           <div className="fav-item-venues">
             <span className="tag tag-blue">Featured</span>
@@ -49,7 +57,13 @@ const VenueDetails = ({ club }) => {
             </a>
           </div>
           <h3 className="listing-title">
-            <a href="venue-details.html">{organization.organization_name}</a>
+            <a
+              onClick={() => {
+                navigate(`/club/${club.id}`);
+              }}
+            >
+              {organization.organization_name}
+            </a>
           </h3>
           <div className="listing-details-group">
             <p>{organization.description}</p>
@@ -75,16 +89,23 @@ const VenueDetails = ({ club }) => {
           </div>
           <div className="listing-button">
             <div className="listing-venue-owner">
-              <a className="navigation" href="coach-detail.html">
-                {organization_images ? (
-                  <img src={organization_images} alt="Venue" />
-                ) : (
-                  <img
-                    src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
-                    alt="Venue"
-                  />
-                )}
-                {organization.organization_name}
+              <a
+                className="navigation"
+                onClick={() => {
+                  navigate(`/club/${club.id}`);
+                }}
+              >
+                <>
+                  {organization_images ? (
+                    <img src={organization_images} alt="Venue" />
+                  ) : (
+                    <img
+                      src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
+                      alt="Venue"
+                    />
+                  )}
+                  {organization.organization_name}
+                </>
               </a>
             </div>
             <LinkContainer to={`/club/${club.id}`} className="user-book-now">

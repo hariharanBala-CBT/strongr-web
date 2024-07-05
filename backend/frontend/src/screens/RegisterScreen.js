@@ -310,9 +310,7 @@ function RegisterScreen() {
                                 >
                                   By continuing you indicate that you read and
                                   agreed to the{" "}
-                                  <a href="terms-condition.html">
-                                    Terms of Use
-                                  </a>
+                                  <a href="javascript:void(0);">Terms of Use</a>
                                 </label>
                               </div>
                               <button

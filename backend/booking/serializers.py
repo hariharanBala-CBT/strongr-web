@@ -184,24 +184,39 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
 
     def get_next_availabilty(self, obj):
         now = datetime.datetime.now()
-        print(now)
+
         next_slot = Slot.objects.filter(
-            start_time__gte=now.time(), is_booked=False,
-            location=obj).order_by('start_time').first()
+            days=now.strftime('%A'),
+            start_time__gte=now.time(),
+            is_booked=False,
+            location=obj
+        ).order_by('start_time').first()
 
         next_additional_slot = AdditionalSlot.objects.filter(
-            date__gte=now.date(), is_active=True,
-            location=obj).order_by('date', 'start_time').first()
+            date__gte=now.date(),
+            is_active=True,
+            location=obj
+        ).order_by('date', 'start_time').first()
+
+        next_unavailable_slot = UnavailableSlot.objects.filter(
+            date__gte=now.date(),
+            is_active=True,
+            location=obj
+        ).order_by('date', 'start_time').first()
 
         if next_slot and next_additional_slot:
             if next_slot.start_time < next_additional_slot.start_time:
-                return SlotSerializer(next_slot).data
+                if next_slot.start_time < next_unavailable_slot.start_time:
+                    return SlotSerializer(next_slot).data
+                else:
+                    return SlotSerializer(next_slot).data
             else:
                 return AdditionalSlotSerializer(next_additional_slot).data
         elif next_slot:
             return SlotSerializer(next_slot).data
         elif next_additional_slot:
             return AdditionalSlotSerializer(next_additional_slot).data
+
         return None
 
     class Meta:

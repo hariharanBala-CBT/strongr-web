@@ -449,10 +449,12 @@
 
 .authendication-pages .register-content .bottom-texts span {
   color: #0e5072 !important;
+  cursor: pointer;
 }
 
 .authendication-pages .loginpage .bottom-texts span {
   color: #0e5072 !important;
+  cursor: pointer;
 }
 
 .feather-icon-wrapper {
@@ -520,6 +522,7 @@
 
 .authendication-pages .register-content .bottom-text span:hover {
   color: black !important;
+  cursor: pointer;
 }
 
 .authendication-pages .signup-right-banner .bottom-texts span:hover {
