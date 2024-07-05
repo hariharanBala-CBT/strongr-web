@@ -61,7 +61,7 @@
   flex-direction: row;
   justify-content: flex-start;
   flex-wrap: wrap;
-  margin-bottom: 30px;
+  margin: 30px;
 }
 
 .clubs-display {

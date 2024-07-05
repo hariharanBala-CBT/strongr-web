@@ -4,16 +4,16 @@ import "select2/dist/css/select2.min.css";
 import "select2";
 
 function SelectInput({
+  addSlots,
+  disabled,
   id,
-  value,
+  label,
   onChange,
   options,
-  label,
-  disabled,
   required,
-  useRadioButtons, // New prop to determine whether to use radio buttons
-  addSlots,
   removeSlots,
+  value,
+  useRadioButtons,
 }) {
   const selectRef = useRef();
 
@@ -34,7 +34,7 @@ function SelectInput({
 
   useEffect(() => {
     $(selectRef.current).trigger("change.select2");
-  }, [options, addSlots, removeSlots]);
+  }, [addSlots, options, removeSlots]);
 
   if (useRadioButtons) {
     return (
