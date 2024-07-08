@@ -27,6 +27,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <link href="{% static 'css/breadcrumbs.css' %}" rel="stylesheet" />
 
     <style>
       table {
@@ -45,20 +46,28 @@
         box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2),
           0 5px 5px 0 rgba(0, 0, 0, 0.24);
         padding: 30px;
+        width:800px;
       }
       #id_description,
       #id_pricing,
       #id_game,
       #id_number_of_courts
        {
-        width: 320px;
+        width: 450px;
         resize: none;
+        
       }
       select{
-        width: 320px;
+        width: 450px;
       }
       .profile-card{
         padding:50px;
+      }
+      label {
+        width:250px;
+      }
+      .buttons{
+        width:445px;
       }
     </style>
   </head>
@@ -150,6 +159,12 @@
       </div>
       <div id="layoutSidenav_content">
         <main>
+          <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'mainview' locationpk %}">Location</a></li>
+            <li class="breadcrumb-item">Add-Game</li>
+          </ol>
           <div class="container-fluid px-4 m">
             <div class="profile-card">
               <h1 class="my-4">Add Game</h1>

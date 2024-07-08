@@ -16,10 +16,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-
+    <link href="{% static 'css/breadcrumbs.css' %}" rel="stylesheet" />
     <style>
 
-form {
+        form {
             max-width: 681px;
             margin: 0 auto;
             padding: 20px;
@@ -111,7 +111,7 @@ form {
             visibility: hidden;
         } */
         .profile-card{
-            padding:80px;
+            padding:50px;
         } 
         .buttons{
             width: 300px;
@@ -203,6 +203,13 @@ form {
         </div>
         <div id="layoutSidenav_content">
             <main>
+                <main>
+                    <ol class="breadcrumb mb-4">
+                      <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+                      <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
+                      <li class="breadcrumb-item"><a href="{% url 'mainview' locationpk %}">Location</a></li>
+                      <li class="breadcrumb-item">Upate-Court</li>
+                    </ol>
                 <div class="container-fluid px-4 m">
                     <div class="profile-card">
                         <h3 class="my-4">Courts:</h3>

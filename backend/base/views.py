@@ -919,7 +919,6 @@ class SlotUpdateView(UpdateView):
         return self.render_to_response(
             self.get_context_data(form=form, error=form.errors.as_text())
         )
-
     def form_valid(self, form):
         selected_day = form.cleaned_data.get('days')
         try:
@@ -934,10 +933,12 @@ class SlotUpdateView(UpdateView):
                         form=form, error='Selected working day is not active'
                     )
                 )
+            
             # Save the form and update the slot
             self.object = form.save()
             messages.success(self.request, 'Slot updated successfully.')
             return HttpResponseRedirect(reverse('slot-list', kwargs={'locationpk': pk}))
+    
 
         except OrganizationLocationWorkingDays.DoesNotExist:
             return self.render_to_response(
@@ -945,7 +946,12 @@ class SlotUpdateView(UpdateView):
                     form=form, error='Selected working day does not exist'
                 )
             )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.request.session.get('location_pk')
+        return context
 
+    
 @method_decorator(login_required, name='dispatch')
 class SlotDeleteView(DeleteView):
     model = Slot
@@ -1465,6 +1471,7 @@ class AddMultipleTempSlotsView(View):
             messages.success(request, 'Slots created successfully.')
             return redirect('temp-slot-list')
         return render(request, self.template_name, {'forms': forms})
+    
 
 class TempSlotListView(ListView):
     model = AdditionalSlot
@@ -1533,6 +1540,11 @@ class TempSlotCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('temp-slot-list', kwargs={'pk': self.request.session.get('location_pk')})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['locationpk'] = self.request.session.get('location_pk')
+        return context
 
 @method_decorator(login_required, name='dispatch')
 class UnavailableSlotListView(ListView):
@@ -1611,6 +1623,10 @@ class UnavailableSlotCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('unavailable-slot-list', kwargs={'pk': self.request.session.get('location_pk')})
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs.get('pk')  
+        return context
 
 @login_required
 @ensure_csrf_cookie

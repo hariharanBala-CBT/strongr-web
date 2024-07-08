@@ -15,6 +15,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+        <link href="{% static 'css/breadcrumbs.css' %}" rel="stylesheet" />
         <style>
             form{
                 box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
@@ -116,6 +117,12 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'organization_profile' pk=1 %}">Profile</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
+                        <li class="breadcrumb-item">Add-location</li>
+                    </ol>
                     <div class="container-fluid px-4 m">
                         <div class="profile-card"> 
                             <h1 class="my-4">Add Location</h1>

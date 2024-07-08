@@ -225,16 +225,10 @@
                 <main>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'organization_profile' pk=1 %}">Profile</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'slot-location' %}">Slot List</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'temp-slot-location'%}">Additional Slots</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'temp-deslot-location'%}">Unavailable Slots</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'preview' %}">Preview</a></li>
                         <li class="breadcrumb-item">Status</li>
                     </ol>
                     <h1 class="mt-4 mb-4" style="margin-left: 35%;">Status</h1>
-                    <div class="container" style="display: flex; justify-content: center; align-items: center; margin-top: 100px;">
+                    <div class="container" style="display: flex; justify-content: center; align-items: center; margin-top: 0px;">
                         <div class="card2">
                             <div class="card-body">
                                 <p><strong>Logged-in Organization:</strong> {{ organization.organization_name }}</p>

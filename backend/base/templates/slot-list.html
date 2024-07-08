@@ -13,6 +13,8 @@
     <link href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" rel="stylesheet">
     <link href="{% static 'styles.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/breadcrumbs.css' %}" rel="stylesheet" />
+
     <!-- <style>
         .location-card {
             display: flex;
@@ -138,6 +140,11 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'slot-location' %}">Slot List Location</a></li>
+                    <li class="breadcrumb-item">Slot List</li>
+                </ol>    
                 <div class="container-fluid px-4 mt-4">
                     <div class="profile-card">
                         <h3 class="my-4">Slots</h3>

@@ -27,7 +27,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
       rel="stylesheet"
     />
-
+    <link href="{% static 'css/breadcrumbs.css' %}" rel="stylesheet" />
     <style>
       table {
         position: relative;
@@ -158,6 +158,12 @@
       </div>
       <div id="layoutSidenav_content">
         <main>
+          <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'mainview' locationpk %}">Location</a></li>
+            <li class="breadcrumb-item">Add-Image</li>
+          </ol>
           <div class="container-fluid px-4 m">
             <div class="profile-card">
               <h1 class="my-4">Add Images</h1>

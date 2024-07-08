@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="{% static 'css/breadcrumbs.css' %}" rel="stylesheet" />
 
     <style>
 
@@ -158,6 +159,12 @@ form {
         </div>
         <div id="layoutSidenav_content">
             <main>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'slot-location' %}">Slot List Location</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'slot-list' locationpk=location_pk %}">Slot List</a></li>
+                    <li class="breadcrumb-item">Add-Slot</li>
+                </ol>    
                 <div class="container-fluid px-4 m">
                     <div class="profile-card">
                         <h3 class="my-4">Slots:</h3>

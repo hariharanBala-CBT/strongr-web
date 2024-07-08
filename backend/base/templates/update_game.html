@@ -27,6 +27,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <link href="{% static 'css/breadcrumbs.css' %}" rel="stylesheet" />
 
     <style>
       table {
@@ -40,6 +41,7 @@
         width: 50%;
         height: 2em;
         padding: 10px;
+        padding-left:50px;
       }
       form {
         box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2),
@@ -47,12 +49,12 @@
         padding: 30px;
       }
       select{
-        width: 320px;
+        width: 460px;
       }
       #id_description,
       #id_pricing,
       #id_game {
-        width: 320px;
+        width: 460px;
         resize: none;
       }
       .popup {
@@ -189,6 +191,12 @@
       </div>
       <div id="layoutSidenav_content">
         <main>
+          <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'mainview' locationpk %}">Location</a></li>
+            <li class="breadcrumb-item">Update-Game</li>
+          </ol>
           <div class="container-fluid px-4 m">
             <div class="profile-card">
               <h1 class="my-4">Update Game</h1>
