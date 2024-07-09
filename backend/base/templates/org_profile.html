@@ -3,318 +3,317 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
 
-    <title>STRONGR.</title>
+        <title>STRONGR.</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="{% static 'styles.css' %}" rel="stylesheet" />
-    <link href="{% static './css/profile.css' %}" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="{% static 'styles.css' %}" rel="stylesheet" />
+        <link href="{% static './css/profile.css' %}" rel="stylesheet" />
 
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-</head>
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    </head>
 
-<body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
-        <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"
-            aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"
+                aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
 
-        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false" aria-label="User account and settings"><i class="fas fa-user fa-fw"></i>{{ request.user.email }}</a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
-                    <li>
-                        <hr class="dropdown-divider" />
-                    </li>
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
-    <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" aria-label="Sidebar navigation">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Main</div>
-                        <a class="nav-link" href="{% url 'organization_page' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-                        <a class="nav-link" href="{% url 'organization_profile' %}"
-                            style="color: white; background-color: rgb(68, 68, 68);">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
-                            Profile
-                        </a>
-                        <a class="nav-link" href="{% url 'organization_locationlist' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
-                            Locations
-                        </a>
-                        <a class="nav-link" href="{% url 'preview' %}">
-                            <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
-                            Preview
-                        </a>
-                        <a class="nav-link" href="{% url 'status' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
-                            Status
-                        </a>
-                        <a class="nav-link" href="{% url 'org_customers_list'%}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Customers
-                        </a>
-                        <div class="sb-sidenav-menu-heading">Slot</div>
-                        <a class="nav-link" href="{% url 'slot-location' %}">
-                            <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
-                            Slots List
-                        </a>
-                        <a class="nav-link" href="{% url 'temp-slot-location'%}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
-                            Additional Slots
-                        </a>
-                        <a class="nav-link" href="{% url 'temp-deslot-location'%}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
-                            Unavailable Slots
-                        </a>
+            <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" aria-label="User account and settings"><i class="fas fa-user fa-fw"></i>{{ request.user.email }}</a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" aria-label="Sidebar navigation">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Organization</div>
+                            <a class="nav-link" href="{% url 'organization_page' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <a class="nav-link" href="{% url 'organization_profile' %}"
+                                style="color: white; background-color: rgb(68, 68, 68);">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
+                                Profile
+                            </a>
+                            <a class="nav-link" href="{% url 'organization_locationlist' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                Locations
+                            </a>
+                            <a class="nav-link" href="{% url 'preview' %}">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
+                                Preview
+                            </a>
+                            <a class="nav-link" href="{% url 'status' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
+                                Status
+                            </a>
+                            <a class="nav-link" href="{% url 'org_customers_list'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                Customers
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Slot</div>
+                            <a class="nav-link" href="{% url 'slot-location' %}">
+                                <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
+                                Slots List
+                            </a>
+                            <a class="nav-link" href="{% url 'temp-slot-location'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
+                                Additional Slots
+                            </a>
+                            <a class="nav-link" href="{% url 'temp-deslot-location'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
+                                Unavailable Slots
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    <div class="user-email">{{ request.user.email }}</div>
-                </div>
-            </nav>
-        </div>
-        <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4 m">
-                    <div class="profile-card">
-                        <h1 class="my-4">Profile</h1>
-                        <div>
-                            <form method="post" id="profile_updateForm">
-                                {% csrf_token %}
-                                <div class="table-responsive">
-                                    <table id="simple-datatables">
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <label for="id_organization_name">Organization Name</label>
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="organization_name"
-                                                        value="{{ object.organization_name }}" maxlength="50"
-                                                        required="" disabled="" id="id_organization_name">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label for="id_email">Email</label>
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="email" value="{{ request.user.email }}"
-                                                        maxlength="50" required="" disabled="" id="id_email">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label for="id_phone_number">Phone Number<span
-                                                            class="text-danger">*</span></label>
-                                                </td>
-                                                <td>
-                                                    {{ form.phone_number }}
-                                                    <div id="error_phone_number" class="text-danger"></div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label for="id_alt_phone_number">Alternate Phone Number</label>
-                                                </td>
-                                                <td>
-                                                    {{ form.alt_number }}
-                                                    <div id="error_alt_number" class="text-danger"></div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label for="id_description">Description</label>
-                                                </td>
-                                                <td>
-                                                    {{ form.description }}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="u-button">
-                                    <button type="submit" class="btn btn-primary">Update</button>
-                                </div>
-                            </form>
-                            <div class="toast" id="successToast"></div>
-                            <div id="confirmationModal" class="modal" aria-hidden="true" tabindex="-1" role="dialog"
-                                aria-labelledby="modalLabel">
-                                <div class="modal-content">
-                                    <h2 id="modalLabel">Confirm Update</h2>
-                                    <p id="updateDetails">Are you sure you want to update the profile details?</p>
-                                    <div style="display: flex; justify-content: center; align-items: center;">
-                                        <button id="cancelUpdateButton">Cancel</button>
-                                        <button id="confirmUpdateButton">Confirm</button>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        <div class="user-email">{{ request.user.email }}</div>
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4 m">
+                        <div class="profile-card">
+                            <h1 class="my-4">Profile</h1>
+                            <div>
+                                <form method="post" id="profile_updateForm">
+                                    {% csrf_token %}
+                                    <div class="table-responsive">
+                                        <table id="simple-datatables">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <label for="id_organization_name">Organization Name</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="organization_name"
+                                                            value="{{ object.organization_name }}" maxlength="50"
+                                                            required="" disabled="" id="id_organization_name">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="id_email">Email</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="email" value="{{ request.user.email }}"
+                                                            maxlength="50" required="" disabled="" id="id_email">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="id_phone_number">Phone Number<span
+                                                                class="text-danger">*</span></label>
+                                                    </td>
+                                                    <td>
+                                                        {{ form.phone_number }}
+                                                        <div id="error_phone_number" class="text-danger"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="id_alt_phone_number">Alternate Phone Number</label>
+                                                    </td>
+                                                    <td>
+                                                        {{ form.alt_number }}
+                                                        <div id="error_alt_number" class="text-danger"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="id_description">Description</label>
+                                                    </td>
+                                                    <td>
+                                                        {{ form.description }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="u-button">
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </form>
+                                <div class="toast" id="successToast"></div>
+                                <div id="confirmationModal" class="modal" aria-hidden="true" tabindex="-1" role="dialog"
+                                    aria-labelledby="modalLabel">
+                                    <div class="modal-content">
+                                        <h2 id="modalLabel">Confirm Update</h2>
+                                        <p id="updateDetails">Are you sure you want to update the profile details?</p>
+                                        <div style="display: flex; justify-content: center; align-items: center;">
+                                            <button id="cancelUpdateButton">Cancel</button>
+                                            <button id="confirmUpdateButton">Confirm</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
-                            &middot;
-                            <a href="{% url 'termsconditions' %}">Terms &amp; Conditions</a>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div>
+                                <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
+                                &middot;
+                                <a href="{% url 'termsconditions' %}">Terms &amp; Conditions</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </footer>
+                </footer>
+            </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-        crossorigin="anonymous"></script>
-        <script>
-            window.addEventListener('DOMContentLoaded', event => {
-                const $datatablesSimple = document.getElementById('datatablesSimple');
-                if ($datatablesSimple) {
-                    new simpleDatatables.DataTable($datatablesSimple);
-                }
-            });
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+            crossorigin="anonymous"></script>
+            <script>
+                window.addEventListener('DOMContentLoaded', event => {
+                    const $datatablesSimple = document.getElementById('datatablesSimple');
+                    if ($datatablesSimple) {
+                        new simpleDatatables.DataTable($datatablesSimple);
+                    }
+                });
 
-            window.addEventListener('DOMContentLoaded', event => {
-                const sidebarToggle = document.body.querySelector('#sidebarToggle');
-                if (sidebarToggle) {
-                    sidebarToggle.addEventListener('click', event => {
-                        event.preventDefault();
-                        document.body.classList.toggle('sb-sidenav-toggled');
-                        localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-                    });
-                }
-            });
-
-            var modal = document.getElementById('confirmationModal');
-            var updateButton = document.querySelector('#profile_updateForm');
-            var confirmButton = document.getElementById('confirmUpdateButton');
-            var cancelButton = document.getElementById('cancelUpdateButton');
-            const form = document.getElementById('profile_updateForm');
-            var toast = document.getElementById('successToast');
-
-            updateButton.addEventListener('submit', function (event) {
-                event.preventDefault();
-                modal.style.display = "block";
-                modal.setAttribute('aria-hidden', 'false');
-                return false;
-            });
-
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                    modal.setAttribute('aria-hidden', 'true');
-                }
-            }
-
-            confirmButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                modal.style.display = "none";
-                modal.setAttribute('aria-hidden', "true");
-                submitFormData();
-            });
-
-            function showToast(message) {
-                toast.textContent = message;
-                toast.style.display = 'block';
-                setTimeout(() => {
-                    toast.style.display = 'none';
-                }, 2000); // Hide toast after 2 seconds
-            }
-
-            function submitFormData() {
-                const formData = new FormData(form);
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(data => {
-                            if (data.errors) {
-                                displayFormErrors(data.errors);
-                                throw new Error(`HTTP error! status: ${response.status}`, displayFormErrors(data.errors));
-                            }
+                window.addEventListener('DOMContentLoaded', event => {
+                    const sidebarToggle = document.body.querySelector('#sidebarToggle');
+                    if (sidebarToggle) {
+                        sidebarToggle.addEventListener('click', event => {
+                            event.preventDefault();
+                            document.body.classList.toggle('sb-sidenav-toggled');
+                            localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
                         });
                     }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.status === 'success') {
-                        showToast(data.message);
-                        setTimeout(() => {
-                            window.location.href = "{% url 'organization_locationlist' %}";
-                        }, 2000);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('Error submitting form. ' + error.message);
                 });
-            }
 
-            function displayFormErrors(errors) {
-                Object.keys(errors).forEach(field => {
-                    const errorMessages = errors[field].join(', ');
-                    const errorElement = document.getElementById(`error_${field}`);
-                    if (errorElement) {
-                        errorElement.textContent = errorMessages;
-                        errorElement.style.display = 'block';
-                        setTimeout(() => {
-                            errorElement.style.display = 'none';
-                    }, 2500);
-                    }
+                var modal = document.getElementById('confirmationModal');
+                var updateButton = document.querySelector('#profile_updateForm');
+                var confirmButton = document.getElementById('confirmUpdateButton');
+                var cancelButton = document.getElementById('cancelUpdateButton');
+                const form = document.getElementById('profile_updateForm');
+                var toast = document.getElementById('successToast');
+
+                updateButton.addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    modal.style.display = "block";
+                    modal.setAttribute('aria-hidden', 'false');
+                    return false;
                 });
-            }
 
-            cancelButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                modal.style.display = "none";
-                modal.setAttribute('aria-hidden', "true");
-            });
-
-            window.addEventListener('DOMContentLoaded', (event) => {
-                const $successAlert = document.getElementById('message');
-                if ($successAlert) {
-                    setTimeout(() => {
-                        $successAlert.style.display = 'none';
-                    }, 2000); // Hide after 5000ms or 5 seconds
+                window.onclick = function (event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
                 }
-            });
-        </script>
-</body>
 
+                confirmButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    modal.style.display = "none";
+                    modal.setAttribute('aria-hidden', "true");
+                    submitFormData();
+                });
+
+                function showToast(message) {
+                    toast.textContent = message;
+                    toast.style.display = 'block';
+                    setTimeout(() => {
+                        toast.style.display = 'none';
+                    }, 2000); // Hide toast after 2 seconds
+                }
+
+                function submitFormData() {
+                    const formData = new FormData(form);
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                if (data.errors) {
+                                    displayFormErrors(data.errors);
+                                    throw new Error(`HTTP error! status: ${response.status}`, displayFormErrors(data.errors));
+                                }
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.status === 'success') {
+                            showToast(data.message);
+                            setTimeout(() => {
+                                window.location.href = "{% url 'organization_locationlist' %}";
+                            }, 2000);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('Error submitting form. ' + error.message);
+                    });
+                }
+
+                function displayFormErrors(errors) {
+                    Object.keys(errors).forEach(field => {
+                        const errorMessages = errors[field].join(', ');
+                        const errorElement = document.getElementById(`error_${field}`);
+                        if (errorElement) {
+                            errorElement.textContent = errorMessages;
+                            errorElement.style.display = 'block';
+                            setTimeout(() => {
+                                errorElement.style.display = 'none';
+                        }, 2500);
+                        }
+                    });
+                }
+
+                cancelButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    modal.style.display = "none";
+                    modal.setAttribute('aria-hidden', "true");
+                });
+
+                window.addEventListener('DOMContentLoaded', (event) => {
+                    const $successAlert = document.getElementById('message');
+                    if ($successAlert) {
+                        setTimeout(() => {
+                            $successAlert.style.display = 'none';
+                        }, 2000); // Hide after 5000ms or 5 seconds
+                    }
+                });
+            </script>
+    </body>
 </html>
