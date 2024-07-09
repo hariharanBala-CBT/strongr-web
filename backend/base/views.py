@@ -862,12 +862,6 @@ class SlotUpdateView(UpdateView):
         messages.success(self.request, SUCCESS_MESSAGES.get('update_slot'))
         return HttpResponseRedirect(reverse('slot-list', kwargs={'locationpk': pk}))
 
-        except OrganizationLocationWorkingDays.DoesNotExist:
-            return self.render_to_response(
-                self.get_context_data(
-                    form=form, error='Selected working day does not exist'
-                )
-            )
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.request.session.get('location_pk')

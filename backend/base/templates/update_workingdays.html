@@ -138,7 +138,8 @@
             margin: -39px auto 0;
             padding: 7px 20px;
             font-size: 16px;
-            width: 90px;
+            width: 120px;
+            margin-right: 393px;
         }
         .mt-4 {
             padding-left:200px;
@@ -175,7 +176,7 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
-                            <a class="nav-link" href="{% url 'organization_profile' pk=1 %}">
+                            <a class="nav-link" href="{% url 'organization_profile' %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                                 Profile
                             </a>
@@ -269,6 +270,7 @@
                                 <div class="row mt-4">
                                     <div class="col-md-6 text-end">
                                         <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit">Update</button>
+                                        <button id="nextTabBtn" class="btn btn-primary">Next Tab</button>
                                     </div>
                                 </div>
                             </form>
