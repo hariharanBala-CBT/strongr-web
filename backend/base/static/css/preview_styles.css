@@ -46,7 +46,7 @@ hr {
 }
 
 .card-body {
-    padding: 20px;
+    padding: 2rem;
     line-height: 1.6;
     color: #666;
 }
@@ -85,14 +85,21 @@ footer {
 }
 
 .nav-tabs .nav-link {
-    border: 1px solid transparent;
+    border: 1px solid rgba(0, 0, 0, 0.125);
     border-top-left-radius: 0.25rem;
     border-top-right-radius: 0.25rem;
     color: #007bff;
+    /* margin: 2px; */
+}
+
+.nav-tabs .nav-item .nav-link {
+    border-radius: 10px;
 }
 
 .nav-tabs .nav-link:hover {
     border-color: #e0e0e0 #e0e0e0 #fff;
+    background-color: #007bff;
+    color: white;
 }
 
 ul {
@@ -108,7 +115,6 @@ li {
 
 li .label {
     display: inline-block;
-    width: 100px;
 }
 
 .navbar-brand {
@@ -119,35 +125,84 @@ li .label {
     color: white;
 }
 
-/* Style for Disabled Checkbox */
-input[type="checkbox"]:disabled {
-    opacity: 0.6;
-    /* Reduce opacity for disabled checkboxes */
-    cursor: not-allowed;
-    /* Change cursor to 'not-allowed' for disabled checkboxes */
+.table-container {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-/* Align Disabled Checkbox in a Straight Vertical Line */
-/* Style for Disabled Checkbox */
-input[type="checkbox"]:disabled {
-    opacity: 0.6;
-    /* Reduce opacity for disabled checkboxes */
-    cursor: not-allowed;
-    /* Change cursor to 'not-allowed' for disabled checkboxes */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
 }
 
-/* Custom Checkbox Style */
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    background-color: black;
+    color: white;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-responsive>.table-bordered {
+        border: 0;
+    }
+
+    .table-responsive>.table-bordered>thead>tr>th,
+    .table-responsive>.table-bordered>tbody>tr>th,
+    .table-responsive>.table-bordered>tfoot>tr>th,
+    .table-responsive>.table-bordered>thead>tr>td,
+    .table-responsive>.table-bordered>tbody>tr>td,
+    .table-responsive>.table-bordered>tfoot>tr>td {
+        border: 1px solid #dee2e6;
+    }
+}
+
+input[type="checkbox"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+input[type="checkbox"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 
 .checkbox-custom {
     display: inline-block;
     vertical-align: middle;
     position: relative;
     cursor: pointer;
+    min-width: max-content;
 }
 
 .checkbox-custom input[type="checkbox"] {
     display: none;
-    /* Hide the default checkbox */
 }
 
 .checkbox-custom span {
@@ -179,14 +234,20 @@ input[type="checkbox"]:disabled {
 /* Align Disabled Checkbox in a Straight Vertical Line */
 ul.checkbox-list {
     list-style-type: none;
-    /* Remove default list style */
     padding-left: 20px;
-    /* Add padding to align checkboxes */
 }
 
 ul.checkbox-list li input[type="checkbox"] {
     margin-right: 10px;
-    /* Add margin right for spacing between checkbox and label */
+}
+
+.status-container {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-left: 10px;
 }
 
 .status-approved {
@@ -334,7 +395,188 @@ ul.checkbox-list li input[type="checkbox"] {
     z-index: 1050;
 
     p {
-      text-align: center;
-      margin: 0;
+        text-align: center;
+        margin: 0;
     }
-  }
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 700px;
+}
+
+.close {
+    color: #aaa;
+    align-self: self-end;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media (max-width: 500px) {
+
+    .card2 {
+        width: 100%;
+
+        .carousel {
+            width: 100% !important;
+            padding: 0.2rem;
+        }
+
+        img {
+            border-radius: 10px;
+            height: 10rem !important;
+        }
+    }
+}
+
+.card2 {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    column-gap: 2rem;
+    flex-wrap: wrap;
+    flex-grow: inherit;
+    flex-shrink: inherit;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    border-radius: 8px;
+
+    .card2-detail {
+        width: 40%;
+
+        .accordion-item {
+            width: 100%;
+            margin: 0.8rem;
+            border-radius: 5px;
+        }
+    }
+
+    .carousel {
+        width: 50%;
+        height: 450px;
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .carousel-item,
+    .carousel-inner {
+        border-radius: 10px;
+    }
+
+    img {
+        border-radius: 10px;
+        height: 24rem;
+    }
+
+    .games-detail-preview {
+        display: flex;
+        flex-direction: row;
+
+        .game {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+
+.card3 {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    border-radius: 8px;
+
+    .amenities-detail-preview {
+        display: flex;
+        flex-direction: column;
+
+        .amenities {
+            margin: 0.5rem;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+
+            .form-check-label {
+                opacity: 1;
+                color: #191919;
+            }
+        }
+
+        .description {
+            margin: 0.5rem;
+            display: flex;
+            flex-direction: row;
+
+            .label {
+                color: #191919;
+            }
+        }
+    }
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    position: relative;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.dot::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.2) 100%);
+}
+
+.dot-green {
+    background-color: green;
+}
+
+.dot-yellow {
+    background-color: yellow;
+}
+
+.dot-blue {
+    background-color: blue;
+}
+
+.dot-red {
+    background-color: red;
+}
