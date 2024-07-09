@@ -318,6 +318,10 @@
     border-radius: 10px 10px 0 0;
   }
 
+  .clublist-wrapper .listing-item .listing-img {
+    width: 40%;
+  }
+
   .listing-item .listing-img img {
     border-radius: 10px 10px 0 0;
     -webkit-transition: ease all 0.5s;
@@ -346,6 +350,9 @@
   @media (max-width: 1399.98px) {
     .listing-item .fav-item-venues {
       padding: 20px;
+    }
+    .clublist-wrapper .listing-item .listing-img {
+      width: 100%;
     }
   }
 
@@ -582,10 +589,11 @@
 
   .listing-details-group p {
     font-family: "Outfit", sans-serif;
-      font-size: 16px;
-      color: #6B7385;
-      font-weight: 400;
-      line-height: 1.5;
+    font-size: 16px;
+    color: #6B7385;
+    font-weight: 400;
+    line-height: 1.5;
+    min-height: 3rem;
   }
 
   .tag-blue {
@@ -602,11 +610,11 @@
     margin-right: 24px;
   }
 
-  .clubs-display .featured-venues-item.venue-list-item .listing-item .listing-img img {
+  .featured-venues-item.venue-list-item .listing-item .listing-img img {
     border-radius: 10px 0 0 10px;
   }
 
-  .clubs-display .listing-item-grid .listing-img img {
+  .listing-item-grid .listing-img img {
     width: 100%;
     height: 100%;
     object-fit: cover !important;
@@ -617,6 +625,19 @@
     color: #a0a0a0;
   }
 
+  .venue-wrapper .listing-details-group ul {
+    min-height: 3rem;
+  }
+
   .venue-wrapper .gametype {
     color: #192335 !important;
+  }
+
+  .listing-item-grid {
+    margin: 0 0 24px;
+  }
+
+  .club-images {
+    width: 100% !important;
+    height: 200px !important;
   }
