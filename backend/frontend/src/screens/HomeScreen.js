@@ -1,24 +1,33 @@
 import React, { useEffect, useRef, useState } from "react";
+import { ArrowRight } from "react-feather";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import toast, { Toaster } from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Form } from "react-bootstrap";
 import "../css/homescreen.css";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Message from "../components/Message";
 import SelectInput from "../components/SelectInput";
 import DateInput from "../components/DateInput";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import {
   listAreas,
   listGames,
   filterLocation,
   listOrganizations,
+  getTopRatedClubs,
 } from "../actions/actions";
 import { useHomeContext } from "../context/HomeContext";
 import { CircularProgress } from "@mui/material";
-import toast, { Toaster } from "react-hot-toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Form } from "react-bootstrap";
+import { fixImageUrls } from "../utils/imageUtils";
 import Footer from "../components/Footer";
+import cockImage from "../images/icons/work-cock.svg";
+import workImage from "../images/icons/work-icon1.svg";
+import workImage2 from "../images/icons/work-icon2.svg";
+import workImage3 from "../images/icons/work-icon3.svg";
+import Venue from "../components/Venue";
+import Testimonial from "../components/Testimonial";
 
 function HomeScreen(history) {
   const dispatch = useDispatch();
@@ -37,13 +46,16 @@ function HomeScreen(history) {
   const { gameError, gameLoading, games } = useSelector(
     (state) => state.gameList
   );
+  const { loadingTopRatedClubs, topRatedClubs } = useSelector(
+    (state) => state.topRatedClubs
+  );
 
   const handleSubmit = (event) => {
     // event.preventDefault();
     dispatch(filterLocation(areaName, gameName, date));
     navigate("/clubs");
   };
-  const { keyword, setKeyword  } = useHomeContext();
+  const { keyword, setKeyword } = useHomeContext();
 
   const [gameName, setGameName] = useState(games[0]?.game_name);
   const [areaName, setAreaName] = useState(areas[0]?.area_name);
@@ -62,6 +74,7 @@ function HomeScreen(history) {
   useEffect(() => {
     dispatch(listGames());
     dispatch(listAreas());
+    dispatch(getTopRatedClubs());
 
     const dtToday = new Date();
     const month = dtToday.getMonth() + 1;
@@ -117,6 +130,9 @@ function HomeScreen(history) {
     }
   }, [areaError, gameError]);
 
+  useEffect(() => {
+    fixImageUrls();
+  }, [topRatedClubs]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -136,7 +152,10 @@ function HomeScreen(history) {
       <Toaster />
       <div className="banner">
         <video autoPlay muted loop id="myVideo">
-          <source src="https://cbtstrongr.s3.amazonaws.com/videos/sample-video.mp4"  type="video/mp4" />
+          <source
+            src="https://cbtstrongr.s3.amazonaws.com/videos/sample-video.mp4"
+            type="video/mp4"
+          />
         </video>
         <div className="content">
           <h1>Fuel your spirit, lit your soul</h1>
@@ -149,13 +168,106 @@ function HomeScreen(history) {
           </div>
         </div>
       </div>
+      <section className="section work-section" ref={sectionRef}>
+        <div className="work-img">
+          <div className="work-img-right">
+            <img src={cockImage} alt="Icon" />
+          </div>
+        </div>
+        <div className="container">
+          <div className="section-heading aos" data-aos="fade-up">
+            <h2>
+              How It <span>Works</span>
+            </h2>
+            <p className="sub-title">
+              Simplifying the booking process for coaches, venues, and athletes.
+            </p>
+          </div>
+          <div className="row justify-content-center ">
+            <div className="col-lg-4 col-md-6 d-flex">
+              <div className="work-grid w-100 aos" data-aos="fade-up">
+                <div className="work-icon">
+                  <div className="work-icon-inner">
+                    <img src={workImage} alt="Icon" />
+                  </div>
+                </div>
+                <div className="work-content">
+                  <h5>
+                    <a href="javascript:void(0);">Join Us</a>
+                  </h5>
+                  <p>
+                    Quick and Easy Registration: Get started on our software
+                    platform with a simple account creation process.
+                  </p>
+                  <a className="btn" href="javascript:void(0);">
+                    Register Now{" "}
+                    <span>
+                      <ArrowRight />
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 col-md-6 d-flex">
+              <div className="work-grid w-100 aos" data-aos="fade-up">
+                <div className="work-icon">
+                  <div className="work-icon-inner">
+                    <img src={workImage2} alt="Icon" />
+                  </div>
+                </div>
+                <div className="work-content">
+                  <h5>
+                    <a href="javascript:void(0);">Select Coaches/Venues</a>
+                  </h5>
+                  <p>
+                    Book Badminton coaches and venues for expert guidance and
+                    premium facilities.
+                  </p>
+                  <a className="btn" href="javascript:void(0);">
+                    Go To Coaches{" "}
+                    <span>
+                      <ArrowRight />
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 col-md-6 d-flex">
+              <div className="work-grid w-100 aos" data-aos="fade-up">
+                <div className="work-icon">
+                  <div className="work-icon-inner">
+                    <img src={workImage3} alt="Icon" />
+                  </div>
+                </div>
+                <div className="work-content">
+                  <h5>
+                    <a href="javascript:void(0);">Booking Process</a>
+                  </h5>
+                  <p>
+                    Easily book, pay, and enjoy a seamless experience on our
+                    user-friendly platform.
+                  </p>
+                  <a className="btn" href="javascript:void(0);">
+                    Book Now{" "}
+                    <span>
+                      <ArrowRight />
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <section ref={sectionRef} className="section1-container" id="section1-id">
-        <div>
-          <h1 style={{ color: "black" }}>
-            We offer you the best Grounds <br />
-            with <span style={{ color: "midnightblue" }}>best deals.</span>
-          </h1>
+      <section className="section1-container" id="section1-id">
+        <div className="section-heading aos" data-aos="fade-up">
+          <h2>
+            Best <span>Deals</span>
+          </h2>
+          <p className="sub-title">
+            We offer you the best grounds with best deals.
+          </p>
         </div>
         <div className="form-section">
           <Form onSubmit={submitHandler} inline>
@@ -231,7 +343,15 @@ function HomeScreen(history) {
           </div>
         </form>
       </section>
-      <Footer/>
+      {loadingTopRatedClubs ? (
+        <CircularProgress />
+      ) : topRatedClubs && topRatedClubs.length === 0 ? (
+        <p>No top rated clubs found.</p>
+      ) : (
+        <Venue />
+      )}
+      <Testimonial />
+      <Footer />
     </div>
   );
 }

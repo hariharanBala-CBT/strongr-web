@@ -11,7 +11,7 @@ import Header from "../components/Header";
 import { Box, CircularProgress, Modal} from "@mui/material/";
 
 import {
-  generateOTP,
+  generateUpdateOTP,
   listcustomerDetails,
   updateUserProfile,
   validateUser,
@@ -66,7 +66,7 @@ function UpdateprofileScreen() {
     setLoader(true);
     setOtp("");
     setOpenForm(true);
-    dispatch(generateOTP(email));
+    dispatch(generateUpdateOTP(email, userInfo?.id));
   };
 
   const updateCustomer = (e) => {
@@ -88,7 +88,7 @@ function UpdateprofileScreen() {
   const otpGenerate = () => {
     setLoader(true);
     setOpenForm(true);
-    dispatch(generateOTP(email));
+    dispatch(generateUpdateOTP(email, userInfo?.id));
   };
 
   const validateEmail = (e) => {
@@ -107,16 +107,15 @@ function UpdateprofileScreen() {
   useEffect(() => {
     if (userUpdateSuccess && submit) {
       toast.success("user details updated");
-      setSubmit(false)
+      setSubmit(false);
     } else if (userUpdateError && submit) {
       toast.error("incorrect OTP");
       setOpenForm(false);
-      dispatch({
-        type: USER_UPDATE_PROFILE_RESET,
-      });
     }
-  }, [userUpdateSuccess, navigate, dispatch, userUpdateError, submit]);
-
+    dispatch({
+      type: USER_UPDATE_PROFILE_RESET,
+    });
+  }, [dispatch, navigate, submit, userUpdateError, userUpdateSuccess]);
 
   useEffect(() => {
     setOpenForm(false);

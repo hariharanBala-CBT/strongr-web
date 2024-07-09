@@ -1,48 +1,42 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginPhoneNumber } from "../actions/actions";
-// import Loader from "../components/Loader";
-// import Message from "../components/Message";
+import { toast, Toaster } from "react-hot-toast";
+import { LinkContainer } from "react-router-bootstrap";
 import PhoneInput from "react-phone-input-2";
+import OTPInput from "react-otp-input";
 import "react-phone-input-2/lib/style.css";
-import "../css/phonenumscreen.css";
+
+import { CircularProgress } from "@mui/material";
+
 import { auth } from "../firebase.config";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { toast, Toaster } from "react-hot-toast";
-import OTPInput from "react-otp-input";
-import { CircularProgress } from "@mui/material";
-import { LinkContainer } from "react-router-bootstrap";
 
-const linkStyle = {
-  textDecoration: 'underline',
-  color : 'purple',
-  cursor : 'pointer'
-}
+import { loginPhoneNumber, validatePhone } from "../actions/actions";
+import logoImage from "../images/logo-color.png";
+import "../css/phonenumscreen.css";
 
 function PhoneNumberScreen() {
-  const [showOTPInput, setShowOTPInput] = useState(false);
-  const [otp, setOTP] = useState("");
-  // const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [ph, setPh] = useState("");
-
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [otp, setOTP] = useState("");
+  const [ph, setPh] = useState("");
+  const [showOTPInput, setShowOTPInput] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submit, setSubmit] = useState(false);
+
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { error, userInfo } = userLogin;
+  const { userInfo } = useSelector((state) => state.userLogin);
+  const { phoneValidate, phoneValidateError } = useSelector(
+    (state) => state.phoneValidator
+  );
 
-  useEffect(() => {
-    if (userInfo) {
-      navigate(redirect);
-    }
-  }, [navigate, userInfo, redirect]);
-
+  const dispatchLogin = () => {
+    dispatch(loginPhoneNumber(ph));
+  };
 
   const renderInput = (inputProps) => {
     return (
@@ -53,6 +47,13 @@ function PhoneNumberScreen() {
         maxLength={1}
       />
     );
+  };
+
+  const handlePhoneNumberChange = () => {
+    setOTP("");
+    setShowOTPInput(false);
+    setLoading(false);
+    setSubmit(false);
   };
 
   function onCaptchVerify() {
@@ -74,119 +75,223 @@ function PhoneNumberScreen() {
 
   function onSignup(e) {
     e.preventDefault();
+    setSubmit(true);
     if (ph.length < 10) {
-      alert("Please enter a phone number!");
+      toast.error("Please enter a phone number!");
       return;
     }
     setLoading(true);
-    onCaptchVerify();
-    // setShowOTPInput(true);
-    const appVerifier = window.recaptchaVerifier;
-    const formatPh = "+" + ph;
-    signInWithPhoneNumber(auth, formatPh, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-        toast.success("OTP Sent Successfully");
+    dispatch(validatePhone(ph));
+  }
+
+  function onOTPVerify(e) {
+    e.preventDefault();
+    setOTP("");
+    setShowOTPInput(false);
+    setLoading(true);
+    window.confirmationResult
+      .confirm(otp)
+      .then(async (res) => {
+        console.log(res);
         setLoading(false);
-        setShowOTPInput(true);
+        dispatchLogin();
       })
-      .catch((error) => {
-        console.log("otp error is : ",error);
-        // setLoading(false);
-        // setTimeout(()=>{
-        //   toast.error("OTP not Sent");
-        // },5000)
+      .catch((err) => {
+        setShowOTPInput(false);
+        console.log(err);
+        toast.error("Incorrect OTP. Please try again.");
+        setLoading(false);
       });
   }
 
-  const dispatchLogin = () => {
-    dispatch(loginPhoneNumber(ph))
-    setTimeout(() => {
-      if(error){
-        toast.error('User not registered');
-      }
-    },1000)
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, redirect, userInfo]);
 
-  };
-
-
-function onOTPVerify(e) {
-  e.preventDefault();
-  setOTP('');
-  setShowOTPInput(false)
-  setLoading(true);
-  window.confirmationResult
-    .confirm(otp)
-    .then(async (res) => {
-      console.log(res);
+  useEffect(() => {
+    if (phoneValidateError && submit) {
+      setSubmit(false);
       setLoading(false);
-      dispatchLogin();
-    })
-    .catch((err) => {
-      showOTPInput(false)
-      console.log(err);
-      toast.error("Incorrect OTP. Please try again.");
-      setLoading(false);
-    });
-}
-
+      toast.error("User does not exist.");
+    } else if (phoneValidate && submit) {
+      setSubmit(false);
+      onCaptchVerify();
+      const appVerifier = window.recaptchaVerifier;
+      const formatPh = "+" + ph;
+      signInWithPhoneNumber(auth, formatPh, appVerifier)
+        .then((confirmationResult) => {
+          window.confirmationResult = confirmationResult;
+          toast.success("OTP Sent Successfully");
+          setShowOTPInput(true);
+        })
+        .catch((error) => {
+          console.log("OTP error:", error);
+          toast.error("Failed to send OTP. Please refresh page and try again.");
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [ph, phoneValidate, phoneValidateError, submit]);
 
   return (
-    <div>
-      <Header location="nav-all" />
-      <div className="logins-page">
-        <div className="logins-form">
-          <Toaster toastOptions={{ duration: 4000 }} />
-          <div id="recaptcha-container"></div>
-          <h1 className="login-title">LOGIN</h1>
-          {/* {error && <Message variant="danger">{error}</Message>}
-          {(loading || loginLoading) && <Loader />} */}
-          <form>
-            <label>Phone Number</label>
-            <PhoneInput
-              required
-              country={"in"}
-              placeholder="Enter phone number"
-              value={ph}
-              onChange={setPh}
-            />
-            {showOTPInput && (
-              <div className="OTP">
-                <label>Enter OTP</label>
-                <OTPInput
-                  className='otp-input-field'
-                  value={otp}
-                  onChange={setOTP}
-                  numInputs={6}
-                  otpType="number"
-                  autoFocus
-                  // isInputNum
-                  // separator={<span>-</span>}
-                  renderInput={renderInput}
-                />
+    <div className="phonelogin-wrapper">
+      <Toaster />
+      <div className="main-wrapper authendication-pages">
+        <div className="register-content">
+          <div className="container wrapper no-padding">
+            <div className="row no-margin vph-100">
+              <div className="col-12 col-sm-12 col-md-12 col-lg-6 no-padding toppage-container">
+                <div className="banner-bg phone-login">
+                  <div className="row no-margin h-100">
+                    <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
+                      <div className="h-100 d-flex justify-content-center align-items-center">
+                        <div className="text-bg register text-center image-color-wrapper">
+                          <button
+                            type="button"
+                            className="btn btn-limegreen text-capitalize"
+                          >
+                            <i className="fa-solid fa-thumbs-up me-3"></i>Login
+                            User
+                          </button>
+                          <p>
+                            Log in right away for our advanced sports software
+                            solutions, created to address issues in regular
+                            sporting events and activities.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
-
-            {loading && <CircularProgress className="loader"/>}
-            {!showOTPInput && (
-              <button className="generate-btn" onClick={onSignup}>
-                Generate OTP
-              </button>
-            )}
-            {showOTPInput && (
-              <button className="login-btn" onClick={onOTPVerify}>
-                Login
-              </button>
-            )}
-          </form>
-          <span>
-            Login through username &nbsp;
-          <LinkContainer to="/login" style={linkStyle}><span>login</span></LinkContainer>
-          </span>
-          <span>
-            Don't have an Account?&nbsp;
-            <LinkContainer to="/signup" style={linkStyle}><span>signup</span></LinkContainer>
-          </span>
+              <div className="col-12 col-sm-12 col-md-12 col-lg-6 no-padding">
+                <div className="dull-pg">
+                  <div className="row no-margin vph-100 d-flex align-items-center justify-content-center phone-login-right-banner">
+                    <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
+                      <header class="text-center">
+                        <LinkContainer to="/">
+                          <a href="#">
+                            <img src={logoImage} class="img-fluid" alt="Logo" />
+                          </a>
+                        </LinkContainer>
+                      </header>
+                      <div className="shadow-card">
+                        <Toaster toastOptions={{ duration: 4000 }} />
+                        <div id="recaptcha-container"></div>
+                        <h2 className="login-title">
+                          Get Started With Strongr
+                        </h2>
+                        <form>
+                          <label className="phone-textp">
+                            Enter Registered Phone Number
+                          </label>
+                          <PhoneInput
+                            required
+                            country={"in"}
+                            placeholder="Enter phone number"
+                            value={ph}
+                            onChange={(value) => {
+                              handlePhoneNumberChange();
+                              setPh(value);
+                            }}
+                          />
+                          {showOTPInput && (
+                            <div className="OTP">
+                              <label>Enter OTP</label>
+                              <OTPInput
+                                className="otp-input-field"
+                                value={otp}
+                                onChange={setOTP}
+                                numInputs={6}
+                                otpType="number"
+                                autoFocus
+                                renderInput={renderInput}
+                              />
+                            </div>
+                          )}
+                          {loading && (
+                            <div className="otp-loader">
+                              <CircularProgress className="loader" />{" "}
+                            </div>
+                          )}
+                          {!showOTPInput && (
+                            <div className="my-buttons">
+                              <button
+                                className="generate-btn"
+                                onClick={onSignup}
+                              >
+                                Generate OTP
+                              </button>
+                            </div>
+                          )}
+                          {showOTPInput && (
+                            <div className="my-buttons">
+                              <button
+                                className="login-btn"
+                                onClick={onOTPVerify}
+                              >
+                                Login
+                              </button>
+                            </div>
+                          )}
+                        </form>
+                        <div className="bottom-paras">
+                          <p>
+                            Login through Username &nbsp;
+                            <LinkContainer to="/login" className="links">
+                              <span>Login</span>
+                            </LinkContainer>
+                          </p>
+                          <p>
+                            Don't have an Account?&nbsp;
+                            <LinkContainer to="/signup" className="links">
+                              <span>Signup</span>
+                            </LinkContainer>
+                          </p>
+                        </div>
+                      </div>
+                      {/* <div className="bottom-texts">
+                        <div className="bottom-text-one text-center">
+                          <p>
+                            Login using Phone Number?&nbsp;
+                            <LinkContainer
+                              to="/phonenumberlogin"
+                              style={{
+                                textDecoration: "underline",
+                                color: "#192335",
+                              }}
+                            >
+                              <span>Login</span>
+                            </LinkContainer>
+                          </p>
+                        </div>
+                        <div className="bottom-text-two text-center">
+                          <p>
+                            Don’t have an Account?&nbsp;
+                            <LinkContainer
+                              to="/signup"
+                              style={{
+                                textDecoration: "underline",
+                                color: "#192335",
+                              }}
+                            >
+                              <span>Signup</span>
+                            </LinkContainer>
+                          </p>
+                        </div>
+                      </div> */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

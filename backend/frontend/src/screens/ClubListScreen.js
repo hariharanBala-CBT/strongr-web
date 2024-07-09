@@ -23,6 +23,7 @@ import {
   listSuggestedClub,
   listSuggestedClubGame,
 } from "../actions/actions";
+import { fixImageUrls } from "../utils/imageUtils";
 
 import "../css/clublistscreen.css";
 
@@ -44,6 +45,7 @@ function ClubListScreen() {
   const [gameName, setGameName] = useState(selectedGame);
   const [areaName, setAreaName] = useState(selectedArea);
   const [date, setDate] = useState(selectedDate);
+  const [loading, setLoading] = useState(false);
 
   const { areaError, areaLoading, areas } = useSelector(
     (state) => state.areaList
@@ -54,8 +56,10 @@ function ClubListScreen() {
   const { clubFilterLoading, clubLocationDetails } = useSelector(
     (state) => state.filterClubLocations
   );
-  const { suggestedClubList } = useSelector((state) => state.suggestedClubs);
-  const { suggestedClubGameList } = useSelector(
+  const { suggestedClubList, loadingSuggestedClub } = useSelector(
+    (state) => state.suggestedClubs
+  );
+  const { suggestedClubGameList, loadingSuggestedClubGame } = useSelector(
     (state) => state.suggestedClubsGame
   );
 
@@ -66,21 +70,7 @@ function ClubListScreen() {
     navigate("/clubs");
   };
 
-  const handleDateChange = (selectedDate) => {
-    setDate(selectedDate);
-  };
-
   useEffect(() => {
-    const fixImageUrls = () => {
-      const images = document.querySelectorAll("img");
-      images.forEach((img) => {
-        const src = img.getAttribute("src");
-        if (src && src.startsWith("https//")) {
-          img.setAttribute("src", src.replace("https//", "https://"));
-        }
-      });
-    };
-
     fixImageUrls();
   }, [suggestedClubGameList, suggestedClubList, clubLocationDetails]);
 
@@ -159,11 +149,31 @@ function ClubListScreen() {
     }
   }, [areaName, areas, games, clubLocationDetails, dispatch, gameName]);
 
+  useEffect(() => {
+    if (clubFilterLoading || loadingSuggestedClub || loadingSuggestedClubGame) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [clubFilterLoading, loadingSuggestedClub, loadingSuggestedClubGame]);
+
   return (
-    <div>
+    <div className="header-breadcrumb clublist-wrapper">
       <Header location="nav-all" />
       <Toaster />
-      <div className="form-section">
+      <section className="breadcrumb breadcrumb-list mb-0">
+        <span className="primary-right-round"></span>
+        <div className="container">
+          <h1 className="text-white">Venue List</h1>
+          <ul>
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>Venue List</li>
+          </ul>
+        </div>
+      </section>
+      <div className="form-section game-search-club">
         <form onSubmit={handleSubmit}>
           <div className="check-availability-container-club">
             {gameLoading ? (
@@ -175,7 +185,10 @@ function ClubListScreen() {
                 id="game"
                 label="Game"
                 value={gameName}
-                onChange={(value) => setGameName(value)}
+                onChange={(value) => {
+                  setLoading(true);
+                  setGameName(value);
+                }}
                 options={games?.map((game) => ({
                   id: game?.id,
                   name: game?.game_name,
@@ -192,7 +205,10 @@ function ClubListScreen() {
                 id="area"
                 label="Area"
                 value={areaName}
-                onChange={(value) => setAreaName(value)}
+                onChange={(value) => {
+                  setLoading(true);
+                  setAreaName(value);
+                }}
                 options={areas?.map((area) => ({
                   id: area?.id,
                   name: area?.area_name,
@@ -204,52 +220,70 @@ function ClubListScreen() {
               id="date"
               label="Date"
               value={date}
-              onChange={handleDateChange}
+              onChange={(value) => {
+                setLoading(true);
+                setDate(value);
+              }}
             />
           </div>
         </form>
       </div>
-      {clubFilterLoading ? (
+      {loading ? (
         <CircularProgress />
       ) : (
-        <>{clubLocationDetails && <Club clubs={clubLocationDetails} />}</>
-      )}
-      {clubLocationDetails?.length === 0 && suggestedClubList?.length > 0 && (
-        <div>
-          <div>
-            <div className="clubs-error">
-              <NoDataAnimation url={NoDataAnimationUrl} />
-            </div>
+        <>
+          {clubLocationDetails.length > 0 ? (
+            <>
+              <div className="club-list">
+                <Club clubs={clubLocationDetails} />
+              </div>
+            </>
+          ) : (
+            <>
+              {clubLocationDetails?.length === 0 &&
+              suggestedClubList?.length > 0 ? (
+                <>
+                  <div className="clubs-error">
+                    <NoDataAnimation url={NoDataAnimationUrl} />
+                  </div>
 
-            <div className="suggested-clubs">
-              <h3>Suggested Clubs in {areaName}</h3>
-              <Club clubs={suggestedClubList} />
-            </div>
-          </div>
-        </div>
+                  <div className="suggested-clubs">
+                    <h3 className="title-suggested">
+                      Suggested Clubs in {areaName}
+                    </h3>
+                    <Club clubs={suggestedClubList} />
+                  </div>
+                </>
+              ) : (
+                <>
+                  {suggestedClubList?.length === 0 &&
+                  suggestedClubGameList?.length > 0 ? (
+                    <>
+                      <div className="clubs-error">
+                        <NoDataAnimation url={NoDataAnimationUrl} />
+                      </div>
+
+                      <div className="suggested-clubs">
+                        <h3 className="title-suggested">
+                          Suggested Clubs for {gameName}
+                        </h3>
+                        <Club clubs={suggestedClubGameList} />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="clubs-error">
+                        <NoDataAnimation url={NoDataAnimationUrl} />
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </>
       )}
-      {suggestedClubList?.length === 0 && suggestedClubGameList?.length > 0 && (
-        <div>
-          <div>
-            <div className="clubs-error">
-              <NoDataAnimation url={NoDataAnimationUrl} />
-            </div>
-            <div className="suggested-clubs">
-              <h3>Suggested Clubs for {gameName}</h3>
-              <Club clubs={suggestedClubGameList} />
-            </div>
-          </div>
-        </div>
-      )}
-      {clubLocationDetails?.length === 0 &&
-        suggestedClubList?.length === 0 &&
-        suggestedClubGameList?.length === 0 && (
-          <div>
-            <div className="clubs-error">
-              <NoDataAnimation url={NoDataAnimationUrl} />
-            </div>
-          </div>
-        )}
+
       <Footer name="clublist-f" />
     </div>
   );

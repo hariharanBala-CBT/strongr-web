@@ -8,9 +8,12 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import NoDataAnimation from "../components/NoDataAnimation";
 
+import { CircularProgress } from "@mui/material";
+
 import { useHomeContext } from "../context/HomeContext";
 
 import { listOrganizations, RecentSearch } from "../actions/actions";
+import { fixImageUrls } from "../utils/imageUtils";
 
 import "../css/clubsearchscreen.css";
 
@@ -18,66 +21,22 @@ function ClubSearchScreen() {
   const NoDataAnimationUrl =
     "https://cbtstrongr.s3.amazonaws.com/videos/no-data-animation.json";
 
-  const { keyword, setKeyword } = useHomeContext();
   const dispatch = useDispatch();
+  const { keyword, setKeyword, recentlySearchedKeywords } = useHomeContext();
 
-  const [recentlySearchedKeywords, setRecentlySearchedKeywords] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const { filteredClubLocations } = useSelector(
-    (state) => state.listOrganizations
-  );
-  const { filteredData } = useSelector((state) => state.RecentSearch);
+  const { filteredClubLocations, loadingSearchLocations } = useSelector((state) => state.listOrganizations);
+  const { filteredData, loadingSearchClubs } = useSelector((state) => state.RecentSearch);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (keyword) {
-      const updatedKeywords = [
-        keyword,
-        ...recentlySearchedKeywords.filter((k) => k !== keyword).slice(0, 3),
-      ];
-      setRecentlySearchedKeywords(updatedKeywords);
-      localStorage.setItem(
-        "recentlySearchedKeywords",
-        JSON.stringify(updatedKeywords)
-      );
-
-      dispatch(listOrganizations(keyword));
-    }
-  };
-
-  const handleClubClick = (clubId) => {
-    const updatedKeywords = [
-      clubId,
-      ...recentlySearchedKeywords.filter((k) => k !== clubId).slice(0, 3),
-    ];
-    setRecentlySearchedKeywords(updatedKeywords);
-    localStorage.setItem(
-      "recentlySearchedKeywords",
-      JSON.stringify(updatedKeywords)
-    );
-    dispatch(listOrganizations(clubId));
+    dispatch(listOrganizations(keyword));
   };
 
   useEffect(() => {
-    const fixImageUrls = () => {
-      const images = document.querySelectorAll("img");
-      images.forEach((img) => {
-        const src = img.getAttribute("src");
-        if (src && src.startsWith("https//")) {
-          img.setAttribute("src", src.replace("https//", "https://"));
-        }
-      });
-    };
-
     fixImageUrls();
   }, [filteredClubLocations, filteredData]);
-
-  useEffect(() => {
-    const storedKeywords = localStorage.getItem("recentlySearchedKeywords");
-    if (storedKeywords) {
-      setRecentlySearchedKeywords(JSON.parse(storedKeywords));
-    }
-  }, []);
 
   useEffect(() => {
     dispatch(listOrganizations(keyword));
@@ -86,6 +45,14 @@ function ClubSearchScreen() {
   useEffect(() => {
     dispatch(RecentSearch(recentlySearchedKeywords));
   }, [dispatch, recentlySearchedKeywords]);
+
+  useEffect(() => {
+    if (loadingSearchClubs || loadingSearchLocations) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [loadingSearchClubs, loadingSearchLocations]);
 
   return (
     <div>
@@ -107,20 +74,27 @@ function ClubSearchScreen() {
           </Form>
         </div>
       </section>
-      {filteredClubLocations.length > 0 ? (
-        <div className="club-list">
-          <Club clubs={filteredClubLocations} onClick={handleClubClick} />
+      {loading ?
+        <div className="clubs-filter-loader">
+          <CircularProgress />
         </div>
-      ) : (
-        <div className="clubs-error">
-          <NoDataAnimation url={NoDataAnimationUrl} />
-        </div>
-      )}
-
+      :
+      <>
+        {filteredClubLocations.length > 0 ? (
+          <div className="club-list">
+            <Club clubs={filteredClubLocations} />
+          </div>
+        ) : (
+          <div className="clubs-error">
+            <NoDataAnimation url={NoDataAnimationUrl} />
+          </div>
+        )}
+      </>
+      }
       {filteredData?.length > 0 && (
         <div className="recently-searched">
           <h2>Recently Searched:</h2>
-          <Club clubs={filteredData} onClick={handleClubClick} />
+          <Club clubs={filteredData} />
         </div>
       )}
       <Footer name="club-search" />

@@ -1,5 +1,4 @@
-{% load static %}{% load url_filters %}
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -227,123 +226,177 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-                        <div class="container-fluid my-4">
-                            <div class="profile-card">
-                                <!-- <h1>Working Days</h1> -->
-                                <form action="{% url 'organization_locationworkingdays' locationpk %}" id="workingdays_form" method="post">
-                                    {% csrf_token %}
-                                    {{ formset.management_form }}
-                                    <table>
-                                        <tr>
-                                            <th>Days</th>
-                                            <th>Opening Time</th>
-                                            <th>Closing Time</th>
-                                            <th>Availability</th>
-                                        </tr>
-                                        {% for form in formset %}
-                                            <tr>
-                                                <td style="display: none;">{{ form.id }}</td>
-                                                <td>{{ form.instance.days }}</td>
-                                                <td>{{ form.work_from_time }}</td>
-                                                <td>{{ form.work_to_time }}</td>
-                                                <td>{{ form.is_active }}</td>
-                                            </tr>
+                    <div class="container-fluid my-4">
+                        <div class="profile-card">
+                            <form action="{% url 'organization_locationworkingdays' locationpk %}" id="workingdays_form" method="post">
+                                {% csrf_token %}
+                                {{ formset.management_form }}
+                                <table>
+                                    <tr>
+                                        <th>Days</th>
+                                        <th>Opening Time</th>
+                                        <th>Closing Time</th>
+                                        <th>Availability</th>
+                                    </tr>
+                                    {% for form in formset %}
+                                    <tr>
+                                        <td id="form-id">{{ form.id }}</td>
+                                        <td>{{ form.instance.days }}</td>
+                                        <td>
+                                            {{ form.work_from_time }}
+                                            <div class="form-error" id="{{ form.prefix }}-work_from_time-error"></div>
+                                        </td>
+                                        <td>
+                                            {{ form.work_to_time }}
+                                            <div class="form-error" id="{{ form.prefix }}-work_to_time-error"></div>
+                                        </td>
+                                        <td>
+                                            {{ form.is_active }}
+                                            <div class="form-error" id="{{ form.prefix }}-is_active-error"></div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                                {% if formset.non_form_errors %}
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        {% for error in formset.non_form_errors %}
+                                        <li>{{ error }}</li>
                                         {% endfor %}
-                                    </table>
-                                    <div class="row mt-4">
-                                        <!-- <div class="col-md-6">
-                                            <a  href="{% url 'organization_updatelocation' pk=locationpk %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a>
-                                        </div> -->
-                                        <div class="col-md-6 text-end">
-                                            <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit">Update</button>
-                                            <button id="nextTabBtn" class="btn btn-primary">Next</button>
-                                        </div>
+                                    </ul>
+                                </div>
+                                {% endif %}
+                                <div class="row mt-4">
+                                    <div class="col-md-6 text-end">
+                                        <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit">Update</button>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </main>
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                            <div>
-                                  <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
-                                &middot;
-                                <a href="{% url 'termsconditions' %}">Terms &amp; Conditions</a>
-                            </div>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div>
+                            <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
+                            &middot;
+                            <a href="{% url 'termsconditions' %}">Terms &amp; Conditions</a>
                         </div>
                     </div>
-                </footer>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <div class="toast" id="successToast"></div>
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <h2>Confirm Update</h2>
+            <p>Are you sure you want to update the working day details?</p>
+            <div class="button-modal">
+                <button id="cancelButton">Cancel</button>
+                <button id="confirmButton">Confirm</button>
             </div>
         </div>
-        {% comment %} <div class="modal" id="confirmationModal">
-            <div class="modal-content">
-                <h2>Confirm Update</h2>
-                <p>Are you sure you want to update the working day details?</p>
-                <div style="display: flex;">
-                    <button id="cancelButton">Cancel</button>
-                    <button id="confirmButton">Confirm</button>
-                </div>
-            </div>
-        </div> {% endcomment %}
+    </div>
 
-        <div class="toast" id="successToast"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const form = document.getElementById('workingdays_form');
-                const modal = document.getElementById('confirmationModal');
-                const confirmButton = document.getElementById('confirmButton');
-                const cancelButton = document.getElementById('cancelButton');
-                const toast = document.getElementById('successToast');
+    <script>
+        window.addEventListener('DOMContentLoaded', event => {
+            const $datatablesSimple = document.getElementById('datatablesSimple');
+            const $sidebarToggle = document.body.querySelector('#sidebarToggle');
+            const successAlert = document.getElementById('successAlert');
 
-                form.addEventListener('submit', function(event) {
+            if ($datatablesSimple) {
+                new simpleDatatables.DataTable($datatablesSimple);
+            }
+            if ($sidebarToggle) {
+                $sidebarToggle.addEventListener('click', event => {
                     event.preventDefault();
-                    modal.style.display = "block";
+                    document.body.classList.toggle('sb-sidenav-toggled');
+                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
                 });
+            }
+            if (successAlert) {
+                setTimeout(() => {
+                    successAlert.style.display = 'none';
+                }, 2500);
+            }
+        });
 
-                confirmButton.addEventListener('click', function() {
-                    modal.style.display = "none";
-                    submitFormData();
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('workingdays_form');
+            const modal = document.getElementById('confirmationModal');
+            const confirmButton = document.getElementById('confirmButton');
+            const cancelButton = document.getElementById('cancelButton');
+            const toast = document.getElementById('successToast');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                modal.style.display = "block";
+            });
+
+            confirmButton.addEventListener('click', function() {
+                modal.style.display = "none";
+                submitFormData();
+            });
+
+            cancelButton.addEventListener('click', function() {
+                modal.style.display = "none";
+            });
+
+            function submitFormData() {
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        showToast(data.message);
+                        setTimeout(() => {
+                            window.location.href = "{% url 'mainview' locationpk %}";
+                        }, 2000);
+                    } else {
+                        showToast(data.message && 'Error updating working days.');
+                        displayFormErrors(data.errors);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Error submitting form. ' + error.message);
                 });
+            }
 
-                cancelButton.addEventListener('click', function() {
-                    modal.style.display = "none";
-                });
+            function displayFormErrors(errors) {
+                const formFields = document.querySelectorAll('form .form-error');
+                formFields.forEach(field => field.innerHTML = '');  // Clear previous errors
 
-                function submitFormData() {
-                    const formData = new FormData(form);
-                    fetch(form.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRFToken': 'csrf_token'
-                        },
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok: ' + response.statusText);
+                if (errors) {
+                    for (const [field, errorList] of Object.entries(errors)) {
+                        const errorElement = document.getElementById(`${field}-error`);
+                        if (errorElement) {
+                            errorElement.innerHTML = JSON.parse(errorList).map(error => error.message).join('<br>');
                         }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.status === 'success') {
-                            showToast(data.message);
-                            setTimeout(() => {
-                                window.location.href = "{% url 'mainview' locationpk %}";
-                            }, 2000);
-                        } else {
-                            showToast(data.message || 'Error updating working days.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showToast('Error submitting form. ' + error.message);
-                    });
+                    }
                 }
+            }
 
                 function showToast(message) {
                     toast.textContent = message;

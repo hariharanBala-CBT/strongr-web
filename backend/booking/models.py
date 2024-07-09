@@ -11,6 +11,9 @@ class AdditionalSlot(models.Model):
     court = models.ForeignKey(Court, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
 
+    def __str__(self):
+        return f"{self.start_time.strftime('%H:%M')} to {self.end_time.strftime('%H:%M')}"
+
 class UnavailableSlot(models.Model):
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
@@ -18,6 +21,9 @@ class UnavailableSlot(models.Model):
     location = models.ForeignKey(OrganizationLocation,on_delete=models.CASCADE)
     court = models.ForeignKey(Court, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.start_time.strftime('%H:%M')} to {self.end_time.strftime('%H:%M')}"
 
 class Slot(models.Model):
     day_choices = (
@@ -94,4 +100,4 @@ class Booking(models.Model):
                                          default=PENDING)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"booking-{self.id}-{self.name}"

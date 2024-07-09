@@ -1,4 +1,3 @@
-# Create your views here.from django.shortcuts import render
 from django.db import IntegrityError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -18,25 +17,64 @@ import datetime
 from datetime import timedelta
 from django.db import transaction
 from django.contrib.auth.hashers import make_password
+from base.utils import update_completed_bookings
 
 
 @api_view(['GET'])
 def ValidateUser(request):
-    username = request.GET.get('username')
-
     try:
-        if not username:
-            return Response({'detail': 'Username is required'},
-                            status=status.HTTP_400_BAD_REQUEST)
-        user = User.objects.filter(username=username).first()
-        if not user:
-            return Response({'detail': 'User does not exist'},
-                            status=status.HTTP_404_NOT_FOUND)
-        return Response({'detail': 'User exists'}, status=status.HTTP_200_OK)
+        username = request.GET.get('username')
 
-    except Exception as e:
-        return Response({'detail': 'User cannot be validated'},
-                        status=status.HTTP_400_BAD_REQUEST)
+        if not username:
+            return Response({'detail': 'Username is required'},status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.filter(username=username).first()
+        if user:
+            return Response({'detail': 'User exists with this email'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
+
+    except Exception:
+        return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def ValidateUserDetails(request):
+    try:
+        email = request.GET.get('email')
+        phone = request.GET.get('phone')
+
+        if not email:
+            return Response({'detail': 'email is required'},status=status.HTTP_400_BAD_REQUEST)
+        if not phone:
+            return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
+        
+        user = User.objects.filter(email=email)
+        customer = Customer.objects.filter(phone_number = phone)
+
+        if user:
+            return Response({'detail': 'User exists with this email'}, status=status.HTTP_200_OK)
+
+        if customer:
+            return Response({'detail': 'User exists with this phone number'}, status=status.HTTP_200_OK)
+        
+        return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
+
+    except Exception:
+        return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def ValidatePhone(request):
+    try:
+        phone = request.GET.get('phone')
+        phone = phone[2:]
+
+        if not phone:
+            return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
+        customer = Customer.objects.filter(phone_number = phone)
+        if customer:
+            return Response({'detail': 'User exists with this phone number'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
+
+    except Exception:
+        return Response({'detail': 'phone number cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -51,7 +89,7 @@ def search(request):
     organization_locations = OrganizationLocation.objects.filter(
         organization__in=organizations, status=1, organization__status=1)
 
-    serializer = ClubSerializerWithImages(organization_locations, many=True)
+    serializer = ClubLocationSerializerWithImages(organization_locations, many=True)
     serialized_data = serializer.data
     return Response(serialized_data)
 
@@ -63,7 +101,7 @@ def recentSearch(request):
     organization_locations = OrganizationLocation.objects.filter(
         id__in=stored_keywords)
 
-    serializer = ClubSerializerWithImages(organization_locations, many=True)
+    serializer = ClubLocationSerializerWithImages(organization_locations, many=True)
     return Response(serializer.data)
 
 
@@ -156,6 +194,7 @@ def getSlot(request, pk):
 
 @api_view(['GET'])
 def getUserBookings(request, pk):
+    update_completed_bookings();
     booking = Booking.objects.filter(user=pk)
     serializer = UserBookingsSerializer(booking, many=True)
     return Response(serializer.data)
@@ -202,20 +241,19 @@ def filterClubs(request):
         org_game_name.organization_location for org_game_name in game_names
     ]
 
-    serializer = ClubSerializerWithImages(organizationlocations, many=True)
+    serializer = ClubLocationSerializerWithImages(organizationlocations, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
 def getSuggestedClub(request):
     selected_area = request.query_params.get('area')
-    print(selected_area)
 
     try:
         selected_area_obj = Area.objects.get(area_name=selected_area)
         organizationlocations = OrganizationLocation.objects.filter(
             area=selected_area_obj, status=1, organization__status=1)
-        serializer = ClubSerializerWithImages(organizationlocations, many=True)
+        serializer = ClubLocationSerializerWithImages(organizationlocations, many=True)
         return Response(serializer.data)
 
     except Area.DoesNotExist:
@@ -238,7 +276,7 @@ def getSuggestedClubGame(request):
             if ogt.organization_location.status == 1
         ]
 
-        serializer = ClubSerializerWithImages(organization_locations,
+        serializer = ClubLocationSerializerWithImages(organization_locations,
                                               many=True)
         return Response(serializer.data)
 
@@ -279,8 +317,7 @@ def createBooking(request):
             serializer = BookingDetailsSerializer(booking)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            print(e)
+        except Exception:
             return Response({'detail': 'Booking not created'},
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -310,8 +347,7 @@ def createBooking(request):
             serializer = BookingDetailsSerializer(booking)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            print(e)
+        except Exception:
             return Response({'detail': 'Booking not created'},
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -406,8 +442,7 @@ def updateUserProfile(request):
 
         return Response(serializer.data)
 
-    except Exception as e:
-        print(e)
+    except Exception:
         return Response({'detail': 'User profile not updated'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -518,3 +553,22 @@ def PhoneLoginView(request):
     except KeyError:
         message = {'phone_number is required'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+from django.db.models import Avg, Count
+
+@api_view(['GET'])
+def getHighRatedClubs(request):
+    try:
+        locations_with_avg_rating = OrganizationLocation.objects.annotate(
+            avg_rating=Avg('review__rating'),
+            num_reviews=Count('review')
+        ).filter(is_active=True,status=1)
+
+        locations_sorted = locations_with_avg_rating.order_by('-avg_rating')
+        top_locations = locations_sorted[:6]
+        serializer = ClubLocationSerializerWithImages(top_locations, many=True)
+        return Response(serializer.data)
+
+    except Exception as e:
+        print(e)
+        return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)

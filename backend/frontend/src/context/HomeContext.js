@@ -10,6 +10,7 @@ export const HomeProvider = ({ children }) => {
   const [selectedCourt, setSelectedCourt] = useState("");
   const [selectedSlot, setSelectedSlot] = useState("");
   const [keyword, setKeyword] = useState("");
+  const [recentlySearchedKeywords, setRecentlySearchedKeywords] = useState([]);
 
 
   useEffect(() => {
@@ -19,6 +20,7 @@ export const HomeProvider = ({ children }) => {
     const storedSelectedCourt = localStorage.getItem("selectedCourt");
     const storedSelectedSlot = localStorage.getItem("selectedSlot");
     const keyword = localStorage.getItem("keyword");
+    const recentlySearchedKeywords = localStorage.getItem("recentlySearchedKeywords");
 
 
     if (storedSelectedGame) setSelectedGame(storedSelectedGame);
@@ -26,7 +28,8 @@ export const HomeProvider = ({ children }) => {
     if (storedSelectedDate) setSelectedDate(storedSelectedDate);
     if (storedSelectedCourt) setSelectedCourt(storedSelectedCourt);
     if (storedSelectedSlot) setSelectedSlot(storedSelectedSlot);
-    if (keyword) setSelectedSlot(keyword);
+    if (keyword) setKeyword(keyword);
+    if (recentlySearchedKeywords) setRecentlySearchedKeywords(recentlySearchedKeywords);
 
   }, []);
 
@@ -54,6 +57,14 @@ export const HomeProvider = ({ children }) => {
     localStorage.setItem("keyword", keyword);
   }, [keyword]);
 
+  useEffect(() => {
+    try{ 
+    localStorage.setItem("recentlySearchedKeywords", JSON.stringify(recentlySearchedKeywords));
+    } catch (e) {
+      console.log(e);
+    }
+  }, [recentlySearchedKeywords]);
+
   const contextValue = {
     selectedGame,
     setSelectedGame,
@@ -66,7 +77,9 @@ export const HomeProvider = ({ children }) => {
     selectedSlot,
     setSelectedSlot,
     keyword,
-    setKeyword
+    setKeyword,
+    recentlySearchedKeywords,
+    setRecentlySearchedKeywords
   };
 
   return (

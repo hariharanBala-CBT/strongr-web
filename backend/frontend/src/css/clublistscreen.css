@@ -43,7 +43,6 @@
   align-items: baseline;
 }
 
-
 .check-availability-container-club select, .check-availability-container-club input[type="date"] {
   padding: 5px;
   margin: 5px;
@@ -53,42 +52,180 @@
   max-width: 300px;
 }
 
-
 .availability-btn-class {
   text-align: center;
 }
 
-.club-list{
-  margin-left: 20px;
+.club-list {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   flex-wrap: wrap;
+  margin: 30px;
 }
 
-.clubs-display{
+.clubs-display {
   display: flex;
   flex-direction: row;
   column-gap: 1.5rem;
   row-gap: 1.5rem;
 }
 
-.clubs-error{
+.clubs-error {
   display: flex !important;
   align-items: center;
-  /* padding: 5rem; */
   justify-content: center;
 }
-/* 
-.clubs-display .image{
-  height: 200px;
-  width: max-content;
-} */
 
-.suggested-clubs{
+.suggested-clubs {
   padding: 2rem;
 }
 
-.clublist-f{
+.suggested-clubs .title-suggested {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  font-size: 35px;
+}
+
+.clublist-f {
+  margin-top: 147px;
+}
+
+.game-search-club{
+  margin-top: 50px;
+}
+
+.breadcrumb.breadcrumb-list {
+  background: url(../images/sports-banner.jpg) rgba(36, 29, 57, 0.8) no-repeat;
+  background-size: cover;
+}
+
+.breadcrumb {
+  background: url(../images/sports-banner.jpg) rgba(36, 29, 57, 0.8) no-repeat;
+  background-size: cover;
+  background-blend-mode: multiply;
+  padding: 107px 0;
+  position: relative;
+  height: 400px;
+}
+
+header.header-sticky {
+  position: sticky;
+}
+
+.breadcrumb h1 {
+  margin-bottom: 15px;
+}
+
+.breadcrumb.breadcrumb-list .container {
+  position: relative;
+}
+
+.breadcrumb ul {
+  position: relative;
+  color: #FFFFFF;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.breadcrumb ul li {
+  padding-right: 30px;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+
+header.header-sticky {
+  position: sticky;
+}
+
+.breadcrumb h1 {
   margin-top: 155px;
+}
+
+.breadcrumb.breadcrumb-list .container {
+  position: relative;
+}
+
+.breadcrumb ul {
+  position: relative;
+  color: #FFFFFF;
+}
+
+.breadcrumb ul li {
+  padding-right: 30px;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+}
+
+.game-search-club .select-date input.form-control {
+  height: 50px;
+  border-radius: 10px;
+  background: #FAFAFA;
+  border: none;
+}
+
+.header-breadcrumb .header {
+  position: sticky;
+}
+
+.breadcrumb ul li a:hover {
+  color: #097E52 !important;
+}
+
+.listing-list-page .featured-venues-item .listing-item .listing-details-group ul {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.featured-venues-item .listing-details-group .listing-details-info span {
+  margin-right: 15px;
+}
+
+@media (max-width: 767.98px) {
+  .listing-list-page .featured-venues-item .listing-item {
+      display: block !important;
+  }
+  .listing-list-page .featured-venues-item .listing-item .listing-img img {
+    border-radius: 10px 10px 0 0px !important;
+  }
+  .listing-item .listing-content {
+    padding: 20px;
+    border-radius: 0px 0 5px 5px;
+  }
+  .featured-venues-item.venue-list-item .listing-item .listing-details-group ul {
+    display: block !important;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .listing-item .listing-content {
+      padding: 20px;
+  }
+  .listing-item .listing-title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 1399.98px) {
+  .listing-item .fav-item-venues {
+      padding: 20px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .listing-list-page .featured-venues-item .listing-item .listing-details-group .listing-details-info {
+      display: block !important;
+  }
+  .listing-list-page .featured-venues-item .listing-item .listing-details-group ul li + li {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+}
+
+.breadcrumb a {
+  color: #fff !important;
+  text-decoration: none;
 }

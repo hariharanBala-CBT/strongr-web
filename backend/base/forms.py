@@ -68,13 +68,6 @@ class OrganizationProfileForm(forms.ModelForm):
         }
 
 class OrganizationLocationForm(ModelForm):
-    pincode = forms.IntegerField(validators=[MinValueValidator(100000, message='Make sure pincode is 6-digits'), MaxValueValidator(999999, message='Make sure pincode is 6-digits')])
-    phone_number = forms.IntegerField(
-        validators=[
-            MinValueValidator(1000000000, message='Phone number must be 10 digits long'),
-            MaxValueValidator(9999999999, message='Phone number can be at most 10 digits long')
-        ]
-    )
     class Meta:
         model = OrganizationLocation
         fields = ['address_line_1', 'address_line_2', 'area', 'pincode', 'phone_number']
@@ -83,20 +76,38 @@ class OrganizationLocationForm(ModelForm):
             'address_line_2': forms.Textarea(attrs={'rows': 2, 'cols': 20})
         }
 
+    def clean_pincode(self):
+        pincode = self.cleaned_data.get('pincode')
+        if not (100000 <= pincode <= 999999):
+            raise ValidationError('Make sure pincode is 6-digits')
+        return pincode
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if not (1000000000 <= phone_number <= 9999999999):
+            raise ValidationError('Phone number must be 10 digits long')
+        return phone_number
+
     def clean(self):
         cleaned_data = super().clean()
         pincode = cleaned_data.get('pincode')
         phone_number = cleaned_data.get('phone_number')
         area = cleaned_data.get('area')
 
-        # Convert to string
-        pincode = str(pincode)
-        phone_number = str(phone_number)
+        # Ensure pincode and phone number are strings
+        if pincode and phone_number:
+            pincode = str(pincode)
+            phone_number = str(phone_number)
 
-        existing_entries = OrganizationLocation.objects.filter(pincode=pincode, phone_number=phone_number, area=area).exclude(pk=self.instance.pk)
+        # Check for existing entries with the same pincode, phone number, and area
+        existing_entries = OrganizationLocation.objects.filter(
+            pincode=pincode,
+            phone_number=phone_number,
+            area=area
+        ).exclude(pk=self.instance.pk)
 
         if existing_entries.exists():
-            raise ValidationError("This Pincode,Phone Number and Area combination already exists.")
+            raise ValidationError("This Pincode, Phone Number, and Area combination already exists.")
 
         return cleaned_data
 
@@ -204,8 +215,8 @@ class SlotForm(forms.ModelForm):
                             (start_time.hour * 3600 + start_time.minute * 60 + start_time.second)
         time_diff_minutes = time_diff_seconds / 60
 
-        if time_diff_minutes > 60:
-            raise forms.ValidationError("Time difference between slots cannot exceed one hour.")
+        if time_diff_minutes != 60:
+            raise forms.ValidationError("Time difference between slots must exactly be one hour.", code='time_error')
 
         return cleaned_data
 
@@ -238,8 +249,8 @@ class SlotUpdateForm(forms.ModelForm):
                             (start_time.hour * 3600 + start_time.minute * 60 + start_time.second)
         time_diff_minutes = time_diff_seconds / 60
 
-        if time_diff_minutes > 60:
-            raise forms.ValidationError("Time difference between slots cannot exceed one hour.")
+        if time_diff_minutes != 60:
+            raise forms.ValidationError("Time difference between slots must exactly be one hour.", code='time_error')
 
         return cleaned_data
 

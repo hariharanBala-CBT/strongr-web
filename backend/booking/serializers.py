@@ -1,3 +1,4 @@
+import datetime
 from rest_framework import serializers
 from base.models import *
 from .models import *
@@ -138,25 +139,6 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
             'payment_status', 'tax_price', 'total_price', 'organization_name',
             'court', 'slot', 'additional_slot', 'organization_location', 'game_type', 'image'
         ]
-
-# class ClubSerializerWithImages(serializers.ModelSerializer):
-#     organization = ClubSerializer()
-#     area = AreaSerializer()
-#     # organization_images = serializers.SerializerMethodField()
-#     address_line_1 = serializers.SerializerMethodField()
-
-#     # def get_organization_images(self, obj):
-#     #     images = OrganizationGameImages.objects.filter(organization=obj)
-#     #     return [image.image.url for image in images]
-
-#     def get_address_line_1(self, obj):
-#         location = obj
-#         return location.address_line_1 if location else None
-
-#     class Meta:
-#         model = Organization
-#         fields = ['id', 'organization', 'area', 'address_line_1']
-
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
@@ -169,23 +151,25 @@ class ClubSerializerWithLocation(serializers.ModelSerializer):
         model = Organization
         fields = '__all__'
 
-class ClubSerializerWithImages(serializers.ModelSerializer):
+
+class ClubLocationSerializerWithImages(serializers.ModelSerializer):
     organization = ClubSerializer()
     area = AreaSerializer()
     organization_images = serializers.SerializerMethodField()
     address_line_1 = serializers.SerializerMethodField()
-    rating = serializers.DecimalField(max_digits=7, decimal_places=2, read_only=True)
+    rating = serializers.DecimalField(max_digits=7,decimal_places=2,read_only=True)
+    next_availabilty = serializers.SerializerMethodField(read_only=True)
     numRatings = serializers.IntegerField(read_only=True)
     reviews = serializers.SerializerMethodField(read_only=True)
 
     def get_organization_images(self, obj):
         try:
             organization_location = obj
-            organization_game_images = OrganizationGameImages.objects.filter(organization=organization_location).first()
+            organization_game_images = OrganizationGameImages.objects.filter(
+                organization=organization_location).first()
             if organization_game_images:
                 return organization_game_images.image.url
-        except Exception as e:
-            # Handle exceptions appropriately
+        except Exception as e:            
             pass
         return None
 
@@ -198,7 +182,47 @@ class ClubSerializerWithImages(serializers.ModelSerializer):
         serializer = ReviewSerializer(reviews, many=True)
         return serializer.data
 
+    def get_next_availabilty(self, obj):
+        now = datetime.datetime.now()
+
+        next_slot = Slot.objects.filter(
+            days=now.strftime('%A'),
+            start_time__gte=now.time(),
+            is_booked=False,
+            location=obj
+        ).order_by('start_time').first()
+
+        next_additional_slot = AdditionalSlot.objects.filter(
+            date__gte=now.date(),
+            is_active=True,
+            location=obj
+        ).order_by('date', 'start_time').first()
+
+        next_unavailable_slot = UnavailableSlot.objects.filter(
+            date__gte=now.date(),
+            is_active=True,
+            location=obj
+        ).order_by('date', 'start_time').first()
+
+        if next_slot and next_additional_slot:
+            if next_slot.start_time < next_additional_slot.start_time:
+                if next_slot.start_time < next_unavailable_slot.start_time:
+                    return SlotSerializer(next_slot).data
+                else:
+                    return SlotSerializer(next_slot).data
+            else:
+                return AdditionalSlotSerializer(next_additional_slot).data
+        elif next_slot:
+            return SlotSerializer(next_slot).data
+        elif next_additional_slot:
+            return AdditionalSlotSerializer(next_additional_slot).data
+
+        return None
 
     class Meta:
         model = Organization
-        fields = ['id', 'organization', 'area','organization_images','address_line_1','rating', 'numRatings','reviews']
+        fields = [
+            'id', 'organization', 'area', 'organization_images',
+            'address_line_1', 'rating', 'next_availabilty', 'numRatings',
+            'reviews'
+        ]

@@ -19,7 +19,7 @@ load_dotenv()
 
 # Set DEBUG based on the environment
 DEBUG = os.environ.get('DJANGO_DEBUG')
-if DEBUG:
+if DEBUG == 'True':
     from .local_settings import *
 else:
     from .production_settings import *

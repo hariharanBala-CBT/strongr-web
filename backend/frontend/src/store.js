@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { thunk } from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension";
+
 import {
   clubListReducer,
   areaListReducer,
@@ -37,6 +37,9 @@ import {
   validateUserReducer,
   additionalslotsReducer,
   unavailableslotsReducer,
+  validatePhoneReducer,
+  validateUserDetailsReducer,
+  topRatedClubsReducer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -75,6 +78,9 @@ const reducer = combineReducers({
   suggestedClubs: suggestedClubListReducer,
   suggestedClubsGame : suggestedClubGameListReducer,
   userValidator : validateUserReducer,
+  userDetailsValidator : validateUserDetailsReducer,
+  phoneValidator : validatePhoneReducer,
+  topRatedClubs: topRatedClubsReducer 
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
@@ -90,7 +96,7 @@ const middleware = [thunk];
 const store = createStore(
   reducer,
   initialState,
-  composeWithDevTools((applyMiddleware(...middleware))),
+  (applyMiddleware(...middleware)),
 );
 
 export default store;
