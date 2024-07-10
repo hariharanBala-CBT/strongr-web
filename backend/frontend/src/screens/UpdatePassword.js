@@ -144,7 +144,7 @@ function ResetPassword() {
                             data-bs-toggle="modal"
                             data-bs-target="#deactive"
                           >
-                            <i className="feather-zap-off"></i>Deactive Account
+                            <i className="feather-zap-off"></i>Reset Password
                           </a>
                         </div>
                       </div>
