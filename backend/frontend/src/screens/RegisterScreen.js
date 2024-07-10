@@ -149,7 +149,7 @@ function RegisterScreen() {
                   <div className="row no-margin h-100">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
                       <div className="h-100 d-flex justify-content-center align-items-center">
-                        <div class="text-bg register text-center image-color-wrapper">
+                        <div className="text-bg register text-center image-color-wrapper">
                           <button
                             type="button"
                             className="btn btn-limegreen text-capitalize"
@@ -172,10 +172,14 @@ function RegisterScreen() {
                 <div className="dull-pg">
                   <div className="row no-margin vph-100 d-flex align-items-center justify-content-center signup-right-banner">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
-                      <header class="text-center">
+                      <header className="text-center">
                         <LinkContainer to="/">
                           <a href="#">
-                            <img src={logoImage} class="img-fluid" alt="Logo" />
+                            <img
+                              src={logoImage}
+                              className="img-fluid"
+                              alt="Logo"
+                            />
                           </a>
                         </LinkContainer>
                       </header>
