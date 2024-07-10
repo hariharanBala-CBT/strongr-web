@@ -207,7 +207,9 @@ function CheckoutScreen() {
                               ?.organization_name
                           }
                         </h3>
-                        <h6>{bookingData.clubPrice}</h6>
+                        <h6>
+                          {"\u20B9"} {bookingData.clubPrice}
+                        </h6>
                       </li>
                       <p>
                         {bookingData.gameName}-{bookingData.selectedSlot}- 1 hrs
