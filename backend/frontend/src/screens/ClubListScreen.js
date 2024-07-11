@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import toast, { Toaster } from "react-hot-toast";
 
 import { useHomeContext } from "../context/HomeContext";
@@ -33,6 +34,8 @@ function ClubListScreen() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation("clublistscreen");
+
   const {
     selectedDate,
     selectedArea,
@@ -164,10 +167,10 @@ function ClubListScreen() {
       <section className="breadcrumb breadcrumb-list mb-0">
         <span className="primary-right-round"></span>
         <div className="container">
-          <h1 className="text-white">Venue List</h1>
+          <h1 className="text-white">{t("venueList")}</h1>
           <ul>
             <li>
-              <a href="/">Home</a>
+              <a href="/">{t("home")}</a>
             </li>
             <li>Venue List</li>
           </ul>
@@ -183,7 +186,7 @@ function ClubListScreen() {
             ) : (
               <SelectInput
                 id="game"
-                label="Game"
+                label={t("game")}
                 value={gameName}
                 onChange={(value) => {
                   setLoading(true);
@@ -203,7 +206,7 @@ function ClubListScreen() {
             ) : (
               <SelectInput
                 id="area"
-                label="Area"
+                label={t("area")}
                 value={areaName}
                 onChange={(value) => {
                   setLoading(true);
@@ -218,7 +221,7 @@ function ClubListScreen() {
 
             <DateInput
               id="date"
-              label="Date"
+              label={t("date")}
               value={date}
               onChange={(value) => {
                 setLoading(true);
@@ -249,7 +252,7 @@ function ClubListScreen() {
 
                   <div className="suggested-clubs">
                     <h3 className="title-suggested">
-                      Suggested Clubs in {areaName}
+                      {t("suggestedClubsIn")} {areaName}
                     </h3>
                     <Club clubs={suggestedClubList} />
                   </div>
@@ -265,7 +268,7 @@ function ClubListScreen() {
 
                       <div className="suggested-clubs">
                         <h3 className="title-suggested">
-                          Suggested Clubs for {gameName}
+                          {t("suggestedClubsFor")} {gameName}
                         </h3>
                         <Club clubs={suggestedClubGameList} />
                       </div>

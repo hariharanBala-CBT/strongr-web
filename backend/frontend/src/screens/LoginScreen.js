@@ -116,8 +116,8 @@ function LoginScreen() {
                         </LinkContainer>
                       </header>
                       <div className="shadow-card">
-                        <h2>{t("Welcome Back")}</h2>
-                        <p>{t("Login into your account")}</p>
+                        <h2>{t("welcomeBack")}</h2>
+                        <p>{t("loginIntoYourAccount")}</p>
                         {loading ? (
                           <CircularProgress className="loader" />
                         ) : (
@@ -149,7 +149,7 @@ function LoginScreen() {
                                       required
                                       className="form-control pass-input"
                                       type="text"
-                                      placeholder={t("Enter Username")}
+                                      placeholder={t("enterUsername")}
                                       value={username}
                                       onChange={handleUsername}
                                     />
@@ -170,7 +170,7 @@ function LoginScreen() {
                                       required
                                       type={showPassword ? "text" : "password"}
                                       className="form-control pass-input"
-                                      placeholder={t("Enter Password")}
+                                      placeholder={t("enterPassword")}
                                       value={password}
                                       onChange={handlePassword}
                                     />
@@ -203,7 +203,7 @@ function LoginScreen() {
                       <div className="bottom-texts">
                         <div className="bottom-text-one text-center">
                           <p>
-                            {t("Login through Phone Number")}&nbsp;
+                            {t("LoginThroughPhoneNumber")}&nbsp;
                             <LinkContainer
                               to="/phonenumberlogin"
                               style={{
@@ -217,7 +217,7 @@ function LoginScreen() {
                         </div>
                         <div className="bottom-text-two text-center">
                           <p>
-                            {t("Don't have a Account")}&nbsp;
+                            {t("dontHaveAccount")}&nbsp;
                             <LinkContainer
                               to="/register"
                               style={{

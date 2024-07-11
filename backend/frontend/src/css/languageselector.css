@@ -1,6 +1,6 @@
 .dropdown-container {
   position: absolute;
-  top: 10px;
+  top: 16px;
   right: 10px;
   z-index: 1000;
 }
@@ -8,38 +8,32 @@
 .language-selector {
   display: flex;
   align-items: center;
-  font-size: 14px;
-}
+  position: relative;
 
-.language-selector select {
-  padding: 5px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  appearance: none; /* Remove default arrow */
-  background-color: white; /* Ensure background is white */
-  font-size: inherit;
-  cursor: pointer;
-  outline: none; /* Remove outline on focus */
-  transition: border-color 0.2s ease-in-out;
-}
+  .select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    appearance: none;
+    background-color: white;
+    font-size: inherit;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease-in-out;
 
-.language-selector select:focus {
-  border-color: #007bff; /* Adjust focus border color */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Optional: Add a subtle box shadow on focus */
-}
+    .label {
+      margin-right: 8px;
+      min-width: max-content;
+    }
 
-.language-selector label {
-  margin-right: 8px;
-  min-width: max-content;
-}
+    .i {
+      margin-right: 5px;
+    }
 
-.language-selector i {
-  margin-right: 5px;
-}
-
-/* Ensure the dropdown arrow icon remains visible */
-.language-selector select::-ms-expand {
-  display: none;
+    .select::-ms-expand {
+      display: none;
+    }
+  }
 }
 
 .header-right-banner .language-dropdown {
@@ -47,7 +41,6 @@
   position: absolute;
   justify-items: center;
   top: 10px;
-
 }
 
 .language-dropdown label {
@@ -57,4 +50,39 @@
 .language-dropdown .fa-globe {
   color: #fff;
   margin-right: 5px;
+}
+
+.selected-language {
+  margin-left: 8px;
+  color: white;
+}
+
+#language-select {
+  margin-left: 8px;
+}
+
+.dropdown-language {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  overflow: hidden;
+
+  .dropdown-item {
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.dropdown-icon {
+  margin-left: 4px;
+  color: white;
 }

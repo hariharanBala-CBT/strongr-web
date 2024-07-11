@@ -1,16 +1,15 @@
- {
-    "loginButton": "Login User",
-    "loginParagraph": "Log in right away for our advanced sports software solutions, created to address issues in regular sporting events and activities.",
-    "Welcome Back": "Welcome Back",
-    "Login into your account": "Login into your account",
-    "invalidUsername": "Invalid username",
-    "Enter Username": "Enter username",
-    "Enter Password": "Enter password",
-    "Login": "Login",
-    "Login through Phone Number": "Login using Phone number?",
-    "Don't have a Account": "Don't you have an Account?",
-    "incorrectPassword": "Incorrect password",
-    "login": "Login",
-    "signup": "signup"
-  }
-
+{
+  "loginButton": "Login User",
+  "loginParagraph": "Log in right away for our advanced sports software solutions, created to address issues in regular sporting events and activities.",
+  "welcomeBack": "Welcome Back",
+  "loginIntoYourAccount": "Login into your account",
+  "invalidUsername": "Invalid username",
+  "enterUsername": "Enter username",
+  "enterPassword": "Enter password",
+  "Login": "Login",
+  "LoginThroughPhoneNumber": "Login using Phone number?",
+  "dontHaveAccount": "Don't you have an Account?",
+  "incorrectPassword": "Incorrect password",
+  "login": "Login",
+  "signup": "signup"
+}

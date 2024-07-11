@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import toast, { Toaster } from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Form } from "react-bootstrap";
@@ -28,7 +29,6 @@ import workImage2 from "../images/icons/work-icon2.svg";
 import workImage3 from "../images/icons/work-icon3.svg";
 import Venue from "../components/Venue";
 import Testimonial from "../components/Testimonial";
-import { useTranslation } from "react-i18next";
 
 function HomeScreen(history) {
   const { t } = useTranslation("homescreen");
@@ -69,7 +69,7 @@ function HomeScreen(history) {
   const changeArea = (value) => {
     setAreaName(value);
   };
-  const changeGate = (value) => {
+  const changeDate = (value) => {
     setDate(value);
   };
 
@@ -126,9 +126,9 @@ function HomeScreen(history) {
 
   useEffect(() => {
     if (areaError) {
-      toast.error("error in fetching areas");
+      toast.error(t("errorFetchingAreas"));
     } else if (gameError) {
-      toast.error("error in fetching games");
+      toast.error(t("errorFetchingGames"));
     }
   }, [areaError, gameError]);
 
@@ -160,12 +160,12 @@ function HomeScreen(history) {
           />
         </video>
         <div className="content">
-          <h1>{t("home_title")}</h1>
+          <h1>{t("homeTitle")}</h1>
           <div>
             <Button
               onClick={handleClick}
               className="btn-explore"
-              text={t("explore_button")}
+              text={t("explore")}
             />
           </div>
         </div>
@@ -179,10 +179,10 @@ function HomeScreen(history) {
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
             <h2>
-              {t("how_it_works_title")} <span>{t("works")}</span>
+              {t("howIt")} <span>{t("works")}</span>
             </h2>
             <p className="sub-title">
-              {t("how_it_works_subtitle")}
+              {t("howItWorksSubtitle")}
             </p>
           </div>
           <div className="row justify-content-center ">
@@ -195,13 +195,13 @@ function HomeScreen(history) {
                 </div>
                 <div className="work-content">
                   <h5>
-                    <a href="javascript:void(0);">{t("join_us_title")}</a>
+                    <a href="javascript:void(0);">{t("joinUs")}</a>
                   </h5>
                   <p>
-                    {t("join_us_description")}
+                    {t("joinUsDescription")}
                   </p>
                   <a className="btn" href="javascript:void(0);">
-                  {t("register_now_button")}{" "}
+                  {t("registerNow")}{" "}
                     <span>
                       <ArrowRight />
                     </span>
@@ -218,13 +218,13 @@ function HomeScreen(history) {
                 </div>
                 <div className="work-content">
                   <h5>
-                    <a href="javascript:void(0);">{t("select_coaches_venues_title")}</a>
+                    <a href="javascript:void(0);">{t("selectCoachesVenues")}</a>
                   </h5>
                   <p>
-                    {t("select_coaches_venues_description")}
+                    {t("selectCoachesVenuesDescription")}
                   </p>
                   <a className="btn" href="javascript:void(0);">
-                    {t("go_to_coaches_button")}{" "}
+                    {t("goToCoaches")}{" "}
                     <span>
                       <ArrowRight />
                     </span>
@@ -241,13 +241,13 @@ function HomeScreen(history) {
                 </div>
                 <div className="work-content">
                   <h5>
-                    <a href="javascript:void(0);">{t("booking_process_title")}</a>
+                    <a href="javascript:void(0);">{t("bookingProcess")}</a>
                   </h5>
                   <p>
-                    {t("booking_process_description")}
+                    {t("bookingProcessDescription")}
                   </p>
                   <a className="btn" href="javascript:void(0);">
-                  {t("book_now_button")}{" "}
+                  {t("bookNow")}{" "}
                     <span>
                       <ArrowRight />
                     </span>
@@ -262,10 +262,10 @@ function HomeScreen(history) {
       <section className="section1-container" id="section1-id">
         <div className="section-heading aos" data-aos="fade-up">
           <h2>
-          {t("best_deals_title")} <span>{t("deals")}</span>
+          {t("best")} <span>{t("deals")}</span>
           </h2>
           <p className="sub-title">
-          {t("best_deals_subtitle")}
+          {t("bestDealsSubtitle")}
           </p>
         </div>
         <div className="form-section">
@@ -277,14 +277,14 @@ function HomeScreen(history) {
                 name="q"
                 onChange={(e) => setKeyword(e.target.value)}
                 className="mr-sm-2 ml-sm-2 search-input"
-                placeholder={t("search_placeholder")}
+                placeholder={t("search")}
                 // required
               />
             </div>
           </Form>
           <div className="lines">
             <div className="or-line1"></div>
-            {t("or_text")}
+            {t("or")}
             <div className="or-line2"></div>
           </div>
         </div>
@@ -296,7 +296,7 @@ function HomeScreen(history) {
               <Message variant="danger">{gameError}</Message>
             ) : (
               <SelectInput
-                label={t("game_label")}
+                label={t("gameLabel")}
                 id="gameName"
                 value={gameName}
                 onChange={changeGame}
@@ -314,7 +314,7 @@ function HomeScreen(history) {
               <Message variant="danger">{areaError}</Message>
             ) : (
               <SelectInput
-                label={t("area_label")}
+                label={t("areaLabel")}
                 id="areaName"
                 value={areaName}
                 onChange={changeArea}
@@ -327,18 +327,18 @@ function HomeScreen(history) {
             )}
 
             <DateInput
-              label={t("date_label")}
+              label={t("dateLabel")}
               id="date"
               required="required"
               value={date}
-              onChange={changeGate}
+              onChange={changeDate}
             />
           </div>
           <div className="availability-btn-class">
             <Button
               onClick={handleSubmit}
               className="btn-check-availability-home"
-              text={t("check_availability_button")}
+              text={t("checkAvailability")}
             />
           </div>
         </form>
@@ -346,7 +346,7 @@ function HomeScreen(history) {
       {loadingTopRatedClubs ? (
         <CircularProgress />
       ) : topRatedClubs && topRatedClubs.length === 0 ? (
-        <p>{t("no_top_rated_clubs")}</p>
+        <p>{t("noTopRatedClubs")}</p>
       ) : (
         <Venue />
       )}
