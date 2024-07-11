@@ -562,7 +562,7 @@ def getHighRatedClubs(request):
         locations_with_avg_rating = OrganizationLocation.objects.annotate(
             avg_rating=Avg('review__rating'),
             num_reviews=Count('review')
-        ).filter(is_active=True)
+        ).filter(is_active=True,status=1)
 
         locations_sorted = locations_with_avg_rating.order_by('-avg_rating')
         top_locations = locations_sorted[:6]

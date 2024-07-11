@@ -1,13 +1,15 @@
 {% load static %}{% load url_filters %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>STRONGR</title>
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>{% block title %}STRONGR{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link href="{% static 'styles.css' %}" rel="stylesheet" />
@@ -15,45 +17,129 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        form {
-            max-width: 500px;
-            margin: 0 auto;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1200px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
 
-        form label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        form input[type="time"], input[type="date"], form select {
-            width: calc(100% - 12px);
-            padding: 5px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .card {
-            margin: 0 auto;
+            margin: 20px 0;
             padding: 20px;
-            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .card-body {
+            padding: 10px 20px;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: #ffffff;
+            opacity: 0.8;
+        }
+
+        .status-approved {
+            color: #28a745;
+            border: 1px solid #28a745;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #ffc107;
+            border: 1px solid #ffc107;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .status-in-progress {
+            color: #007bff;
+            border: 1px solid #007bff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .status-cancelled {
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .status-unknown {
+            color: #6c757d;
+            border: 1px solid #6c757d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        /* Sidebar styling */
+        #layoutSidenav_nav {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .sb-sidenav-menu-heading {
+            font-weight: 700;
+            color: #adb5bd;
+        }
+
+        .sb-sidenav-menu .nav-link {
+            color: #ffffff;
+        }
+
+        .sb-sidenav-menu .nav-link:hover {
+            background-color: #495057;
+        }
+
+        .sb-sidenav-footer {
+            background-color: #343a40;
+            color: #ffffff;
+        }
     </style>
 </head>
-
 <body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark" aria-label="Main Navigation">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
         <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" aria-controls="sidenavAccordion" aria-expanded="false"><i class="fas fa-bars"></i></button>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user fa-fw"></i>{{ user.username }}
-                </a>
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>{{ user.username }}</a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                 </ul>
@@ -62,7 +148,7 @@
     </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" aria-label="Sidebar Navigation">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Organization</div>
@@ -74,7 +160,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                             Profile
                         </a>
-                        <a class="nav-link" href="{% url 'organization_locationlist'%}">
+                        <a class="nav-link" href="{% url 'organization_locationlist' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                             Locations
                         </a>
@@ -82,24 +168,24 @@
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                             Preview
                         </a>
-                        <a class="nav-link" href="{% url 'status' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></i></div>
+                        <a class="nav-link" href="{% url 'status' %}" style="color: white; background-color: rgb(68, 68, 68);">
+                            <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
                             Status
                         </a>
-                        <a class="nav-link" href="{% url 'org_customers_list'%}">
+                        <a class="nav-link" href="{% url 'org_customers_list' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Customers
-                        </a>  
+                        </a>
                         <div class="sb-sidenav-menu-heading">Slot</div>
                         <a class="nav-link" href="{% url 'slot-location' %}">
                             <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
                             Slots List
-                          </a>
-                        <a class="nav-link" href="{% url 'temp-slot-location'%}">
+                        </a>
+                        <a class="nav-link" href="{% url 'temp-slot-location' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
                             Additional Slots
                         </a>
-                        <a class="nav-link" href="{% url 'temp-deslot-location'%}" style="color: white; background-color: rgb(68, 68, 68);">
+                        <a class="nav-link" href="{% url 'temp-deslot-location' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
                             Unavailable Slots
                         </a>
@@ -113,45 +199,8 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4">
-                    <div class="profile-card">
-                        <h3 class="my-4">Unavailable Slot:</h3>
-                        <h6 class="mb-5">Add Unavailable Temporary Slot to your court</h6>
-                        {% if error %}
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ error }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endif %}
-                        <form method="post" aria-labelledby="formHeading">
-                            <h2 id="formHeading" class="visually-hidden">Unavailable Slot Form</h2>
-                            {% csrf_token %}
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td><label>From<span id="starttime" class="text-danger">*</span></label></td>
-                                        <td>{{ form.start_time }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>To<span id="endtime" class="text-danger">*</span></label></td>
-                                        <td>{{ form.end_time }}</td>
-                                    </tr> 
-                                    <tr>
-                                        <td><label>Date<span id="date" class="text-danger">*</span></label></td>
-                                        <td>{{ form.date }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><label>Court<span id="court" class="text-danger">*</span></label></td>
-                                        <td>{{ form.court }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="buttons px-4 py-4" style="margin-left: 10%">
-                                <button type="button" class="btn btn-secondary" onclick="goBack()" aria-label="Go back"><i class="fa-solid fa-arrow-left-long"></i></button>
-                                <button type="submit" class="btn btn-primary" aria-label="Submit form"><i class="fa-solid fa-arrow-right-long"></i></button>
-                            </div>
-                        </form>
-                    </div>
+                {% block content %}
+                {% endblock %}
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
@@ -172,6 +221,13 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script>
         window.addEventListener('DOMContentLoaded', event => {
+            const $datatablesSimple = document.getElementById('datatablesSimple');
+            if ($datatablesSimple) {
+                new simpleDatatables.DataTable($datatablesSimple);
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', event => {
             const $sidebarToggle = document.body.querySelector('#sidebarToggle');
             if ($sidebarToggle) {
                 $sidebarToggle.addEventListener('click', event => {
@@ -181,18 +237,6 @@
                 });
             }
         });
-
-        function goBack() {
-            history.go(-1);
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var dateInput = document.querySelector('input[type="date"]');
-            var today = new Date().toISOString().split('T')[0];
-            dateInput.setAttribute('min', today);
-        });
-
     </script>
 </body>
-
 </html>

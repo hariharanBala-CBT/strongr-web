@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
+        
         <title>STRONGR.</title>
 
         <!-- External CSS -->
@@ -51,7 +52,7 @@
                     <!-- Sidebar Content -->
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Core</div>
+                            <div class="sb-sidenav-menu-heading">Organization</div>
                             <a class="nav-link" href="{% url 'organization_page' %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
@@ -64,6 +65,18 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
                             </a>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Slots
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="{% url 'slot-location' %}">Slot-list</a>
+                                    <a class="nav-link" href="{% url 'temp-slot-location'%}">Additional Slots</a>
+                                    <a class="nav-link" href="{% url 'temp-deslot-location'%}">Unavailable Slots</a>
+                                </nav>
+                            </div>
                             <a class="nav-link" href="{% url 'preview' %}"
                                 style="color: white; background-color: rgb(68, 68, 68);">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
@@ -73,22 +86,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></i></div>
                                 Status
                             </a>
+                            <div class="sb-sidenav-menu-heading">Customers</div>
                             <a class="nav-link" href="{% url 'org_customers_list'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                                Customers
-                            </a>
-                            <div class="sb-sidenav-menu-heading">Slot</div>
-                            <a class="nav-link" href="{% url 'slot-location' %}">
-                                <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
-                                Slots List
-                            </a>
-                            <a class="nav-link" href="{% url 'temp-slot-location'%}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
-                                Additional Slots
-                            </a>
-                            <a class="nav-link" href="{% url 'temp-deslot-location'%}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
-                                Unavailable Slots
+                                List
                             </a>
                         </div>
                     </div>
@@ -149,18 +150,19 @@
                                             {% endif %}
                                             <li>
                                                 <div class="label">Status</div>:&nbsp;
-                                                {% if profile.status == 1 %}
-                                                <span class="status-approved">Approved</span>
-                                                {% elif profile.status == 2 %}
-                                                <span class="status-pending">Pending</span>
-                                                {% elif profile.status == 3 %}
-                                                <span class="status-in-progress">In Progress</span>
-                                                {% elif profile.status == 4 %}
-                                                <span class="status-cancelled">Cancelled</span>
-                                                {% else %}
-                                                <span class="status-unknown">Unknown</span>
-                                                <p>Please Contact the Service Provider.</p>
-                                                {% endif %}
+                                                    {% if profile.status == 1 %}
+                                                        <span class="status-approved">Approved</span>
+                                                    {% elif profile.status == 2 %}
+                                                        <span class="status-pending">Pending</span>
+                                                    {% elif profile.status == 3 %}
+                                                        <span class="status-in-progress">In Progress</span>
+                                                    {% elif profile.status == 4 %}
+                                                        <span class="status-cancelled">Cancelled</span>
+                                                    {% else %}
+                                                        <span class="status-unknown">Unknown</span>
+                                                        <p>Please Contact the Service Provider.</p>
+                                                    {% endif %}
+                                                </div>
                                             </li>
                                             {% endfor %}
                                         </ul>
@@ -180,7 +182,18 @@
                                             data-bs-target="#{{ location_item.location.area|slugify }}-{{ location_item.location.id }}"
                                             type="button" role="tab"
                                             aria-controls="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}"
-                                            aria-selected="{{ forloop.first }}">{{ location_item.location.area }}</button>
+                                            aria-selected="{{ forloop.first }}">
+                                            {% if location_item.location.status == 1 %}
+                                            <span class="dot dot-green"></span>
+                                            {% elif location_item.location.status == 2 %}
+                                            <span class="dot dot-yellow"></span>
+                                            {% elif location_item.location.status == 3 %}
+                                            <span class="dot dot-blue"></span>
+                                            {% elif location_item.location.status == 4 %}
+                                            <span class="dot dot-red"></span>
+                                            {% endif %}
+                                            {{ location_item.location.address_line_1 }}
+                                        </button>
                                     </li>
                                     {% endfor %}
                                 </ul>
@@ -196,182 +209,251 @@
                                             <div class="card mb-4">
                                                 <div class="card-body">
                                                     <!-- Content for each tab -->
-                                                    <li>
-                                                        <div class="label">Status</div>:&nbsp;
-                                                        {% if location_item.location.status == 1 %}
-                                                        <span class="status-approved">Approved</span>
-                                                        {% elif location_item.location.status == 2 %}
-                                                        <span class="status-pending">Pending</span>
-                                                        {% elif location_item.location.status == 3 %}
-                                                        <span class="status-in-progress">In Progress</span>
-                                                        {% elif location_item.location.status == 4 %}
-                                                        <span class="status-cancelled">Cancelled</span>
-                                                        {% else %}
-                                                        <span class="status-unknown">Unknown</span>
-                                                        <p>Please Contact the Service Provider.</p>
-                                                        {% endif %}
-                                                    </li>
+                                                    <div>
+                                                        <li>
+                                                            <div class="label">Status</div>:&nbsp;
+                                                            {% if location_item.location.status == 1 %}
+                                                            <span class="status-approved">Approved</span>
+                                                            {% elif location_item.location.status == 2 %}
+                                                            <span class="status-pending">Pending</span>
+                                                            {% elif location_item.location.status == 3 %}
+                                                            <span class="status-in-progress">In Progress</span>
+                                                            {% elif location_item.location.status == 4 %}
+                                                            <span class="status-cancelled">Cancelled</span>
+                                                            {% else %}
+                                                            <span class="status-unknown">Unknown</span>
+                                                            <p>Please Contact the Service Provider.</p>
+                                                            {% endif %}
+                                                        </li>
 
-                                                    <!-- Location Address -->
-                                                    <div class="card2">
-                                                        <h5><strong>Address:</strong></h5>
-                                                        <ul>
-                                                            {{ location_item.location.address_line_1 }}<br>
-                                                            {{ location_item.location.address_line_2 }}<br>
-                                                            {{ location_item.location.area }}-{{location_item.location.pincode }}
-                                                        </ul>
+                                                        <!-- Location Address -->
+                                                        <div class="card2 mt-4 mb-4">
+                                                            <div id="carouselExampleIndicators-{{ location_item.location.id }}" class="carousel slide" data-bs-ride="carousel">
+                                                                <div class="carousel-indicators">
+                                                                    {% for image in location_item.images %}
+                                                                        <button type="button" data-bs-target="#carouselExampleIndicators-{{ location_item.location.id }}" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-current="{% if forloop.first %}true{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
+                                                                    {% endfor %}
+                                                                </div>
+                                                                <div class="carousel-inner">
+                                                                    {% for image in location_item.images %}
+                                                                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                                                            <img class="d-block w-100" src="{{ image.image.url|fix_https }}" alt="image" width="350" height="450">
+                                                                        </div>
+                                                                    {% empty %}
+                                                                        <div class="carousel-item active">
+                                                                            <img class="d-block w-100" src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg" alt="image" width="350" height="450">
+                                                                        </div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators-{{ location_item.location.id }}" data-bs-slide="prev">
+                                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                    <span class="visually-hidden">Previous</span>
+                                                                </button>
+                                                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators-{{ location_item.location.id }}" data-bs-slide="next">
+                                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                    <span class="visually-hidden">Next</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="card2-detail">
+                                                                <div class="card3">
+                                                                    <h5><strong>Address:</strong></h5>
+                                                                    <ul>
+                                                                        <li>{{ location_item.location.address_line_1 }}</li>
+                                                                        <li>{{ location_item.location.address_line_2 }}</li>
+                                                                        <li>{{ location_item.location.area }}-{{ location_item.location.pincode }}</li>
+                                                                    </ul>
+                                                                </div>
+
+                                                                <!-- Accordion for games -->
+                                                                <div class="accordion" id="gamesAccordion-{{ location_item.location.id }}">
+                                                                    {% for game in location_item.games %}
+                                                                    <div class="accordion-item">
+                                                                        <h2 class="accordion-header" id="heading{{ game.id }}">
+                                                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ game.id }}" aria-expanded="{% if forloop.first %}true{% endif %}" aria-controls="collapse{{ game.id }}">
+                                                                                {{ game.game_type }}
+                                                                            </button>
+                                                                        </h2>
+                                                                        <div id="collapse{{ game.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ game.id }}" data-bs-parent="#gamesAccordion-{{ location_item.location.id }}">
+                                                                            <div class="accordion-body">
+                                                                                <ul class="list-unstyled">
+                                                                                    <li>Pricing: {{ game.pricing }}</li>
+                                                                                    <li>Description: {% if game.description %}{{ game.description }}{% else %}None{% endif %}</li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                    <div class="card3">
+                                                        <h5><strong>Amenities:</strong></h5>
+                                                        <div class="amenities-detail-preview">
+                                                            {% for amenity in location_item.amenities %}
+                                                                <div class="amenities">
+                                                                    <label class="form-check">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            {% if amenity.is_parking %} checked {% endif %} disabled>
+                                                                        <span class="form-check-label">Parking</span>
+                                                                    </label><br>
 
-                                                    <!-- Games -->
-                                                    <h5><strong>Games:</strong></h5>
-                                                    <ul>
-                                                        {% for game in location_item.games %}
-                                                        <ul>
-                                                            <strong>{{ game.game_type }}</strong>
-                                                            <li>
-                                                                <div class="label">Pricing</div>: {{ game.pricing }}
-                                                            </li>
-                                                            <li>
-                                                                <div class="label">Description</div>:
-                                                                {% if game.description%}
-                                                                    {{ game.description }}
+                                                                    <label class="form-check">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            {% if amenity.is_restrooms %} checked {% endif %} disabled>
+                                                                        <span class="form-check-label">Restroom</span>
+                                                                    </label><br>
+
+                                                                    <label class="form-check">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            {% if amenity.is_changerooms %} checked {% endif %} disabled>
+                                                                        <span class="form-check-label">Changeroom</span>
+                                                                    </label><br>
+
+                                                                    <label class="form-check">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            {% if amenity.is_powerbackup %} checked {% endif %} disabled>
+                                                                        <span class="form-check-label">Power Backup</span>
+                                                                    </label><br>
+
+                                                                    <label class="form-check">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            {% if amenity.is_beverages_facility %} checked {% endif %} disabled>
+                                                                        <span class="form-check-label">Beverage</span>
+                                                                    </label><br>
+
+                                                                    <label class="form-check">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            {% if amenity.is_coaching_facilities %} checked {% endif %} disabled>
+                                                                        <span class="form-check-label">Coaching</span>
+                                                                    </label><br>
+                                                                </div>
+                                                                {% if amenity.description %}
+                                                                    <li>
+                                                                        <div class="label">Description</div>: {{ amenity.description }}
+                                                                    </li>
                                                                 {% else %}
-                                                                    None
+                                                                    <li>
+                                                                        <div class="label">Description</div>: None
+                                                                    </li>
                                                                 {% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <!-- Nested Tabs for Working Days, Courts, and Slots -->
+                                                    <div class="card3">
+                                                        <ul class="nav nav-tabs mt-4" id="nestedTabs-{{ location_item.location.id }}" role="tablist">
+                                                            <li class="nav-item" role="presentation">
+                                                                <button class="nav-link active" id="workingdays-tab-{{ location_item.location.id }}" data-bs-toggle="tab"
+                                                                    data-bs-target="#workingdays-{{ location_item.location.id }}" type="button" role="tab"
+                                                                    aria-controls="workingdays-{{ location_item.location.id }}" aria-selected="true">Working Days</button>
+                                                            </li>
+                                                            <li class="nav-item" role="presentation">
+                                                                <button class="nav-link" id="courts-tab-{{ location_item.location.id }}" data-bs-toggle="tab"
+                                                                    data-bs-target="#courts-{{ location_item.location.id }}" type="button" role="tab"
+                                                                    aria-controls="courts-{{ location_item.location.id }}" aria-selected="false">Courts</button>
+                                                            </li>
+                                                            <li class="nav-item" role="presentation">
+                                                                <button class="nav-link" id="slots-tab-{{ location_item.location.id }}" data-bs-toggle="tab"
+                                                                    data-bs-target="#slots-{{ location_item.location.id }}" type="button" role="tab"
+                                                                    aria-controls="slots-{{ location_item.location.id }}" aria-selected="false">Slots</button>
                                                             </li>
                                                         </ul>
-                                                        {% endfor %}
-                                                    </ul>
 
-                                                    <h5><strong>Amenities:</strong></h5>
-                                                    <ul class="checkbox-list">
-                                                        {% for amenity in location_item.amenities %}
-                                                        <li>
-                                                            <label class="checkbox-custom">
-                                                                <input type="checkbox"
-                                                                {% if amenity.is_parking %}
-                                                                    checked
-                                                                {%endif %} disabled>
-                                                                <span></span> Parking
-                                                            </label><br>
+                                                        <div class="tab-content" id="nestedTabsContent-{{ location_item.location.id }}">
+                                                            <!-- Working Days Tab -->
+                                                            <div class="tab-pane fade show active" id="workingdays-{{ location_item.location.id }}" role="tabpanel"
+                                                                aria-labelledby="workingdays-tab-{{ location_item.location.id }}">
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Days</th>
+                                                                                <th>Opening Time</th>
+                                                                                <th>Closing Time</th>
+                                                                                <th>Availability</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            {% for workingtime in location_item.workingtimes %}
+                                                                            <tr>
+                                                                                <td>{{ workingtime.get_days_display }}</td>
+                                                                                <td>{{ workingtime.work_from_time }}</td>
+                                                                                <td>{{ workingtime.work_to_time }}</td>
+                                                                                <td>
+                                                                                    {% if workingtime.is_active %}
+                                                                                    <label class="checkbox-custom">
+                                                                                        <input type="checkbox" checked disabled>
+                                                                                        <span></span>
+                                                                                    </label>
+                                                                                    {% else %}
+                                                                                    <label class="checkbox-custom">
+                                                                                        <input type="checkbox" unchecked disabled>
+                                                                                        <span></span>
+                                                                                    </label>
+                                                                                    {% endif %}
+                                                                                </td>
+                                                                            </tr>
+                                                                            {% endfor %}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
 
-                                                            <label class="checkbox-custom">
-                                                                <input type="checkbox"
-                                                                {% if amenity.is_restrooms %}
-                                                                    checked
-                                                                {% endif %} disabled>
-                                                                <span></span> Restroom
-                                                            </label><br>
+                                                            <!-- Courts Tab -->
+                                                            <div class="tab-pane fade" id="courts-{{ location_item.location.id }}" role="tabpanel"
+                                                                aria-labelledby="courts-tab-{{ location_item.location.id }}">
+                                                                <ul class="court-list context-courts" id="court-list-{{ location_item.location.id }}">
+                                                                    <table class="table">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th scope="col">Court Name</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            {% for court in location_item.courts %}
+                                                                                <tr>
+                                                                                    <td>{{ court.name }}</td>
+                                                                                </tr>
+                                                                                {% empty %}
+                                                                                <tr>
+                                                                                    <td class="empty">No Courts Added</td>
+                                                                                </tr>
+                                                                            {% endfor %}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </ul>
+                                                            </div>
 
-                                                            <label class="checkbox-custom">
-                                                                <input type="checkbox"
-                                                                {% if amenity.is_changerooms %}
-                                                                    checked
-                                                                {% endif %} disabled>
-                                                                <span></span> Changeroom
-                                                            </label><br>
-
-                                                            <label class="checkbox-custom">
-                                                                <input type="checkbox"
-                                                                {% if amenity.is_powerbackup %}
-                                                                    checked
-                                                                {% endif %} disabled>
-                                                                <span></span> Power Backup
-                                                            </label><br>
-
-                                                            <label class="checkbox-custom">
-                                                                <input type="checkbox"
-                                                                {% if amenity.is_beverages_facility %}
-                                                                    checked
-                                                                {% endif %} disabled>
-                                                                <span></span> Beverage
-                                                            </label><br>
-
-                                                            <label class="checkbox-custom">
-                                                                <input type="checkbox"
-                                                                {% if amenity.is_coaching_facilities %}
-                                                                    checked
-                                                                {% endif %} disabled>
-                                                                <span></span> Coaching
-                                                            </label><br>
-                                                            {% if amenity.description %}
-                                                        <li>
-                                                            <div class="label">Description</div>: {{ amenity.description }}
-                                                        </li>
-                                                        {% else %}
-                                                        <li>
-                                                            <div class="label">Description</div>: None
-                                                        </li>
-                                                        {% endif %}
-                                                        </li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                    <!-- Working Times -->
-                                                    <h5><strong>Working Times:</strong></h5>
-
-                                                    <form action="post">
-                                                        <table class="table table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Days</th>
-                                                                    <th>Opening Time</th>
-                                                                    <th>Closing Time</th>
-                                                                    <th>Availability</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {% for workingtime in location_item.workingtimes %}
-                                                                <tr>
-                                                                    <td>{{ workingtime.get_days_display }}</td>
-                                                                    <td>{{ workingtime.work_from_time }}</td>
-                                                                    <td>{{ workingtime.work_to_time }}</td>
-
-                                                                    <td>
-                                                                        {% if workingtime.is_active %}
-                                                                        <label class="checkbox-custom">
-                                                                            <input type="checkbox" checked disabled>
-                                                                            <span></span>
-                                                                        </label>
-                                                                        {% else %}
-                                                                        <label class="checkbox-custom">
-                                                                            <input type="checkbox" unchecked disabled>
-                                                                            <span></span>
-                                                                        </label>
-                                                                        {% endif %}
-                                                                    </td>
-                                                                </tr>
-                                                                {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    </form>
-                                                    <!-- Courts -->
-                                                    <h5><strong>Courts</strong></h5>
-                                                    <ul class="court-list context-courts" id="court-list-{{ location_item.location.id }}">
-                                                        {% for court in location_item.courts %}
-                                                            <li>{{ court.name }}</li>
-                                                        {% empty %}
-                                                            <li class="empty">No Courts Added</li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                    <!-- Images -->
-                                                    <h5><strong>Images</strong></h5>
-                                                    <div class="context-images" id="slots-list-{{ location_item.location.id }}">
-                                                        {% for image in location_item.images %}
-                                                            <img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
-                                                        {% empty %}
-                                                            <li class="empty">No images Addded</li>
-                                                        {% endfor %}
+                                                            <!-- Slots Tab -->
+                                                            <div class="tab-pane fade" id="slots-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="slots-tab-{{ location_item.location.id }}">
+                                                                <ul class="slots-list context-slots" id="slots-list-{{ location_item.location.id }}">
+                                                                    {% if location_item.slots %}
+                                                                    <div id="tableContent-{{ location_item.location.id }}" class="table-container">
+                                                                        <table class="table table-responsive">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Slot</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                {% for slot in location_item.slots %}
+                                                                                <tr>
+                                                                                    <td>{{ slot.court.name }} ({{ slot.get_days_display }} -- {{ slot.start_time}} - {{ slot.end_time }})</td>
+                                                                                </tr>
+                                                                                {% endfor %}
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                    {% else %}
+                                                                    <li class="empty">No Slot Added</li>
+                                                                    {% endif %}
+                                                                </ul>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <!-- Slots -->
-                                                    <h5><strong>Slots</strong></h5>
-                                                    <ul class="slots-list context-slots" id="slots-list-{{ location_item.location.id }}">
-                                                        {% if location_item.slots %}
-                                                            <li><a href="{% url 'slot-list' locationpk=location_item.location.pk %}">Slot list</a></li>
-                                                        {% else %}
-                                                            <li class="empty">No Slot Added</li>
-                                                        {% endif %}
-                                                    </ul>
-                                                    <div class="text-center mb-4">
+
+                                                    <div class="text-center mb-4 mt-4">
                                                         {% for profile in profiles %}
                                                             {% if profile.status == 1 %}
                                                                 {% if location_item.location.status != 1 and location_item.location.status != 3 %}
@@ -386,12 +468,17 @@
                                                                                 disabled
                                                                                 data-bs-toggle="tooltip"
                                                                                 data-bs-placement="top"
-                                                                                title="Please add all details before submitting"
+                                                                                title="{% if not location_item.has_courts and not location_item.has_slots %}
+                                                                                        Please add courts and slots
+                                                                                    {% elif not location_item.has_courts %}
+                                                                                        Please add courts to proceed
+                                                                                    {% else %}
+                                                                                        Please add slots to proceed
+                                                                                    {% endif %}"
                                                                             {% endif %}
                                                                         >
                                                                         Submit
                                                                         </button>
-
                                                                     </form>
                                                                 </div>
                                                                 {% endif %}
@@ -405,7 +492,6 @@
                                         </div>
                                     </div>
                                     {% endfor %}
-
                                 </div>
                             </div>
                         </div>
@@ -476,6 +562,7 @@
                                                 <p>10. <strong>Support:</strong> For any questions or concerns, please contact our customer support team at support@strongr.com.</p>
 
                                                 <p>By using Strongr, you agree to these terms and conditions. Thank you for choosing Strongr for your playground turf booking needs.</p>
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -483,7 +570,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             {% endif %}
                         {% endfor %}
@@ -511,30 +597,71 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script>
-            const $sidebarToggle = document.body.querySelector('#sidebarToggle');
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', event => {
-                    event.preventDefault();
-                    document.body.classList.toggle('sb-sidenav-toggled');
-                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-                });
-            }
+            document.addEventListener('DOMContentLoaded', (event) => {
+                const $sidebarToggle = document.body.querySelector('#sidebarToggle');
+                if ($sidebarToggle) {
+                    $sidebarToggle.addEventListener('click', event => {
+                        event.preventDefault();
+                        document.body.classList.toggle('sb-sidenav-toggled');
+                        localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+                    });
+                }
 
-            const $successAlert = $('#successAlert');
-            if ($successAlert.length) {
-                setTimeout(() => {
-                    $successAlert.hide();
-                }, 2500);
-            }
+                const $successAlert = $('#successAlert');
+                if ($successAlert.length) {
+                    setTimeout(() => {
+                        $successAlert.hide();
+                    }, 2500);
+                }
 
-            window.addEventListener('DOMContentLoaded', event => {
+                // Modal Function
+                function openModal(locationId) {
+                    var tableContentId = "tableContent-" + locationId;
+                    var modalId = "myModal-" + locationId;
+                    var modalBodyId = "modalBody-" + locationId;
+
+                    console.log("Table Content ID:", tableContentId);
+                    console.log("Modal ID:", modalId);
+                    console.log("Modal Body ID:", modalBodyId);
+
+                    var tableContent = document.getElementById(tableContentId);
+                    var modal = document.getElementById(modalId);
+                    var modalBody = document.getElementById(modalBodyId);
+
+                    if (tableContent && modal && modalBody) {
+                        modalBody.innerHTML = tableContent.innerHTML;
+                        modal.style.display = "block";
+                    } else {
+                        console.error("Element not found:", { tableContent, modal, modalBody });
+                    }
+                }
+
+                function closeModal(locationId) {
+                    var modalId = "myModal-" + locationId;
+                    var modalBodyId = "modalBody-" + locationId;
+
+                    var modal = document.getElementById(modalId);
+                    var modalBody = document.getElementById(modalBodyId);
+
+                    if (modal && modalBody) {
+                        modal.style.display = "none";
+                        modalBody.innerHTML = "";
+                    } else {
+                        console.error("Element not found:", { modal, modalBody });
+                    }
+                }
+
+                // Expose the functions to the global scope
+                window.openModal = openModal;
+                window.closeModal = closeModal;
+
                 const datatablesSimple = document.getElementById('datatablesSimple');
                 if (datatablesSimple) {
                     new simpleDatatables.DataTable(datatablesSimple);
                 }
 
                 var submitButton = document.getElementById("submit-btn-{{ location_item.location.id }}");
-                if (submitButton.getAttribute("disabled")) {
+                if (submitButton && submitButton.getAttribute("disabled")) {
                     // Initialize tooltip if button is disabled
                     new bootstrap.Tooltip(submitButton);
                 }

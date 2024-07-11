@@ -1,0 +1,123 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+}
+
+.container {
+    padding: 20px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 1200px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.header {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.card {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 10px 20px;
+}
+
+.navbar-brand {
+    font-weight: 700;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #ffffff;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #ffffff;
+    opacity: 0.8;
+}
+
+.status-approved {
+    color: #28a745;
+    background-color: #e6f4ea;
+    border: 1px solid #28a745;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: left 10px;
+}
+
+.status-pending {
+    color: #ffc107;
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: left 10px;
+}
+
+.status-in-progress {
+    color: #007bff;
+    background-color: #d6e4ff;
+    border: 1px solid #007bff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: left 10px;
+}
+
+.status-cancelled {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #dc3545;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: left 10px;
+}
+
+.status-unknown {
+    color: #6c757d;
+    background-color: #e9ecef;
+    border: 1px solid #6c757d;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: left 10px;
+}
+
+.table-responsive {
+    margin-top: 20px;
+}
+
+/* Sidebar styling */
+#layoutSidenav_nav {
+    background-color: #343a40;
+    color: #ffffff;
+}
+
+.sb-sidenav-menu-heading {
+    font-weight: 700;
+    color: #adb5bd;
+}
+
+.sb-sidenav-menu .nav-link {
+    color: #ffffff;
+}
+
+.sb-sidenav-menu .nav-link:hover {
+    background-color: #495057;
+}
+
+.sb-sidenav-footer {
+    background-color: #343a40;
+    color: #ffffff;
+}

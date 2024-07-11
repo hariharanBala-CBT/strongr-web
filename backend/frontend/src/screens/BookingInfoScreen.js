@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { LinkContainer } from "react-router-bootstrap";
-
+import { MapPin } from "react-feather";
+import venueImage from "../images/owner-venue2.jpg";
 import { useHomeContext } from "../context/HomeContext";
 
 import Footer from "../components/Footer";
@@ -222,6 +222,7 @@ function BookingInfoScreen() {
   }, [clubGame, clubLocation, courts]);
 
   const handleSubmit = async (event) => {
+    console.log("handlesub...");
     event.preventDefault();
     if (selectedSlot) {
       const parts = selectedSlot.split("-");
@@ -342,198 +343,274 @@ function BookingInfoScreen() {
     <div>
       <Header location="nav-all" />
       <Toaster />
-      <div className="bookinginfo-content">
-        <div className="card1">
-          <div className="container-title">
-            <h2>{clubLocation?.organization?.organization_name}</h2>
-            <h3>{clubLocation?.area?.area_name}</h3>
-          </div>
-
-          <hr style={{ backgroundColor: "black" }} />
-          <form onSubmit={handleSubmit} className="booking-form">
-            <div className="booking-container">
-              <SelectInput
-                id="area"
-                value={areaName}
-                onChange={handleAreaChange}
-                disabled
-                options={[
-                  {
-                    id: clubLocation?.area?.id,
-                    name: clubLocation?.area?.area_name,
-                  },
-                ]}
-                label="Area"
-              />
-              <SelectInput
-                id="game"
-                value={gameName}
-                // disabled
-                onChange={handleGameChange}
-                options={clubGame?.map((game) => ({
-                  id: game?.id,
-                  name: game?.game_type?.game_name,
-                }))}
-                label="Game"
-              />
-              <DateInput id="date" value={date} onChange={handleDateChange} />
-              {loading ? (
-                <CircularProgress />
-              ) : (
-                <SelectInput
-                  id="court"
-                  value={courtName}
-                  onChange={handleCourtChange}
-                  options={courts?.map((court) => ({
-                    id: court.id,
-                    name: court.name,
-                  }))}
-                  label="Court"
-                />
-              )}
-              {loading ? (
-                <div>Loading slots...</div>
-              ) : slots?.length !== 0 || additionalSlots?.length !== 0 ? (
-                <SelectInput
-                  id="slot"
-                  value={slot}
-                  onChange={handleSlotChange}
-                  options={slots?.map((slot) => ({
-                    id: slot.id,
-                    name: `${slot.start_time}-${slot.end_time}`,
-                  }))}
-                  label="slot"
-                  addSlots={additionalSlots?.map((slot) => ({
-                    id: slot.id,
-                    name: `${slot.start_time}-${slot.end_time}`,
-                  }))}
-                  removeSlots={unavailableSlots?.map((slot) => ({
-                    id: slot.id,
-                    name: `${slot.start_time}-${slot.end_time}`,
-                  }))}
-                />
-              ) : (
-                <Alert severity="error">
-                  No slots available in {courtName}
-                </Alert>
-              )}
-            </div>
-          </form>
+      <section className="breadcrumb breadcrumb-list mb-0">
+        <span className="primary-right-round"></span>
+        <div className="container">
+          <h1 className="text-white">Book A Court</h1>
+          <ul>
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>Book A Court</li>
+          </ul>
         </div>
-        <div className="card2">
-          <h2>
-            <span>Your Order</span>
-          </h2>
+      </section>
+      <div className="content book-cage">
+        <div className="container">
+          <section className="card mb-40">
+            <div className="text-center mb-40">
+              <h3 className="mb-1">Book A Court</h3>
+              <p className="sub-title mb-0">
+                Hassle-free court bookings and state-of-the-art facilities.
+              </p>
+            </div>
+            <div className="master-academy dull-whitesmoke-bg card">
+              <div className="row d-flex align-items-center justify-content-center">
+                <div className="col-12 col-sm-12 col-md-12 col-lg-6">
+                  <div className="d-sm-flex justify-content-start align-items-center">
+                    <a href="javascript:void(0);">
+                      <img
+                        className="corner-radius-10"
+                        src={venueImage}
+                        alt="Venue"
+                      />
+                    </a>
+                    <div className="info">
+                      <div className="d-flex justify-content-start align-items-center mb-3">
+                        <span className="text-white dark-yellow-bg color-white me-2 d-flex justify-content-center align-items-center">
+                          4.5
+                        </span>
+                        <span>300 Reviews</span>
+                      </div>
+                      <h3 className="mb-2">
+                        {clubLocation?.organization?.organization_name}
+                      </h3>
+                      <p>
+                        {clubLocation?.organization?.organization_name}: Where
+                        dreams meet excellence in sports education and training.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-12 col-sm-12 col-md-12 col-lg-6">
+                  <ul className="d-sm-flex align-items-center justify-content-evenly">
+                    <li>
+                      <h3 className="d-inline-block">
+                        <span>
+                          <MapPin />
+                        </span>
+                        {clubLocation?.area?.area_name}
+                      </h3>
+                    </li>
+                    <li>
+                      <span>
+                        <i className="feather-plus"></i>
+                      </span>
+                    </li>
+                    <li>
+                      <h3 className="d-inline-block">₹150</h3>
+                      <span>/hr</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+          <div className="row">
+            <div className="col-12 col-sm-12 col-md-12 col-lg-6">
+              <div className="booking-info-card">
+                <h3 className="border-bottom">Booking Form</h3>
+                <form onSubmit={handleSubmit} className="booking-form">
+                  <div className="booking-container">
+                    <SelectInput
+                      id="area"
+                      value={areaName}
+                      onChange={handleAreaChange}
+                      options={[
+                        {
+                          id: clubLocation?.area?.id,
+                          name: clubLocation?.area?.area_name,
+                        },
+                      ]}
+                      label="Area"
+                    />
+                    <SelectInput
+                      id="game"
+                      value={gameName}
+                      // disabled
+                      onChange={handleGameChange}
+                      options={clubGame?.map((game) => ({
+                        id: game?.id,
+                        name: game?.game_type?.game_name,
+                      }))}
+                      label="Game"
+                    />
+                    <DateInput
+                      id="date"
+                      value={date}
+                      onChange={handleDateChange}
+                    />
+                    {loading ? (
+                      <CircularProgress />
+                    ) : (
+                      <SelectInput
+                        id="court"
+                        value={courtName}
+                        onChange={handleCourtChange}
+                        options={courts?.map((court) => ({
+                          id: court.id,
+                          name: court.name,
+                        }))}
+                        label="Court"
+                      />
+                    )}
+                    {loading ? (
+                      <div>Loading slots...</div>
+                    ) : slots?.length !== 0 || additionalSlots?.length !== 0 ? (
+                      <SelectInput
+                        useRadioButtons
+                        id="slot"
+                        value={slot}
+                        onChange={handleSlotChange}
+                        options={slots?.map((slot) => ({
+                          id: slot.id,
+                          name: `${slot.start_time}-${slot.end_time}`,
+                        }))}
+                        label="Slot"
+                        addSlots={additionalSlots?.map((slot) => ({
+                          id: slot.id,
+                          name: `${slot.start_time}-${slot.end_time}`,
+                        }))}
+                        removeSlots={unavailableSlots?.map((slot) => ({
+                          id: slot.id,
+                          name: `${slot.start_time}-${slot.end_time}`,
+                        }))}
+                      />
+                    ) : (
+                      <Alert severity="error">
+                        No slots available in {courtName}
+                      </Alert>
+                    )}
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div className="col-12 col-sm-12 col-md-12 col-lg-6">
+              <aside className="card booking-details box-min-height">
+                <h3 className="border-bottom">Your Order</h3>
+                <div className="card2">
+                  <ul className="order-sub-total">
+                    <div className="orderset1">
+                      <li>
+                        <h3>{clubLocation?.organization?.organization_name}</h3>
+                        <h6>
+                          {"\u20B9"} {clubPrice}
+                        </h6>
+                      </li>
+                      <p>
+                        {gameName} &nbsp;({"\u20B9"}
+                        {getSelectedGamePricing()}
+                        /hr)
+                      </p>
+                    </div>
+                    <div className="orderset2">
+                      <li>
+                        <h3>GST</h3>
+                        <h6>
+                          {"\u20B9"} {taxPrice}
+                        </h6>
+                      </li>
+                      <p>state tax and Central tax</p>
+                    </div>
+                    <div className="orderset3">
+                      <li>
+                        <h3>convenience Fee</h3>
+                        <h6>
+                          {"\u20B9"} {bookingFee}
+                        </h6>
+                      </li>
+                      <p>Online booking fee</p>
+                    </div>
+                  </ul>
+                  <div className="order-total d-flex justify-content-between align-items-center">
+                    <h5>Order Total</h5>
+                    <h5>
+                      {"\u20B9"} {totalPrice}
+                    </h5>
+                  </div>
 
-          <div className="ul">
-            <div className="li">
-              <div>
-                <h3>{clubLocation?.organization?.organization_name}</h3>
-                <small>
-                  {gameName} &nbsp;({getSelectedGamePricing()}
-                  /hr)
-                </small>
-              </div>
-              <span>
-                <i className="fa fa-inr"></i>
-                {clubPrice}
-              </span>
-            </div>
-            <div className="li">
-              <div>
-                <h3>GST</h3>
-                <small>state tax and Central tax</small>
-              </div>
-              <span>
-                <i className="fa fa-inr"></i>
-                {taxPrice}
-              </span>
-            </div>
-            <div className="li">
-              <div>
-                <h3>convenience Fee</h3>
-                <small>Online booking fee</small>
-              </div>
-              <span>
-                <i className="fa fa-inr"></i>
-                {bookingFee}
-              </span>
-            </div>
-            <div className="li">
-              <span>Total (INR)</span>
-              <strong>
-                <i className="fa fa-inr"></i>
-                {totalPrice}
-              </strong>
+                  {!openForm && (
+                    <div className="d-grid btn-block">
+                      <Button
+                        disabled={
+                          totalPrice < 60 || !(userInfo && userInfo.length > 0)
+                        }
+                        onClick={handleSubmit}
+                        className="btn btn-primary"
+                        text="Book now"
+                      />
+                    </div>
+                  )}
+                </div>
+              </aside>
             </div>
           </div>
+          <Modal
+            open={openForm}
+            onClose={() => setOpenForm(false)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            {loader ? (
+              <Box sx={boxStyle} className="otp-loader">
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Box sx={boxStyle}>
+                <Alert severity="info">
+                  You are one step away from booking
+                </Alert>
+                <form
+                  onSubmit={loginAndRedirect}
+                  className="booking-login-form"
+                >
+                  <h2 className="login-title">Login</h2>
 
-          {!openForm && (
-            <div className="button">
-              <Button
-                disabled={totalPrice < 60 || !(userInfo && userInfo.length > 0)}
-                onClick={handleSubmit}
-                className="btn-check-availability-home"
-                text="Book now"
-              />
-            </div>
-          )}
+                  <label>Username</label>
+                  <input
+                    required
+                    type="text"
+                    placeholder="Enter username"
+                    value={username}
+                    onChange={(e) => {
+                      setUsername(e.target.value);
+                    }}
+                  />
+
+                  <label>Password</label>
+                  <input
+                    required
+                    type="password"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                  />
+
+                  <div className="login-button">
+                    <Button
+                      type="submit"
+                      className="btn-check-availability-home"
+                      text="Login"
+                    />
+                  </div>
+                </form>
+              </Box>
+            )}
+          </Modal>
         </div>
       </div>
-
-      <Modal
-        open={openForm}
-        onClose={() => setOpenForm(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        {loader ? (
-          <Box sx={boxStyle} className="otp-loader">
-            <CircularProgress />
-          </Box>
-        ) : (
-          <Box sx={boxStyle}>
-            <Alert severity="info">You are one step away from booking</Alert>
-            <form onSubmit={loginAndRedirect} className="booking-login-form">
-              <h2 className="login-title">Login</h2>
-
-              <label>Username</label>
-              <input
-                required
-                type="text"
-                placeholder="Enter username"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                }}
-              />
-
-              <label>Password</label>
-              <input
-                required
-                type="password"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-
-              <div className="login-button">
-                <Button
-                  type="submit"
-                  className="btn-check-availability-home"
-                  text="Login"
-                />
-              </div>
-              <span>Don't have an account?</span>
-              <LinkContainer to="/signup" style={linkStyle}>
-                <span>Signup</span>
-              </LinkContainer>
-            </form>
-          </Box>
-        )}
-      </Modal>
       <Footer name="bookinginfo-f" />
     </div>
   );

@@ -589,10 +589,11 @@
 
   .listing-details-group p {
     font-family: "Outfit", sans-serif;
-      font-size: 16px;
-      color: #6B7385;
-      font-weight: 400;
-      line-height: 1.5;
+    font-size: 16px;
+    color: #6B7385;
+    font-weight: 400;
+    line-height: 1.5;
+    min-height: 3rem;
   }
 
   .tag-blue {
@@ -622,6 +623,10 @@
   .venue-wrapper .listing-details-group .gameicon {
     margin-left: 10px;
     color: #a0a0a0;
+  }
+
+  .venue-wrapper .listing-details-group ul {
+    min-height: 3rem;
   }
 
   .venue-wrapper .gametype {
