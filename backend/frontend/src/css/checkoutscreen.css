@@ -1,162 +1,69 @@
-.title {
-    display: flex;
-    justify-content: center;
+.billing-cage .card {
+    border: 1px solid #EAEDF0;
+    border-radius: 10px;
+    padding: 24px;
+    color: inherit;
+    margin-top: 40px;
 }
-
-.title h1 {
-    margin: 0%;
-    margin-top: 1rem;
-    padding: 0%;
+.checkout-page .breadcrumb.breadcrumb-list {
+    background: url(../images/checkout-bg.jpg) rgba(36, 29, 57, 0.8) no-repeat;
+    background-size: cover;
 }
-
-.checkout-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    max-width: 1000px;
-    background-color: #ffffff;
-    border-radius: 8px;
+.billing-cage .card {
+    border: 1px solid #EAEDF0;
+    border-radius: 10px;
+    padding: 24px;
+    color: inherit;
+    margin-bottom: 40px;
+}
+.billing-cage p{
+    color: #6B7385;
+}
+.billing-cage li{
+    list-style: none;
+}
+.billing-cage aside .order-total {
+    background: #F9F9F6;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px 0 9px 0;
+}
+form input.form-control, form textarea.form-control {
     padding: 20px;
-    /* box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1); */
-    margin: 20px;
-    margin-left: 200px;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    flex-grow: inherit;
-    flex-shrink: inherit;
+    border-radius: 10px;
+    background: #eee;
+    border: none;
 }
-
-.checkout-content h1, h2, h3 {
-    margin: 0;
-}
-
-.checkout-content .ul .li {
-    border: 1px solid rgb(0, 0, 0, 0.125);
-}
-
-.checkout-content .card1 .checkout-form{
-    padding: 1.5rem;
-    flex-wrap: wrap;
-    flex-grow: inherit;
-    flex-shrink: inherit;
-}
-
-
-.checkout-content .card1 label{
-    font-weight: 600;
-    margin-top: 10px;
-    text-align: left;
-    width: 180px;
-    display: flex;
-    align-items: center;
-}
-
-.checkout-content .card1{
-    width: 450px;
-    display: flex;
-    flex-direction: column;
-    padding: 2rem;
-    border-radius: 8px;
-    /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.17); */
-    flex-wrap: wrap;
-    flex-grow: inherit;
-    flex-shrink: inherit;
-}
-
-.checkout-content .card2{
-    width: 450px;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.17);
-    flex-wrap: wrap;
-    flex-grow: inherit;
-    flex-shrink: inherit;
-}
-
-.checkout-content .card2 small {
-    float: left;
-}
-
-.checkout-content .card2 h2{
+.checkout-form .input-wrapper{
     margin-bottom: 1rem;
 }
-
-.checkout-content .card2 .li{
-    width: 100%;
-    padding: 1rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+.checkout-form .form-check input{
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+.checkout-form .form-check{
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+.checkout-form .btn-block button{
+    position: relative;
+    width: 440px;
+}
+.checkout-form .form-check .form-check-label{
+    margin-left: 10px;
 }
 
-.checkout-content .card1 .button {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: center;
+.checkout-card {
+    border: 1px solid #EAEDF0;
+    border-radius: 10px;
+    padding: 24px;
+    color: inherit;
+    margin-bottom: 40px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.17);
+    margin-top: 30px;
 }
 
-.checkout-content .name{
-    display: flex;
-    flex-direction: row;
-    /* flex-wrap: wrap;
-    flex-grow: inherit;
-    flex-shrink: inherit; */
-}
-
-.checkout-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.checkout-form .name input {
-    width: 70%;
-    padding: 5px;
-    margin: 5px 0;
-    border: 1px solid #bebebe;
-    border-radius: 5px;
-}
-
-
-.checkout-form .email-input,
-.checkout-form .phone-number {
-    display: flex;
-    flex-direction: column;
-}
-
-.checkout-form .email-input #email,
-.checkout-form .phone-number #phone-number {
-    width: 85% ;
-    padding: 5px;
-    margin: 5px 0;
-    border: 1px solid #bebebe;
-    border-radius: 5px;
-}
-
-
-.form-check{
-    margin-top: 0.5rem;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    font-size: small;
-    align-items: baseline;
-    column-gap: 1rem;
-}
-
-hr{
-    width:100%;
-    margin-top: 1rem;
-}
-
-.form-check label {
-    font-weight: 300 !important ;
-    width: max-content !important;
-}
-
-@media (max-width: 770px) {
-    .checkout-content, label {
-        padding: 0;
-        margin: 0;
-    }
+.checkout-card button {
+    width: 100% !important;
 }

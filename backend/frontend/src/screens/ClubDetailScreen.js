@@ -617,11 +617,11 @@ function ClubDetailScreen() {
 
                 <div className="accordion-item mb-4" id="reviews">
                   <div className="accordion-header" id="panelsStayOpen-reviews">
-                    <div class="review-wrapper-new ">
+                    <div className="review-wrapper-new ">
                       <div>
                         <span className="w-75 mb-0">Reviews</span>
                       </div>
-                      <div class="review-wrapper-last">
+                      <div className="review-wrapper-last">
                         <div>
                           {userInfo && <button> Write a review</button>}
                           <p>

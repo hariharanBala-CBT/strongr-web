@@ -174,10 +174,14 @@ function PhoneNumberScreen() {
                 <div className="dull-pg">
                   <div className="row no-margin vph-100 d-flex align-items-center justify-content-center phone-login-right-banner">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
-                      <header class="text-center">
+                      <header className="text-center">
                         <LinkContainer to="/">
                           <a href="#">
-                            <img src={logoImage} class="img-fluid" alt="Logo" />
+                            <img
+                              src={logoImage}
+                              className="img-fluid"
+                              alt="Logo"
+                            />
                           </a>
                         </LinkContainer>
                       </header>
