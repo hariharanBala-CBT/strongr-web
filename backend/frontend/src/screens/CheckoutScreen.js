@@ -10,14 +10,11 @@ import Footer from "../components/Footer";
 
 import { CircularProgress } from "@mui/material";
 
-import {
-  createBooking, listcustomerDetails,
-} from "../actions/actions";
+import { createBooking, listcustomerDetails } from "../actions/actions";
 
 import "../css/checkoutscreen.css";
 
 function CheckoutScreen() {
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation("checkoutscreen");
@@ -25,45 +22,53 @@ function CheckoutScreen() {
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
 
-  const { createBookingError, createBookingLoading, success, booking } = useSelector((state) => state.bookingCreate)
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
+  const { createBookingError, createBookingLoading, success, booking } =
+    useSelector((state) => state.bookingCreate);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const placeOrder = () => {
       dispatch(
-      createBooking({
-        id: bookingData.id,
-        userInfo: userInfo,
-        phoneNumber: phoneNumber,
-        date: bookingData.date,
-        slotId: bookingData?.slotId,
-        addSlotId : bookingData?.addSlotId,
-        courtId: bookingData.courtId,
-        taxPrice: bookingData.taxPrice,
-        totalPrice: bookingData.totalPrice,
-      })
-      )
-    }
+        createBooking({
+          id: bookingData.id,
+          userInfo: userInfo,
+          phoneNumber: phoneNumber,
+          date: bookingData.date,
+          slotId: bookingData?.slotId,
+          addSlotId: bookingData?.addSlotId,
+          courtId: bookingData.courtId,
+          taxPrice: bookingData.taxPrice,
+          totalPrice: bookingData.totalPrice,
+        })
+      );
+    };
     placeOrder();
   };
 
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
-  const { bookingDetailsSuccess } = useSelector((state) => state.bookingDetails);
+  const { bookingDetailsSuccess } = useSelector(
+    (state) => state.bookingDetails
+  );
 
   const bookingDataJSON = localStorage.getItem("Bookingdata");
   const bookingData = JSON.parse(bookingDataJSON);
 
   useEffect(() => {
     if (bookingDetailsSuccess) {
-      navigate('/')
+      navigate("/");
     }
-  }, [bookingDetailsSuccess, navigate])
+  }, [bookingDetailsSuccess, navigate]);
 
   useEffect(() => {
-    dispatch(listcustomerDetails(userInfo?.id))
-  }, [dispatch, userInfo])
+    dispatch(listcustomerDetails(userInfo?.id));
+  }, [dispatch, userInfo]);
 
   useEffect(() => {
     if (userInfo) {
@@ -71,159 +76,179 @@ function CheckoutScreen() {
       setEmail(userInfo.email || "");
       setPhoneNumber(customerDetails?.phone_number || "");
     } else {
-      navigate('/');
+      navigate("/");
     }
-  }, [customerDetails , navigate, setEmail, setFirstName, setPhoneNumber, userInfo]);
-
+  }, [
+    customerDetails,
+    navigate,
+    setEmail,
+    setFirstName,
+    setPhoneNumber,
+    userInfo,
+  ]);
 
   useEffect(() => {
     if (success && booking) {
-        navigate(`/booking/${booking.id}`);
+      navigate(`/booking/${booking.id}`);
     } else if (createBookingError) {
       toast.error(t("somethingWentWrong"))
     }
   }, [booking, createBookingError, navigate, success, t])
 
   return (
-    <div>
+    <div className="checkout-page">
       <Header location="nav-all" />
-      <div className="title">
-        <h1>{t("orderSummary")}</h1>
-      </div>
-
-      <div className="checkout-content">
-        <div className="card1">
-          <div className="container-title">
-            <h2>{t("billingDetails")}</h2>
-          </div>
-
-          <form onSubmit={handleSubmit} className="checkout-form">
-            <div className="name">
-              <div>
-                <label htmlFor="firstName" className="form-label">
-                  {t("name")}
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="firstName"
-                  placeholder=""
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="email-input">
-              <label htmlFor="email" className="form-label">
-                {t("email")}{" "}
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <div className="phone-number">
-              <label htmlFor="phone-number" className="form-label">
-                {t("phoneNumber")}{" "}
-              </label>
-              <input
-                type="tel"
-                className="form-control"
-                id="phone-number"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                required
-              />
-            </div>
-
-            <hr
-              style={{
-                backgroundColor: "black",
-              }}
-            />
-
-            <div className="form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="same-address"
-                required
-              />
-              <label className="form-check-label" htmlFor="same-address">
-                {t("agreeTerms")}
-              </label>
-            </div>
-
-            {createBookingLoading ?
-            <CircularProgress /> :
-            <div className="button">
-              <Button
-                className="btn-check-availability-home"
-                text={t("proceedToPay")}
-                type="submit"
-              />
-            </div>
-            }
-          </form>
+      <section className="breadcrumb breadcrumb-list mb-0">
+        <span className="primary-right-round"></span>
+        <div className="container">
+          <h1 className="text-white">{t("checkout")}</h1>
+          <ul>
+            <li>
+              <a href="/">{t("home")}</a>
+            </li>
+            <li>{t("checkout")}</li>
+          </ul>
         </div>
+      </section>
+      <div className="content billing-cage">
+        <div className="container">
+          <div className="row">
+            <div className="col-12 col-sm-12 col-md-12 col-lg-6">
+              <div className="checkout-card booking-details box-min-height">
+                <h3 className="border-bottom">{t("billingDetails")}</h3>
+                <form onSubmit={handleSubmit} className="checkout-form">
+                  <div className="input-wrapper">
+                    <label htmlFor="firstName" className="form-label">
+                      {t("name")}
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="firstName"
+                      placeholder=""
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      required
+                    />
+                  </div>
 
-        <div className="card2">
-          <h2>
-            <span>{t("yourOrder")}</span>
-          </h2>
+                  <div className="input-wrapper">
+                    <label htmlFor="email" className="form-label">
+                      {t("email")}{" "}
+                    </label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
 
-          <div className="ul">
-            <div className="li">
-              <div>
-                <h3>{bookingData.clubLocation?.organization?.organization_name}</h3>
+                  <div className="input-wrapper">
+                    <label htmlFor="phone-number" className="form-label">
+                      {t("phoneNumber")}{" "}
+                    </label>
+                    <input
+                      type="tel"
+                      className="form-control"
+                      id="phone-number"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      required
+                    />
+                  </div>
 
-                <small>
-                  {bookingData.gameName}-{bookingData.selectedSlot}- 1 hrs
-                </small>
+                  <hr
+                    style={{
+                      backgroundColor: "#dee2e6",
+                    }}
+                  />
+
+                  <div className="form-check">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="same-address"
+                      required
+                      checked={isChecked}
+                      onChange={handleCheckboxChange}
+                    />
+                    <label className="form-check-label" htmlFor="same-address">
+                      {t("agreeTerms")}
+                      {/* <a href="" id="termsLink"> */}
+                      {/* </a> */}
+                    </label>
+                  </div>
+
+                  {createBookingLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    <div className="d-grid btn-block">
+                      <Button
+                        className="btn btn-primary"
+                        text={t("proceedToPay")}
+                        type="submit"
+                      />
+                    </div>
+                  )}
+                </form>
               </div>
-              <span>
-                <i className="fa fa-inr"></i>
-                {bookingData.clubPrice}
-              </span>
             </div>
-            <div className="li">
-              <div>
-                <h3>{t("gst")}</h3>
-                <small>{t("stateAndCentralTax")}</small>
-              </div>
-              <span>
-                <i className="fa fa-inr"></i>
-                {bookingData.taxPrice}
-              </span>
-            </div>
-            <div className="li">
-              <div>
-                <h3>{t("convenienceFee")}</h3>
-                <small>{t("onlineBookingFee")}</small>
-              </div>
-              <span>
-                <i className="fa fa-inr"></i>
-                {bookingData.bookingFee}
-              </span>
-            </div>
-            <div className="li">
-              <span>{t("total")}</span>
-              <strong>
-                <i className="fa fa-inr"></i>
-                {bookingData.totalPrice}
-              </strong>
+            <div className="col-12 col-sm-12 col-md-12 col-lg-6">
+              <aside className="checkout-card booking-details box-min-height">
+                <h3 className="border-bottom">{t("yourOrder")}</h3>
+                <div className="card2">
+                  <ul className="order-sub-total">
+                    <div className="orderset1">
+                      <li>
+                        <h3>
+                          {
+                            bookingData.clubLocation?.organization
+                              ?.organization_name
+                          }
+                        </h3>
+                        <h6>
+                          {"\u20B9"} {bookingData.clubPrice}
+                        </h6>
+                      </li>
+                      <p>
+                        {bookingData.gameName}-{bookingData.selectedSlot}- 1 hrs
+                      </p>
+                    </div>
+                    <div className="orderset2">
+                      <li>
+                        <h3>{t("gst")}</h3>
+                        <h6>
+                          {"\u20B9"} {bookingData.taxPrice}
+                        </h6>
+                      </li>
+                      <p>{t("stateAndCentralTax")}</p>
+                    </div>
+                    <div className="orderset3">
+                      <li>
+                        <h3>{t("convenienceFee")}</h3>
+                        <h6>
+                          {"\u20B9"} {bookingData.bookingFee}
+                        </h6>
+                      </li>
+                      <p>{t("onlineBookingFee")}</p>
+                    </div>
+                  </ul>
+                  <div className="order-total d-flex justify-content-between align-items-center">
+                    <h5>{t("total")}</h5>
+                    <h5>
+                      {"\u20B9"} {bookingData.totalPrice}
+                    </h5>
+                  </div>
+                </div>
+              </aside>
             </div>
           </div>
         </div>
       </div>
-    <Footer/>
+      <Footer />
     </div>
   );
 }
