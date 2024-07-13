@@ -172,7 +172,7 @@ function ClubListScreen() {
             <li>
               <a href="/">{t("home")}</a>
             </li>
-            <li>Venue List</li>
+            <li>{t("venueList")}</li>
           </ul>
         </div>
       </section>

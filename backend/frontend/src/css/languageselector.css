@@ -4,7 +4,15 @@
   right: 10px;
   z-index: 1000;
 }
-
+.authendication-pages .dropdown-icon {
+  color: #000;
+}
+.authendication-pages .globe-icon-wrapper {
+  color: #000;
+}
+.authendication-pages .selected-language {
+  color: #000;
+}
 .language-selector {
   display: flex;
   align-items: center;
@@ -47,9 +55,8 @@
   color: white;
 }
 
-.language-dropdown .fa-globe {
-  color: #fff;
-  margin-right: 5px;
+.globe-icon-wrapper {
+  color: white;
 }
 
 .selected-language {

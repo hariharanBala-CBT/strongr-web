@@ -7,12 +7,16 @@ import PhoneInput from "react-phone-input-2";
 import OTPInput from "react-otp-input";
 import "react-phone-input-2/lib/style.css";
 
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "../components/LanguageSelector";
+
 import { CircularProgress } from "@mui/material";
 
 import { auth } from "../firebase.config";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 import { loginPhoneNumber, validatePhone } from "../actions/actions";
+
 import logoImage from "../images/logo-color.png";
 import "../css/phonenumscreen.css";
 
@@ -20,6 +24,7 @@ function PhoneNumberScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation("phonenumberloginscreen");
 
   const [otp, setOTP] = useState("");
   const [ph, setPh] = useState("");
@@ -77,7 +82,7 @@ function PhoneNumberScreen() {
     e.preventDefault();
     setSubmit(true);
     if (ph.length < 10) {
-      toast.error("Please enter a phone number!");
+      toast.error(t("pleaseEnterPhoneNumber"));
       return;
     }
     setLoading(true);
@@ -99,7 +104,7 @@ function PhoneNumberScreen() {
       .catch((err) => {
         setShowOTPInput(false);
         console.log(err);
-        toast.error("Incorrect OTP. Please try again.");
+        toast.error(t("incorrectOtp"));
         setLoading(false);
       });
   }
@@ -114,7 +119,7 @@ function PhoneNumberScreen() {
     if (phoneValidateError && submit) {
       setSubmit(false);
       setLoading(false);
-      toast.error("User does not exist.");
+      toast.error(t("userDoesNotExist"));
     } else if (phoneValidate && submit) {
       setSubmit(false);
       onCaptchVerify();
@@ -123,12 +128,12 @@ function PhoneNumberScreen() {
       signInWithPhoneNumber(auth, formatPh, appVerifier)
         .then((confirmationResult) => {
           window.confirmationResult = confirmationResult;
-          toast.success("OTP Sent Successfully");
+          toast.success(t("otpSentSuccessfully"));
           setShowOTPInput(true);
         })
         .catch((error) => {
           console.log("OTP error:", error);
-          toast.error("Failed to send OTP. Please refresh page and try again.");
+          toast.error(t("failedToSendOtp"));
           setTimeout(() => {
             window.location.reload();
           }, 500);
@@ -143,6 +148,7 @@ function PhoneNumberScreen() {
     <div className="phonelogin-wrapper">
       <Toaster />
       <div className="main-wrapper authendication-pages">
+        <LanguageSelector />
         <div className="register-content">
           <div className="container wrapper no-padding">
             <div className="row no-margin vph-100">
@@ -156,14 +162,9 @@ function PhoneNumberScreen() {
                             type="button"
                             className="btn btn-limegreen text-capitalize"
                           >
-                            <i className="fa-solid fa-thumbs-up me-3"></i>Login
-                            User
+                            <i className="fa-solid fa-thumbs-up me-3"></i>{t("loginUser")}
                           </button>
-                          <p>
-                            Log in right away for our advanced sports software
-                            solutions, created to address issues in regular
-                            sporting events and activities.
-                          </p>
+                          <p>{t("loginDescription")}</p>
                         </div>
                       </div>
                     </div>
@@ -182,19 +183,15 @@ function PhoneNumberScreen() {
                         </LinkContainer>
                       </header>
                       <div className="shadow-card">
-                        <Toaster toastOptions={{ duration: 4000 }} />
+                        {/* <Toaster toastOptions={{ duration: 4000 }} /> */}
                         <div id="recaptcha-container"></div>
-                        <h2 className="login-title">
-                          Get Started With Strongr
-                        </h2>
+                        <h2 className="login-title">{t("getStartedWithStrongr")}</h2>
                         <form>
-                          <label className="phone-textp">
-                            Enter Registered Phone Number
-                          </label>
+                          <label className="phone-textp">{t("enterRegisteredPhoneNumber")}</label>
                           <PhoneInput
                             required
                             country={"in"}
-                            placeholder="Enter phone number"
+                            placeholder={t("enterPhoneNumber")}
                             value={ph}
                             onChange={(value) => {
                               handlePhoneNumberChange();
@@ -203,7 +200,7 @@ function PhoneNumberScreen() {
                           />
                           {showOTPInput && (
                             <div className="OTP">
-                              <label>Enter OTP</label>
+                              <label>{t("enterOtp")}</label>
                               <OTPInput
                                 className="otp-input-field"
                                 value={otp}
@@ -226,7 +223,7 @@ function PhoneNumberScreen() {
                                 className="generate-btn"
                                 onClick={onSignup}
                               >
-                                Generate OTP
+                                {t("generateOtp")}
                               </button>
                             </div>
                           )}
@@ -236,56 +233,56 @@ function PhoneNumberScreen() {
                                 className="login-btn"
                                 onClick={onOTPVerify}
                               >
-                                Login
+                                {t("login")}
                               </button>
                             </div>
                           )}
                         </form>
                         <div className="bottom-paras">
                           <p>
-                            Login through Username &nbsp;
+                            {t("loginThroughUsername")} &nbsp;
                             <LinkContainer to="/login" className="links">
-                              <span>Login</span>
+                              <span>{t("loginLink")}</span>
                             </LinkContainer>
                           </p>
                           <p>
-                            Don't have an Account?&nbsp;
+                            {t("dontHaveAccount")}&nbsp;
                             <LinkContainer to="/signup" className="links">
-                              <span>Signup</span>
+                              <span>{t("signupLink")}</span>
                             </LinkContainer>
                           </p>
                         </div>
+                        {/* <div className="bottom-texts">
+                          <div className="bottom-text-one text-center">
+                            <p>
+                              {t("loginUsingPhoneNumber")}?&nbsp;
+                              <LinkContainer
+                                to="/phonenumberlogin"
+                                style={{
+                                  textDecoration: "underline",
+                                  color: "#192335",
+                                }}
+                              >
+                                <span>{t("loginLink")}</span>
+                              </LinkContainer>
+                            </p>
+                          </div>
+                          <div className="bottom-text-two text-center">
+                            <p>
+                              {t("dontHaveAccount")}&nbsp;
+                              <LinkContainer
+                                to="/signup"
+                                style={{
+                                  textDecoration: "underline",
+                                  color: "#192335",
+                                }}
+                              >
+                                <span>{t("signupLink")}</span>
+                              </LinkContainer>
+                            </p>
+                          </div>
+                        </div> */}
                       </div>
-                      {/* <div className="bottom-texts">
-                        <div className="bottom-text-one text-center">
-                          <p>
-                            Login using Phone Number?&nbsp;
-                            <LinkContainer
-                              to="/phonenumberlogin"
-                              style={{
-                                textDecoration: "underline",
-                                color: "#192335",
-                              }}
-                            >
-                              <span>Login</span>
-                            </LinkContainer>
-                          </p>
-                        </div>
-                        <div className="bottom-text-two text-center">
-                          <p>
-                            Don’t have an Account?&nbsp;
-                            <LinkContainer
-                              to="/signup"
-                              style={{
-                                textDecoration: "underline",
-                                color: "#192335",
-                              }}
-                            >
-                              <span>Signup</span>
-                            </LinkContainer>
-                          </p>
-                        </div>
-                      </div> */}
                     </div>
                   </div>
                 </div>

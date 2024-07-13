@@ -2,8 +2,8 @@ import React from "react";
 
 function DateInput({ label, id, value, onChange, required }) {
   return (
-    <div className='select-date' style={{ display: "flex", flexDirection: "row" }}>
-      <label htmlFor={id}>{label}:</label>
+    <div className='select-date'>
+    <label htmlFor={id}>{label}</label>
       <input
         className="form-control"
         type="date"

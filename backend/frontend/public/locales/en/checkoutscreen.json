@@ -1,0 +1,17 @@
+{
+    "orderSummary": "Order Summary",
+    "billingDetails": "Billing Details",
+    "name": "Name",
+    "email": "Email",
+    "phoneNumber": "Phone number",
+    "agreeTerms": "I agree to terms and conditions",
+    "proceedToPay": "Proceed to Pay",
+    "yourOrder": "Your Order",
+    "gst": "GST",
+    "stateAndCentralTax": "State tax and Central tax",
+    "convenienceFee": "Convenience Fee",
+    "onlineBookingFee": "Online booking fee",
+    "total": "Total (INR)",
+    "somethingWentWrong": "Something went wrong.."
+  }
+  

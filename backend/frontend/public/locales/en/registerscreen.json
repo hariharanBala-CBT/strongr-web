@@ -1,0 +1,23 @@
+{
+    "registerNow": "Register Now",
+    "registerDescription": "Register now for our innovative sports software solutions, designed to tackle challenges in everyday sports activities and events.",
+    "getStarted": "Get Started With Strongr",
+    "username": "Username",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "termsOfUse": "Terms of Use",
+    "agreeTerms": "By continuing you indicate that you read and agreed to the",
+    "signup": "Signup",
+    "haveAccount": "Have an Account?",
+    "login": "Login",
+    "otpAuthentication": "OTP Authentication",
+    "enterOtp": "Enter the 4 digit OTP sent to your email.",
+    "submit": "Submit",
+    "didNotReceiveOtp": "Didn't receive an OTP.",
+    "sendingOtp": "Sending OTP...",
+    "passwordMinLength": "Password must be at least 8 characters",
+    "passwordMismatch": "Passwords do not match",
+    "emailRegistered": "This email is already registered. Please use a different email."
+  }

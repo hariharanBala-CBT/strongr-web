@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 import Header from "../components/Header";
 import Button from "../components/Button";
@@ -19,6 +20,7 @@ function CheckoutScreen() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation("checkoutscreen");
 
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
@@ -78,28 +80,28 @@ function CheckoutScreen() {
     if (success && booking) {
         navigate(`/booking/${booking.id}`);
     } else if (createBookingError) {
-      toast.error('Something went wrong..')
+      toast.error(t("somethingWentWrong"))
     }
-  }, [booking, createBookingError, navigate, success])
+  }, [booking, createBookingError, navigate, success, t])
 
   return (
     <div>
       <Header location="nav-all" />
       <div className="title">
-        <h1>Order Summary</h1>
+        <h1>{t("orderSummary")}</h1>
       </div>
 
       <div className="checkout-content">
         <div className="card1">
           <div className="container-title">
-            <h2>Billing Details</h2>
+            <h2>{t("billingDetails")}</h2>
           </div>
 
           <form onSubmit={handleSubmit} className="checkout-form">
             <div className="name">
               <div>
                 <label htmlFor="firstName" className="form-label">
-                  Name
+                  {t("name")}
                 </label>
                 <input
                   type="text"
@@ -115,7 +117,7 @@ function CheckoutScreen() {
 
             <div className="email-input">
               <label htmlFor="email" className="form-label">
-                Email{" "}
+                {t("email")}{" "}
               </label>
               <input
                 type="email"
@@ -129,7 +131,7 @@ function CheckoutScreen() {
 
             <div className="phone-number">
               <label htmlFor="phone-number" className="form-label">
-                Phone number{" "}
+                {t("phoneNumber")}{" "}
               </label>
               <input
                 type="tel"
@@ -155,9 +157,7 @@ function CheckoutScreen() {
                 required
               />
               <label className="form-check-label" htmlFor="same-address">
-                I agree to terms and conditions
-                {/* <a href="" id="termsLink"> */}
-                {/* </a> */}
+                {t("agreeTerms")}
               </label>
             </div>
 
@@ -166,8 +166,8 @@ function CheckoutScreen() {
             <div className="button">
               <Button
                 className="btn-check-availability-home"
-                text="Proceed to Pay"
-                type='submit'
+                text={t("proceedToPay")}
+                type="submit"
               />
             </div>
             }
@@ -176,7 +176,7 @@ function CheckoutScreen() {
 
         <div className="card2">
           <h2>
-            <span>Your Order</span>
+            <span>{t("yourOrder")}</span>
           </h2>
 
           <div className="ul">
@@ -195,8 +195,8 @@ function CheckoutScreen() {
             </div>
             <div className="li">
               <div>
-                <h3>GST</h3>
-                <small>state tax and Central tax</small>
+                <h3>{t("gst")}</h3>
+                <small>{t("stateAndCentralTax")}</small>
               </div>
               <span>
                 <i className="fa fa-inr"></i>
@@ -205,8 +205,8 @@ function CheckoutScreen() {
             </div>
             <div className="li">
               <div>
-                <h3>convenience Fee</h3>
-                <small>Online booking fee</small>
+                <h3>{t("convenienceFee")}</h3>
+                <small>{t("onlineBookingFee")}</small>
               </div>
               <span>
                 <i className="fa fa-inr"></i>
@@ -214,7 +214,7 @@ function CheckoutScreen() {
               </span>
             </div>
             <div className="li">
-              <span>Total (INR)</span>
+              <span>{t("total")}</span>
               <strong>
                 <i className="fa fa-inr"></i>
                 {bookingData.totalPrice}

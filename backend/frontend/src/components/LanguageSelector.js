@@ -44,28 +44,28 @@ const LanguageSelector = () => {
 
   return (
     <div className="dropdown-container" ref={dropdownRef}>
-      <div className="language-selector">
-        <Globe color="white" size={24} onClick={toggleDropdown} />
-        {selectedLanguage && (
-          <span className="selected-language">{t(selectedLanguage)}
-            <ChevronDown className="dropdown-icon" />
-          </span>
-        )}
-        {dropdownVisible && (
-          <div className="dropdown-language">
-            {languages.map((lng) => (
-              <div
-                key={lng.code}
-                className="dropdown-item"
-                onClick={() => changeLanguage(lng.code)}
-              >
-                {t(lng.key)}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+    <div className="language-selector">
+      <Globe className="globe-icon-wrapper" onClick={toggleDropdown} />
+      <ChevronDown className="dropdown-icon" onClick={toggleDropdown} />
+      {selectedLanguage && (
+        <span className="selected-language">{t(selectedLanguage)}</span>
+      )}
+      {dropdownVisible && (
+        <div className="dropdown-language">
+          {languages.map((lng) => (
+            <div
+              key={lng.code}
+              className="dropdown-item"
+              onClick={() => changeLanguage(lng.code)}
+            >
+              {t(lng.key)}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
+  </div>
+
   );
 };
 

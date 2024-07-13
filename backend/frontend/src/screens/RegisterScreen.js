@@ -3,18 +3,14 @@ import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  User,
-  Mail,
-  Eye,
-  EyeOff,
-  Phone,
-  ArrowRightCircle,
-} from "react-feather";
+import { User, Mail, Eye, EyeOff, Phone, ArrowRightCircle } from "react-feather";
 import OTPInput, { ResendOTP } from "otp-input-react";
 import logoImage from "../images/logo-color.png";
 import Button from "../components/Button";
 import { Box, CircularProgress, Modal } from "@mui/material";
+
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "../components/LanguageSelector";
 
 import { generateOTP, register, validateUserDetails } from "../actions/actions";
 
@@ -48,6 +44,7 @@ function RegisterScreen() {
   const [submit, setSubmit] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { t } = useTranslation("registerscreen");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -79,10 +76,10 @@ function RegisterScreen() {
   const validateDetails = (e) => {
     e.preventDefault();
     if (password.length < 8) {
-      toast.error("Password must be at least 8 characters");
+      toast.error(t("passwordMinLength"));
       return;
     } else if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error(t("passwordMismatch"));
       return;
     } else {
       dispatch(validateUserDetails(email, phoneNumber));
@@ -93,7 +90,7 @@ function RegisterScreen() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (otp === "") {
-      toast.error("Please enter the OTP");
+      toast.error(t("enterOtp"));
       return;
     }
     dispatch(register(email, name, otp, password, phoneNumber));
@@ -116,9 +113,7 @@ function RegisterScreen() {
       navigate("/");
     } else if (registerError) {
       if (registerError === "Email is already registered") {
-        toast.error(
-          "This email is already registered. Please use a different email."
-        );
+        toast.error(t("emailRegistered"));
       } else {
         toast.error(registerError);
       }
@@ -141,6 +136,7 @@ function RegisterScreen() {
     <div className="register-page">
       <Toaster />
       <div className="main-wrapper authendication-pages">
+        <LanguageSelector />
         <div className="register-content">
           <div className="container wrapper no-padding">
             <div className="row no-margin vph-100">
@@ -155,13 +151,9 @@ function RegisterScreen() {
                             className="btn btn-limegreen text-capitalize"
                           >
                             <i className="fa-solid fa-thumbs-up me-3"></i>
-                            register Now
+                            {t("registerNow")}
                           </button>
-                          <p>
-                            Register now for our innovative sports software
-                            solutions, designed to tackle challenges in everyday
-                            sports activities and events.
-                          </p>
+                          <p>{t("registerDescription")}</p>
                         </div>
                       </div>
                     </div>
@@ -180,7 +172,7 @@ function RegisterScreen() {
                         </LinkContainer>
                       </header>
                       <div className="shadow-card">
-                        <h2>Get Started With Strongr</h2>
+                        <h2>{t("getStarted")}</h2>
                         <div className="tab-content" id="myTabContent">
                           <div
                             className="tab-pane fade show active"
@@ -198,7 +190,7 @@ function RegisterScreen() {
                                     className="form-control pass-input"
                                     required
                                     type="text"
-                                    placeholder="Username"
+                                    placeholder={t("username")}
                                     value={name}
                                     onChange={(e) => {
                                       setName(e.target.value);
@@ -217,7 +209,7 @@ function RegisterScreen() {
                                     className="form-control pass-input"
                                     required
                                     type="email"
-                                    placeholder="Email"
+                                    placeholder={t("email")}
                                     value={email}
                                     onChange={(e) => {
                                       setEmail(e.target.value);
@@ -235,7 +227,7 @@ function RegisterScreen() {
                                     className="form-control pass-input"
                                     required
                                     type="tel"
-                                    placeholder="Phone Number"
+                                    placeholder={t("phoneNumber")}
                                     value={phoneNumber}
                                     onChange={(e) => {
                                       setPhoneNumber(e.target.value);
@@ -249,7 +241,7 @@ function RegisterScreen() {
                                   <input
                                     type={showPassword ? "text" : "password"}
                                     className="form-control pass-input"
-                                    placeholder="Password"
+                                    placeholder={t("password")}
                                     value={password}
                                     onChange={(e) => {
                                       setPassword(e.target.value);
@@ -276,7 +268,7 @@ function RegisterScreen() {
                                       showConfirmPassword ? "text" : "password"
                                     }
                                     className="form-control pass-confirm"
-                                    placeholder="Confirm Password"
+                                    placeholder={t("confirmPassword")}
                                     value={confirmPassword}
                                     onChange={(e) => {
                                       setConfirmPassword(e.target.value);
@@ -306,18 +298,19 @@ function RegisterScreen() {
                                 </div>
                                 <label
                                   className="form-check-label"
-                                  for="policy"
+                                  htmlFor="policy"
                                 >
-                                  By continuing you indicate that you read and
-                                  agreed to the{" "}
-                                  <a href="javascript:void(0);">Terms of Use</a>
+                                  {t("agreeTerms")}{" "}
+                                  <a href="javascript:void(0);">
+                                    {t("termsOfUse")}
+                                  </a>
                                 </label>
                               </div>
                               <button
                                 className="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block"
                                 type="submit"
                               >
-                                Signup
+                                {t("signup")}
                                 <span className="right-arrow">
                                   <ArrowRightCircle size={20} />
                                 </span>
@@ -328,9 +321,9 @@ function RegisterScreen() {
                       </div>
                       <div className="bottom-text text-center">
                         <p>
-                          Have an Account?
+                          {t("haveAccount")}
                           <LinkContainer to="/login">
-                            <span> Login</span>
+                            <span> {t("login")}</span>
                           </LinkContainer>
                         </p>
                       </div>
@@ -346,7 +339,7 @@ function RegisterScreen() {
               >
                 {loader ? (
                   <Box sx={style} className="otp-loader">
-                    <span>sending otp...</span>
+                    <span>{t("sendingOtp")}</span>
                     <CircularProgress />
                   </Box>
                 ) : (
@@ -356,8 +349,8 @@ function RegisterScreen() {
                     ) : (
                       <div className="login">
                         <div className="title-auth">
-                          <h5>OTP Authentication</h5>
-                          <p>Enter the 4 digit OTP sent to your email.</p>
+                          <h5>{t("otpAuthentication")}</h5>
+                          <p>{t("enterOtp")}</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="otp-form">
@@ -376,12 +369,12 @@ function RegisterScreen() {
                           <Button
                             type="submit"
                             className="otp-login-btn"
-                            text="submit"
+                            text={t("submit")}
                           />
                         </form>
 
                         <div className="auth-footer">
-                          Didn’t receive an OTP.
+                          {t("didNotReceiveOtp")}
                           <ResendOTP
                             onResendClick={regenerateOtp}
                             className="resend-btn"

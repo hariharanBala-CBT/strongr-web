@@ -72,10 +72,10 @@ const Testimonial = () => {
       <div className="container">
         <div className="section-heading aos" data-aos="fade-up">
           <h2>
-            {t("Our")} <span>{t("Testimonials")}</span>
+            {t("our")} <span>{t("testimonials")}</span>
           </h2>
           <p className="sub-title">
-          {t("sub_title")}
+          {t("subtitle")}
           </p>
         </div>
         <div className="row">

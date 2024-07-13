@@ -313,7 +313,7 @@ function ClubDetailScreen() {
             </div>
             <div className="col-12 col-sm-12 col-md-6 col-lg-6">
               <div className="d-flex float-sm-end align-items-center">
-                <p className="d-inline-block me-2 mb-0">{("startsFrom ")}:</p>
+                <p className="d-inline-block me-2 mb-0">{t("startsFrom")}:</p>
                 <h3 className="primary-text mb-0 d-inline-block">
                   ₹150<span>/ hr</span>
                 </h3>

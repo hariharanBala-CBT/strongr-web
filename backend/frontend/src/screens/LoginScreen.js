@@ -231,7 +231,6 @@ function LoginScreen() {
                         </div>
                       </div>
                     </div>
-                    {/* Language selector is already positioned absolutely */}
                   </div>
                 </div>
               </div>
