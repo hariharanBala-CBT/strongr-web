@@ -1,0 +1,20 @@
+{
+    "updateProfile": "Update Profile",
+    "home": "Home",
+    "profile": "Profile",
+    "username": "Username",
+    "firstName": "First Name",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "verifyAndUpdate": "Verify & Update",
+    "sendingOtp": "Sending OTP...",
+    "enterOtp": "Enter OTP sent to email",
+    "submit": "Submit",
+    "updatePasswordPrompt": "Want to update your password?",
+    "updatePassword": "Update Password",
+    "fillAllFields": "Please fill all fields and enter a valid OTP",
+    "userDetailsUpdated": "User details updated",
+    "incorrectOtp": "Incorrect OTP",
+    "emailExists": "Account with this email exists"
+  }
+  

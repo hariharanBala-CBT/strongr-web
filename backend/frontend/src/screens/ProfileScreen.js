@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Clock, CheckCircle, XCircle, CheckSquare, Eye } from "react-feather";
+import { useTranslation } from "react-i18next";
 import { isAfter } from "date-fns";
 
 import Footer from "../components/Footer";
@@ -59,6 +60,7 @@ function ProfileScreen() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation("profilescreen");
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -71,17 +73,18 @@ function ProfileScreen() {
   function getBookingStatusText(status) {
     switch (status) {
       case 1:
-        return "Pending";
+        return t("pending");
       case 2:
-        return "Booked";
+        return t("booked");
       case 3:
-        return "Cancelled";
+        return t("cancelled");
       case 4:
-        return "Completed";
+        return t("completed");
       default:
-        return "Unknown";
+        return t("unknownAction");
     }
   }
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -124,12 +127,12 @@ function ProfileScreen() {
       <section className="breadcrumb breadcrumb-list mb-0">
         <span className="primary-right-round"></span>
         <div className="container">
-          <h1 className="text-white">User Profile</h1>
+          <h1 className="text-white">{t("userProfile")}</h1>
           <ul>
             <li>
-              <a href="/">Home</a>
+              <a href="/">{t("home")}</a>
             </li>
-            <li>User Profile</li>
+            <li>{t("userProfile")}</li>
           </ul>
         </div>
       </section>
@@ -138,7 +141,7 @@ function ProfileScreen() {
           <div className="user-profile-list profile-profile-list">
             <ul className="nav">
               <li>
-                <a className="active">Profile</a>
+                <a className="active">{t("profile")}</a>
               </li>
               <li>
                 <a
@@ -146,12 +149,12 @@ function ProfileScreen() {
                     navigate(`/profile/${userInfo.id}`);
                   }}
                 >
-                  Update Profile
+                  {t("updateProfile")}
                 </a>
               </li>
               <li>
                 <LinkContainer to="/updatepassword">
-                  <a>Update Password</a>
+                  <a>{t("updatePassword")}</a>
                 </LinkContainer>
               </li>
             </ul>
@@ -160,12 +163,12 @@ function ProfileScreen() {
             <div className="col-sm-12">
               <div className="profile-detail-group">
                 <div className="card">
-                  <h2>My Profile</h2>
+                  <h2>{t("myProfile")}</h2>
                   <form>
                     <div className="row">
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space">
-                          <label className="form-label">User Name</label>
+                          <label className="form-label">{t("userName")}</label>
                           <input
                             type="text"
                             className="form-control"
@@ -178,7 +181,7 @@ function ProfileScreen() {
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space">
-                          <label className="form-label">Name</label>
+                          <label className="form-label">{t("name")}</label>
                           <input
                             type="text"
                             className="form-control"
@@ -190,7 +193,7 @@ function ProfileScreen() {
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space">
-                          <label className="form-label">Email</label>
+                          <label className="form-label">{t("email")}</label>
                           <input
                             type="email"
                             value={userInfo?.email}
@@ -202,7 +205,7 @@ function ProfileScreen() {
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space">
-                          <label className="form-label">Phone Number</label>
+                          <label className="form-label">{t("phoneNumber")}</label>
                           <input
                             type="text"
                             value={userInfo?.customer?.phone_number}
@@ -225,31 +228,31 @@ function ProfileScreen() {
             <div className="col-sm-12">
               <Grid item xs={8} className="booked-table-content">
                 <Item>
-                  <h2>My Bookings</h2>
+                  <h2>{t("myBookings")}</h2>
                   <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader aria-label="sticky table">
                       <TableHead className="table-heading">
                         <TableRow>
                           <TableCell>
-                            <h4>Club</h4>
+                            <h4>{t("club")}</h4>
                           </TableCell>
                           <TableCell>
-                            <h4>Game</h4>
+                            <h4>{t("game")}</h4>
                           </TableCell>
                           <TableCell>
-                            <h4>Booked Date</h4>
+                            <h4>{t("bookedDate")}</h4>
                           </TableCell>
                           <TableCell>
-                            <h4>Price</h4>
+                            <h4>{t("price")}</h4>
                           </TableCell>
                           <TableCell>
-                            <h4>Booking status</h4>
+                            <h4>{t("bookingStatus")}</h4>
                           </TableCell>
                           <TableCell>
-                            <h4>Details</h4>
+                            <h4>{t("details")}</h4>
                           </TableCell>
                           <TableCell>
-                            <h4>Action</h4>
+                            <h4>{t("action")}</h4>
                           </TableCell>
                         </TableRow>
                       </TableHead>
@@ -325,31 +328,31 @@ function ProfileScreen() {
                                       color="#1859e5"
                                       className="eye-icon"
                                     />
-                                    Details
+                                    {t("details")}
                                   </a>
                                 </TableCell>
                                 <TableCell>
                                   <Tooltip
                                     title={
                                       booking?.booking_status === 1
-                                        ? "Pending bookings can't be cancelled"
+                                        ? t("pendingBookings")
                                         : booking?.booking_status === 4
-                                        ? "Booking completed"
+                                        ? t("bookingCompleted")
                                         : booking?.booking_status === 3
-                                        ? "Cancelled"
+                                        ? t("cancelled")
                                         : booking?.booking_status === 2 &&
                                           isAfter(
                                             new Date(booking.booking_date),
                                             today
                                           )
-                                        ? "Cancel Booking"
+                                        ? t("cancelBooking")
                                         : booking?.booking_status === 2 &&
                                           !isAfter(
                                             new Date(booking.booking_date),
                                             today
                                           )
-                                        ? "Cancellation is only allowed before one day"
-                                        : "Unknown action"
+                                        ? t("cancellationNotAllowed")
+                                        : t("unknownAction")
                                     }
                                   >
                                     {booking?.booking_status === 1 ? (
@@ -417,11 +420,11 @@ function ProfileScreen() {
         <DialogTitle>{"Cancel Booking?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            No Refund against this cancellation.
+            {t("noRefund")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelClose}>no</Button>
+          <Button onClick={handleCancelClose}>{t("no")}</Button>
           <Button
             onClick={() => {
               dispatch(bookingCancel(bookingId));
@@ -429,7 +432,7 @@ function ProfileScreen() {
               dispatch(listUserBookings(userInfo.id));
             }}
           >
-            confirm
+            {t("confirm")}
           </Button>
         </DialogActions>
       </Dialog>

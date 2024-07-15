@@ -219,7 +219,7 @@ function LoginScreen() {
                           <p>
                             {t("dontHaveAccount")}&nbsp;
                             <LinkContainer
-                              to="/register"
+                              to="/signup"
                               style={{
                                 textDecoration: "underline",
                                 color: "#192335",

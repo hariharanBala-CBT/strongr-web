@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import OTPInput, { ResendOTP } from "otp-input-react";
 import { ArrowRightCircle } from "react-feather";
+import { useTranslation } from "react-i18next";
 import Button from "../components/Button";
 import Header from "../components/Header";
 
@@ -39,6 +40,8 @@ const style = {
 function UpdateprofileScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation("updateprofilescreen");
+
   const { id } = useParams();
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -81,7 +84,7 @@ function UpdateprofileScreen() {
         })
       );
     } else {
-      toast.error("Please fill all fields and enter a valid OTP");
+      toast.error(t("fillAllFields"));
     }
   };
 
@@ -106,10 +109,10 @@ function UpdateprofileScreen() {
 
   useEffect(() => {
     if (userUpdateSuccess && submit) {
-      toast.success("user details updated");
+      toast.success(t("userDetailsUpdated"));
       setSubmit(false);
     } else if (userUpdateError && submit) {
-      toast.error("incorrect OTP");
+      toast.error(t("incorrectOtp"));
       setOpenForm(false);
     }
     dispatch({
@@ -137,7 +140,7 @@ function UpdateprofileScreen() {
       otpGenerate();
       setSubmit(false);
     } else if (userValidate && submit && email !== userInfo?.email) {
-      toast.error("Account with this email exists");
+      toast.error(t("emailExists"));
       setSubmit(false);
     } else if (userValidate && submit && email === userInfo?.email) {
       otpGenerate();
@@ -152,12 +155,12 @@ function UpdateprofileScreen() {
       <section className="breadcrumb breadcrumb-list mb-0">
         <span className="primary-right-round"></span>
         <div className="container">
-          <h1 className="text-white">Update Profile</h1>
+          <h1 className="text-white">{t("updateProfile")}</h1>
           <ul>
             <li>
-              <a href="/">Home</a>
+              <a href="/">{t("home")}</a>
             </li>
-            <li>Update Profile</li>
+            <li>{t("updateProfile")}</li>
           </ul>
         </div>
       </section>
@@ -167,15 +170,15 @@ function UpdateprofileScreen() {
             <ul className="nav">
               <li>
                 <LinkContainer to="/profile">
-                  <a>Profile</a>
+                  <a>{t("profile")}</a>
                 </LinkContainer>
               </li>
               <li>
-                <a className="active">Update Profile</a>
+                <a className="active">{t("updateProfile")}</a>
               </li>
               <li>
                 <LinkContainer to="/updatepassword">
-                  <a>Update Password</a>
+                  <a>{t("updatePassword")}</a>
                 </LinkContainer>
               </li>
             </ul>
@@ -185,11 +188,11 @@ function UpdateprofileScreen() {
               <div className="profile-detail-group">
                 <div className="update-userprofile">
                   <form onSubmit={updateCustomer}>
-                    <h2 className="profile-title">Update Profile</h2>
+                    <h2 className="profile-title">{t("updateProfile")}</h2>
                     <div className="row">
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space">
-                          <label className="form-label">Username</label>
+                          <label className="form-label">{t("username")}</label>
                           <input
                             className="form-control pass-input"
                             required
@@ -204,7 +207,7 @@ function UpdateprofileScreen() {
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space">
-                          <label className="form-label">First Name</label>
+                          <label className="form-label">{t("firstName")}</label>
                           <input
                             className="form-control pass-input"
                             required
@@ -218,7 +221,7 @@ function UpdateprofileScreen() {
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space mb-0">
-                          <label className="form-label">Email</label>
+                          <label className="form-label">{t("email")}</label>
                           <input
                             className="form-control pass-input"
                             required
@@ -232,7 +235,7 @@ function UpdateprofileScreen() {
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space mb-0">
-                          <label className="form-label">Phone Number</label>
+                          <label className="form-label">{t("phoneNumber")}</label>
                           <input
                             className="form-control pass-input"
                             required
@@ -250,7 +253,7 @@ function UpdateprofileScreen() {
                         className="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-50 btn-block"
                         type="submit"
                       >
-                        <span>Verify & Update</span>
+                        <span>{t("verifyAndUpdate")}</span>
 
                         <span className="right-arrow">
                           <ArrowRightCircle size={20} />
@@ -259,11 +262,11 @@ function UpdateprofileScreen() {
                     )}
                     <div className="bottom-text">
                       <span>
-                        Want to update your password?&nbsp;
+                        {t("updatePasswordPrompt")}&nbsp;
                         <LinkContainer to="/updatepassword">
                           <span className="linked-para-text">
                             {" "}
-                            Update Password
+                            {t("updatePassword")}
                           </span>
                         </LinkContainer>
                       </span>
@@ -277,14 +280,14 @@ function UpdateprofileScreen() {
                   >
                     {loader ? (
                       <Box sx={style} className="otp-loader">
-                        <span>sending otp...</span>
+                        <span>{t("sendingOtp")}</span>
                         <CircularProgress />
                       </Box>
                     ) : (
                       <Box sx={style}>
                         <form onSubmit={updateCustomer} className="otp-form">
                           <div className="otp-input">
-                            <label>Enter OTP sent to email</label>
+                            <label>{t("enterOtp")}</label>
                             <OTPInput
                               className="otp-input-field"
                               value={otp}
@@ -301,7 +304,7 @@ function UpdateprofileScreen() {
                             <Button
                               type="submit"
                               className="btn-check-availability-home"
-                              text="submit"
+                              text={t("submit")}
                             />
                           </div>
                         </form>

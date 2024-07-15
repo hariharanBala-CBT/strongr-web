@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, startTransition } from "react";
 import { Globe, ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
 import "../css/languageselector.css";
@@ -31,10 +31,23 @@ const LanguageSelector = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("selectedLanguage");
+    if (savedLanguage) {
+      i18n.changeLanguage(savedLanguage);
+      setSelectedLanguage(savedLanguage);
+    } else {
+      setSelectedLanguage(i18n.language);
+    }
+  }, [i18n]);
+
   const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng, () => {
-      setSelectedLanguage(lng);
-      setDropdownVisible(false);
+    startTransition(() => {
+      i18n.changeLanguage(lng, () => {
+        setSelectedLanguage(lng);
+        localStorage.setItem("selectedLanguage", lng);
+        setDropdownVisible(false);
+      });
     });
   };
 
@@ -44,28 +57,27 @@ const LanguageSelector = () => {
 
   return (
     <div className="dropdown-container" ref={dropdownRef}>
-    <div className="language-selector">
-      <Globe className="globe-icon-wrapper" onClick={toggleDropdown} />
-      <ChevronDown className="dropdown-icon" onClick={toggleDropdown} />
-      {selectedLanguage && (
-        <span className="selected-language">{t(selectedLanguage)}</span>
-      )}
-      {dropdownVisible && (
-        <div className="dropdown-language">
-          {languages.map((lng) => (
-            <div
-              key={lng.code}
-              className="dropdown-item"
-              onClick={() => changeLanguage(lng.code)}
-            >
-              {t(lng.key)}
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="language-selector">
+        <Globe className="globe-icon-wrapper" onClick={toggleDropdown} />
+        <ChevronDown className="dropdown-icon" onClick={toggleDropdown} />
+        {selectedLanguage && (
+          <span className="selected-language">{t(selectedLanguage)}</span>
+        )}
+        {dropdownVisible && (
+          <div className="dropdown-language">
+            {languages.map((lng) => (
+              <div
+                key={lng.code}
+                className="dropdown-item"
+                onClick={() => changeLanguage(lng.code)}
+              >
+                {t(lng.key)}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-
   );
 };
 

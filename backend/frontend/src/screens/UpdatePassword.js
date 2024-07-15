@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
+import toast, { Toaster } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
+
 import Header from "../components/Header";
 import Button from "../components/Button";
-import "../css/updatepassword.css";
+
 import { resetUserPassword } from "../actions/actions";
-import toast, { Toaster } from "react-hot-toast";
+
+import "../css/updatepassword.css";
 
 function ResetPassword() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation("updatepassword");
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,7 +25,7 @@ function ResetPassword() {
 
   useEffect(() => {
     if (resetPsuccess) {
-      toast.success("password updated successfully");
+      toast.success(t("passwordUpdated"));
       setTimeout(() => {
         navigate(-1);
       }, 1000);
@@ -38,16 +43,14 @@ function ResetPassword() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error(t("passwordsDoNotMatch"));
       return;
     }
 
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{6,}$/;
 
     if (!password.match(passwordRegex)) {
-      toast.error(
-        "Password must contain minimum 6 characters, one special character, and one number"
-      );
+      toast.error(t("invalidPassword"));
       return;
     }
     if (password === confirmPassword) {
@@ -57,7 +60,7 @@ function ResetPassword() {
           password: password,
         })
       );
-    } else toast.error("passwords do not match");
+    } else toast.error(t("passwordsDoNotMatch"));
   };
 
   return (
@@ -67,12 +70,12 @@ function ResetPassword() {
       <section className="breadcrumb breadcrumb-list mb-0">
         <span className="primary-right-round"></span>
         <div className="container">
-          <h1 className="text-white">Update Password</h1>
+          <h1 className="text-white">{t("updatePassword")}</h1>
           <ul>
             <li>
-              <a href="/">Home</a>
+              <a href="/">{t("home")}</a>
             </li>
-            <li>Update Password</li>
+            <li>{t("updatePassword")}</li>
           </ul>
         </div>
       </section>
@@ -82,7 +85,7 @@ function ResetPassword() {
             <ul className="nav">
               <li>
                 <LinkContainer to="/profile">
-                  <a>Profile</a>
+                  <a>{t("profile")}</a>
                 </LinkContainer>
               </li>
               <li>
@@ -91,11 +94,11 @@ function ResetPassword() {
                     navigate(`/profile/${userInfo.id}`);
                   }}
                 >
-                  Update Profile
+                  {t("updateProfile")}
                 </a>
               </li>
               <li>
-                <a className="active">Update Password</a>
+                <a className="active">{t("updatePassword")}</a>
               </li>
             </ul>
           </div>
@@ -107,15 +110,15 @@ function ResetPassword() {
                     <div className="row">
                       <div className="col-lg-12">
                         <div className="appoint-head">
-                          <h4>Change Password</h4>
+                          <h4>{t("changePassword")}</h4>
                         </div>
                         <div className="input-space other-setting-form">
-                          <label className="form-label"> Password</label>
+                          <label className="form-label"> {t("password")}</label>
                           <input
                             required
                             className="form-control"
                             type="password"
-                            placeholder="Enter password"
+                            placeholder={t("enterPassword")}
                             value={password}
                             onChange={(e) => {
                               setPassword(e.target.value);
@@ -123,12 +126,12 @@ function ResetPassword() {
                           />
                         </div>
                         <div className="input-space other-setting-form">
-                          <label className="form-label">Confirm Password</label>
+                          <label className="form-label">{t("confirmPassword")}</label>
                           <input
                             required
                             className="form-control"
                             type="password"
-                            placeholder="Enter password Again"
+                            placeholder={t("enterPasswordAgain")}
                             value={confirmPassword}
                             onChange={(e) => {
                               setConfirmPassword(e.target.value);
@@ -144,7 +147,7 @@ function ResetPassword() {
                             data-bs-toggle="modal"
                             data-bs-target="#deactive"
                           >
-                            <i className="feather-zap-off"></i>Reset Password
+                            <i className="feather-zap-off"></i>{t("resetPassword")}
                           </a>
                         </div>
                       </div>
