@@ -1,7 +1,4 @@
-import React, { useEffect, useRef } from "react";
-import $ from "jquery";
-import "select2/dist/css/select2.min.css";
-import "select2";
+import React from "react";
 
 function SelectInput({
   addSlots,
@@ -15,27 +12,6 @@ function SelectInput({
   value,
   useRadioButtons,
 }) {
-  const selectRef = useRef();
-
-  useEffect(() => {
-    // Initialize select2
-    $(selectRef.current).select2();
-
-    // Cleanup on unmount
-    return () => {
-      $(selectRef.current).select2("destroy");
-    };
-  }, []);
-
-  // Update select2 when value or options change
-  useEffect(() => {
-    $(selectRef.current).val(value).trigger("change");
-  }, [value]);
-
-  useEffect(() => {
-    $(selectRef.current).trigger("change.select2");
-  }, [addSlots, options, removeSlots]);
-
   if (useRadioButtons) {
     return (
       <>
@@ -85,9 +61,8 @@ function SelectInput({
           {label}
         </label>
         <select
-          className="select"
+          className="form-select mt-3"
           id={id}
-          ref={selectRef}
           value={value}
           disabled={disabled}
           onChange={(e) => onChange(e.target.value)}

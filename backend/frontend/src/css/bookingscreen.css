@@ -77,3 +77,22 @@
         margin-bottom: 20px;
     }
 }
+
+.booked-cage .subtitle-txt {
+    color: #6B7385;
+    font-size: 18px;
+}
+
+.form-select {
+    background-color: #f8f9fa !important;
+    border: 2px solid #f8f9fa !important;
+    border-radius: 0.25rem !important;
+    color: #495057 !important;
+    font-weight: 500 !important;
+    padding: 0.5rem 1rem !important;
+  }
+  
+  .form-select.mt-3 {
+    margin-top: 1rem !important;
+  }
+  
