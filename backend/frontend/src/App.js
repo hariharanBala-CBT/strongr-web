@@ -15,6 +15,7 @@ import PhoneNumberLoginScreen from "./screens/PhoneNumberLoginScreen";
 import { HomeProvider } from "./context/HomeContext";
 import ClubSearchScreen from "./screens/ClubSearchScreen";
 import ErrorScreen from "./screens/ErrorScreen";
+import Scrolltotop from "./components/Scrolltotop";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
     <Router>
       <main>
         <HomeProvider>
+          <Scrolltotop />
           <Routes>
             <Route path="/error/" element={<ErrorScreen />} />
 

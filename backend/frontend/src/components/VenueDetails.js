@@ -1,6 +1,5 @@
 import React from "react";
 import { Calendar, MapPin, Heart } from "react-feather";
-import { GiShuttlecock } from "react-icons/gi";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 
