@@ -1,9 +1,11 @@
 form {
     max-width: 500px;
+    width: 829px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 form label {
@@ -37,4 +39,11 @@ form button[type="submit"]:hover {
     margin: 0 auto;
     padding: 20px;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.profile-card{
+    padding:50px;
+}
+.buttons{
+    width:365px;
 }

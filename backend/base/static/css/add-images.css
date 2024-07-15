@@ -1,0 +1,45 @@
+table {
+    position: relative;
+    max-width: 360px;
+    padding: 25px;
+    padding-bottom: 0px;
+}
+
+td {
+    width: 50%;
+    height: 2em;
+    padding: 10px;
+}
+
+form {
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2),0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    padding: 30px;
+}
+
+#id_description,
+#id_pricing,
+#id_game {
+    width: 320px;
+    resize: none;
+}
+
+.profile-card {
+    padding: 80px;
+}
+
+.buttons {
+    height: 75px;
+    margin-left: 20%;
+}
+
+input,
+button,
+select,
+optgroup,
+textarea {
+    padding-left: 50px;
+}
+
+label {
+    padding-left: 80px;
+}

@@ -36,6 +36,12 @@ textarea {
     display: flex;
 }
 
+.buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 input:disabled,
 textarea:disabled {
     color: black;

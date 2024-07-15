@@ -22,19 +22,3 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 9998;
 }
-
-#successAlert {
-  position: fixed;
-  top: 70px;
-  right: 20px;
-  background-color: #323231;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  z-index: 1050;
-
-  p {
-    text-align: center;
-    margin: 0;
-  }
-}

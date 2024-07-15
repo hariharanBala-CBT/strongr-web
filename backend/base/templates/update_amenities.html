@@ -1,425 +1,71 @@
-{% load static %}{% load url_filters %}
+{% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>STRONGR.</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css"
-      rel="stylesheet"
-    />
-    <script
-      src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
-      crossorigin="anonymous"
-    ></script>
-    <link href="{% static 'styles.css' %}" rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+<link href="{% static './css/amenities.css' %}" rel="stylesheet" />
 
-    <style>
-      form {
-         box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 
-           0 5px 5px 0 rgba(0, 0, 0, 0.24); 
-        border-radius: 2%;
-        padding: 20px;
-      }
-      table {
-        position: relative;
-        padding: 25px;
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      th,
-      td {
-        padding: 10px;
-        text-align: left;
-        width:300px;
-      }
-
-      th {
-        /* background-color: #f2f2f2; */
-        font-weight: bold;
-      }
-
-      input[type="checkbox"] {
-        margin-left: 5px;
-      }
-
-      textarea {
-        width: 80%;
-      }
-      #id_description {
-        resize: none;
-      }
-      
-      .toast {
-          position: fixed;
-          top: 60px;
-          right: 20px;
-          background-color: #323231;
-          color: white;
-          padding: 10px 20px;
-          border-radius: 5px;
-          z-index: 1050;
-          display: none;
-      }
-      .profile-card {
-        padding-right:150px;
-      }
-      #nextTabBtn{
-        display: block;
-        margin: 20px auto 0;
-        padding: 10px 20px;
-        font-size: 16px;
-    }
-    .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
-      top:20px;
-    }
-    .buttons{
-      width:443px;
-    }
-    </style>
-  </head>
-  <body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-   
-      <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
-
-      <button
-        class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
-        id="sidebarToggle"
-        href="#!"
-      >
-        <i class="fas fa-bars"></i>
-      </button>
-   
-      <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            id="navbarDropdown"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            ><i class="fas fa-user fa-fw"></i>{{ user.username }}</a
-          >
-          <ul
-            class="dropdown-menu dropdown-menu-end"
-            aria-labelledby="navbarDropdown"
-          >
-            <!-- <li><a class="dropdown-item" href="#!">Settings</a></li>
-            <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-            <li><hr class="dropdown-divider" /></li> -->
-            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-          </ul>
-        </li>
-      </ul>
-    </nav>
-    <div id="layoutSidenav">
-      <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-          <div class="sb-sidenav-menu">
-            <div class="nav">
-              <div class="sb-sidenav-menu-heading">Organization</div>
-              <a class="nav-link" href="{% url 'organization_page' %}">
-                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                Dashboard
-            </a>
-            <a class="nav-link" href="{% url 'organization_profile' %}">
-                <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
-                Profile
-            </a>
-               <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
-                <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
-                Locations
-            </a>
-            <a class="nav-link" href="{% url 'preview' %}">
-                <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
-                Preview
-            </a>
-            <a class="nav-link" href="{% url 'status' %}">
-              <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></i></div>
-                Status
-            </a>
-            <a class="nav-link" href="{% url 'org_customers_list'%}">
-              <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-              Customers
-          </a>   
-            <div class="sb-sidenav-menu-heading">Slot</div>
-            <a class="nav-link" href="{% url 'slot-location' %}">
-              <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
-              Slots List
-          </a>
-              <a class="nav-link" href="{% url 'temp-slot-location'%}">
-                  <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
-                  Additional Slots
-              </a>
-              <a class="nav-link" href="{% url 'temp-deslot-location'%}">
-                  <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
-                  Unavailable Slots
-              </a>
-            </div>
-          </div>
-          <div class="sb-sidenav-footer">
-            <div class="small">Logged in as:</div>
-            {{ user.username }}
-          </div>
-        </nav>
+<div class="container-fluid px-4 mt-4">
+  <div class="profile-card">
+    <!-- <h3>AMENITIES</h3> -->
+    <!-- <span>Add available Amenities in your locations</span> -->
+    <form
+      id="upd-amen-form"
+      action="{% url 'organization_locationamenities' locationpk %}"
+      method="post"
+      class="mt-4">
+      {% csrf_token %}
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <label for="id_is_parking">Is Parking available</label>
+            </td>
+            <td>{{ form.is_parking }}</td>
+            <td>
+              <label for="id_is_restrooms">Is restroom available</label>
+            </td>
+            <td>{{ form.is_restrooms }}</td>
+          </tr>
+          <tr>
+            <td>
+              <label for="id_is_changerooms">Is Changeroom available</label>
+            </td>
+            <td>{{ form.is_changerooms }}</td>
+            <td>
+              <label for="id_is_powerbackup">Is power backup available</label>
+            </td>
+            <td>{{ form.is_powerbackup }}</td>
+          </tr>
+          <tr>
+            <td>
+              <label for="id_is_beverages_facility"
+                >Is Beverages available</label
+              >
+            </td>
+            <td>{{ form.is_beverages_facility }}</td>
+            <td>
+              <label for="id_is_coaching_facilities"
+                >Is coaching facilities available</label
+              >
+            </td>
+            <td>{{ form.is_coaching_facilities }}</td>
+          </tr>
+          <tr>
+            <td>
+              <label for="id_description">Description</label>
+            </td>
+            <td colspan="3">{{ form.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="buttons px-4 py-4" style="margin-left: 20%">
+        <button
+          id="nextTabBtn"
+          type="submit"
+          class="btn btn-primary"
+          data-toggle="tooltip"
+          title="submit">
+          Update
+        </button>
       </div>
-      <div id="layoutSidenav_content">
-        <main>
-          <div class="container-fluid px-4 mt-4">
-            <div class="profile-card">
-              <!-- <h3>AMENITIES</h3> -->
-              <!-- <span>Add available Amenities in your locations</span> -->
-              <form id="upd-amen-form" action="{% url 'organization_locationamenities' locationpk %}"  method="post" class="mt-4">
-                {% csrf_token %}
-                <table>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <label for="id_is_parking">Is Parking available</label>
-                      </td>
-                      <td>{{ form.is_parking }}</td>
-                      <td>
-                        <label for="id_is_restrooms"
-                          >Is restroom available</label
-                        >
-                      </td>
-                      <td>{{ form.is_restrooms }}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label for="id_is_changerooms"
-                          >Is Changeroom available</label
-                        >
-                      </td>
-                      <td>{{ form.is_changerooms }}</td>
-                      <td>
-                        <label for="id_is_powerbackup"
-                          >Is power backup available</label
-                        >
-                      </td>
-                      <td>{{ form.is_powerbackup }}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label for="id_is_beverages_facility"
-                          >Is Beverages available</label
-                        >
-                      </td>
-                      <td>{{ form.is_beverages_facility }}</td>
-                      <td>
-                        <label for="id_is_coaching_facilities"
-                          >Is coaching facilities available</label
-                        >
-                      </td>
-                      <td>{{ form.is_coaching_facilities }}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label for="id_description">Description</label>
-                      </td>
-                      <td colspan="3">{{ form.description }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-                 <div class="buttons px-4 py-4" style="margin-left: 20%">
-                  <button id="nextTabBtn" type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit" style="margin-top: 22px">Update</button>
-                </div>
-                {% comment %} <button id="nextTabBtn" class="btn btn-primary">Next</button> {% endcomment %}
-              </form>
-              <div class="toast" id="successToast"></div>
-              <!-- <div id="confirmationModal" class="modal" aria-hidden="true" tabindex="-1" role="dialog"
-                  aria-labelledby="modalLabel">
-                  <div class="modal-content">
-                      <h2 id="modalLabel">Confirm Update</h2>
-                      <div style="display: flex; justify-content: center; align-items: center;">
-                          <button id="cancelUpdateButton">Cancel</button>
-                          <button id="confirmUpdateButton">Confirm</button>
-                      </div>
-                  </div>
-              </div> -->
-            </div>
-          </div>
-        </main>
-        <footer class="py-4 bg-light mt-auto">
-          <div class="container-fluid px-4">
-            <div
-              class="d-flex align-items-center justify-content-between small"
-            >
-              <div class="text-muted">Copyright &copy; Your Website 2023</div>
-              <div>
-                  <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
-                &middot;
-                <a href="{% url 'termsconditions' %}">Terms &amp; Conditions</a>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
-    </div>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-      crossorigin="anonymous"
-    ></script>
-      
-
-    <script>
-      window.addEventListener('DOMContentLoaded', event => {
-          const datatablesSimple = document.getElementById('datatablesSimple');
-          if (datatablesSimple) {
-              new simpleDatatables.DataTable(datatablesSimple);
-          }
-      });
-  
-      window.addEventListener('DOMContentLoaded', event => {
-          const sidebarToggle = document.body.querySelector('#sidebarToggle');
-          if (sidebarToggle) {
-              sidebarToggle.addEventListener('click', event => {
-                  event.preventDefault();
-                  document.body.classList.toggle('sb-sidenav-toggled');
-                  localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-              });
-          }
-      });
-  
-      var modal = document.getElementById('confirmationModal');
-      var updateButton = document.querySelector('#upd-amen-form');
-      var confirmButton = document.getElementById('confirmUpdateButton');
-      var cancelButton = document.getElementById('cancelUpdateButton');
-      const form = document.getElementById('upd-amen-form');
-      var toast = document.getElementById('successToast');
-  
-      updateButton.addEventListener('submit', function (event) {
-          event.preventDefault();
-          modal.style.display = "block";
-          modal.setAttribute('aria-hidden', 'false');
-          return false;
-      });
-  
-      window.onclick = function (event) {
-          if (event.target == modal) {
-              modal.style.display = "none";
-              modal.setAttribute('aria-hidden', 'true');
-          }
-      }
-  
-      confirmButton.addEventListener('click', function (e) {
-          e.preventDefault();
-          modal.style.display = "none";
-          modal.setAttribute('aria-hidden', "true");
-          submitFormData();
-      });
-  
-      function showToast(message) {
-          toast.textContent = message;
-          toast.style.display = 'block';
-          setTimeout(() => {
-              toast.style.display = 'none';
-          }, 2000); // Hide toast after 2 seconds
-      }
-  
-      function submitFormData() {
-          const formData = new FormData(form);
-          fetch(form.action, {
-              method: 'POST',
-              body: formData,
-              headers: {
-                  'X-Requested-With': 'XMLHttpRequest',
-                  'X-CSRFToken': '{{ csrf_token }}'
-              },
-          })
-          .then(response => {
-              if (!response.ok) {
-                  return response.json().then(data => {
-                      if (data.errors) {
-                          displayFormErrors(data.errors);
-                      }
-                      // throw new Error(`HTTP error! status: ${response.status}, ${data.message}`);
-                  });
-              }
-              return response.json();
-          })
-          .then(data => {
-              if (data.status === 'success') {
-                  // showToast(data.message);
-                  // setTimeout(() => {
-                  //     window.location.href = "{% url 'organization_locationlist' %}";
-                  // }, 2000);
-              }
-          })
-          .catch(error => {
-              console.error('Error:', error);
-              showToast('Error submitting form. ' + error.message);
-          });
-      }
-  
-      function displayFormErrors(errors) {
-          Object.keys(errors).forEach(field => {
-              const errorMessages = errors[field].join(', ');
-              const errorElement = document.getElementById(`error_${field}`);
-              if (errorElement) {
-                  errorElement.textContent = errorMessages;
-                  errorElement.style.display = 'block';
-              }
-          });
-      }
-  
-      cancelButton.addEventListener('click', function (e) {
-          e.preventDefault();
-          modal.style.display = "none";
-          modal.setAttribute('aria-hidden', "true");
-      });
-  
-      window.addEventListener('DOMContentLoaded', (event) => {
-          const successAlert = document.getElementById('message');
-          if (successAlert) {
-              setTimeout(() => {
-                  successAlert.style.display = 'none';
-              }, 2000); // Hide after 5000ms or 5 seconds
-          }
-      });
-      {% comment %} $(document).ready(function () {
-        $('#nextTabBtn').click(function () {
-            const activeTab = $('.tab-button.active');
-            const nextTab = activeTab.next('.tab-button');
-            
-            if (nextTab.length > 0) {
-                activeTab.removeClass('active');
-                nextTab.addClass('active');
-                
-                const url = nextTab.data('url');
-                $('#tab-content').load(url, function () {
-                    initFormSubmission();
-                });
-            }
-        });
-    }); {% endcomment %}
-  </script>
-  </body>
-</html>
-
-
+    </form>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+table {
+    max-width: 100%;
+    width: 500px;
+    margin: 0 auto;
+    padding: 10px;
+    /* border-color: transparent; */
+    background: inherit;
+    background-clip: border-box;
+}
+
+th,
+td {
+    text-align: center;
+    padding: 15px;
+}
+
+.card {
+    margin: 0 auto;
+}
+
+.card-body {
+    width: 900px;
+}
+
+.table-bordered {
+    width: 800px;
+}
+
+/* .datatable-top {
+    visibility: hidden;
+} */
+.update-icon {
+    display: flex;
+    justify-content: center;
+}
+
+#successAlert {
+    position: fixed;
+    top: 70px;
+    left: 85%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 90%;
+    max-width: 400px;
+    height: 60px;
+}
+
+#successAlert p {
+    text-align: center;
+    margin: 0;
+}
+
+.profile-card {
+    padding-right: 200px;
+}
+
+#nextTabBtn {
+    display: block;
+    margin: 20px auto 0;
+    padding: 10px 20px;
+    font-size: 16px;
+}

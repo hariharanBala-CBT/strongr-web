@@ -114,7 +114,7 @@ class OrganizationLocationForm(ModelForm):
 class OrganizationLocationGameTypeForm(ModelForm):
     class Meta:
         model = OrganizationLocationGameType
-        fields = ['game_type', 'pricing', 'description']
+        fields = ['game_type', 'pricing', 'description','is_active']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 2, 'cols': 25})
         }
