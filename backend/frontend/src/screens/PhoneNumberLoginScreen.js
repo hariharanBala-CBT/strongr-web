@@ -186,7 +186,6 @@ function PhoneNumberScreen() {
                         </LinkContainer>
                       </header>
                       <div className="shadow-card">
-                        <Toaster toastOptions={{ duration: 4000 }} />
                         <div id="recaptcha-container"></div>
                         <h2 className="login-title">
                           Get Started With Strongr

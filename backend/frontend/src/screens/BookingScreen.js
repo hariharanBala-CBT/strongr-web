@@ -101,6 +101,11 @@ function BookingScreen() {
                 <a>Book A Court</a>
               </LinkContainer>
             </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to={"/checkout"}>
+                <a>Checkout</a>
+              </LinkContainer>
+            </li>
             <li>Booked Court</li>
           </ul>
         </div>
@@ -171,7 +176,7 @@ function BookingScreen() {
             <ul className="booking-info d-lg-flex justify-content-between align-items-center">
               <li>
                 <h6>Court Name</h6>
-                <p>Standard Synthetic Court 1</p>
+                <p>{bookingDetails?.court?.name}</p>
               </li>
               <li>
                 <h6>Appointment Date</h6>

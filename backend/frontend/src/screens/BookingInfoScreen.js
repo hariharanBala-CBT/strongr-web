@@ -223,7 +223,6 @@ function BookingInfoScreen() {
   }, [clubGame, clubLocation, courts]);
 
   const handleSubmit = async (event) => {
-    console.log("handlesub...");
     event.preventDefault();
     if (selectedSlot) {
       const parts = selectedSlot.split("-");
