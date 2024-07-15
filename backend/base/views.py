@@ -1068,8 +1068,10 @@ class ChangeOrganizationStatusView(View):
                   recipient_list,
                   fail_silently=False)
 
-        # add a success message
-        messages.success(request, SUCCESS_MESSAGES.get('org_status'))
+        if new_status == 1:
+            messages.success(request, SUCCESS_MESSAGES.get('org_approve'))
+        elif new_status == 4:
+            messages.success(request, SUCCESS_MESSAGES.get('org_cancel'))
 
         return redirect('organization_list')
 
@@ -1091,7 +1093,10 @@ class ChangeOrganizationLocationStatusView(View):
         organizationLocation.status = new_status
         organizationLocation.save()
 
-        messages.success(request, SUCCESS_MESSAGES.get('orglocation_status'))
+        if new_status == 1:
+            messages.success(request, SUCCESS_MESSAGES.get('orglocation_approve'))
+        elif new_status == 4:
+            messages.success(request, SUCCESS_MESSAGES.get('orglocation_cancel'))
 
         user = request.user
 
