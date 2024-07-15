@@ -5,5 +5,7 @@
     "area": "Area",
     "date": "Date",
     "suggestedClubsIn": "Suggested Clubs in",
-    "suggestedClubsFor": "Suggested Clubs for"
+    "suggestedClubsFor": "Suggested Clubs for",
+    "fetchingAreas": "பகுதிகளைப் பெறுவதில் பிழை",
+    "fetchingGames": "விளையாட்டுகளைப் பெறுவதில் பிழை"
 }

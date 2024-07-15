@@ -5,5 +5,7 @@
     "area": "பகுதி",
     "date": "தேதி",
     "suggestedClubsIn": "பரிந்துரைக்கப்பட்ட கிளப்புகள்",
-    "suggestedClubsFor": "விளையாட்டிற்கான பரிந்துரைக்கப்பட்ட கிளப்புகள்"
+    "suggestedClubsFor": "விளையாட்டிற்கான பரிந்துரைக்கப்பட்ட கிளப்புகள்",
+    "fetchingAreas": "Error in fetching areas",
+    "fetchingGames": "Error in fetching games"
 }

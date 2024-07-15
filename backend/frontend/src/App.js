@@ -16,6 +16,7 @@ import PhoneNumberLoginScreen from "./screens/PhoneNumberLoginScreen";
 import { HomeProvider } from "./context/HomeContext";
 import ClubSearchScreen from "./screens/ClubSearchScreen";
 import ErrorScreen from "./screens/ErrorScreen";
+import Scrolltotop from "./components/Scrolltotop";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./react-i18n";
 import { CircularProgress } from "@mui/material";
@@ -36,7 +37,8 @@ function App() {
               </div>
             }
           >
-            <Routes>
+            <Scrolltotop />
+          <Routes>
               <Route path="/error/" element={<ErrorScreen />} />
 
               <Route path="/" element={<HomeScreen />} />

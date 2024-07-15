@@ -3,6 +3,7 @@
     "home": "வீடு",
     "reviews": "விமர்சனங்கள்",
     "venueType": "இடம் வகை",
+    "venueList": "இடம் பட்டியல்",
     "indoor": "உட்புறம்",
     "addedBy": "மூலம்",
     "startsFrom": "இருந்து தொடங்குகிறது",
@@ -47,5 +48,7 @@
     "password": "கடவுச்சொல்",
     "enterPassword": "கடவுச்சொல்லை உள்ளிடவும்",
     "dontHaveAnAccount": "உங்களிடம் கணக்கு இல்லையா?",
-    "signup": "பதிவு செய்யுங்கள்"
+    "signup": "பதிவு செய்யுங்கள்",
+    "incorrectCredentials": "தவறான நுழைவு விவரங்கள்",
+    "loggedInSuccessfully": "வெற்றிகரமாக உள்நுழைந்தது"
 }

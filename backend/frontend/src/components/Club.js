@@ -65,12 +65,9 @@ function Club({ clubs }) {
                             <span className="rating-bg">4.2</span>
                             <span>300 Reviews</span>
                           </div>
-                          <a href="javascript:void(0)" className="fav-icon">
-                            <i className="feather-heart"></i>
-                          </a>
                         </div>
                         <h3 className="listing-title">
-                          <a href="venue-details.html">
+                          <a onClick={() => handleViewDetails(club)}>
                             {club.organization.organization_name}
                           </a>
                         </h3>
@@ -88,15 +85,18 @@ function Club({ clubs }) {
                                 {club.address_line_1},{club?.area?.area_name}
                               </span>
                             </li>
-                            <li>
-                              <span>
-                                <i className="gametype">Game : </i>
-                                <span className="gameicon">
-                                  <GiShuttlecock size="2em" />
-                                </span>{" "}
-                                <span className="primary-text">Badminton</span>
-                              </span>
-                            </li>
+                            {club?.next_availabilty && (
+                              <li>
+                                <span>
+                                  <i className="fa-solid fa-calendar-days"> </i>
+                                  <span className="primary-text">
+                                    next availability :{" "}
+                                    {club?.next_availabilty?.days}-
+                                    {club?.next_availabilty?.start_time}
+                                  </span>
+                                </span>
+                              </li>
+                            )}
                           </ul>
                         </div>
                         <div className="listing-button">

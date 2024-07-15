@@ -139,9 +139,9 @@ function ClubListScreen() {
 
   useEffect(() => {
     if (areaError) {
-      toast.error("error in fetching areas");
+      toast.error(t('fetchingAreas'));
     } else if (gameError) {
-      toast.error("error in fetching games");
+      toast.error(t('fetchingGames'));
     }
   }, [areaError, gameError]);
 
@@ -169,7 +169,7 @@ function ClubListScreen() {
         <div className="container">
           <h1 className="text-white">{t("venueList")}</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">{t("home")}</a>
             </li>
             <li>{t("venueList")}</li>

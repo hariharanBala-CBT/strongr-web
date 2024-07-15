@@ -1,6 +1,5 @@
 import React from "react";
 import { Calendar, MapPin, Heart } from "react-feather";
-import { GiShuttlecock } from "react-icons/gi";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -50,11 +49,6 @@ const VenueDetails = ({ club }) => {
                 </>
               )}
             </div>
-            <a href="javascript:void(0)" className="fav-icon">
-              <i className="feather-heart">
-                <Heart />
-              </i>
-            </a>
           </div>
           <h3 className="listing-title">
             <a

@@ -175,7 +175,7 @@ function ClubDetailScreen() {
 
   useEffect(() => {
     if (LoginError && isLogin) {
-      toast.error("Incorrect Credentials");
+      toast.error(t('login.incorrectCredentials'));
       setOpenForm(true);
       setLoader(false);
       setIsLogin(false);
@@ -184,7 +184,7 @@ function ClubDetailScreen() {
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
-      toast.success("Logged in successfully");
+      toast.success(t('login.loggedInSuccessfully'));
       setOpenForm(false);
       setIsLogin(false);
     }
@@ -203,8 +203,13 @@ function ClubDetailScreen() {
         <div className="container">
           <h1 className="text-white">{t("venueDetails")}</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">{t("home")}</a>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to="/clubs">
+                <a>{t("venueList")}</a>
+              </LinkContainer>
             </li>
             <li>{t("venueDetails")}</li>
           </ul>
@@ -827,6 +832,10 @@ function ClubDetailScreen() {
                                     <textarea
                                       className="form-control"
                                       id="floatingTextarea2"
+                                      value={comment}
+                                      onChange={(e) =>
+                                        setComment(e.target.value)
+                                      }
                                     ></textarea>
                                   </div>
                                 </div>
@@ -844,73 +853,21 @@ function ClubDetailScreen() {
                           </>
                         )}
                       </div>
-
-                      <div className="review-box d-md-flex">
-                        <div className="review-profile">
-                          <img src={profileImage} alt="User" />
-                        </div>
-                        <div className="review-info">
-                          <h6 className="mb-2 tittle">
-                            Amanda Booked on 06/04/2023
-                          </h6>
-                          <div className="rating">
-                            <i className="fas fa-star filled"></i>
-                            <i className="fas fa-star filled"></i>
-                            <i className="fas fa-star filled"></i>
-                            <i className="fas fa-star filled"></i>
-                            <i className="fas fa-star filled"></i>
-                            <span className>5.0</span>
+                      {clubReviews?.map((review) => (
+                        <div className="review-box d-md-flex">
+                          <div className="review-profile">
+                            <img src={profileImage} alt="User" />
                           </div>
-                          <span className="success-text">
-                            <i className="feather-check"></i>Yes, I would book
-                            again.
-                          </span>
-                          <h6>Absolutely perfect</h6>
-                          <p>
-                            If you are looking for a perfect place for friendly
-                            matches with your friends or a competitive match, It
-                            is the best place.
-                          </p>
-                          <span className="post-date">Sent on 11/03/2023</span>
-                        </div>
-                      </div>
-
-                      <div className="review-box d-md-flex">
-                        <div className="review-profile">
-                          <img src={profileImage} alt="User" />
-                        </div>
-                        <div className="review-info">
-                          <h6 className="mb-2 tittle">
-                            Amanda Booked on 06/04/2023
-                          </h6>
-                          <div className="rating">
-                            <i className="fas fa-star filled"></i>
-                            <i className="fas fa-star filled"></i>
-                            <i className="fas fa-star filled"></i>
-                            <i className="fas fa-star filled"></i>
-                            <i className="fas fa-star filled"></i>
-                            <span className>5.0</span>
-                          </div>
-                          <span className="warning-text">
-                            <i className="feather-x"></i>No, I dont want to book
-                            again.
-                          </span>
-                          <h6>Awesome. Its very convenient to play.</h6>
-                          <p>
-                            If you are looking for a perfect place for friendly
-                            matches with your friends or a competitive match, It
-                            is the best place.
-                          </p>
-                          <div className="dull-bg">
-                            <p>
-                              Experience badminton excellence at Badminton
-                              Academy. Top-notch facilities, well-maintained
-                              courts, and a friendly atmosphere. Highly
-                              recommended for an exceptional playing experience
-                            </p>
+                          <div className="review-info">
+                            <h6 className="mb-2 tittle">{review.name}</h6>
+                            <Rating value={review.rating} color="#FFAA00" />
+                            <p>{review.comment}</p>
+                            <span className="post-date">
+                              {review.createdAt.substring(0, 10)}
+                            </span>
                           </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 </div>

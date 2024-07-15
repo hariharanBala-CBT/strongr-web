@@ -28,8 +28,12 @@ function ClubSearchScreen() {
 
   const [loading, setLoading] = useState(false);
 
-  const { filteredClubLocations, loadingSearchLocations } = useSelector((state) => state.listOrganizations);
-  const { filteredData, loadingSearchClubs } = useSelector((state) => state.RecentSearch);
+  const { filteredClubLocations, loadingSearchLocations } = useSelector(
+    (state) => state.listOrganizations
+  );
+  const { filteredData, loadingSearchClubs } = useSelector(
+    (state) => state.RecentSearch
+  );
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -57,42 +61,43 @@ function ClubSearchScreen() {
   }, [loadingSearchClubs, loadingSearchLocations]);
 
   return (
-    <div>
+    <div className="searchbar-screen">
       <Header location="nav-all" />
       <Toaster />
       <section className="section-container" id="section-id">
         <div className="form-section 1">
           <Form onSubmit={submitHandler} inline>
             <div className="search-bar-container">
-              <Form.Control
-                type="text"
-                name="q"
-                onChange={(e) => setKeyword(e.target.value)}
-                className="mr-sm-2 ml-sm-2 search-input"
-                placeholder={t("search")}
-                defaultValue={keyword}
-              />
+              <label className="search-label">
+                <input
+                  type="search"
+                  placeholder={t("search")}
+                  className="form-control form-control-sm"
+                  onChange={(e) => setKeyword(e.target.value)}
+                />
+                <i className="fas fa-search search-icon"></i>
+              </label>
             </div>
           </Form>
         </div>
       </section>
-      {loading ?
+      {loading ? (
         <div className="clubs-filter-loader">
           <CircularProgress />
         </div>
-      :
-      <>
-        {filteredClubLocations.length > 0 ? (
-          <div className="club-list">
-            <Club clubs={filteredClubLocations} />
-          </div>
-        ) : (
-          <div className="clubs-error">
-            <NoDataAnimation url={NoDataAnimationUrl} />
-          </div>
-        )}
-      </>
-      }
+      ) : (
+        <>
+          {filteredClubLocations.length > 0 ? (
+            <div className="club-list">
+              <Club clubs={filteredClubLocations} />
+            </div>
+          ) : (
+            <div className="clubs-error">
+              <NoDataAnimation url={NoDataAnimationUrl} />
+            </div>
+          )}
+        </>
+      )}
       {filteredData?.length > 0 && (
         <div className="recently-searched">
           <h2>{t("recentlySearched:")}</h2>

@@ -62,3 +62,42 @@
   padding-bottom: 10rem;
   background-color: #e2e2e2;
 }
+
+.search-bar-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-label {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #192335;
+  pointer-events: none;
+}
+
+.searchbar-screen .form-control {
+  background: #FAFAFA;
+  border: 0;
+  padding: 20px;
+  height: 58px;
+  width: 100%;
+  outline: 0;
+}
+
+.searchbar-screen .header {
+  position: sticky !important;
+}
+
+div.search-bar-container .form-control {
+  height: 50px;
+  border: 1px solid #EAEDF0;
+  border-radius: 6px;
+  padding-right: 40px;
+  font-size: 18px;
+}

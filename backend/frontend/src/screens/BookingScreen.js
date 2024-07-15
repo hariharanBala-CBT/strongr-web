@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { MapPin } from "react-feather";
 import { MdSportsEsports } from "react-icons/md";
 import { useTranslation } from "react-i18next";
+import { LinkContainer } from "react-router-bootstrap";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -84,8 +85,23 @@ function BookingScreen() {
         <div className="container">
           <h1 className="text-white">{t("bookedCourt")}</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">{t("home")}</a>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to="/clubs">
+                <a>{t("venueList")}</a>
+              </LinkContainer>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to={`/club/${id}`}>
+                <a>{t("venueDetails")}</a>
+              </LinkContainer>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to={`/bookinginfo/${id}`}>
+                <a>{t("bookACourt")}</a>
+              </LinkContainer>
             </li>
             <li>{t("bookedCourt")}</li>
           </ul>
@@ -130,7 +146,7 @@ function BookingScreen() {
                 <div className="col-12 col-sm-12 col-md-12 col-lg-6">
                   <ul className="d-sm-flex align-items-center justify-content-evenly">
                     <li>
-                      <h3 className="d-inline-block">
+                      <h3 className="d-inline-block subtitle-txt">
                         <span>
                           <MapPin />
                         </span>
@@ -138,9 +154,9 @@ function BookingScreen() {
                       </h3>
                     </li>
                     <li>
-                      <h3 className="d-inline-block">
+                      <h3 className="d-inline-block subtitle-txt">
                         <span>
-                          <MdSportsEsports />
+                          <MdSportsEsports size={25} />
                         </span>
                         {bookingDetails?.game_type}
                       </h3>

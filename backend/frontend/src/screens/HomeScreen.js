@@ -271,15 +271,15 @@ function HomeScreen(history) {
         <div className="form-section">
           <Form onSubmit={submitHandler} inline>
             <div className="search-bar-container">
-              <FontAwesomeIcon className="search-icon" />
-              <Form.Control
-                type="text"
-                name="q"
-                onChange={(e) => setKeyword(e.target.value)}
-                className="mr-sm-2 ml-sm-2 search-input"
-                placeholder={t("search")}
-                // required
-              />
+              <label className="search-label">
+                <input
+                  type="search"
+                  placeholder={t("search")}
+                  className="form-control form-control-sm"
+                  onChange={(e) => setKeyword(e.target.value)}
+                />
+                <i className="fas fa-search search-icon"></i>
+              </label>
             </div>
           </Form>
           <div className="lines">

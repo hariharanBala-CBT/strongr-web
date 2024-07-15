@@ -3,6 +3,7 @@
     "home": "Home",
     "reviews": "Reviews",
     "venueType": "Venue Type",
+    "venueList": "Venue List",
     "indoor": "Indoor",
     "addedBy": "Added By",
     "startsFrom": "Starts From",
@@ -47,5 +48,7 @@
     "password": "Password",
     "enterPassword": "Enter password",
     "dontHaveAnAccount": "Don't have an account?",
-    "signup": "Signup"
+    "signup": "Signup",
+    "incorrectCredentials": "Incorrect Credentials",
+    "loggedInSuccessfully": "Logged in successfully"
 }
