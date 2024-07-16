@@ -1,11 +1,10 @@
 {% extends 'base_org.html' %}{% load static %}
 {% block content %}
     <link href="{% static './css/profile.css' %}" rel="stylesheet"/>
-
     <div class="container-fluid px-4 m">
         
         <ol class="breadcrumb mb-1">
-            <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a></li>
             <li class="breadcrumb-item active">Profile</li>
         </ol>
 

@@ -3,7 +3,7 @@ form {
     border-radius: 2%;
     padding: 30px;
     width: 850px;
-
+    margin-top: 63px;
 }
 
 table {
@@ -71,7 +71,7 @@ select {
 }
 
 .profile-card {
-    padding-right: 250px;
+    padding-left:250px;
 
 }
 
@@ -84,5 +84,5 @@ select {
 .buttons {
     width: 600px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }

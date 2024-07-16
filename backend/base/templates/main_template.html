@@ -24,21 +24,30 @@
     </head>
 
     <body class="sb-nav-fixed">
+        <!-- Navbar -->
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                    class="fas fa-bars"></i></button>
             <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>{{ user.username }}</a>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="fas fa-user fa-fw"></i>
+                        {{ user.username }}
+                    </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>
             </ul>
         </nav>
+
+        <!-- Sidebar -->
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <!-- Sidebar Content -->
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Organization</div>
@@ -50,48 +59,51 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                                 Profile
                             </a>
-                            <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
+                            <a class="nav-link" href="{% url 'organization_locationlist'  %}"  style="color: white; background-color: rgb(68, 68, 68);">
                                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
                             </a>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Slots
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="{% url 'slot-location' %}">Slot-list</a>
+                                    <a class="nav-link" href="{% url 'temp-slot-location'%}">Additional Slots</a>
+                                    <a class="nav-link" href="{% url 'temp-deslot-location'%}">Unavailable Slots</a>
+                                </nav>
+                            </div>
                             <a class="nav-link" href="{% url 'preview' %}">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                                 Preview
                             </a>
                             <a class="nav-link" href="{% url 'status' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></i></div>
                                 Status
                             </a>
+                            <div class="sb-sidenav-menu-heading">Customers</div>
                             <a class="nav-link" href="{% url 'org_customers_list'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                                Customers
-                            </a>
-                            <div class="sb-sidenav-menu-heading">Slot</div>
-                            <a class="nav-link" href="{% url 'slot-location' %}">
-                                <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
-                                Slots List
-                            </a>
-                            <a class="nav-link" href="{% url 'temp-slot-location'%}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
-                                Additional Slots
-                            </a>
-                            <a class="nav-link" href="{% url 'temp-deslot-location'%}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
-                                Unavailable Slots
+                                List
                             </a>
                         </div>
                     </div>
+                    <!-- Logged in User -->
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
                         <div class="user-email">{{ request.user.email }}</div>
                     </div>
                 </nav>
             </div>
+
             <div id="layoutSidenav_content">
                 <main class="main-template">
                     <div class="container-fluid px-4 mt-4">
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i>
+                            </a></li>
                             <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
                             <li class="breadcrumb-item">Location</li>
                         </ol>
@@ -284,7 +296,7 @@
 
                         const url = nextTab.data('url');
                         $('#tab-content').load(url, function () {
-                            initFormSubmission();
+                               initFormSubmission();
                         });
                     }
                 });

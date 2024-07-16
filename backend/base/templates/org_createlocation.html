@@ -1,10 +1,8 @@
 {% extends 'base_org.html' %}{% load static %}
 {% block content %}
     <link href="{% static './css/add-location.css' %}" rel="stylesheet" />
-
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="{% url 'organization_page' %}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'organization_profile' %}">Profile</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a></li>
         <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
         <li class="breadcrumb-item">Add-location</li>
     </ol>

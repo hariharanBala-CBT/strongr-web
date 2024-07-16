@@ -878,7 +878,7 @@ class SlotDeleteView(DeleteView):
         return super().delete(request, *args, **kwargs)
 
     def get_success_url(self):
-        pk = self.request.session.get('location_pk')
+        pk = self.request.session.get('locationpk')
         return reverse('slot-list', kwargs={'locationpk': pk})
 
     def get_context_data(self, **kwargs):
@@ -1589,7 +1589,6 @@ def update_working_days(request, location_pk):
         formset = OrganizationLocationWorkingDaysFormSet(queryset=queryset)
 
     return render(request, 'update_workingdays.html', {'formset': formset, 'locationpk': location_pk})
-
 
 @login_required
 def update_amenities(request, location_pk):

@@ -1,6 +1,16 @@
 {% load static %}
     <link href="{% static './css/update_location.css' %}" rel="stylesheet" />
+    <style>
+        input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
 
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+    </style>
     <div class="container-fluid px-4 m">
         <div class="profile-card">
             <div>
@@ -28,7 +38,7 @@
 
                     <div class="buttons text-center mt-4 mx-5">
                         <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2">Update</button>
-                        <!-- <button id="nextTabBtn" class="btn btn-primary">Update</button> -->
+                        <button id="nextTabBtn" class="btn btn-primary">Next</button> 
                     </div>
 
                     <input type="hidden" name="organization" value="{{ request.user.organization.id }}">

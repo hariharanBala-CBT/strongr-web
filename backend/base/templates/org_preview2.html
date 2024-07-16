@@ -2,6 +2,11 @@
 {% block content %}
         <link href="{% static './css/preview_styles.css' %}" rel="stylesheet" />
         <div>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i>
+                            </a></li>
+                            <li class="breadcrumb-item">Preview</li>
+                        </ol>                
             <h1 class="mt-4 mb-4">Preview</h1>
 
             {% if messages %}
