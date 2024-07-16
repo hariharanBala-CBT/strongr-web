@@ -58,14 +58,10 @@ function Header({ location }) {
                 <a href="#/">Home</a>
               </li>
               <li className="has-submenu">
-                <a href="#">
-                  User
-                </a>
+                <a href="#">User</a>
               </li>
               <li className="has-submenu">
-                <a href="#">
-                  Pages
-                </a>
+                <a href="#">Pages</a>
               </li>
               <li>
                 <a href="#">Contact Us</a>
