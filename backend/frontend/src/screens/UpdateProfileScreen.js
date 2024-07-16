@@ -4,11 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import OTPInput, { ResendOTP } from "otp-input-react";
-
+import { ArrowRightCircle } from "react-feather";
 import Button from "../components/Button";
 import Header from "../components/Header";
 
-import { Box, CircularProgress, Modal} from "@mui/material/";
+import { Box, CircularProgress, Modal } from "@mui/material/";
 
 import {
   generateUpdateOTP,
@@ -36,12 +36,6 @@ const style = {
   p: 4,
 };
 
-const linkStyle = {
-  textDecoration: "underline",
-  color: "purple",
-  cursor: "pointer",
-};
-
 function UpdateprofileScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,8 +47,12 @@ function UpdateprofileScreen() {
 
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
-  const { userValidate, userValidateError } = useSelector((state) => state.userValidator);
-  const { userUpdateSuccess, userUpdateError } = useSelector((state) => state.userUpdate);
+  const { userValidate, userValidateError } = useSelector(
+    (state) => state.userValidator
+  );
+  const { userUpdateSuccess, userUpdateError } = useSelector(
+    (state) => state.userUpdate
+  );
   const { otpLoading } = useSelector((state) => state.generateOtp);
 
   const [username, setUsername] = useState(userInfo?.username || "");
@@ -72,14 +70,16 @@ function UpdateprofileScreen() {
   const updateCustomer = (e) => {
     e.preventDefault();
     if (otp && fname && email && phone) {
-      setSubmit(true)
-      dispatch(updateUserProfile({
-        id: userInfo.id,
-        otp: otp,
-        fname: fname,
-        email: email,
-        phone: phone
-      }))
+      setSubmit(true);
+      dispatch(
+        updateUserProfile({
+          id: userInfo.id,
+          otp: otp,
+          fname: fname,
+          email: email,
+          phone: phone,
+        })
+      );
     } else {
       toast.error("Please fill all fields and enter a valid OTP");
     }
@@ -146,118 +146,172 @@ function UpdateprofileScreen() {
   }, [userValidate, userValidateError]);
 
   return (
-    <div>
+    <div className="user-profile-wrapper">
       <Header location="nav-all" />
       <Toaster />
-      <div className="profile-page">
-        <div className="profile-form">
-          <form onSubmit={validateEmail}>
-            <h2 className="profile-title">Update Profile</h2>
-            <div className="username-input">
-              <label>Username</label>
-              <input
-                className="username"
-                value={username}
-                disabled
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                }}
-              />
-            </div>
+      <section className="breadcrumb breadcrumb-list mb-0">
+        <span className="primary-right-round"></span>
+        <div className="container">
+          <h1 className="text-white">Update Profile</h1>
+          <ul>
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>Update Profile</li>
+          </ul>
+        </div>
+      </section>
+      <div className="content profile-bg">
+        <div className="container">
+          <div className="user-profile-list profile-profile-list">
+            <ul className="nav">
+              <li>
+                <LinkContainer to="/profile">
+                  <a>Profile</a>
+                </LinkContainer>
+              </li>
+              <li>
+                <a className="active">Update Profile</a>
+              </li>
+              <li>
+                <LinkContainer to="/updatepassword">
+                  <a>Update Password</a>
+                </LinkContainer>
+              </li>
+            </ul>
+          </div>
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="profile-detail-group">
+                <div className="update-userprofile">
+                  <form onSubmit={updateCustomer}>
+                    <h2 className="profile-title">Update Profile</h2>
+                    <div className="row">
+                      <div className="col-lg-6 col-md-6">
+                        <div className="input-space">
+                          <label className="form-label">Username</label>
+                          <input
+                            className="form-control pass-input"
+                            required
+                            type="text"
+                            value={username}
+                            disabled
+                            onChange={(e) => {
+                              setUsername(e.target.value);
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-lg-6 col-md-6">
+                        <div className="input-space">
+                          <label className="form-label">First Name</label>
+                          <input
+                            className="form-control pass-input"
+                            required
+                            type="text"
+                            value={fname}
+                            onChange={(e) => {
+                              setFname(e.target.value);
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-lg-6 col-md-6">
+                        <div className="input-space mb-0">
+                          <label className="form-label">Email</label>
+                          <input
+                            className="form-control pass-input"
+                            required
+                            type="email"
+                            value={email}
+                            onChange={(e) => {
+                              setEmail(e.target.value);
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-lg-6 col-md-6">
+                        <div className="input-space mb-0">
+                          <label className="form-label">Phone Number</label>
+                          <input
+                            className="form-control pass-input"
+                            required
+                            type="tel"
+                            value={phone}
+                            onChange={(e) => {
+                              setPhone(e.target.value);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    {!openForm && (
+                      <button
+                        className="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-50 btn-block"
+                        type="submit"
+                      >
+                        <span>Verify & Update</span>
 
-            <div className="firstname-input">
-              <label>First Name</label>
-              <input
-                required
-                type="text"
-                value={fname}
-                onChange={(e) => {
-                  setFname(e.target.value);
-                }}
-              />
-            </div>
-
-            <div className="email-input">
-              <label>Email Id</label>
-              <input
-                required
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-            </div>
-
-            <div className="phonenumber-input">
-              <label>Phone Number</label>
-              <input
-                required
-                type="integer"
-                value={phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                }}
-              />
-            </div>
-
-            {!openForm && (
-              <div className="profile-button">
-                <Button
-                  type="submit"
-                  className="btn-check-availability-home"
-                  text="Verify & Update"
-                />
+                        <span className="right-arrow">
+                          <ArrowRightCircle size={20} />
+                        </span>
+                      </button>
+                    )}
+                    <div className="bottom-text">
+                      <span>
+                        Want to update your password?&nbsp;
+                        <LinkContainer to="/updatepassword">
+                          <span className="linked-para-text">
+                            {" "}
+                            Update Password
+                          </span>
+                        </LinkContainer>
+                      </span>
+                    </div>
+                  </form>
+                  <Modal
+                    open={openForm}
+                    onClose={() => setOpenForm(false)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    {loader ? (
+                      <Box sx={style} className="otp-loader">
+                        <span>sending otp...</span>
+                        <CircularProgress />
+                      </Box>
+                    ) : (
+                      <Box sx={style}>
+                        <form onSubmit={updateCustomer} className="otp-form">
+                          <div className="otp-input">
+                            <label>Enter OTP sent to email</label>
+                            <OTPInput
+                              className="otp-input-field"
+                              value={otp}
+                              onChange={setOtp}
+                              autoFocus
+                              OTPLength={4}
+                              otpType="number"
+                              disabled={false}
+                              secure
+                            />
+                            <ResendOTP onResendClick={regenerateOtp} />
+                          </div>
+                          <div className="otp-button">
+                            <Button
+                              type="submit"
+                              className="btn-check-availability-home"
+                              text="submit"
+                            />
+                          </div>
+                        </form>
+                      </Box>
+                    )}
+                  </Modal>
+                </div>
               </div>
-            )}
-
-            <span>
-              Want to update your password?&nbsp;
-              <LinkContainer to="/updatepassword" style={linkStyle}>
-                <span> update password</span>
-              </LinkContainer>
-            </span>
-          </form>
-
-          <Modal
-            open={openForm}
-            onClose={() => setOpenForm(false)}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            {loader ? (
-              <Box sx={style} className="otp-loader">
-                <span>sending otp...</span>
-                <CircularProgress />
-              </Box>
-            ) : (
-              <Box sx={style}>
-                <form onSubmit={updateCustomer} className="otp-form">
-                  <div className="otp-input">
-                    <label>Enter OTP sent to email</label>
-                    <OTPInput
-                      className="otp-input-field"
-                      value={otp}
-                      onChange={setOtp}
-                      autoFocus
-                      OTPLength={4}
-                      otpType="number"
-                      disabled={false}
-                      secure
-                    />
-                    <ResendOTP onResendClick={regenerateOtp} />
-                  </div>
-                  <div className="otp-button">
-                    <Button
-                      type="submit"
-                      className="btn-check-availability-home"
-                      text="submit"
-                    />
-                  </div>
-                </form>
-              </Box>
-            )}
-          </Modal>
+            </div>
+          </div>
         </div>
       </div>
     </div>
