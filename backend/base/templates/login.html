@@ -13,49 +13,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: "Poppins", sans-serif; }
-        .fs-4 { font-weight: 700; }
-        input, button, select, optgroup, textarea {
-            margin: 0; font-family: inherit; border-radius: 10rem; display: block; width: 100%;
-            height: calc(1.5em + 0.75rem + 2px); padding: 1.5rem 1rem; font-size: 0.8rem;
-            font-weight: 400; line-height: 1.5; color: #6e707e; background-color: #fff;
-            background-clip: padding-box; border: 1px solid #d1d3e2;
-            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-        }
-        .btn.btn-primary.btn-user.btn-block {
-            display: block; color: #fff; background-color: #4e73df; border-color: #4e73df;
-            font-size: .8rem; border-radius: 10rem; padding: 0.6rem 1rem 1.8rem 1rem;
-        }
-        .text-center { text-decoration: none; margin-bottom: 0.7rem; }
-        a:hover { text-decoration: none; }
-        .form-group {
-            position: relative;
-        }
-        .toggle-password {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-        }
-        .icon-container {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            color: #6e707e;
-        }
-        .input-with-icon {
-            padding-right: 2.5rem;
-        }
-        .alert{
-            padding:0px;
-            border:0;
-        }
-
-    </style>
+    <link href="{% static 'css/login.css' %}" rel="stylesheet">
 </head>
 <body class="bg-gradient-primary">
     <div class="container">
@@ -69,7 +27,7 @@
                                 <div class="p-5">
                                     <div class="text-center">
                                         <a class="h4 text-gray-900 mb-4" href="/" style="font-weight: 900;">STRONGR.</a>
-                                        <h6 style="margin-top: 0.5rem;">Login</h6>
+                                        <h6>Login</h6>
                                     </div>
                                     <form class="user" method="post">
                                         {% csrf_token %}
@@ -85,7 +43,7 @@
                                             {% endif %}
                                         </div>
                                         <div class="form-group">
-                                            <div style="position: relative;">
+                                            <div>
                                                 {{ form.password }}
                                                 <span id="toggle-password" class="toggle-password" onclick="togglePasswordVisibility()">
                                                     <i class="fas fa-eye" id="toggle-password-icon"></i>

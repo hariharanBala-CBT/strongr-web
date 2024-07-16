@@ -44,6 +44,7 @@ form button[type="submit"]:hover {
 .profile-card{
     padding:10px;
 }
+
 .buttons{
     width:490px;
     display: flex;

@@ -127,7 +127,8 @@ th {
 }
 
 .profile-card {
-    padding-right: 150px;
+    padding-left: 200px;
+    margin-top: 60px;
 }
 
 #nextTabBtn {

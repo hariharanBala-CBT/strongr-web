@@ -1,11 +1,5 @@
 {% load static %}
     <link href="{% static './css/workingdaysstyle.css' %}" rel="stylesheet" />
-    <style>
-        .profile-card {
-            padding-left: 200px;
-            margin-top: 60px;
-        }
-    </style>
                     <div class="container-fluid my-4 px-4 m">
                         <div class="profile-card">
                             <form action="{% url 'organization_locationworkingdays' locationpk %}" id="workingdays_form" method="post">

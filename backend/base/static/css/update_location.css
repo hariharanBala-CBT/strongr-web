@@ -82,7 +82,7 @@ select {
 }
 
 .buttons {
-    width: 600px;
+    width: 320px;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
 }
