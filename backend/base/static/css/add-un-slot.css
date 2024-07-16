@@ -1,5 +1,5 @@
 form {
-    width: 400px;
+    width: 540px;
     margin: 0 auto;
     padding: 50px;
     border: 1px solid #ccc;
@@ -10,12 +10,13 @@ form {
 form label {
     display: block;
     margin-bottom: 5px;
+    padding-right: 100px;
 }
 
 form input[type="time"],
 input[type="date"],
 form select {
-    width: calc(100% - 12px);
+    width: calc(180% - 120px);
     padding: 5px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -29,9 +30,9 @@ form select {
 }
 
 .profile-card {
-    padding: 80px;
+    padding: 10px;
 }
 
 .buttons {
-    margin-left: 10%
+    margin-left: 20%
 }

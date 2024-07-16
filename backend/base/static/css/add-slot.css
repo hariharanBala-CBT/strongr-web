@@ -1,5 +1,5 @@
 form {
-    max-width: 500px;
+    max-width: 650px;
     width: 829px;
     margin: 0 auto;
     padding: 40px;
@@ -42,8 +42,10 @@ form button[type="submit"]:hover {
 }
 
 .profile-card{
-    padding:50px;
+    padding:10px;
 }
 .buttons{
-    width:365px;
+    width:490px;
+    display: flex;
+    justify-content: space-evenly;
 }

@@ -10,12 +10,13 @@ form {
 form label {
     display: block;
     margin-bottom: 5px;
+    padding-right: 100px;
 }
 
 form input[type="time"],
 input[type="date"],
 form select {
-    width: calc(200% - 300px);
+    width: calc(200% - 200px);
     padding: 5px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -29,7 +30,7 @@ form select {
 }
 
 .profile-card {
-    padding: 80px;
+    padding: 10px;
 }
 
 .buttons {

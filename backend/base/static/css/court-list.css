@@ -51,7 +51,8 @@ td {
 }
 
 .profile-card {
-    padding-right: 200px;
+    padding-left:100px;
+    margin-top:60px;
 }
 
 #nextTabBtn {
