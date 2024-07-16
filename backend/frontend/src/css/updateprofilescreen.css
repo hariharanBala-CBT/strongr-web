@@ -298,3 +298,7 @@ form.otp-form {
     padding: 10px 12px;
   }
 }
+
+.update-profile-screen .header {
+  position: sticky !important;
+}

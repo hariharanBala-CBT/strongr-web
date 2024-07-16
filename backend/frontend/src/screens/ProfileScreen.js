@@ -126,7 +126,7 @@ function ProfileScreen() {
         <div className="container">
           <h1 className="text-white">User Profile</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">Home</a>
             </li>
             <li>User Profile</li>

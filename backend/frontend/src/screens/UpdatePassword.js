@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
+import { ArrowRightCircle, Eye, EyeOff } from "react-feather";
 import Header from "../components/Header";
 import Button from "../components/Button";
+import Footer from "../components/Footer";
 import "../css/updatepassword.css";
 import { resetUserPassword } from "../actions/actions";
 import toast, { Toaster } from "react-hot-toast";
@@ -14,9 +16,19 @@ function ResetPassword() {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { userInfo } = useSelector((state) => state.userLogin);
   const { resetPsuccess } = useSelector((state) => state.resetUserPassword);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   useEffect(() => {
     if (resetPsuccess) {
@@ -61,7 +73,7 @@ function ResetPassword() {
   };
 
   return (
-    <div className="user-profile-wrapper">
+    <div className="user-profile-wrapper update-password-screen">
       <Header location="nav-all" />
       <Toaster />
       <section className="breadcrumb breadcrumb-list mb-0">
@@ -69,8 +81,13 @@ function ResetPassword() {
         <div className="container">
           <h1 className="text-white">Update Password</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">Home</a>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to="/profile">
+                <a>User Profile</a>
+              </LinkContainer>
             </li>
             <li>Update Password</li>
           </ul>
@@ -100,62 +117,85 @@ function ResetPassword() {
             </ul>
           </div>
           <div className="row">
-            <div className="col-sm-12">
+            <div className="col-sm-3"></div>
+            <div className="col-sm-6">
               <div className="profile-detail-group">
                 <div className="update-userprofile">
-                  <form>
+                  <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-lg-12">
                         <div className="appoint-head">
-                          <h4>Change Password</h4>
+                          <h4>Update Password</h4>
                         </div>
                         <div className="input-space other-setting-form">
-                          <label className="form-label"> Password</label>
+                          <label className="form-label">New Password</label>
                           <input
                             required
                             className="form-control"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Enter password"
                             value={password}
                             onChange={(e) => {
                               setPassword(e.target.value);
                             }}
                           />
+                          <span
+                            onClick={togglePasswordVisibility}
+                            className="feather-icon-eye"
+                          >
+                            {showPassword ? (
+                              <EyeOff size={20} />
+                            ) : (
+                              <Eye size={20} />
+                            )}
+                          </span>
                         </div>
                         <div className="input-space other-setting-form">
                           <label className="form-label">Confirm Password</label>
                           <input
                             required
                             className="form-control"
-                            type="password"
+                            type={showConfirmPassword ? "text" : "password"}
                             placeholder="Enter password Again"
                             value={confirmPassword}
                             onChange={(e) => {
                               setConfirmPassword(e.target.value);
                             }}
                           />
+                          <span
+                            onClick={toggleConfirmPasswordVisibility}
+                            className="feather-icon-eye"
+                          >
+                            {showConfirmPassword ? (
+                              <EyeOff size={20} />
+                            ) : (
+                              <Eye size={20} />
+                            )}
+                          </span>
                         </div>
                       </div>
-                      <div className="col-lg-12">
-                        <div className="deactivate-account-blk">
-                          <a
-                            href="javascript:void(0)"
-                            className="btn deactive-btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#deactive"
-                          >
-                            <i className="feather-zap-off"></i>Reset Password
-                          </a>
-                        </div>
+                      <div className="col-lg-12 change-password">
+                        <button
+                          className="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-50 btn-block"
+                          type="submit"
+                        >
+                          <span>Reset Password</span>
+
+                          <span className="right-arrow">
+                            <ArrowRightCircle size={20} />
+                          </span>
+                        </button>
                       </div>
                     </div>
                   </form>
                 </div>
               </div>
             </div>
+            <div className="col-sm-3"></div>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

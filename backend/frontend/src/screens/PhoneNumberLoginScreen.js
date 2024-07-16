@@ -26,6 +26,8 @@ function PhoneNumberScreen() {
   const [showOTPInput, setShowOTPInput] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submit, setSubmit] = useState(false);
+  const [otpTimestamp, setOtpTimestamp] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes in seconds
 
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
@@ -86,9 +88,17 @@ function PhoneNumberScreen() {
 
   function onOTPVerify(e) {
     e.preventDefault();
-    setOTP("");
-    setShowOTPInput(false);
     setLoading(true);
+
+    // Check if OTP has expired (2 minutes)
+    const currentTime = Date.now();
+    if (currentTime - otpTimestamp > 2 * 60 * 1000) {
+      toast.error("OTP has expired. Please request a new one.");
+      setLoading(false);
+      setShowOTPInput(false);
+      return;
+    }
+
     window.confirmationResult
       .confirm(otp)
       .then(async (res) => {
@@ -123,6 +133,8 @@ function PhoneNumberScreen() {
       signInWithPhoneNumber(auth, formatPh, appVerifier)
         .then((confirmationResult) => {
           window.confirmationResult = confirmationResult;
+          setOtpTimestamp(Date.now()); // Store the OTP timestamp
+          setTimeLeft(120); // Reset the timer to 2 minutes
           toast.success("OTP Sent Successfully");
           setShowOTPInput(true);
         })
@@ -138,6 +150,22 @@ function PhoneNumberScreen() {
         });
     }
   }, [ph, phoneValidate, phoneValidateError, submit]);
+
+  useEffect(() => {
+    if (showOTPInput && timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [showOTPInput, timeLeft]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+  };
 
   return (
     <div className="phonelogin-wrapper">
@@ -186,7 +214,6 @@ function PhoneNumberScreen() {
                         </LinkContainer>
                       </header>
                       <div className="shadow-card">
-                        <Toaster toastOptions={{ duration: 4000 }} />
                         <div id="recaptcha-container"></div>
                         <h2 className="login-title">
                           Get Started With Strongr
@@ -217,6 +244,9 @@ function PhoneNumberScreen() {
                                 autoFocus
                                 renderInput={renderInput}
                               />
+                              <div className="otp-timer">
+                                OTP expires in: {formatTime(timeLeft)}
+                              </div>
                             </div>
                           )}
                           {loading && (
@@ -260,36 +290,6 @@ function PhoneNumberScreen() {
                           </p>
                         </div>
                       </div>
-                      {/* <div className="bottom-texts">
-                        <div className="bottom-text-one text-center">
-                          <p>
-                            Login using Phone Number?&nbsp;
-                            <LinkContainer
-                              to="/phonenumberlogin"
-                              style={{
-                                textDecoration: "underline",
-                                color: "#192335",
-                              }}
-                            >
-                              <span>Login</span>
-                            </LinkContainer>
-                          </p>
-                        </div>
-                        <div className="bottom-text-two text-center">
-                          <p>
-                            Don’t have an Account?&nbsp;
-                            <LinkContainer
-                              to="/signup"
-                              style={{
-                                textDecoration: "underline",
-                                color: "#192335",
-                              }}
-                            >
-                              <span>Signup</span>
-                            </LinkContainer>
-                          </p>
-                        </div>
-                      </div> */}
                     </div>
                   </div>
                 </div>

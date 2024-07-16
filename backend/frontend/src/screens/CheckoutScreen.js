@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-
+import { LinkContainer } from "react-router-bootstrap";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
@@ -101,8 +101,28 @@ function CheckoutScreen() {
         <div className="container">
           <h1 className="text-white">Checkout</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">Home</a>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to="/clubs">
+                <a>Venue List</a>
+              </LinkContainer>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to={`/club/${bookingData.id}`}>
+                <a>Venue Details</a>
+              </LinkContainer>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to={`/bookinginfo/${bookingData.id}`}>
+                <a>Book A Court</a>
+              </LinkContainer>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to={`/bookinginfo/${bookingData.id}`}>
+                <a>Booked Court</a>
+              </LinkContainer>
             </li>
             <li>Checkout</li>
           </ul>

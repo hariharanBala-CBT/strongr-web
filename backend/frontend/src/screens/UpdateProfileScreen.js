@@ -7,6 +7,7 @@ import OTPInput, { ResendOTP } from "otp-input-react";
 import { ArrowRightCircle } from "react-feather";
 import Button from "../components/Button";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 import { Box, CircularProgress, Modal } from "@mui/material/";
 
@@ -146,7 +147,7 @@ function UpdateprofileScreen() {
   }, [userValidate, userValidateError]);
 
   return (
-    <div className="user-profile-wrapper">
+    <div className="user-profile-wrapper update-profile-screen">
       <Header location="nav-all" />
       <Toaster />
       <section className="breadcrumb breadcrumb-list mb-0">
@@ -154,8 +155,13 @@ function UpdateprofileScreen() {
         <div className="container">
           <h1 className="text-white">Update Profile</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">Home</a>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to="/profile">
+                <a>User Profile</a>
+              </LinkContainer>
             </li>
             <li>Update Profile</li>
           </ul>
@@ -184,7 +190,7 @@ function UpdateprofileScreen() {
             <div className="col-sm-12">
               <div className="profile-detail-group">
                 <div className="update-userprofile">
-                  <form onSubmit={updateCustomer}>
+                  <form onSubmit={validateEmail}>
                     <h2 className="profile-title">Update Profile</h2>
                     <div className="row">
                       <div className="col-lg-6 col-md-6">
@@ -314,6 +320,7 @@ function UpdateprofileScreen() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
