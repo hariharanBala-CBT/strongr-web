@@ -24,6 +24,7 @@ function BookingScreen() {
 
   const { bookingDetails } = useSelector((state) => state.bookingDetails);
   const { success } = useSelector((state) => state.bookingCreate);
+  const { userInfo } = useSelector((state) => state.userLogin);
 
   function getPaymentStatusText(status) {
     switch (status) {
@@ -203,7 +204,7 @@ function BookingScreen() {
               </li>
               <li>
                 <h6>Contact Email Address</h6>
-                <p>{"test@gmail.com"}</p>
+                <p>{userInfo?.email}</p>
               </li>
               <li>
                 <h6>Phone Number</h6>
