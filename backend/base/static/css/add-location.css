@@ -1,41 +1,52 @@
-form{
+form {
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
     border-radius: 2%;
     padding: 30px;
 }
+
 table {
     position: relative;
     padding: 25px;
     padding-bottom: 0px;
 }
+
 td {
     width: 350px;
     height: 2em;
     padding: 10px;
 }
-input, textarea, select{
+
+input,
+textarea,
+select {
     border-radius: 0.2rem;
     border: 1px solid darkgrey;
     width: 350px;
 }
-#id_address_line_2 , #id_address_line_1 {
+
+#id_address_line_2,
+#id_address_line_1 {
     resize: none;
 }
+
 .errorlist {
     color: red;
 }
-.buttons{
-    width:550px;
-}
-.profile-card{
-    padding:50px;
-}
-input[type=number]::-webkit-outer-spin-button,
-             input[type=number]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-             margin: 0;
-            }
 
-        input[type=number] {
-            -moz-appearance: textfield;
-            }
+.buttons {
+    width: 550px;
+}
+
+.profile-card {
+    padding: 50px;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}

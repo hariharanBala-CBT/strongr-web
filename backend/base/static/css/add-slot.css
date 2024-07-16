@@ -41,12 +41,13 @@ form button[type="submit"]:hover {
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
-.profile-card{
-    padding:10px;
+.profile-card {
+    padding: 10px;
 }
 
-.buttons{
-    width:490px;
+
+.buttons {
+    width: 490px;
     display: flex;
     justify-content: space-evenly;
 }
