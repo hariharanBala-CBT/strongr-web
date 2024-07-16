@@ -1,6 +1,5 @@
 import React from "react";
 import { Calendar, MapPin, Heart } from "react-feather";
-import { GiShuttlecock } from "react-icons/gi";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -50,11 +49,6 @@ const VenueDetails = ({ club }) => {
                 </>
               )}
             </div>
-            <a href="javascript:void(0)" className="fav-icon">
-              <i className="feather-heart">
-                <Heart />
-              </i>
-            </a>
           </div>
           <h3 className="listing-title">
             <a
@@ -76,15 +70,17 @@ const VenueDetails = ({ club }) => {
                   {address_line_1}
                 </span>
               </li>
-              <li>
-                <span>
-                  <i className="gametype">Game : </i>
-                  <span className="gameicon">
-                    <GiShuttlecock size="2em" />
-                  </span>{" "}
-                  <span className="primary-text">Badminton</span>
-                </span>
-              </li>
+              {club?.next_availabilty && (
+                <li>
+                  <span>
+                    <i className="fa-solid fa-calendar-days"> </i>
+                    <span className="primary-text">
+                      next availability : {club?.next_availabilty?.days}-
+                      {club?.next_availabilty?.start_time}
+                    </span>
+                  </span>
+                </li>
+              )}
             </ul>
           </div>
           <div className="listing-button">

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { MapPin } from "react-feather";
+import { LinkContainer } from "react-router-bootstrap";
 import venueImage from "../images/owner-venue2.jpg";
 import { useHomeContext } from "../context/HomeContext";
 
@@ -222,7 +223,6 @@ function BookingInfoScreen() {
   }, [clubGame, clubLocation, courts]);
 
   const handleSubmit = async (event) => {
-    console.log("handlesub...");
     event.preventDefault();
     if (selectedSlot) {
       const parts = selectedSlot.split("-");
@@ -348,8 +348,18 @@ function BookingInfoScreen() {
         <div className="container">
           <h1 className="text-white">Book A Court</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">Home</a>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to="/clubs">
+                <a>Venue List</a>
+              </LinkContainer>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to={`/club/${id}`}>
+                <a>Venue Details</a>
+              </LinkContainer>
             </li>
             <li>Book A Court</li>
           </ul>
@@ -395,7 +405,7 @@ function BookingInfoScreen() {
                 <div className="col-12 col-sm-12 col-md-12 col-lg-6">
                   <ul className="d-sm-flex align-items-center justify-content-evenly">
                     <li>
-                      <h3 className="d-inline-block">
+                      <h3 className="d-inline-block subtitle-txt">
                         <span>
                           <MapPin />
                         </span>
@@ -408,8 +418,10 @@ function BookingInfoScreen() {
                       </span>
                     </li>
                     <li>
-                      <h3 className="d-inline-block">₹150</h3>
-                      <span>/hr</span>
+                      <h3 className="d-inline-block subtitle-txt">
+                        ₹150
+                        <span>/hr</span>
+                      </h3>
                     </li>
                   </ul>
                 </div>

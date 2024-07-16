@@ -476,10 +476,11 @@ def update_location(request, pk):
             return redirect('mainview', location_pk=form.instance.pk)
         else:
             if 'This Pincode,Phone Number and Area combination already exists.' in form.non_field_errors():
-                messages.error(request,"Location update failed.This Pincode,Phone Number and Area combination already exists.")
+                messages.error(request, "Location update failed. This Pincode, Phone Number and Area combination already exists.")
             else:
-                error_messages = ''.join([f'{error}' for error in form.errors.values()])
-                messages.error(request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
+                error_messages = ', '.join([str(error) for error in form.errors.values()])
+                formatted_message = ERROR_MESSAGES.get('form_validation_failed_location', 'Form validation failed.').format(error_messages=error_messages)
+                messages.error(request, formatted_message)
             return render(request, 'main_template.html', {'form': form, 'locationpk': pk})
     else:
         form = OrganizationLocationForm(instance=location)
@@ -621,6 +622,18 @@ class OrganizationLocationImageListView(ListView):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.kwargs.get('locationpk')
         return context
+
+    # def post(self, request, *args, **kwargs):
+    #     image_id = request.POST.get('image_id')
+    #     if image_id:
+    #         image = OrganizationGameImages.objects.get(id=image_id)
+    #         if image.image:
+    #             image_path = image.image.path
+    #             if os.path.exists(image_path):
+    #                 os.remove(image_path)
+    #         image.delete()
+    #         messages.success(request, 'Image deleted successfully.')
+    #     return redirect(reverse('mainview', kwargs={'locationpk': self.kwargs.get('locationpk')}))
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationImageView(CreateView):

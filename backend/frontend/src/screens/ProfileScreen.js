@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
+import { Clock, CheckCircle, XCircle, CheckSquare, Eye } from "react-feather";
 import { isAfter } from "date-fns";
 
 import Footer from "../components/Footer";
@@ -117,216 +119,294 @@ function ProfileScreen() {
   };
 
   return (
-    <div>
+    <div className="user-profile-screen user-profile-wrapper">
       <Header location="nav-all" />
-
-      <Box sx={{ flexGrow: 1, height: "80vh" }} className="user">
-        <Grid
-          container
-          spacing={2}
-          sx={{ flexWrap: "wrap", flexShrink: "inherit", height: "60vh" }}
-        >
-          <Grid item xs={4}>
-            <Item sx={{ height: "76vh" }}>
-              <h2>My Profile</h2>
-
-              <Stack spacing={4}>
-                <Content className="details">
-                  <ul>
-                    <strong>Username: </strong>
-                    {userInfo?.username}
-                  </ul>
-                  <ul>
-                    <strong>Name: </strong>
-                    {userInfo?.first_name}
-                  </ul>
-                  <ul>
-                    <strong>Email id: </strong>
-                    {userInfo?.email}
-                  </ul>
-                  <ul>
-                    <strong>Phone number: </strong>
-                    {userInfo?.customer?.phone_number}
-                  </ul>
-                </Content>
-                <Button
-                  variant="contained"
-                  size="small"
-                  className="update-user-btn"
-                  onClick={updateUser}
+      <section className="breadcrumb breadcrumb-list mb-0">
+        <span className="primary-right-round"></span>
+        <div className="container">
+          <h1 className="text-white">User Profile</h1>
+          <ul>
+            <li className="breadcrumb-icons">
+              <a href="/">Home</a>
+            </li>
+            <li>User Profile</li>
+          </ul>
+        </div>
+      </section>
+      <div className="content court-bg">
+        <div className="container">
+          <div className="user-profile-list profile-profile-list">
+            <ul className="nav">
+              <li>
+                <a className="active">Profile</a>
+              </li>
+              <li>
+                <a
+                  onClick={() => {
+                    navigate(`/profile/${userInfo.id}`);
+                  }}
                 >
-                  Update
-                </Button>
-              </Stack>
-            </Item>
-          </Grid>
+                  Update Profile
+                </a>
+              </li>
+              <li>
+                <LinkContainer to="/updatepassword">
+                  <a>Update Password</a>
+                </LinkContainer>
+              </li>
+            </ul>
+          </div>
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="profile-detail-group">
+                <div className="card">
+                  <h2>My Profile</h2>
+                  <form>
+                    <div className="row">
+                      <div className="col-lg-6 col-md-6">
+                        <div className="input-space">
+                          <label className="form-label">User Name</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={userInfo?.username}
+                            id="name"
+                            placeholder="Enter Name"
+                            readOnly
+                          />
+                        </div>
+                      </div>
+                      <div className="col-lg-6 col-md-6">
+                        <div className="input-space">
+                          <label className="form-label">Name</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={userInfo?.first_name}
+                            id="name"
+                            readOnly
+                          />
+                        </div>
+                      </div>
+                      <div className="col-lg-6 col-md-6">
+                        <div className="input-space">
+                          <label className="form-label">Email</label>
+                          <input
+                            type="email"
+                            value={userInfo?.email}
+                            className="form-control"
+                            id="email"
+                            readOnly
+                          />
+                        </div>
+                      </div>
+                      <div className="col-lg-6 col-md-6">
+                        <div className="input-space">
+                          <label className="form-label">Phone Number</label>
+                          <input
+                            type="text"
+                            value={userInfo?.customer?.phone_number}
+                            className="form-control"
+                            id="phone"
+                            readOnly
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div className="info-about"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-12">
+              <Grid item xs={8} className="booked-table-content">
+                <Item>
+                  <h2>My Bookings</h2>
+                  <TableContainer sx={{ maxHeight: 440 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead className="table-heading">
+                        <TableRow>
+                          <TableCell>
+                            <h4>Club</h4>
+                          </TableCell>
+                          <TableCell>
+                            <h4>Game</h4>
+                          </TableCell>
+                          <TableCell>
+                            <h4>Booked Date</h4>
+                          </TableCell>
+                          <TableCell>
+                            <h4>Price</h4>
+                          </TableCell>
+                          <TableCell>
+                            <h4>Booking status</h4>
+                          </TableCell>
+                          <TableCell>
+                            <h4>Details</h4>
+                          </TableCell>
+                          <TableCell>
+                            <h4>Action</h4>
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {userbookings
+                          ?.slice(
+                            page * rowsPerPage,
+                            page * rowsPerPage + rowsPerPage
+                          )
+                          .sort(
+                            (a, b) =>
+                              new Date(b.booking_date) -
+                              new Date(a.booking_date)
+                          )
+                          .map((booking) => {
+                            const bookingDate = new Date(booking.booking_date);
+                            const day = String(bookingDate.getDate()).padStart(
+                              2,
+                              "0"
+                            );
+                            const month = String(
+                              bookingDate.getMonth() + 1
+                            ).padStart(2, "0");
+                            const year = bookingDate.getFullYear();
+                            const formattedDate = `${day}-${month}-${year}`;
 
-          {userbookings?.length === 0 ? (
-            <Grid item xs={8}>
-              <Item sx={{ height: "100%" }}>
-                <h2>My Bookings</h2>
-                <h3 className="no-bookings">No bookings yet..</h3>
-              </Item>
-            </Grid>
-          ) : (
-            <Grid item xs={8}>
-              <Item sx={{ height: "76vh" }}>
-                <h2>My Bookings</h2>
-                <TableContainer sx={{ maxHeight: 440 }}>
-                  <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>
-                          <h4>Club</h4>
-                        </TableCell>
-                        <TableCell>
-                          <h4>Game</h4>
-                        </TableCell>
-                        <TableCell>
-                          <h4>Booked Date</h4>
-                        </TableCell>
-                        <TableCell>
-                          <h4>Price</h4>
-                        </TableCell>
-                        <TableCell>
-                          <h4>Booking status</h4>
-                        </TableCell>
-                        <TableCell>
-                          <h4>Details</h4>
-                        </TableCell>
-                        <TableCell>
-                          <h4>Action</h4>
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {userbookings
-                        ?.slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                        .sort(
-                          (a, b) =>
-                            new Date(b.booking_date) - new Date(a.booking_date)
-                        )
-                        .map((booking) => {
-                          const bookingDate = new Date(booking.booking_date);
-                          const day = String(bookingDate.getDate()).padStart(
-                            2,
-                            "0"
-                          );
-                          const month = String(
-                            bookingDate.getMonth() + 1
-                          ).padStart(2, "0");
-                          const year = bookingDate.getFullYear();
-                          const formattedDate = `${day}-${month}-${year}`;
-
-                          return (
-                            <TableRow key={booking.id}>
-                              <TableCell>{booking.organization_name}</TableCell>
-                              <TableCell>{booking.game_type}</TableCell>
-                              <TableCell>{formattedDate}</TableCell>
-                              <TableCell>₹ {booking.total_price}</TableCell>
-                              <TableCell>
-                                <span
-                                  className={
-                                    booking.booking_status === 1
-                                      ? "pending-status"
-                                      : booking.booking_status === 2
-                                      ? "booked-status"
-                                      : booking.booking_status === 3
-                                      ? "cancelled-status"
-                                      : booking.booking_status === 4 &&
-                                        "completed-status"
-                                  }
-                                >
-                                  {getBookingStatusText(booking.booking_status)}
-                                </span>
-                              </TableCell>
-                              <TableCell>
-                                <Button
-                                  onClick={() => redirectBooking(booking.id)}
-                                >
-                                  Details
-                                </Button>
-                              </TableCell>
-                              <TableCell>
-                                <Tooltip
-                                  title={
-                                    booking?.booking_status === 1
-                                      ? "Pending bookings can't be cancelled"
-                                      : booking?.booking_status === 4
-                                      ? "Booking completed"
-                                      : booking?.booking_status === 3
-                                      ? "Cancelled"
-                                      : booking?.booking_status === 2 &&
-                                        isAfter(
-                                          new Date(booking.booking_date),
-                                          today
-                                        )
-                                      ? "Cancel Booking"
-                                      : booking?.booking_status === 2 &&
-                                        !isAfter(
-                                          new Date(booking.booking_date),
-                                          today
-                                        )
-                                      ? "Cancellation is only allowed before one day"
-                                      : "Unknown action"
-                                  }
-                                >
-                                  {booking?.booking_status === 1 ? (
-                                    <IconButton color="default">
-                                      <i class="fas fa-rectangle-xmark"></i>
-                                    </IconButton>
-                                  ) : booking?.booking_status === 4 ? (
-                                    <IconButton color="success">
-                                      <i class="fas fa-square-check"></i>
-                                    </IconButton>
-                                  ) : booking?.booking_status === 3 ? (
-                                    <IconButton color="default">
-                                      <i class="fas fa-rectangle-xmark"></i>
-                                    </IconButton>
-                                  ) : booking?.booking_status === 2 &&
-                                    isAfter(
-                                      new Date(booking.booking_date),
-                                      today
-                                    ) ? (
-                                    <IconButton
-                                      color="error"
-                                      onClick={() => {
-                                        setBookingId(booking.id);
-                                        setOpen(true);
-                                      }}
-                                    >
-                                      <i class="fas fa-rectangle-xmark"></i>
-                                    </IconButton>
-                                  ) : (
-                                    <IconButton color="info">
-                                      <i class="fas fa-rectangle-xmark"></i>
-                                    </IconButton>
-                                  )}
-                                </Tooltip>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 20]}
-                  component="div"
-                  count={userbookings?.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />{" "}
-              </Item>
-            </Grid>
-          )}
-        </Grid>
-      </Box>
+                            return (
+                              <TableRow key={booking.id}>
+                                <TableCell>
+                                  {booking.organization_name}
+                                </TableCell>
+                                <TableCell>{booking.game_type}</TableCell>
+                                <TableCell>{formattedDate}</TableCell>
+                                <TableCell>₹ {booking.total_price}</TableCell>
+                                <TableCell>
+                                  <span
+                                    className={
+                                      booking.booking_status === 1
+                                        ? "badge bg-info pending-status"
+                                        : booking.booking_status === 2
+                                        ? "badge bg-success booked-status"
+                                        : booking.booking_status === 3
+                                        ? "badge bg-danger cancelled-status"
+                                        : booking.booking_status === 4 &&
+                                          "badge bg-completed"
+                                    }
+                                  >
+                                    <p className="booking-icons">
+                                      {booking.booking_status === 1 && (
+                                        <Clock size={18} />
+                                      )}
+                                      {booking.booking_status === 2 && (
+                                        <CheckCircle size={18} />
+                                      )}
+                                      {booking.booking_status === 3 && (
+                                        <XCircle size={18} />
+                                      )}
+                                      {booking.booking_status === 4 && (
+                                        <CheckSquare size={18} />
+                                      )}
+                                      {getBookingStatusText(
+                                        booking.booking_status
+                                      )}
+                                    </p>
+                                  </span>
+                                </TableCell>
+                                <TableCell className="text-pink">
+                                  <a
+                                    onClick={() => redirectBooking(booking.id)}
+                                  >
+                                    <Eye
+                                      size={18}
+                                      color="#1859e5"
+                                      className="eye-icon"
+                                    />
+                                    Details
+                                  </a>
+                                </TableCell>
+                                <TableCell>
+                                  <Tooltip
+                                    title={
+                                      booking?.booking_status === 1
+                                        ? "Pending bookings can't be cancelled"
+                                        : booking?.booking_status === 4
+                                        ? "Booking completed"
+                                        : booking?.booking_status === 3
+                                        ? "Cancelled"
+                                        : booking?.booking_status === 2 &&
+                                          isAfter(
+                                            new Date(booking.booking_date),
+                                            today
+                                          )
+                                        ? "Cancel Booking"
+                                        : booking?.booking_status === 2 &&
+                                          !isAfter(
+                                            new Date(booking.booking_date),
+                                            today
+                                          )
+                                        ? "Cancellation is only allowed before one day"
+                                        : "Unknown action"
+                                    }
+                                  >
+                                    {booking?.booking_status === 1 ? (
+                                      <IconButton color="default">
+                                        <i className="fas fa-rectangle-xmark"></i>
+                                      </IconButton>
+                                    ) : booking?.booking_status === 4 ? (
+                                      <IconButton color="success">
+                                        <i className="fas fa-square-check"></i>
+                                      </IconButton>
+                                    ) : booking?.booking_status === 3 ? (
+                                      <IconButton color="default">
+                                        <i className="fas fa-rectangle-xmark"></i>
+                                      </IconButton>
+                                    ) : booking?.booking_status === 2 &&
+                                      isAfter(
+                                        new Date(booking.booking_date),
+                                        today
+                                      ) ? (
+                                      <IconButton
+                                        color="error"
+                                        onClick={() => {
+                                          setBookingId(booking.id);
+                                          setOpen(true);
+                                        }}
+                                      >
+                                        <i className="fas fa-rectangle-xmark"></i>
+                                      </IconButton>
+                                    ) : (
+                                      <IconButton color="info">
+                                        <i className="fas fa-rectangle-xmark"></i>
+                                      </IconButton>
+                                    )}
+                                  </Tooltip>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    className="pagination-para-text"
+                    rowsPerPageOptions={[5, 10, 20]}
+                    component="div"
+                    count={userbookings?.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />{" "}
+                </Item>
+              </Grid>
+            </div>
+          </div>
+        </div>
+      </div>
       <Dialog
         open={open}
         TransitionComponent={Transition}

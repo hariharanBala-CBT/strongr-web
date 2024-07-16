@@ -28,6 +28,7 @@ import workImage2 from "../images/icons/work-icon2.svg";
 import workImage3 from "../images/icons/work-icon3.svg";
 import Venue from "../components/Venue";
 import Testimonial from "../components/Testimonial";
+import customerGuide from "../guide/customer.pdf";
 
 function HomeScreen(history) {
   const dispatch = useDispatch();
@@ -176,9 +177,12 @@ function HomeScreen(history) {
         </div>
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
+              
             <h2>
               How It <span>Works</span>
             </h2>
+            <a href={customerGuide} className="guide">Guide</a>
+            
             <p className="sub-title">
               Simplifying the booking process for coaches, venues, and athletes.
             </p>
@@ -272,15 +276,15 @@ function HomeScreen(history) {
         <div className="form-section">
           <Form onSubmit={submitHandler} inline>
             <div className="search-bar-container">
-              <FontAwesomeIcon className="search-icon" />
-              <Form.Control
-                type="text"
-                name="q"
-                onChange={(e) => setKeyword(e.target.value)}
-                className="mr-sm-2 ml-sm-2 search-input"
-                placeholder="Search..."
-                // required
-              />
+              <label className="search-label">
+                <input
+                  type="search"
+                  placeholder="Search..."
+                  className="form-control form-control-sm"
+                  onChange={(e) => setKeyword(e.target.value)}
+                />
+                <i className="fas fa-search search-icon"></i>
+              </label>
             </div>
           </Form>
           <div className="lines">

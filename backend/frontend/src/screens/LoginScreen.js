@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { User, Eye, EyeOff, ArrowRightCircle } from "react-feather";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import logoImage from "../images/logo-color.png";
 import { login, validateUser } from "../actions/actions";
 
@@ -103,10 +103,14 @@ function LoginScreen() {
                 <div className="dull-pg">
                   <div className="row no-margin vph-100 d-flex align-items-center justify-content-center login-right-banner">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
-                      <header class="text-center">
+                      <header className="text-center">
                         <LinkContainer to="/">
                           <a href="#">
-                            <img src={logoImage} class="img-fluid" alt="Logo" />
+                            <img
+                              src={logoImage}
+                              className="img-fluid"
+                              alt="Logo"
+                            />
                           </a>
                         </LinkContainer>
                       </header>
@@ -128,11 +132,17 @@ function LoginScreen() {
                                 className="login-form"
                               >
                                 <div className="form-group">
-                                  <div className="group-img">
-                                    <i className="feather-user">
+                                  <div
+                                    className={`group-img ${
+                                      userValidateError
+                                        ? "icon-wrapper-error"
+                                        : ""
+                                    }`}
+                                  >
+                                    <span className="feather-icon-wrapper user-ic">
                                       <User color="black" size={20} />
-                                    </i>
-                                    <input
+                                    </span>
+                                    <TextField
                                       error={
                                         username.length > 0 && userValidateError
                                       }
@@ -152,9 +162,22 @@ function LoginScreen() {
                                   </div>
                                 </div>
                                 <div className="form-group">
-                                  <div className="pass-group group-img">
-                                    <i className="toggle-password feather-eye-off"></i>
-                                    <input
+                                  <div
+                                    className={`pass-group group-img ${
+                                      LoginError ? "icon-wrapper-error" : ""
+                                    }`}
+                                  >
+                                    <span
+                                      onClick={togglePasswordVisibility}
+                                      className="feather-icon-wrapper user-ic"
+                                    >
+                                      {showPassword ? (
+                                        <EyeOff size={20} color="black" />
+                                      ) : (
+                                        <Eye size={20} color="black" />
+                                      )}
+                                    </span>
+                                    <TextField
                                       error={
                                         LoginError && errorMessage.length > 0
                                       }
@@ -170,16 +193,6 @@ function LoginScreen() {
                                       value={password}
                                       onChange={handlePassword}
                                     />
-                                    <span
-                                      onClick={togglePasswordVisibility}
-                                      className="feather-icon-wrapper"
-                                    >
-                                      {showPassword ? (
-                                        <EyeOff size={20} color="black" />
-                                      ) : (
-                                        <Eye size={20} color="black" />
-                                      )}
-                                    </span>
                                   </div>
                                 </div>
                                 <button

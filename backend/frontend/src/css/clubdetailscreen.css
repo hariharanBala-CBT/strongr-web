@@ -420,7 +420,7 @@ ul {
   background-size: cover;
 }
 
-.breadcrumb ul li:after {
+.breadcrumb ul .breadcrumb-icons:after {
   position: absolute;
   top: 7px;
   right: 10px;
@@ -463,7 +463,7 @@ ul {
 }
 
 .accordion-item .accordion-body .review-form-wrapper textarea {
-  background: rgba(0, 0, 0, 0.125);
+  background: #eee;
   height: 80px;
   margin: 15px 0px 15px 0px;
 }
@@ -483,6 +483,7 @@ ul {
 
 .book-court .btn-block a:hover {
   background: #097E52 !important;
+  border-color: #097E52 !important;
 }
 
 .carousel-container .carousel-slider {
@@ -532,6 +533,9 @@ ul {
   h1 {
       font-size: 32px !important;
   }
+  .venue-club-details .carousel-img {
+      height: auto !important;
+  }
 }
 
 @media (max-width: 479.98px) {
@@ -557,4 +561,12 @@ ul {
       margin-bottom: 10px;
       margin-right: 0;
   }
+}
+
+.venue-club-details .carousel-img {
+  height: 450px;
+}
+
+.venue-club-details .accordion-button::after {
+  display: none;
 }

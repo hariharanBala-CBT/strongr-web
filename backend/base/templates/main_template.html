@@ -1,20 +1,20 @@
-{% load static %}{% load url_filters %}
+{% load static %}
+{% load url_filters %}
 
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>STRONGR.</title>
 
-        <title>STRONGR.</title>
-
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-        <link href="{% static 'styles.css' %}" rel="stylesheet" />
-        <link href="{% static './css/tab-page.css' %}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="{% static 'styles.css' %}" rel="stylesheet" />
+    <link href="{% static './css/tab-page.css' %}" rel="stylesheet" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -274,17 +274,17 @@
                     }
                 });
 
-                const $successAlert = $('#successAlert');
-                if ($successAlert.length) {
-                    setTimeout(() => {
-                        $successAlert.hide();
-                    }, 2500);
-                }
+            const $successAlert = $('#successAlert');
+            if ($successAlert.length) {
+                setTimeout(() => {
+                    $successAlert.hide();
+                }, 2500);
+            }
 
-                const $datatablesSimple = $('#datatablesSimple');
-                if ($datatablesSimple.length) {
-                    new simpleDatatables.DataTable(datatablesSimple[0]);
-                }
+            const $datatablesSimple = $('#datatablesSimple');
+            if ($datatablesSimple.length) {
+                new simpleDatatables.DataTable(datatablesSimple[0]);
+            }
 
                 const $sidebarToggle = $('#sidebarToggle');
                 if ($sidebarToggle.length) {

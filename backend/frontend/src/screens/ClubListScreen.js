@@ -166,7 +166,7 @@ function ClubListScreen() {
         <div className="container">
           <h1 className="text-white">Venue List</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">Home</a>
             </li>
             <li>Venue List</li>
