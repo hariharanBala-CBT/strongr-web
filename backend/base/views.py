@@ -476,15 +476,64 @@ def update_location(request, pk):
             return redirect('mainview', location_pk=form.instance.pk)
         else:
             if 'This Pincode,Phone Number and Area combination already exists.' in form.non_field_errors():
-                messages.error(request,"Location update failed.This Pincode,Phone Number and Area combination already exists.")
+                messages.error(request, "Location update failed. This Pincode, Phone Number and Area combination already exists.")
             else:
-                error_messages = ''.join([f'{error}' for error in form.errors.values()])
-                messages.error(request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
+                error_messages = ', '.join([str(error) for error in form.errors.values()])
+                formatted_message = ERROR_MESSAGES.get('form_validation_failed_location', 'Form validation failed.').format(error_messages=error_messages)
+                messages.error(request, formatted_message)
             return render(request, 'main_template.html', {'form': form, 'locationpk': pk})
     else:
         form = OrganizationLocationForm(instance=location)
 
     return render(request, 'update_location.html', {'form': form, 'pk': pk})
+
+class LocationUpdateView(LoginRequiredMixin, UpdateView):
+    model = OrganizationLocation
+    template_name = 'update_location.html'
+    form_class = OrganizationLocationForm
+    context_object_name = 'location'
+
+    def get_queryset(self):
+        organization = get_object_or_404(Organization, user=self.request.user)
+        return self.model.objects.filter(organization=organization)
+
+    def form_valid(self, form):
+        form.instance.organization = get_object_or_404(Organization, user=self.request.user)
+        form.save()
+        self.request.session['location_pk'] = form.instance.pk
+        messages.success(self.request, 'Location updated successfully.')
+
+        if self.request.is_ajax():
+            return JsonResponse({'status': 'success', 'message': 'Location updated successfully.'})
+        else:
+            return redirect('mainview', location_pk=form.instance.pk)
+
+    def form_invalid(self, form):
+        if 'This Pincode, Phone Number and Area combination already exists.' in form.non_field_errors():
+            error_message = "Location update failed. This Pincode, Phone Number and Area combination already exists."
+        else:
+            error_messages = ''.join([f'{error}' for error in form.errors.values()])
+            error_message = f'Form validation failed: {error_messages}'
+
+        messages.error(self.request, error_message)
+
+        if self.request.is_ajax():
+            return JsonResponse({'status': 'error', 'message': error_message, 'form_errors': form.errors}, status=400)
+        else:
+            return self.render_main_view_with_errors(form)
+
+    def render_main_view_with_errors(self, form):
+        organization_locations = OrganizationLocation.objects.filter(organization=self.request.user.organization)
+        context = {
+            'organization_locations': organization_locations,
+            'form': form,
+            'locationpk': self.object.pk,
+        }
+        return render(self.request, 'main_template.html', context)
+
+    def get_success_url(self):
+        return reverse('mainview', kwargs={'location_pk': self.object.pk})
+
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationListView(ListView):
@@ -619,6 +668,18 @@ class OrganizationLocationImageListView(ListView):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.kwargs.get('locationpk')
         return context
+
+    # def post(self, request, *args, **kwargs):
+    #     image_id = request.POST.get('image_id')
+    #     if image_id:
+    #         image = OrganizationGameImages.objects.get(id=image_id)
+    #         if image.image:
+    #             image_path = image.image.path
+    #             if os.path.exists(image_path):
+    #                 os.remove(image_path)
+    #         image.delete()
+    #         messages.success(request, 'Image deleted successfully.')
+    #     return redirect(reverse('mainview', kwargs={'locationpk': self.kwargs.get('locationpk')}))
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationLocationImageView(CreateView):
