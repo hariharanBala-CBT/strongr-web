@@ -480,6 +480,18 @@
                     </div>
                 </div>
             </div>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; <span id="current-year"></span> STRONGR. | All Rights Reserved</div>
+                        <div>
+                            <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
+                            &middot;
+                            <a href="{% url 'termsandconditions' %}">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
 
         <script>
@@ -490,6 +502,7 @@
                     new bootstrap.Tooltip(submitButton);
                 }
             });
+        document.getElementById('current-year').textContent = new Date().getFullYear();
         </script>
 
 {% endblock %}
