@@ -946,6 +946,9 @@ class PreviewView(FormView):
         context['all_locations'] = locationdetails
         profile = Organization.objects.filter(user=self.request.user)
         context['profiles'] = profile
+        organization = Organization.objects.get(user=self.request.user)
+        tenant = organization.tenant
+        context['tenant_signup_terms'] = tenant.sign_up_terms_and_conditions
         return context
 
     def form_valid(self, form):
