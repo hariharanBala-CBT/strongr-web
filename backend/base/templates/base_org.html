@@ -9,7 +9,6 @@
     <meta name="author" content="" />
 
     <title>{% block title %}STRONGR{% endblock %}</title>
-    <title>{% block title %}STRONGR{% endblock %}</title>
 
     <!-- External CSS -->
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
@@ -100,7 +99,7 @@
                 </div>
             </nav>
         </div>
-        
+
         {% if messages %}
             <div class="alert alert-success" role="alert" id="successAlert">
                 {% for message in messages %}
@@ -108,7 +107,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-        
+
         {% if error %}
             <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                 {{ error }}
@@ -184,12 +183,12 @@
                     successAlert.style.display = 'none';
                 }, 4000);
             }
-            
+
             const errorAlert = document.getElementById('errorAlert');
             if (errorAlert) {
                 setTimeout(() => {
                     errorAlert.style.display = 'none';
-                }, 2000); // Hide after 2000ms or 2 seconds
+                }, 3000);
             }
         });
 
@@ -212,4 +211,3 @@
     </script>
 </body>
 </html>
-
