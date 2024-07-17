@@ -51,7 +51,7 @@ body {
     padding: 4px 8px;
     border-radius: 4px;
     font-weight: bold;
-    margin: left 10px;
+    margin-left: 10px;
 }
 
 .status-pending {
@@ -61,7 +61,7 @@ body {
     padding: 4px 8px;
     border-radius: 4px;
     font-weight: bold;
-    margin: left 10px;
+    margin-left: 10px;
 }
 
 .status-in-progress {
@@ -71,7 +71,7 @@ body {
     padding: 4px 8px;
     border-radius: 4px;
     font-weight: bold;
-    margin: left 10px;
+    margin-left: 10px;
 }
 
 .status-cancelled {
@@ -81,7 +81,7 @@ body {
     padding: 4px 8px;
     border-radius: 4px;
     font-weight: bold;
-    margin: left 10px;
+    margin-left: 10px;
 }
 
 .status-unknown {
@@ -91,11 +91,22 @@ body {
     padding: 4px 8px;
     border-radius: 4px;
     font-weight: bold;
-    margin: left 10px;
+    margin-left: 10px;
 }
 
 .table-responsive {
     margin-top: 20px;
+}
+
+.centered-text {
+    margin-left: 35%;
+}
+
+.centered-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0px;
 }
 
 /* Sidebar styling */

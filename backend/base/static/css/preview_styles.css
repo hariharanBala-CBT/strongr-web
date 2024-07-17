@@ -58,11 +58,14 @@ hr {
     font-size: 0.9rem;
 }
 
-footer {
+.footer {
     background-color: #f8f9fa;
     padding: 10px 0;
     text-align: center;
-    margin-top: 20px;
+    margin-top: auto;
+    width: 104%;
+    margin-left: -18px;
+    margin-bottom: -20px;
     border-top: 1px solid #e0e0e0;
 
     a {
@@ -90,7 +93,6 @@ footer {
     border-top-left-radius: 0.25rem;
     border-top-right-radius: 0.25rem;
     color: #007bff;
-    /* margin: 2px; */
 }
 
 .nav-tabs .nav-item .nav-link {

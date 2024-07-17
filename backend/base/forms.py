@@ -66,7 +66,12 @@ class OrganizationProfileForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 2, 'cols': 25})
         }
-
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if not phone_number:
+            raise forms.ValidationError('This field is required.')
+        return phone_number
+        
 class OrganizationLocationForm(ModelForm):
     class Meta:
         model = OrganizationLocation
@@ -114,7 +119,7 @@ class OrganizationLocationForm(ModelForm):
 class OrganizationLocationGameTypeForm(ModelForm):
     class Meta:
         model = OrganizationLocationGameType
-        fields = ['game_type', 'pricing', 'description']
+        fields = ['game_type', 'pricing', 'description','is_active']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 2, 'cols': 25})
         }

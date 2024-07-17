@@ -1,0 +1,46 @@
+table {
+    position: relative;
+    max-width: 360px;
+    /* margin: 0 auto 100px; */
+    padding: 25px;
+    padding-bottom: 0px;
+}
+
+td {
+    width: 50%;
+    height: 2em;
+    padding: 10px;
+}
+
+form {
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2),
+        0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    padding: 30px;
+    width: 800px;
+}
+
+#id_description,
+#id_pricing,
+#id_game,
+#id_number_of_courts {
+    width: 450px;
+    resize: none;
+
+}
+
+select {
+    width: 450px;
+}
+
+.profile-card {
+    padding: 50px;
+}
+
+label {
+    width: 250px;
+}
+
+.buttons {
+    width: 445px;
+    margin-left: 20%;
+}

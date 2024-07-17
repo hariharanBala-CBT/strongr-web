@@ -1,6 +1,9 @@
 form {
     border-radius: 2%;
-    padding: 20px;
+    padding: 30px;
+    width: 850px;
+    margin-top: 63px;
+    margin-bottom: 75px;
 }
 
 table {
@@ -13,6 +16,7 @@ td {
     width: 50%;
     height: 2em;
     padding: 10px;
+    padding-left: 100px;
 }
 
 input,
@@ -66,3 +70,37 @@ select {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 9998;
 }
+
+.profile-card {
+    padding-left:250px;
+
+}
+
+#nextTabBtn {
+    display: block;
+    padding: 7px 20px;
+    font-size: 16px;
+}
+
+.buttons {
+    width: 320px;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 250px;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.button1{
+    width: 500px;
+    display: flex;
+    justify-content: space-between;
+    }
