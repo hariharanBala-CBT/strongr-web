@@ -1,29 +1,45 @@
-{% extends 'base_org.html' %}{% load static %}
-{% block content %}
-    <link href="{% static './css/add-images.css' %}" rel="stylesheet"/>
-          
-    <ol class="breadcrumb mb-4">
-      <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a></li>
-      <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'mainview' locationpk %}">Location</a></li>
-      <li class="breadcrumb-item">Add-Image</li>
-    </ol>
-    
-    <div class="container-fluid px-4 m">
-      <div class="profile-card">
-        <h1 class="my-4">Add Images</h1>
-        <h6 class="mb-5">Add Available Images to your Location</h6>
-        <div>
-          <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="id_image">Image<span class="text-danger">*</span></label>
-            {{ form.image }}
-            <div class="buttons px-4 py-4">
-              <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
-                <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
-            </div>
-        </form>
+{% extends 'base_org.html' %}{% load static %} {% block content %}
+<link href="{% static './css/add-images.css' %}" rel="stylesheet" />
+
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item">
+    <a href="{% url 'organization_page' %}"
+      ><i class="fa fa-home" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'organization_locationlist'%}">Location List</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'mainview' locationpk %}">Location</a>
+  </li>
+  <li class="breadcrumb-item">Add-Image</li>
+</ol>
+
+<div class="container-fluid px-4 m">
+  <div class="profile-card">
+    <h1 class="my-4">Add Images</h1>
+    <h6 class="mb-5">Add Available Images to your Location</h6>
+    <div>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="id_image">Image<span class="text-danger">*</span></label>
+        {{ form.image }}
+        <div class="buttons px-4 py-4">
+          <a type="button" class="btn btn-secondary" onclick="goBack()"
+            ><i class="fa-solid fa-arrow-left-long"></i
+          ></a>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            data-toggle="tooltip"
+            title="submit"
+          >
+            <i class="fa-solid fa-arrow-right-long"></i>
+          </button>
         </div>
-      </div>
+      </form>
     </div>
+  </div>
+</div>
 {% endblock %}

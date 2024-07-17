@@ -1,66 +1,80 @@
 {% load static %}
 
-    <link href="{% static './css/court-list.css' %}" rel="stylesheet"/>
+<link href="{% static './css/court-list.css' %}" rel="stylesheet" />
 
-    <div class="container-fluid px-4 m">
-        <div class="profile-card">
-            <div>
-                <div class="card mb-4">
-                    <div class="location-card card-header">
-                        <div>Court</div>
-                        <div>
-                            <a href= "{% url 'add-court' %}" class="btn btn-success align-self-end" data-toggle="tooltip" title="Add court"><i class="fa-solid fa-plus"></i></a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table class="table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Court</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for court in courts %}
-                                    <tr>
-                                        <td>{{ court.name }}</td>
-                                            <td>
-                                                <div class="update-icon">
-                                                    <a href="{% url 'update-court' locationpk=locationpk courtpk=court.pk %}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square "></i></a>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="update-icon">
-                                                    <a href="{% url 'delete-court' court.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
-                                                </div>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        <button id="nextTabBtn" class="btn btn-primary">Next Tab</button>
-                    </div>
-                </div>
-            </div>
+<div class="container-fluid px-4 m">
+  <div class="profile-card">
+    <div>
+      <div class="card mb-4">
+        <div class="location-card card-header">
+          <div>Court</div>
+          <div>
+            <a
+              href="{% url 'add-court' %}"
+              class="btn btn-success align-self-end"
+              data-toggle="tooltip"
+              title="Add court"
+              ><i class="fa-solid fa-plus"></i
+            ></a>
+          </div>
         </div>
+        <div class="card-body">
+          <table class="table-bordered">
+            <thead>
+              <tr>
+                <th>Court</th>
+                <th>Edit</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for court in courts %}
+              <tr>
+                <td>{{ court.name }}</td>
+                <td>
+                  <div class="update-icon">
+                    <a
+                      href="{% url 'update-court' locationpk=locationpk courtpk=court.pk %}"
+                      class="btn btn-primary"
+                      ><i class="fa-regular fa-pen-to-square"></i
+                    ></a>
+                  </div>
+                </td>
+                <td>
+                  <div class="update-icon">
+                    <a
+                      href="{% url 'delete-court' court.pk %}"
+                      class="btn btn-danger"
+                      ><i class="fa-solid fa-trash"></i
+                    ></a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <button id="nextTabBtn" class="btn btn-primary">Next Tab</button>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <script>
-        $(document).ready(function () {
-            $('#nextTabBtn').click(function () {
-                const activeTab = $('.tab-button.active');
-                const nextTab = activeTab.next('.tab-button');
+<script>
+  $(document).ready(function () {
+    $("#nextTabBtn").click(function () {
+      const activeTab = $(".tab-button.active");
+      const nextTab = activeTab.next(".tab-button");
 
-                if (nextTab.length > 0) {
-                    activeTab.removeClass('active');
-                    nextTab.addClass('active');
+      if (nextTab.length > 0) {
+        activeTab.removeClass("active");
+        nextTab.addClass("active");
 
-                    const url = nextTab.data('url');
-                    $('#tab-content').load(url, function () {
-                        initFormSubmission();
-                    });
-                }
-            });
+        const url = nextTab.data("url");
+        $("#tab-content").load(url, function () {
+          initFormSubmission();
         });
-    </script>
+      }
+    });
+  });
+</script>

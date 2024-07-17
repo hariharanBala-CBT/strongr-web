@@ -30,7 +30,7 @@
                     <label for="id_end_time">End Time:</label>
                     {{ form.end_time }}
                 </div>
-                <div class="form-group" style="display: none;">
+                <div class="form-group">
                     <label for="id_end_time">court:</label>
                     {{ form.court }}
                 </div>
@@ -48,11 +48,11 @@
                     <label for="id_days">Days:</label>
                     {{ form.days }}
                 </div>
-                <div class="form-group" disabled style="display: flex; justify-content: left;">
-                    <label for="id_checkbox" style="margin-right: 50px;">Booked:</label>
+                <div class="form-group" disabled>
+                    <label for="id_checkbox">Booked:</label>
                     {{ form.is_booked }}
                 </div>
-                <div class="buttons px-4 py-4" style="margin-left: 8%">
+                <div class="buttons px-4 py-4">
                     <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
                     <button type="submit" onclick="openPopup(event)" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
                 </div>

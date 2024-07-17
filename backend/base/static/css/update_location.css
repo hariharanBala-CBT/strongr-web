@@ -86,3 +86,19 @@ select {
     display: flex;
     justify-content: space-evenly;
 }
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.button1{
+    width: 500px;
+    display: flex;
+    justify-content: space-between;
+    }

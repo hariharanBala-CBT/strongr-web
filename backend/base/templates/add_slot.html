@@ -22,29 +22,38 @@
                 </div>
             {% endif %}
 
-            <form id="slot-form" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_start_time">Start Time:</label>
-                    {{ form.start_time }}
-                </div>
-                <div class="form-group">
-                    <label for="id_end_time">End Time:</label>
-                    {{ form.end_time }}
-                </div>
-                <div class="form-group">
-                    <label for="id_court">Court:</label>
-                    {{ form.court }}
-                </div>
-                <div class="form-group">
-                    <label for="id_days">Days:</label>
-                    {{ form.days }}
-                </div>
-                <div class="buttons px-4 py-4">
-                    <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
-                    <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <form id="slot-form" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="id_start_time">Start Time:</label>
+        {{ form.start_time }}
+      </div>
+      <div class="form-group">
+        <label for="id_end_time">End Time:</label>
+        {{ form.end_time }}
+      </div>
+      <div class="form-group">
+        <label for="id_court">Court:</label>
+        {{ form.court }}
+      </div>
+      <div class="form-group">
+        <label for="id_days">Days:</label>
+        {{ form.days }}
+      </div>
+      <div class="buttons px-4 py-4">
+        <a type="button" class="btn btn-secondary" onclick="goBack()"
+          ><i class="fa-solid fa-arrow-left-long"></i
+        ></a>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          data-toggle="tooltip"
+          title="submit"
+        >
+          <i class="fa-solid fa-arrow-right-long"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

@@ -1,63 +1,61 @@
-{% extends 'base_org.html' %}{% load static %}
-{% block content %}
-    <link href="{% static './css/cancel-booking.css' %}" rel="stylesheet"/>
+{% extends 'base_org.html' %}{% load static %} {% block content %}
+<link href="{% static './css/cancel-booking.css' %}" rel="stylesheet" />
 
-    <div class="container-fluid px-4">
-        <h1 class="header mt-4 mb-4">Cancelled Bookings</h1>
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="fas fa-table me-1"></i>
-                Booking Log
-            </div>
-            <div class="card-body">
-                <table id="datatablesSimple">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Game</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Amount</th>
-                            <th>status<small>(Amount)</small></th>
-                            <th>Booking status</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Name</th>
-                            <th>Game</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Amount</th>
-                            <th>status<small>(Amount)</small></th>
-                            <th>Booking status</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        {% for booking in bookings %}
-                        {% if booking.booking_status == 3 %}
-                        <tr>
-                            <td>{{ booking.name }}</td>
-                            <td>{{ booking.court.game }}</td>
-                            <td>{{ booking.booking_date }}</td>
-                            <td>{{ booking.slot }}</td>
-                            <td>{{ booking.total_price }}</td>
-                            <td>{{ booking.get_payment_status_display }}</td>
-                            <td>{{ booking.get_booking_status_display }}</td>
-                        </tr>
-                        {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Centered container for the back link -->
-        <div class="centered-container">
-            <a class="backBtn" href="{% url 'organization_page' %}">
-                <span class="label" data-toggle="tooltip" title="back"><i class="fa-solid fa-circle-arrow-left"></i></span>
-            </a>
-        </div>
-
+<div class="container-fluid px-4">
+  <h1 class="header mt-4 mb-4">Cancelled Bookings</h1>
+  <div class="card mb-4">
+    <div class="card-header">
+      <i class="fas fa-table me-1"></i>
+      Booking Log
     </div>
+    <div class="card-body">
+      <table id="datatablesSimple">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Game</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Amount</th>
+            <th>status<small>(Amount)</small></th>
+            <th>Booking status</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th>Name</th>
+            <th>Game</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Amount</th>
+            <th>status<small>(Amount)</small></th>
+            <th>Booking status</th>
+          </tr>
+        </tfoot>
+        <tbody>
+          {% for booking in bookings %} {% if booking.booking_status == 3 %}
+          <tr>
+            <td>{{ booking.name }}</td>
+            <td>{{ booking.court.game }}</td>
+            <td>{{ booking.booking_date }}</td>
+            <td>{{ booking.slot }}</td>
+            <td>{{ booking.total_price }}</td>
+            <td>{{ booking.get_payment_status_display }}</td>
+            <td>{{ booking.get_booking_status_display }}</td>
+          </tr>
+          {% endif %} {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Centered container for the back link -->
+  <div class="centered-container">
+    <a class="backBtn" href="{% url 'organization_page' %}">
+      <span class="label" data-toggle="tooltip" title="back"
+        ><i class="fa-solid fa-circle-arrow-left"></i
+      ></span>
+    </a>
+  </div>
+</div>
 {% endblock %}

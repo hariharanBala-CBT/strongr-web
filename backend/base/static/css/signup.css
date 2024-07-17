@@ -1,25 +1,45 @@
 a:hover {
     text-decoration: none;
-}
+  }
 
-.form-group {
+  .form-group {
     margin-bottom: 15px;
-}
+  }
 
-input {
+  input {
     width: 100%;
-}
+  }
 
-.text-center button {
+  .text-center button {
     width: 100%;
-}
+  }
 
-.error {
+  .error {
     color: #DB1417;
-}
+  }
 
-.title {
-    margin-left: 30%;
-    margin-top: 3%;
-    margin-bottom: 3%;
-}
+  .input-icon {
+    position: relative;
+  }
+
+  .input-icon i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+  }
+
+  .input-icon input {
+    padding-left: 0px;
+  }
+ 
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }

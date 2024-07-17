@@ -1,51 +1,70 @@
-{% extends 'base_org.html' %}{% load static %}
-{% block content %}
+{% extends 'base_org.html' %}{% load static %} {% block content %}
 
-    <link href="{% static './css/add-court.css' %}" rel="stylesheet" />
+<link href="{% static './css/add-court.css' %}" rel="stylesheet" />
 
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a></li>
-        <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'mainview' locationpk %}">Location</a></li>
-        <li class="breadcrumb-item">Add-court</li>
-    </ol>
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item">
+    <a href="{% url 'organization_page' %}"
+      ><i class="fa fa-home" aria-hidden="true"></i
+    ></a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'organization_locationlist'%}">Location List</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'mainview' locationpk %}">Location</a>
+  </li>
+  <li class="breadcrumb-item">Add-court</li>
+</ol>
+<div class="container-fluid px-4 m">
+  <div class="profile-card">
+    <h3 class="my-4">Courts</h3>
+    <h6 class="mb-5">Add Available Courts to your Location</h6>
 
-    <div class="container-fluid px-4 m">
-        <div class="profile-card">
-            <h3 class="my-4">Courts</h3>
-            <h6 class="mb-5">Add Available Courts to your Location</h6>
+    <form method="post">
+      {% csrf_token %}
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <label>Name<span id="name" class="text-danger">*</span></label>
+            </td>
+            <td>{{ form.name }}</td>
+          </tr>
+          <tr>
+            <td>
+              <label>Game<span id="game" class="text-danger">*</span></label>
+            </td>
+            <td>{{ form.game }}</td>
+          </tr>
+          <tr>
+            <td>
+              <label>Description</label>
+            </td>
+            <td>{{ form.description }}</td>
+          </tr>
+        </tbody>
+      </table>
 
-            <form method="post">
-                {% csrf_token %}
-                <table>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <label>Name<span id="name" class="text-danger">*</span></label>
-                        </td>
-                        <td>{{ form.name }}</td>
-                        </tr>
-                    <tr>
-                        <td>
-                        <label>Game<span id="game" class="text-danger">*</span></label>
-                        </td>
-                        <td>{{ form.game }}</td>
-                    </tr>
-                    <tr>
-                        <td>
-                        <label>Description</label>
-                        </td>
-                        <td>{{ form.description }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <div class="buttons px-4 py-4">
-                    <a  href="{% url 'mainview' locationpk %}"  class="btn btn-secondary" data-toggle="tooltip" title="back"><i class="fa-solid fa-arrow-left-long"></i></a>
-                    <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
-                </div>
-            </form>
-        </div>
-    </div>
+      <div class="buttons px-4 py-4">
+        <a
+          href="{% url 'mainview' locationpk %}"
+          class="btn btn-secondary"
+          data-toggle="tooltip"
+          title="back"
+          ><i class="fa-solid fa-arrow-left-long"></i
+        ></a>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          data-toggle="tooltip"
+          title="submit"
+        >
+          <i class="fa-solid fa-arrow-right-long"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
 {% endblock %}

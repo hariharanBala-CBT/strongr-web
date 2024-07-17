@@ -1,21 +1,21 @@
-{% extends 'base_org.html' %}
-{% load static %}
-{% block content %}
-    <link href="{% static './css/del-pages.css' %}" rel="stylesheet"/>
+{% extends 'base_org.html' %} {% load static %} {% block content %}
+<link href="{% static './css/del-pages.css' %}" rel="stylesheet" />
 
-    <div class="container-fluid px-4">
-        <div class="profile-card">
-            <h1 class="my-4">Confirm Delete - Court</h1>
-            <div class="mt-4">
-                <form method="post">
-                    {% csrf_token %}
-                    <h5>Are you sure you want to delete "{{ court.name }}"?</h5>
-                    <div class="buttons">
-                        <input type="submit" class="btn btn-danger" value="Confirm Delete">
-                        <a href="{% url 'mainview' locationpk %}" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
-            </div>
+<div class="container-fluid px-4">
+  <div class="profile-card">
+    <h1 class="my-4">Confirm Delete - Court</h1>
+    <div class="mt-4">
+      <form method="post">
+        {% csrf_token %}
+        <h5>Are you sure you want to delete "{{ court.name }}"?</h5>
+        <div class="buttons">
+          <input type="submit" class="btn btn-danger" value="Confirm Delete" />
+          <a href="{% url 'mainview' locationpk %}" class="btn btn-secondary"
+            >Cancel</a
+          >
         </div>
+      </form>
     </div>
+  </div>
+</div>
 {% endblock %}

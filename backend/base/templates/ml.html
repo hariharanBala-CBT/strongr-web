@@ -1,22 +1,20 @@
-{% extends 'base_org.html' %}
-{% load static %}
-{% block content %}
-    <link href="{% static './css/del-pages.css' %}" rel="stylesheet"/>
+{% extends 'base_org.html' %} {% load static %} {% block content %}
+<link href="{% static './css/del-pages.css' %}" rel="stylesheet" />
 
-    <div class="container-fluid px-4">
-        <div class="profile-card">
-            <h2 class="my-4">Confirm Create - Default Slot</h2>
-            <div>
-              <form method="post">
-                {% csrf_token %}
-                    <h5>Are you sure you want to create default set of slots</h5>
-                    <div class="buttons">
-                        <input type="submit" class="btn btn-success" value="Create Slots">
-                        <a class="btn btn-secondary" onclick="goBack()">Cancel</a>
-                    </div>
-                </form>
-                <p>Note: Will be created based on your working time given by you !!!</p>
-            </div>
+<div class="container-fluid px-4">
+  <div class="profile-card">
+    <h2 class="my-4">Confirm Create - Default Slot</h2>
+    <div>
+      <form method="post">
+        {% csrf_token %}
+        <h5>Are you sure you want to create default set of slots</h5>
+        <div class="buttons">
+          <input type="submit" class="btn btn-success" value="Create Slots" />
+          <a class="btn btn-secondary" onclick="goBack()">Cancel</a>
         </div>
+      </form>
+      <p>Note: Will be created based on your working time given by you !!!</p>
     </div>
+  </div>
+</div>
 {% endblock %}
