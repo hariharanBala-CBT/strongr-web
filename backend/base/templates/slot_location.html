@@ -9,14 +9,7 @@
     </ol>
 
     <div class="container-fluid px-4 mt-4">
-        {% if messages %}
-            <div class="alert alert-success" role="alert" id="successAlert">
-                {% for message in messages %}
-                <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-        <h1 class="mt-4 mb-4" style="margin-left: 40%;">Slot location list</h1>
+        <h1 class="header mt-4 mb-4">Slot location list</h1>
         <div class="card mb-4">
             <div class="location-card card-header">
                 <div><i class="fas fa-map-marker-alt"></i>  Locations</div>

@@ -841,6 +841,11 @@ class SlotCreateView(CreateView):
         messages.success(self.request, SUCCESS_MESSAGES.get('create_slot'))
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        error_messages = ''.join([f'{error}' for error in form.errors.values()])
+        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
+        return self.render_to_response(self.get_context_data(form=form))
+
     def get_success_url(self):
         location_pk = self.request.session.get('locationpk')
         return reverse('slot-list', kwargs={'locationpk': location_pk})
@@ -880,7 +885,7 @@ class SlotUpdateView(UpdateView):
         context['locationpk'] = self.request.session.get('location_pk')
         return context
 
-    
+
 @method_decorator(login_required, name='dispatch')
 class SlotDeleteView(DeleteView):
     model = Slot
@@ -1385,7 +1390,7 @@ class AddMultipleTempSlotsView(View):
             messages.success(request, SUCCESS_MESSAGES.get('create_tempslot'))
             return redirect('temp-slot-list')
         return render(request, self.template_name, {'forms': forms})
-    
+
 
 class TempSlotListView(ListView):
     model = AdditionalSlot
@@ -1454,7 +1459,7 @@ class TempSlotCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('temp-slot-list', kwargs={'pk': self.request.session.get('location_pk')})
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.request.session.get('location_pk')
@@ -1538,7 +1543,7 @@ class UnavailableSlotCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['pk'] = self.kwargs.get('pk')  
+        context['pk'] = self.kwargs.get('pk')
         return context
 
 @login_required
