@@ -27,7 +27,7 @@
 
                     <div class="buttons text-center mt-4 mx-5">
                         <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2">Update</button>
-                        <button id="nextTabBtn" class="btn btn-primary">Next</button> 
+                        {% comment %} <button id="nextTabBtn" class="btn btn-primary">Next</button>  {% endcomment %}
                     </div>
 
                     <input type="hidden" name="organization" value="{{ request.user.organization.id }}">
