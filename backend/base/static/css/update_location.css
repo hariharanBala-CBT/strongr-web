@@ -16,6 +16,7 @@ td {
     width: 50%;
     height: 2em;
     padding: 10px;
+    padding-left: 100px;
 }
 
 input,
@@ -84,7 +85,8 @@ select {
 .buttons {
     width: 320px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    padding-left: 250px;
 }
 
 input[type=number]::-webkit-outer-spin-button,
