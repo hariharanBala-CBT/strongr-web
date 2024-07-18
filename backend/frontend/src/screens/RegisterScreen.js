@@ -15,7 +15,7 @@ import OTPInput, { ResendOTP } from "otp-input-react";
 import logoImage from "../images/logo-color.png";
 import Button from "../components/Button";
 import { Box, CircularProgress, Modal } from "@mui/material";
-
+import ModalClose from "@mui/joy/ModalClose";
 import { generateOTP, register, validateUserDetails } from "../actions/actions";
 
 import { USER_LOGOUT } from "../constants/constants";
@@ -355,6 +355,11 @@ function RegisterScreen() {
                   </Box>
                 ) : (
                   <Box sx={style}>
+                    <ModalClose
+                      variant="outlined"
+                      sx={{ m: 1 }}
+                      onClick={() => setOpenForm(false)}
+                    />
                     {registerUserLoading ? (
                       <CircularProgress className="loader" />
                     ) : (

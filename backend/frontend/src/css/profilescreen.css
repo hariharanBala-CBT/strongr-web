@@ -49,6 +49,7 @@
 
 .text-pink a {
     color: #1859e5 !important;
+    cursor: pointer;
 }
 
 .text-pink .eye-icon {

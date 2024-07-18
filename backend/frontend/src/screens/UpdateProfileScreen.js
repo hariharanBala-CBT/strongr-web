@@ -10,7 +10,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 import { Box, CircularProgress, Modal } from "@mui/material/";
-
+import ModalClose from "@mui/joy/ModalClose";
 import {
   generateUpdateOTP,
   listcustomerDetails,
@@ -288,6 +288,11 @@ function UpdateprofileScreen() {
                       </Box>
                     ) : (
                       <Box sx={style}>
+                        <ModalClose
+                          variant="outlined"
+                          sx={{ m: 1 }}
+                          onClick={() => setOpenForm(false)}
+                        />
                         <form onSubmit={updateCustomer} className="otp-form">
                           <div className="otp-input">
                             <label>Enter OTP sent to email</label>
