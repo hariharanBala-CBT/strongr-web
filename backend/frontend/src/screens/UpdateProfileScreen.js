@@ -10,7 +10,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 import { Box, CircularProgress, Modal } from "@mui/material/";
-
+import ModalClose from "@mui/joy/ModalClose";
 import {
   generateUpdateOTP,
   listcustomerDetails,
@@ -288,29 +288,41 @@ function UpdateprofileScreen() {
                       </Box>
                     ) : (
                       <Box sx={style}>
-                        <form onSubmit={updateCustomer} className="otp-form">
-                          <div className="otp-input">
-                            <label>Enter OTP sent to email</label>
-                            <OTPInput
-                              className="otp-input-field"
-                              value={otp}
-                              onChange={setOtp}
-                              autoFocus
-                              OTPLength={4}
-                              otpType="number"
-                              disabled={false}
-                              secure
-                            />
-                            <ResendOTP onResendClick={regenerateOtp} />
-                          </div>
-                          <div className="otp-button">
+                        <ModalClose
+                          variant="outlined"
+                          sx={{ m: 1 }}
+                          onClick={() => setOpenForm(false)}
+                        />
+                        <div className="update-prof-otpform">
+                          <form onSubmit={updateCustomer} className="otp-form">
+                            <div className="otp-input">
+                              <label className="update-prof-label">
+                                Enter OTP sent to email
+                              </label>
+                              <OTPInput
+                                className="otp-input-field"
+                                value={otp}
+                                onChange={setOtp}
+                                autoFocus
+                                OTPLength={4}
+                                otpType="number"
+                                disabled={false}
+                                secure
+                              />
+                              <div className="resend-wrapper">
+                                <ResendOTP
+                                  onResendClick={regenerateOtp}
+                                  className="resend-btn"
+                                />
+                              </div>
+                            </div>
                             <Button
                               type="submit"
-                              className="btn-check-availability-home"
+                              className="otp-login-btn"
                               text="submit"
                             />
-                          </div>
-                        </form>
+                          </form>
+                        </div>
                       </Box>
                     )}
                   </Modal>

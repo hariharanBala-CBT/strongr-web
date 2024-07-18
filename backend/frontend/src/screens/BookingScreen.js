@@ -192,7 +192,7 @@ function BookingScreen() {
                 <p>{bookingDetails?.slot?.end_time?.slice(0, 5)}</p>
               </li>
               <li>
-                <h6>Area</h6>
+                <h6>Address</h6>
                 <p>{bookingDetails?.organization_location}</p>
               </li>
             </ul>

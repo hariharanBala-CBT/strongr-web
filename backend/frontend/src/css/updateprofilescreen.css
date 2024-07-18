@@ -302,3 +302,66 @@ form.otp-form {
 .update-profile-screen .header {
   position: sticky !important;
 }
+
+.update-prof-label {
+  color: #101828;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 40px;
+}
+
+.update-prof-otpform .otp-login-btn {
+  background-color: #019d9a;
+  border: 1px solid #019d9a;
+  border-radius: 40px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: 0;
+  max-width: 400px;
+  padding: 10px 18px;
+  text-align: center;
+  text-decoration: none;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  -webkit-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  width: 100%;
+}
+
+.update-prof-otpform .auth-footer {
+  width: 100%;
+  text-align: center;
+  border-top: 1px solid #ededed;
+  margin-top: 20px;
+}
+
+.resend-btn button {
+  background-color: #019d9a;
+  border: 1px solid #019d9a;
+  border-radius: 40px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: 0;
+  padding: 6px 18px;
+  text-align: center;
+  text-decoration: none;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  -webkit-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+}
+
+.resend-wrapper {
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+}

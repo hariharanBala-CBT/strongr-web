@@ -317,7 +317,13 @@
     overflow: hidden;
     border-radius: 10px 10px 0 0;
     width: 550px;
-    height: 275px;
+    height: 300px;
+    cursor: pointer;
+  }
+
+  .recently-searched h2 {
+    text-align: center;
+    padding: 20px;
   }
 
   @media (max-width: 991.98px) {
@@ -336,6 +342,7 @@
     border-radius: 10px 10px 0 0;
     width: 100%;
     height: auto;
+    cursor: pointer;
   }
 
   .clublist-wrapper .listing-item .listing-img {
@@ -399,6 +406,7 @@
   .listing-item .list-reviews {
     margin: 0 0 15px;
     justify-content: space-between;
+    min-height: 2rem;
   }
 
   .listing-item .list-reviews .fav-icon {
@@ -443,6 +451,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
+    cursor: pointer;
   }
 
   @media (max-width: 1199.98px) {
@@ -554,6 +563,7 @@
   .user-book-now {
     color: #192335;
     font-weight: 500;
+    cursor: pointer;
   }
 
   .user-book-now:hover {
@@ -646,7 +656,7 @@
   }
 
   .venue-wrapper .listing-details-group ul {
-    min-height: 3rem;
+    min-height: 5rem;
   }
 
   .venue-wrapper .gametype {
