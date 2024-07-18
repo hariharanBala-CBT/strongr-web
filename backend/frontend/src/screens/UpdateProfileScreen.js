@@ -293,29 +293,36 @@ function UpdateprofileScreen() {
                           sx={{ m: 1 }}
                           onClick={() => setOpenForm(false)}
                         />
-                        <form onSubmit={updateCustomer} className="otp-form">
-                          <div className="otp-input">
-                            <label>Enter OTP sent to email</label>
-                            <OTPInput
-                              className="otp-input-field"
-                              value={otp}
-                              onChange={setOtp}
-                              autoFocus
-                              OTPLength={4}
-                              otpType="number"
-                              disabled={false}
-                              secure
-                            />
-                            <ResendOTP onResendClick={regenerateOtp} />
-                          </div>
-                          <div className="otp-button">
+                        <div className="update-prof-otpform">
+                          <form onSubmit={updateCustomer} className="otp-form">
+                            <div className="otp-input">
+                              <label className="update-prof-label">
+                                Enter OTP sent to email
+                              </label>
+                              <OTPInput
+                                className="otp-input-field"
+                                value={otp}
+                                onChange={setOtp}
+                                autoFocus
+                                OTPLength={4}
+                                otpType="number"
+                                disabled={false}
+                                secure
+                              />
+                              <div className="resend-wrapper">
+                                <ResendOTP
+                                  onResendClick={regenerateOtp}
+                                  className="resend-btn"
+                                />
+                              </div>
+                            </div>
                             <Button
                               type="submit"
-                              className="btn-check-availability-home"
+                              className="otp-login-btn"
                               text="submit"
                             />
-                          </div>
-                        </form>
+                          </form>
+                        </div>
                       </Box>
                     )}
                   </Modal>
