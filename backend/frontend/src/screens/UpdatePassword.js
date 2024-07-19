@@ -72,7 +72,7 @@ function ResetPassword() {
         <div className="container">
           <h1 className="text-white">{t("updatePassword")}</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">{t("home")}</a>
             </li>
             <li>{t("updatePassword")}</li>

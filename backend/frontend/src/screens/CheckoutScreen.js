@@ -103,7 +103,7 @@ function CheckoutScreen() {
         <div className="container">
           <h1 className="text-white">{t("checkout")}</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">{t("home")}</a>
             </li>
             <li>{t("checkout")}</li>

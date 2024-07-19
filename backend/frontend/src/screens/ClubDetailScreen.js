@@ -117,7 +117,7 @@ function ClubDetailScreen() {
 
   useEffect(() => {
     if (successclubReview) {
-      toast.success("Review submitted");
+      toast.success(t("reviewSubmitted"));
     }
   }, [successclubReview]);
 
@@ -175,7 +175,7 @@ function ClubDetailScreen() {
 
   useEffect(() => {
     if (LoginError && isLogin) {
-      toast.error(t('login.incorrectCredentials'));
+      toast.error(t('incorrectCredentials'));
       setOpenForm(true);
       setLoader(false);
       setIsLogin(false);
@@ -184,7 +184,7 @@ function ClubDetailScreen() {
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
-      toast.success(t('login.loggedInSuccessfully'));
+      toast.success(t('loggedInSuccessfully'));
       setOpenForm(false);
       setIsLogin(false);
     }
@@ -230,14 +230,14 @@ function ClubDetailScreen() {
                   <i className="feather-map-pin">
                     <MapPin />
                   </i>
-                  {clubLocation?.address_line_1}, {clubLocation?.address_line_2}
+                  {clubLocation?.address_line_1} {clubLocation?.address_line_2}
                   ,{clubLocation?.pincode}
                 </li>
                 <li>
                   <i className="feather-phone-call">
                     <Phone />
                   </i>
-                  9999999999
+                  {clubLocation?.organization?.phone_number}
                 </li>
                 <li>
                   <i className="feather-mail">
@@ -259,7 +259,7 @@ function ClubDetailScreen() {
               <ul className="social-options float-lg-end d-sm-flex justify-content-start align-items-center">
                 <li className="venue-review-info d-flex justify-content-start align-items-center">
                   <span className="d-flex justify-content-center align-items-center">
-                    5.0
+                    {clubLocation?.rating}
                   </span>
                   <div className="review">
                     <div className="rating">
@@ -282,7 +282,7 @@ function ClubDetailScreen() {
           </div>
           <hr />
           <div className="row bottom-row d-flex align-items-center">
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+            {/* <div className="col-12 col-sm-12 col-md-6 col-lg-6">
               <ul className="d-sm-flex details">
                 <li>
                   <div className="profile-pic">
@@ -323,7 +323,7 @@ function ClubDetailScreen() {
                   ₹150<span>/ hr</span>
                 </h3>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -354,22 +354,13 @@ function ClubDetailScreen() {
                     <div className="accordion-body">
                       <div className="text show-more-height">
                         <p>
-                          Badminton Academy is a renowned sports facility
-                          situated in Sacramento, CA. With a commitment to
-                          providing high-quality services, we offer a range of
-                          amenities and equipment to support athletes in their
-                          training and development.
-                        </p>
-                        <p>
-                          Our facility is equipped with state-of-the-art
-                          features, ensuring a conducive environment for
-                          athletes to excel in their respective sports.
+                        {clubLocation?.organization?.description}
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="accordion-item mb-4" id="includes">
+                {/* <div className="accordion-item mb-4" id="includes">
                   <h4 className="accordion-header" id="panelsStayOpen-includes">
                     <button
                       className="accordion-button"
@@ -485,7 +476,7 @@ function ClubDetailScreen() {
                       </ul>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="accordion-item mb-4" id="amenities">
                   <h4
                     className="accordion-header"
@@ -515,7 +506,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>Parking</span>
+                            <span>{t("parking")}</span>
                           </li>
                         )}
                         {clubAmenity?.is_restrooms === true && (
@@ -524,7 +515,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>Restrooms</span>
+                            <span>{t("restrooms")}</span>
                           </li>
                         )}
                         {clubAmenity?.is_changerooms === true && (
@@ -533,7 +524,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>ChangeRooms</span>
+                            <span>{t("changeRooms")}</span>
                           </li>
                         )}
                         {clubAmenity?.is_powerbackup === true && (
@@ -542,7 +533,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>Power Backup</span>
+                            <span>{t("powerBackup")}</span>
                           </li>
                         )}
                         {clubAmenity?.is_beverages_facility === true && (
@@ -551,7 +542,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>Beverages Facility</span>
+                            <span>{t("beveragesFacility")}</span>
                           </li>
                         )}
                         {clubAmenity?.is_coaching_facilities === true && (
@@ -560,7 +551,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>Coaching Facility</span>
+                            <span>{t("coachingFacility")}</span>
                           </li>
                         )}
                       </ul>
@@ -653,7 +644,7 @@ function ClubDetailScreen() {
                     aria-labelledby="panelsStayOpen-reviews"
                   >
                     <div className="accordion-body">
-                      <div className="row review-wrapper">
+                       {/* <div className="row review-wrapper">
                         <div className="col-lg-3">
                           <div className="ratings-info corner-radius-10 text-center">
                             <h3>4.8</h3>
@@ -667,7 +658,7 @@ function ClubDetailScreen() {
                             </div>
                           </div>
                         </div>
-                        <div className="col-lg-9">
+                       <div className="col-lg-9">
                           <div className="recommended">
                             <h5>Recommended by 97% of Players</h5>
                             <div className="row">
@@ -788,8 +779,8 @@ function ClubDetailScreen() {
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
+                        </div> 
+                      </div>*/}
                       <div className="row review-wrapper review-form-wrapper">
                         {loadingclubReview && <Loader />}
 
@@ -919,8 +910,8 @@ function ClubDetailScreen() {
                   </div>
                 )}
               </div>
-              <div className="white-bg d-flex justify-content-start align-items-center availability">
-                <div className="gamesList">
+              {/*  <div className="white-bg d-flex justify-content-start align-items-center availability">
+               <div className="gamesList">
                   <h4>{t("games")}</h4>
                   {clubGame?.map((game) => (
                     <span key={game.id}>
@@ -929,30 +920,38 @@ function ClubDetailScreen() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </div> */}
               <div className="white-bg book-court">
                 <h4 className="border-bottom">{t("bookACourt")}</h4>
-                <h5 className="d-inline-block">{t("badmintonAcademy")}</h5>
+                <h5 className="d-inline-block">{t("games")} </h5>
+                <br/>
                 <p className="d-inline-block"> {t("availableNow")}</p>
                 <ul className="d-sm-flex align-items-center justify-content-evenly">
                   <li>
-                    <h3 className="d-inline-block primary-text">₹150</h3>
-                    <span>/hr</span>
-                    <p>{t("upToGuests", { guests: 1 })}</p>
+                    <div className="games-container">
+                      {clubGame?.map((game) => (
+                        <div key={game.id} className="game-item">
+                          <h3 className="primary-text">
+                            {game.game_type.game_name}
+                          </h3>
+                          <p>₹{game.pricing}</p>
+                        </div>
+                      ))}
+                    </div>
                   </li>
-                  <li>
+                  {/* <li>
                     <span>
                       <i className="feather-plus"></i>
                     </span>
-                  </li>
-                  <li>
+                  </li> */}
+                  {/* <li>
                     <h4 className="d-inline-block primary-text">₹500</h4>
                     <span>/hr</span>
                     <p>
                     {t("eachAdditionalGuest")} <br />
                     {t("maxGuests")}
                     </p>
-                  </li>
+                  </li> */}
                 </ul>
                 <div className="d-grid btn-block mt-3">
                   <a
@@ -966,7 +965,7 @@ function ClubDetailScreen() {
                   </a>
                 </div>
               </div>
-              <div className="white-bg listing-owner">
+              {/* <div className="white-bg listing-owner">
                 <h4 className="border-bottom">{("listingByOwner")}</h4>
                 <ul>
                   <li className="d-flex justify-content-start align-items-center">
@@ -1010,7 +1009,7 @@ function ClubDetailScreen() {
                     </div>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </aside>
           </div>
         </div>
@@ -1058,7 +1057,7 @@ function ClubDetailScreen() {
                 <Button
                   type="submit"
                   className="btn-check-availability-home"
-                  text="Login"
+                  text={t("login")}
                 />
               </div>
               <span>{t("dontHaveAnAccount")}</span>

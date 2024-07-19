@@ -37,10 +37,6 @@
     "gamesList": "விளையாட்டுகள்",
     "badmintonAcademy": "பேட்மின்டன் கலையாண்டு",
     "availableNow": "தற்போது கிடைக்கின்றது",
-    "pricePerHour": "₹{{price}} /மணி",
-    "upToGuests": "{{guests}} விருந்திற்கு வரை",
-    "eachAdditionalGuest": "ஒவ்வொரு காட்சிக்கும்",
-    "maxGuests": "மிகப்பெரிய 4 விருந்துகளுக்கு முட்டாள்",
     "book": "பதிவு",
     "loginToWriteReview": "விமர்சனம் எழுத உள்நுழையவும்",
     "username": "பயனர்பெயர்",
@@ -50,5 +46,12 @@
     "dontHaveAnAccount": "உங்களிடம் கணக்கு இல்லையா?",
     "signup": "பதிவு செய்யுங்கள்",
     "incorrectCredentials": "தவறான நுழைவு விவரங்கள்",
-    "loggedInSuccessfully": "வெற்றிகரமாக உள்நுழைந்தது"
+    "loggedInSuccessfully": "வெற்றிகரமாக உள்நுழைந்தது",
+    "parking": "கார் நிறுத்தும் இடம்",
+    "restrooms": "மலசலவிடங்கள்",
+    "changeRooms": "மாற்றும் அறைகள்",
+    "powerBackup": "மின்சாரம் மீண்டும் பொருந்தும் வசதி",
+    "beveragesFacility": "பானங்கள் வசதி",
+    "coachingFacility": "பயிற்சி வசதி",
+    "reviewSubmitted": "மதிப்பீடு சமர்ப்பிக்கப்பட்டது"
 }

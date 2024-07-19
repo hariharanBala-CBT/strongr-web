@@ -267,7 +267,7 @@ function BookingInfoScreen() {
           setLoader(false);
           navigate("/checkout");
         } else {
-          toast.error("select a slot to book");
+          toast.error(t("selectSlot"));
         }
       } else {
         setLoader(false);
@@ -327,7 +327,7 @@ function BookingInfoScreen() {
 
   useEffect(() => {
     if (LoginError && isLogin) {
-      toast.error("Incorrect Credentials");
+      toast.error(t('incorrectCredentials'));
       setOpenForm(true);
       setLoader(false);
       setIsLogin(false);
@@ -336,7 +336,7 @@ function BookingInfoScreen() {
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
-      toast.success("Logged in successfully");
+      toast.success(t('loggedInSuccessfully'));
       setOpenForm(false);
       setIsLogin(false);
     }
@@ -389,17 +389,21 @@ function BookingInfoScreen() {
                       />
                     </a>
                     <div className="info">
-                      <div className="d-flex justify-content-start align-items-center mb-3">
+                    {clubLocation?.rating ? (
+                      <div className="d-flex align-items-center">
                         <span className="text-white dark-yellow-bg color-white me-2 d-flex justify-content-center align-items-center">
-                          4.5
+                          {clubLocation.rating}
                         </span>
-                        <span>300 {t("reviews")}</span>
+                        <span>
+                          {clubLocation.numRatings} {t("reviews")}
+                        </span>
                       </div>
+                    ) : null}
                       <h3 className="mb-2">
                         {clubLocation?.organization?.organization_name}
                       </h3>
                       <p>
-                        {clubLocation?.organization?.organization_name}: {t("organizationDescription")}
+                       {clubLocation?.organization?.description}
                       </p>
                     </div>
                   </div>
@@ -420,10 +424,6 @@ function BookingInfoScreen() {
                       </span>
                     </li>
                     <li>
-                      <h3 className="d-inline-block subtitle-txt">
-                        ₹150
-                        <span>/hr</span>
-                      </h3>
                     </li>
                   </ul>
                 </div>
@@ -491,7 +491,7 @@ function BookingInfoScreen() {
                           id: slot.id,
                           name: `${slot.start_time}-${slot.end_time}`,
                         }))}
-                        label="Slot"
+                        label={t("slotLabel")}
                         addSlots={additionalSlots?.map((slot) => ({
                           id: slot.id,
                           name: `${slot.start_time}-${slot.end_time}`,
@@ -591,7 +591,7 @@ function BookingInfoScreen() {
                 >
                   <h2 className="login-title">{t("login")}</h2>
 
-                  <label>{t("username")}</label>6
+                  <label>{t("username")}</label>
                   <input
                     required
                     type="text"

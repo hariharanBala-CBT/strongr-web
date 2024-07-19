@@ -44,7 +44,7 @@ function RegisterScreen() {
   const [submit, setSubmit] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { t } = useTranslation("registerscreen");
+  const { t } = useTranslation("regist0erscreen");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

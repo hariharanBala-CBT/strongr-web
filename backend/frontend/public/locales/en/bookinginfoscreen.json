@@ -6,7 +6,6 @@
       "venueList": "Venue List",
       "venueDetails": "Venue Details",
       "reviews": "Reviews",
-      "organizationDescription": "Where dreams meet excellence in sports education and training.",
       "bookingForm": "Booking Form",
       "areaLabel": "Area",
       "gameLabel": "Game",
@@ -27,5 +26,8 @@
       "password": "Password",
       "enterPassword": "Enter password",
       "loginButton": "Login",
-      "loginToProceed": "You are one step away from booking"
+      "loginToProceed": "You are one step away from booking",
+      "selectSlot": "Select a slot to book",
+      "incorrectCredentials": "Incorrect Credentials",
+      "loggedInSuccessfully": "Logged in successfully"
     }

@@ -157,7 +157,7 @@ function UpdateprofileScreen() {
         <div className="container">
           <h1 className="text-white">{t("updateProfile")}</h1>
           <ul>
-            <li>
+            <li className="breadcrumb-icons">
               <a href="/">{t("home")}</a>
             </li>
             <li>{t("updateProfile")}</li>

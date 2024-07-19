@@ -6,7 +6,6 @@
     "venueList": "இடம் பட்டியல்",
     "venueDetails": "இடம் விவரங்கள்",
     "reviews": "மதிப்பீடுகள்",
-    "organizationDescription": "விளையாட்டு கல்வி மற்றும் பயிற்சியில் கனவுகள் மேம்படும் இடம்.",
     "bookingForm": "முன்பதிவு படிவம்",
     "areaLabel": "பகுதி",
     "gameLabel": "விளையாட்டு",
@@ -27,6 +26,9 @@
     "password": "கடவுச்சொல்",
     "enterPassword": "கடவுச்சொல்லை உள்ளிடவும்",
     "loginButton": "உள்நுழைய",
-    "loginToProceed": "நீங்கள் ஒரு படி விலகியுள்ளீர்கள்"
+    "loginToProceed": "நீங்கள் ஒரு படி விலகியுள்ளீர்கள்",
+    "selectSlot": "ஒரு இடத்தை தேர்ந்தெடுத்து பதிவு செய்யவும்",
+    "incorrectCredentials": "தவறான அனுமதிகள்",
+    "loggedInSuccessfully": "வெற்றிகரமாக உள்நுழைந்தது"
   }
   

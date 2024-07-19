@@ -128,31 +128,27 @@ function BookingScreen() {
                       />
                     </a>
                     <div className="info">
+                    {bookingDetails?.rating ? (
                       <div className="d-flex justify-content-start align-items-center mb-3">
                         <span className="text-white dark-yellow-bg color-white me-2 d-flex justify-content-center align-items-center">
-                          4.5
+                          {bookingDetails.rating}
                         </span>
-                        <span>{t("reviews", { count: 300 })}</span>
+                        <span>
+                          {bookingDetails.num_ratings} {t("reviews")}
+                        </span>
                       </div>
+                    ) : null}
                       <h3 className="mb-2">
                         {bookingDetails?.organization_name}
                       </h3>
                       <p>
-                        {t("organizationDescription", { organization_name: bookingDetails?.organization_name })}
+                       {bookingDetails?.organization?.description}
                       </p>
                     </div>
                   </div>
                 </div>
                 <div className="col-12 col-sm-12 col-md-12 col-lg-6">
                   <ul className="d-sm-flex align-items-center justify-content-evenly">
-                    <li>
-                      <h3 className="d-inline-block subtitle-txt">
-                        <span>
-                          <MapPin />
-                        </span>
-                        {bookingDetails?.organization_location}
-                      </h3>
-                    </li>
                     <li>
                       <h3 className="d-inline-block subtitle-txt">
                         <span>
