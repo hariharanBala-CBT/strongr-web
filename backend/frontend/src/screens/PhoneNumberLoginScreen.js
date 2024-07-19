@@ -140,7 +140,7 @@ function PhoneNumberScreen() {
           window.confirmationResult = confirmationResult;
           setOtpTimestamp(Date.now()); // Store the OTP timestamp
           setTimeLeft(120); // Reset the timer to 2 minutes
-          toast.success(t("otpSentSuccessfully"));
+          toast.success("OTP Sent Successfully");
           setShowOTPInput(true);
         })
         .catch((error) => {

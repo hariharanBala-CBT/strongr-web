@@ -109,6 +109,11 @@ function BookingScreen() {
                 <a>Checkout</a>
               </LinkContainer>
             </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to={"/checkout"}>
+                <a>Checkout</a>
+              </LinkContainer>
+            </li>
             <li>{t("bookedCourt")}</li>
           </ul>
         </div>

@@ -152,6 +152,16 @@ function ResetPassword() {
                               <Eye size={20} />
                             )}
                           </span>
+                          <span
+                            onClick={togglePasswordVisibility}
+                            className="feather-icon-eye"
+                          >
+                            {showPassword ? (
+                              <EyeOff size={20} />
+                            ) : (
+                              <Eye size={20} />
+                            )}
+                          </span>
                         </div>
                         <div className="input-space other-setting-form">
                           <label className="form-label">{t("confirmPassword")}</label>

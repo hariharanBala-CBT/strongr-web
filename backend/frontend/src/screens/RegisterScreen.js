@@ -8,10 +8,10 @@ import OTPInput, { ResendOTP } from "otp-input-react";
 import logoImage from "../images/logo-color.png";
 import Button from "../components/Button";
 import { Box, CircularProgress, Modal } from "@mui/material";
-import ModalClose from "@mui/joy/ModalClose";
+
 import { useTranslation } from "react-i18next";
 import LanguageSelector from "../components/LanguageSelector";
-
+import ModalClose from "@mui/joy/ModalClose";
 import { generateOTP, register, validateUserDetails } from "../actions/actions";
 
 import { USER_LOGOUT } from "../constants/constants";

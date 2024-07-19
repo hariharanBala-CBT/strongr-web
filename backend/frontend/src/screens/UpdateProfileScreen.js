@@ -9,8 +9,10 @@ import { useTranslation } from "react-i18next";
 import Button from "../components/Button";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Footer from "../components/Footer";
 
 import { Box, CircularProgress, Modal } from "@mui/material/";
+import ModalClose from "@mui/joy/ModalClose";
 import ModalClose from "@mui/joy/ModalClose";
 import {
   generateUpdateOTP,
@@ -324,6 +326,8 @@ function UpdateprofileScreen() {
                               className="otp-login-btn"
                               text={t("submit")}
                             />
+                          </form>
+                        </div>
                           </form>
                         </div>
                       </Box>
