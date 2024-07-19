@@ -89,7 +89,7 @@ function ResetPassword() {
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to="/profile">
-                <a>User Profile</a>
+                <a>{t("userProfile")}</a>
               </LinkContainer>
             </li>
             <li>{t("updatePassword")}</li>
@@ -128,10 +128,10 @@ function ResetPassword() {
                     <div className="row">
                       <div className="col-lg-12">
                         <div className="appoint-head">
-                          <h4>Update Password</h4>
+                          <h4>{t("updatePassword")}</h4>
                         </div>
                         <div className="input-space other-setting-form">
-                          <label className="form-label">New Password</label>
+                          <label className="form-label">{t("newPassword")}</label>
                           <input
                             required
                             className="form-control"
@@ -182,7 +182,7 @@ function ResetPassword() {
                           className="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-50 btn-block"
                           type="submit"
                         >
-                          <span>Reset Password</span>
+                          <span>{t("resetPassword")}</span>
 
                           <span className="right-arrow">
                             <ArrowRightCircle size={20} />

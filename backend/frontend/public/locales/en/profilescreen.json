@@ -14,7 +14,7 @@
     "game": "Game",
     "bookedDate": "Booked Date",
     "price": "Price",
-    "price": "Booking status",
+    "bookingStatus": "Booking status",
     "details": "Details",
     "action": "Action",
     "pending": "Pending",

@@ -108,22 +108,17 @@ function CheckoutScreen() {
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to="/clubs">
-                <a>Venue List</a>
+                <a>{t("venueList")}</a>
               </LinkContainer>
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to={`/club/${bookingData.id}`}>
-                <a>Venue Details</a>
+                <a>{t("venueDetails")}</a>
               </LinkContainer>
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to={`/bookinginfo/${bookingData.id}`}>
-                <a>Book A Court</a>
-              </LinkContainer>
-            </li>
-            <li className="breadcrumb-icons">
-              <LinkContainer to={`/bookinginfo/${bookingData.id}`}>
-                <a>Booked Court</a>
+                <a>{t("bookACourt")}</a>
               </LinkContainer>
             </li>
             <li>{t("checkout")}</li>

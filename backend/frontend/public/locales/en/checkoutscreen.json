@@ -13,5 +13,8 @@
   "convenienceFee": "Convenience Fee",
   "onlineBookingFee": "Online booking fee",
   "total": "Total (INR)",
-  "somethingWentWrong": "Something went wrong.."
+  "somethingWentWrong": "Something went wrong..",
+  "venueList": "Venue List",
+  "venueDetails": "Venue Details",
+  "bookACourt": "Book a court"
 }

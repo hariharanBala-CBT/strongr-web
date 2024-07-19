@@ -164,7 +164,7 @@ function UpdateprofileScreen() {
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to="/profile">
-                <a>User Profile</a>
+                <a>{t("userProfile")}</a>
               </LinkContainer>
             </li>
             <li>{t("updateProfile")}</li>

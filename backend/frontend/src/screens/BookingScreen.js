@@ -106,12 +106,7 @@ function BookingScreen() {
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to={"/checkout"}>
-                <a>Checkout</a>
-              </LinkContainer>
-            </li>
-            <li className="breadcrumb-icons">
-              <LinkContainer to={"/checkout"}>
-                <a>Checkout</a>
+                <a>{t("checkout")}</a>
               </LinkContainer>
             </li>
             <li>{t("bookedCourt")}</li>
@@ -177,7 +172,7 @@ function BookingScreen() {
             <h5 className="mb-3">{t("bookingDetails")}</h5>
             <ul className="booking-info d-lg-flex justify-content-between align-items-center">
               <li>
-                <h6>Court Name</h6>
+                <h6>{t("courtName")}</h6>
                 <p>{bookingDetails?.court?.name}</p>
               </li>
               <li>
@@ -193,7 +188,7 @@ function BookingScreen() {
                 <p>{bookingDetails?.slot?.end_time?.slice(0, 5)}</p>
               </li>
               <li>
-                <h6>Address</h6>
+                <h6>{t("address")}</h6>
                 <p>{bookingDetails?.organization_location}</p>
               </li>
             </ul>

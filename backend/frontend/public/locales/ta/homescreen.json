@@ -24,5 +24,6 @@
     "checkAvailability": "கிடைக்குமா என்பதைச் சரிபார்க்கவும்",
     "noTopRatedClubs": "சிறந்த மதிப்பீடு செய்யப்பட்ட கிளப்புகள் இல்லை.",
     "errorFetchingAreas": "பகுதிகளை மீட்கத் தோல்வி",
-    "errorFetchingGames": "விளையாட்டுகளை மீட்கத் தோல்வி"
+    "errorFetchingGames": "விளையாட்டுகளை மீட்கத் தோல்வி",
+    "guide":"வழிகாட்டி"
 }

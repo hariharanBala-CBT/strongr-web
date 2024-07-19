@@ -24,5 +24,6 @@
     "checkAvailability": "Check Availability",
     "noTopRatedClubs": "No top rated clubs found.",
     "errorFetchingAreas": "Error in fetching areas",
-    "errorFetchingGames": "Error in fetching games"
+    "errorFetchingGames": "Error in fetching games",
+    "guide":"Guide"
 }

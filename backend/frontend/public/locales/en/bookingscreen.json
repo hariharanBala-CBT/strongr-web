@@ -15,7 +15,7 @@
   "appointmentDate": "Appointment Date",
   "startTime": "Appointment Start time",
   "endTime": "Appointment End time",
-  "area": "Area",
+  "address": "Address",
   "contactInfo": "Contact Information",
   "name": "Name",
   "email": "Contact Email Address",
@@ -31,6 +31,7 @@
   "success": "Success",
   "cancelled": "Cancelled",
   "unknown": "Unknown",
-  "booked": "Booked"
+  "booked": "Booked",
+  "checkout": "Checkout"
 
 }
