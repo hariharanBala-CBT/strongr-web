@@ -1,0 +1,29 @@
+.preview {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+td {
+    align-items: center;
+}
+
+.header{
+    margin-left: 40%;
+}
+
+#successAlert {
+    position: fixed;
+    top: 70px;
+    left: 85%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: 90%;
+    max-width: 400px;
+    height: 60px;
+}
+
+#successAlert p {
+    text-align: center;
+    margin: 0;
+}

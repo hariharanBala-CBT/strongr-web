@@ -35,6 +35,12 @@ SUCCESS_MESSAGES = {
     'orglocation_status' : 'Organization location status updated successfully',
 
     'change_password' : 'Your password was successfully updated',
+
+    #tenant
+    'org_approve' : 'Organization is Approved !!!',
+    'orglocation_approve' : 'Organization location is Approved !!!',
+    'org_cancel' : 'Organization is Cancelled',
+    'orglocation_cancel' : 'Organization location is Cancelled',
 }
 
 ERROR_MESSAGES = {

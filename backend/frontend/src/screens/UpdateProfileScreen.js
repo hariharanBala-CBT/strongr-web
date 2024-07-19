@@ -8,9 +8,10 @@ import { ArrowRightCircle } from "react-feather";
 import { useTranslation } from "react-i18next";
 import Button from "../components/Button";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 import { Box, CircularProgress, Modal } from "@mui/material/";
-
+import ModalClose from "@mui/joy/ModalClose";
 import {
   generateUpdateOTP,
   listcustomerDetails,
@@ -149,7 +150,7 @@ function UpdateprofileScreen() {
   }, [userValidate, userValidateError]);
 
   return (
-    <div className="user-profile-wrapper">
+    <div className="user-profile-wrapper update-profile-screen">
       <Header location="nav-all" />
       <Toaster />
       <section className="breadcrumb breadcrumb-list mb-0">
@@ -159,6 +160,11 @@ function UpdateprofileScreen() {
           <ul>
             <li className="breadcrumb-icons">
               <a href="/">{t("home")}</a>
+            </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to="/profile">
+                <a>User Profile</a>
+              </LinkContainer>
             </li>
             <li>{t("updateProfile")}</li>
           </ul>
@@ -187,7 +193,7 @@ function UpdateprofileScreen() {
             <div className="col-sm-12">
               <div className="profile-detail-group">
                 <div className="update-userprofile">
-                  <form onSubmit={updateCustomer}>
+                  <form onSubmit={validateEmail}>
                     <h2 className="profile-title">{t("updateProfile")}</h2>
                     <div className="row">
                       <div className="col-lg-6 col-md-6">
@@ -285,29 +291,41 @@ function UpdateprofileScreen() {
                       </Box>
                     ) : (
                       <Box sx={style}>
-                        <form onSubmit={updateCustomer} className="otp-form">
-                          <div className="otp-input">
-                            <label>{t("enterOtp")}</label>
-                            <OTPInput
-                              className="otp-input-field"
-                              value={otp}
-                              onChange={setOtp}
-                              autoFocus
-                              OTPLength={4}
-                              otpType="number"
-                              disabled={false}
-                              secure
-                            />
-                            <ResendOTP onResendClick={regenerateOtp} />
-                          </div>
-                          <div className="otp-button">
+                        <ModalClose
+                          variant="outlined"
+                          sx={{ m: 1 }}
+                          onClick={() => setOpenForm(false)}
+                        />
+                        <div className="update-prof-otpform">
+                          <form onSubmit={updateCustomer} className="otp-form">
+                            <div className="otp-input">
+                              <label className="update-prof-label">
+                                {t("enterOtp")}
+                              </label>
+                              <OTPInput
+                                className="otp-input-field"
+                                value={otp}
+                                onChange={setOtp}
+                                autoFocus
+                                OTPLength={4}
+                                otpType="number"
+                                disabled={false}
+                                secure
+                              />
+                              <div className="resend-wrapper">
+                                <ResendOTP
+                                  onResendClick={regenerateOtp}
+                                  className="resend-btn"
+                                />
+                              </div>
+                            </div>
                             <Button
                               type="submit"
-                              className="btn-check-availability-home"
+                              className="otp-login-btn"
                               text={t("submit")}
                             />
-                          </div>
-                        </form>
+                          </form>
+                        </div>
                       </Box>
                     )}
                   </Modal>
@@ -317,6 +335,7 @@ function UpdateprofileScreen() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

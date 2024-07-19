@@ -129,8 +129,8 @@ function ProfileScreen() {
         <div className="container">
           <h1 className="text-white">{t("userProfile")}</h1>
           <ul>
-           <li className="breadcrumb-icons">
-              <a href="/">{t("home")}</a>
+            <li className="breadcrumb-icons">
+              <a href="/">Home</a>
             </li>
             <li>{t("userProfile")}</li>
           </ul>

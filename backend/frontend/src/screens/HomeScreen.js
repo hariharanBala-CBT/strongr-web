@@ -7,11 +7,16 @@ import toast, { Toaster } from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Form } from "react-bootstrap";
 import "../css/homescreen.css";
+
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Message from "../components/Message";
 import SelectInput from "../components/SelectInput";
 import DateInput from "../components/DateInput";
+import Venue from "../components/Venue";
+import Footer from "../components/Footer";
+import Testimonial from "../components/Testimonial";
+import customerGuide from "../guide/customer.pdf";
 import {
   listAreas,
   listGames,
@@ -22,13 +27,10 @@ import {
 import { useHomeContext } from "../context/HomeContext";
 import { CircularProgress } from "@mui/material";
 import { fixImageUrls } from "../utils/imageUtils";
-import Footer from "../components/Footer";
 import cockImage from "../images/icons/work-cock.svg";
 import workImage from "../images/icons/work-icon1.svg";
 import workImage2 from "../images/icons/work-icon2.svg";
 import workImage3 from "../images/icons/work-icon3.svg";
-import Venue from "../components/Venue";
-import Testimonial from "../components/Testimonial";
 
 function HomeScreen(history) {
   const { t } = useTranslation("homescreen");
@@ -178,9 +180,13 @@ function HomeScreen(history) {
         </div>
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
+
             <h2>
               {t("howIt")} <span>{t("works")}</span>
             </h2>
+            <div className="guide-link">
+              <a href={customerGuide} className="guide" target="_blank" rel="noopener noreferrer">Guide</a>
+            </div>
             <p className="sub-title">
               {t("howItWorksSubtitle")}
             </p>

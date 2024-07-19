@@ -26,6 +26,7 @@ function BookingScreen() {
 
   const { bookingDetails } = useSelector((state) => state.bookingDetails);
   const { success } = useSelector((state) => state.bookingCreate);
+  const { userInfo } = useSelector((state) => state.userLogin);
 
   function getPaymentStatusText(status) {
     switch (status) {
@@ -103,6 +104,11 @@ function BookingScreen() {
                 <a>{t("bookACourt")}</a>
               </LinkContainer>
             </li>
+            <li className="breadcrumb-icons">
+              <LinkContainer to={"/checkout"}>
+                <a>Checkout</a>
+              </LinkContainer>
+            </li>
             <li>{t("bookedCourt")}</li>
           </ul>
         </div>
@@ -166,8 +172,8 @@ function BookingScreen() {
             <h5 className="mb-3">{t("bookingDetails")}</h5>
             <ul className="booking-info d-lg-flex justify-content-between align-items-center">
               <li>
-                <h6>{t("courtName")}</h6>
-                <p>{t("standardCourt")}</p>
+                <h6>Court Name</h6>
+                <p>{bookingDetails?.court?.name}</p>
               </li>
               <li>
                 <h6>{t("appointmentDate")}</h6>
@@ -182,7 +188,7 @@ function BookingScreen() {
                 <p>{bookingDetails?.slot?.end_time?.slice(0, 5)}</p>
               </li>
               <li>
-                <h6>{t("area")}</h6>
+                <h6>Address</h6>
                 <p>{bookingDetails?.organization_location}</p>
               </li>
             </ul>
@@ -194,7 +200,7 @@ function BookingScreen() {
               </li>
               <li>
                 <h6>{t("email")}</h6>
-                <p>{"test@gmail.com"}</p>
+                <p>{userInfo?.email}</p>
               </li>
               <li>
                 <h6>{t("phoneNumber")}</h6>

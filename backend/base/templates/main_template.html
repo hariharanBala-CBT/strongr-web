@@ -1,43 +1,53 @@
-{% load static %}{% load url_filters %}
+{% load static %}
+{% load url_filters %}
 
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>STRONGR.</title>
 
-        <title>STRONGR.</title>
-
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-        <link href="{% static 'styles.css' %}" rel="stylesheet" />
-        <link href="{% static './css/tab-page.css' %}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="{% static 'styles.css' %}" rel="stylesheet" />
+    <link href="{% static './css/tab-page.css' %}" rel="stylesheet" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <link href="{% static 'css/breadcrumbs.css' %}" rel="stylesheet" />
     </head>
 
     <body class="sb-nav-fixed">
+        <!-- Navbar -->
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <a class="navbar-brand ps-3" href="{% url 'organization_page' %}">STRONGR.</a>
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+                    class="fas fa-bars"></i></button>
             <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>{{ user.username }}</a>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="fas fa-user fa-fw"></i>
+                        {{ user.username }}
+                    </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>
             </ul>
         </nav>
+
+        <!-- Sidebar -->
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <!-- Sidebar Content -->
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Organization</div>
@@ -49,46 +59,54 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                                 Profile
                             </a>
-                            <a class="nav-link" href="{% url 'organization_locationlist'%}" style="color: white; background-color: rgb(68, 68, 68);">
+                            <a class="nav-link" href="{% url 'organization_locationlist'  %}"  style="color: white; background-color: rgb(68, 68, 68);">
                                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
                             </a>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Slots
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="{% url 'slot-location' %}">Slot-list</a>
+                                    <a class="nav-link" href="{% url 'temp-slot-location'%}">Additional Slots</a>
+                                    <a class="nav-link" href="{% url 'temp-deslot-location'%}">Unavailable Slots</a>
+                                </nav>
+                            </div>
                             <a class="nav-link" href="{% url 'preview' %}">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                                 Preview
                             </a>
                             <a class="nav-link" href="{% url 'status' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
+                                <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></i></div>
                                 Status
                             </a>
+                            <div class="sb-sidenav-menu-heading">Customers</div>
                             <a class="nav-link" href="{% url 'org_customers_list'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                                Customers
-                            </a>
-                            <div class="sb-sidenav-menu-heading">Slot</div>
-                            <a class="nav-link" href="{% url 'slot-location' %}">
-                                <div class="sb-nav-link-icon"><i class="fa-regular fa-clock"></i></div>
-                                Slots List
-                            </a>
-                            <a class="nav-link" href="{% url 'temp-slot-location'%}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
-                                Additional Slots
-                            </a>
-                            <a class="nav-link" href="{% url 'temp-deslot-location'%}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-minus"></i></div>
-                                Unavailable Slots
+                                List
                             </a>
                         </div>
                     </div>
+                    <!-- Logged in User -->
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
                         <div class="user-email">{{ request.user.email }}</div>
                     </div>
                 </nav>
             </div>
+
             <div id="layoutSidenav_content">
                 <main class="main-template">
                     <div class="container-fluid px-4 mt-4">
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i>
+                            </a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'organization_locationlist'%}">Location List</a></li>
+                            <li class="breadcrumb-item">Location</li>
+                        </ol>
                         {% if messages %}
                             <div class="alert alert-success" role="alert" id="successAlert">
                                 {% for message in messages %}
@@ -126,6 +144,17 @@
                         </div>
                     </div>
                 </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; <span id="current-year"></span> STRONGR. | All Rights Reserved</div>
+                            <div>
+                                <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
+                                &middot;
+                                <a href="{% url 'termsandconditions' %}">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -135,6 +164,7 @@
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script>
             $(document).ready(function () {
+                // Function to get cookie value
                 function getCookie(name) {
                     let cookieValue = null;
                     if (document.cookie && document.cookie !== '') {
@@ -150,6 +180,7 @@
                     return cookieValue;
                 }
 
+                // Function to initialize form submission via AJAX
                 function initFormSubmission() {
                     $('#tab-content form').submit(function (event) {
                         event.preventDefault();
@@ -166,13 +197,14 @@
                                 'X-CSRFToken': csrftoken,
                                 'X-Requested-With': 'XMLHttpRequest'
                             },
-                            success: function (response) {
-                                if (response.status === 'success') {
-                                    showToast(response.message);
-                                } else {
-                                    showToast(response.message || 'Error submitting form.');
-                                }
-                            },
+                               success: function(response) {
+                            if (response.status === 'success') {
+                                showToast(response.message);
+
+                            } else {
+                                showToast(response.message || 'Error submitting form.');
+                            }
+                        },
                             error: function (xhr, status, error) {
                                 console.error('Error:', error);
                                 showToast('Error submitting form. ' + error);
@@ -181,6 +213,7 @@
                     });
                 }
 
+                // Function to show toast messages
                 function showToast(message) {
                     const toast = $('#successToast');
                     toast.text(message);
@@ -190,11 +223,14 @@
                     }, 2500);
                 }
 
+                // Function to set active tab
                 function setActiveTab(tab) {
                     $('.tab-button').removeClass('active');
                     $(tab).addClass('active');
+                    localStorage.setItem('activeTab', $(tab).data('url'));
                 }
 
+                // Handle tab button click
                 $('.tab-button').click(function () {
                     const url = $(this).data('url');
                     setActiveTab(this);
@@ -203,13 +239,34 @@
                     });
                 });
 
-                const initialTab = $('.tab-button.active').data('url');
-                if (initialTab) {
+                // Load the last active tab on page load if location hasn't changed
+                const initialTab = localStorage.getItem('activeTab');
+                const currentLocationPk = '{{ locationpk }}';
+                const savedLocationPk = localStorage.getItem('locationPk');
+
+                if (savedLocationPk !== currentLocationPk) {
+                    localStorage.removeItem('activeTab');
+                    localStorage.setItem('locationPk', currentLocationPk);
+                    const defaultTabElement = $('.tab-button').first();
+                    setActiveTab(defaultTabElement);
+                    $('#tab-content').load(defaultTabElement.data('url'), function () {
+                        initFormSubmission();
+                    });
+                } else if (initialTab) {
+                    const activeTabElement = $(`.tab-button[data-url='${initialTab}']`);
+                    setActiveTab(activeTabElement);
                     $('#tab-content').load(initialTab, function () {
+                        initFormSubmission();
+                    });
+                } else {
+                    const defaultTabElement = $('.tab-button').first();
+                    setActiveTab(defaultTabElement);
+                    $('#tab-content').load(defaultTabElement.data('url'), function () {
                         initFormSubmission();
                     });
                 }
 
+                // Handle location change
                 $('#locationSelect').change(function () {
                     const selectedLocation = $(this).val();
                     if (selectedLocation) {
@@ -217,17 +274,17 @@
                     }
                 });
 
-                const $successAlert = $('#successAlert');
-                if ($successAlert.length) {
-                    setTimeout(() => {
-                        $successAlert.hide();
-                    }, 2500);
-                }
+            const $successAlert = $('#successAlert');
+            if ($successAlert.length) {
+                setTimeout(() => {
+                    $successAlert.hide();
+                }, 2500);
+            }
 
-                const $datatablesSimple = $('#datatablesSimple');
-                if ($datatablesSimple.length) {
-                    new simpleDatatables.DataTable(datatablesSimple[0]);
-                }
+            const $datatablesSimple = $('#datatablesSimple');
+            if ($datatablesSimple.length) {
+                new simpleDatatables.DataTable(datatablesSimple[0]);
+            }
 
                 const $sidebarToggle = $('#sidebarToggle');
                 if ($sidebarToggle.length) {
@@ -238,6 +295,25 @@
                     });
                 }
             });
+
+            $(document).ready(function () {
+                $('#nextTabBtn').click(function () {
+                    const activeTab = $('.tab-button.active');
+                    const nextTab = activeTab.next('.tab-button');
+
+                    if (nextTab.length > 0) {
+                        activeTab.removeClass('active');
+                        nextTab.addClass('active');
+
+                        const url = nextTab.data('url');
+                        $('#tab-content').load(url, function () {
+                               initFormSubmission();
+                        });
+                    }
+                });
+            });
+
+        document.getElementById('current-year').textContent = new Date().getFullYear();
         </script>
     </body>
 </html>

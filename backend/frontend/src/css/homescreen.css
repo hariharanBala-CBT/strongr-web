@@ -554,3 +554,7 @@
   align-content: center;
   justify-items: center;
 }
+
+.guide{
+  position: relative;
+}
