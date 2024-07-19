@@ -151,6 +151,7 @@ class ClubSerializerWithLocation(serializers.ModelSerializer):
         model = Organization
         fields = '__all__'
 
+from django.db.models import Q
 
 class ClubLocationSerializerWithImages(serializers.ModelSerializer):
     organization = ClubSerializer()
@@ -183,41 +184,108 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
         return serializer.data
 
     def get_next_availabilty(self, obj):
-        now = datetime.datetime.now()
+        now = datetime.datetime.now().replace(microsecond=0)
+        current_time = (now + datetime.timedelta(hours=1)).time()
+        selected_date = now.date()
 
-        next_slot = Slot.objects.filter(
-            days=now.strftime('%A'),
-            start_time__gte=now.time(),
-            is_booked=False,
-            location=obj
-        ).order_by('start_time').first()
+        # Find the first court for the given OrganizationLocation
+        try:
+            court = Court.objects.filter(location=obj).first()
+            if not court:
+                return None
+        except Court.DoesNotExist:
+            return None
 
-        next_additional_slot = AdditionalSlot.objects.filter(
-            date__gte=now.date(),
-            is_active=True,
-            location=obj
-        ).order_by('date', 'start_time').first()
+        # Exclude unavailable and booked slots
+        unavailable_slots = UnavailableSlot.objects.filter(
+            court=court,
+            date__gte=selected_date,
+            is_active=True
+        ).values_list('start_time', 'end_time')
+        
+        booked_slots = Booking.objects.filter(
+            court=court,
+            booking_date__gte=selected_date
+        ).values_list('slot__start_time', 'slot__end_time')
+        
+        excluded_times = list(unavailable_slots) + list(booked_slots)
 
-        next_unavailable_slot = UnavailableSlot.objects.filter(
-            date__gte=now.date(),
-            is_active=True,
-            location=obj
-        ).order_by('date', 'start_time').first()
+        nearest_slots = []
 
-        if next_slot and next_additional_slot:
-            if next_slot.start_time < next_additional_slot.start_time:
-                if next_slot.start_time < next_unavailable_slot.start_time:
-                    return SlotSerializer(next_slot).data
-                else:
-                    return SlotSerializer(next_slot).data
-            else:
-                return AdditionalSlotSerializer(next_additional_slot).data
-        elif next_slot:
-            return SlotSerializer(next_slot).data
-        elif next_additional_slot:
-            return AdditionalSlotSerializer(next_additional_slot).data
+        # Find nearest slot from Slot table
+        for i in range(0, 7):  # Search for up to one week
+            target_date = now + datetime.timedelta(days=i)
+            target_weekday = target_date.strftime('%A')
 
-        return None
+            slots = Slot.objects.filter(
+                court=court,
+                days=target_weekday,
+                start_time__gte=(current_time if i == 0 and selected_date == now.date() else datetime.datetime.min.time())
+            ).exclude(
+                Q(start_time__in=[time[0] for time in excluded_times]) |
+                Q(end_time__in=[time[1] for time in excluded_times])
+            )
+
+            for slot in slots:
+                slot_info = {
+                    'date': target_date.date(),
+                    'start_time': slot.start_time,
+                    'end_time': slot.end_time,
+                    'source': 'slot'
+                }
+                nearest_slots.append(slot_info)
+        
+        # Find nearest slot from AdditionalSlot table
+        for i in range(0, 7):  # Search for up to one week
+            target_date = now + datetime.timedelta(days=i)
+
+            additional_slots = AdditionalSlot.objects.filter(
+                court=court,
+                date=target_date.date(),
+                is_active=True,
+                start_time__gte=(current_time if i == 0 and selected_date == now.date() else datetime.datetime.min.time())
+            ).exclude(
+                Q(start_time__in=[time[0] for time in excluded_times]) |
+                Q(end_time__in=[time[1] for time in excluded_times])
+            )
+
+            for slot in additional_slots:
+                slot_info = {
+                    'date': slot.date,
+                    'start_time': slot.start_time,
+                    'end_time': slot.end_time,
+                    'source': 'additional_slot'
+                }
+                nearest_slots.append(slot_info)
+
+        # Sort the collected slots by date and start_time and select the nearest one
+        nearest_slots.sort(key=lambda x: (x['date'], x['start_time']))
+
+        # If there are no available slots, return None or handle accordingly
+        if not nearest_slots:
+            return None
+        
+        # Serialize and return the nearest slot
+        nearest_slot = nearest_slots[0]
+        
+        if nearest_slot['source'] == 'slot':
+            slot = Slot.objects.get(
+                court=court,
+                start_time=nearest_slot['start_time'],
+                end_time=nearest_slot['end_time'],
+                days=nearest_slot['date'].strftime('%A')
+            )
+            serializer = SlotSerializer(slot)
+        else:
+            slot = AdditionalSlot.objects.get(
+                court=court,
+                start_time=nearest_slot['start_time'],
+                end_time=nearest_slot['end_time'],
+                date=nearest_slot['date']
+            )
+            serializer = AdditionalSlotSerializer(slot)
+        
+        return serializer.data
 
     class Meta:
         model = Organization

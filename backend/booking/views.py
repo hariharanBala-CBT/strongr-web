@@ -572,3 +572,111 @@ def getHighRatedClubs(request):
     except Exception as e:
         print(e)
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+from django.utils.dateparse import parse_datetime
+from django.db.models import Q
+
+@api_view(['GET'])
+def getNearestSlot(request):
+    court_id = request.query_params.get('courtId')
+    date_str = request.query_params.get('date')
+    
+    date_obj = parse_datetime(date_str)
+    current_datetime = datetime.datetime.now().replace(microsecond=0)
+    current_time = (current_datetime + datetime.timedelta(hours=1)).time()
+    selected_date = date_obj.date() if date_obj else current_datetime.date()
+
+    # Exclude unavailable and booked slots
+    unavailable_slots = UnavailableSlot.objects.filter(
+        court_id=court_id, 
+        date__gte=current_datetime.date(), 
+        is_active=True
+    ).values_list('start_time', 'end_time')
+    
+    booked_slots = Booking.objects.filter(
+        court_id=court_id, 
+        booking_date__gte=current_datetime.date()
+    ).values_list('slot__start_time', 'slot__end_time')
+    
+    excluded_times = list(unavailable_slots) + list(booked_slots)
+
+    nearest_slots = []
+
+    # Find nearest slot from Slot table
+    for i in range(0, 7):  # Search for up to one week
+        target_date = current_datetime + timedelta(days=i)
+        target_weekday = target_date.strftime('%A')
+
+        slots = Slot.objects.filter(
+            court_id=court_id,
+            days=target_weekday,
+            start_time__gte=(current_time if i == 0 and selected_date == current_datetime.date() else datetime.datetime.min.time())
+        ).exclude(
+            Q(start_time__in=[time[0] for time in excluded_times]) |
+            Q(end_time__in=[time[1] for time in excluded_times])
+        )
+
+        for slot in slots:
+            slot_info = {
+                'date': target_date.date(),
+                'start_time': slot.start_time,
+                'end_time': slot.end_time,
+                'source': 'slot'
+            }
+            nearest_slots.append(slot_info)
+        
+    # Find nearest slot from AdditionalSlot table
+    for i in range(0, 7):  # Search for up to one week
+        target_date = current_datetime + timedelta(days=i)
+
+        additional_slots = AdditionalSlot.objects.filter(
+            court_id=court_id,
+            date=target_date.date(),
+            is_active=True,
+            start_time__gte=(current_time if i == 0 and selected_date == current_datetime.date() else datetime.datetime.min.time())
+        ).exclude(
+            Q(start_time__in=[time[0] for time in excluded_times]) |
+            Q(end_time__in=[time[1] for time in excluded_times])
+        )
+
+        for slot in additional_slots:
+            slot_info = {
+                'date': slot.date,
+                'start_time': slot.start_time,
+                'end_time': slot.end_time,
+                'source': 'additional_slot'
+            }
+            nearest_slots.append(slot_info)
+
+    # Sort the collected slots by date and start_time and select the nearest one
+    nearest_slots.sort(key=lambda x: (x['date'], x['start_time']))
+
+    # If there are no available slots, return an empty response or handle accordingly
+    if not nearest_slots:
+        return Response({"message": "No slots available"}, status=404)
+    
+    # Serialize and return the nearest slot
+    nearest_slot = nearest_slots[0]
+    
+    if nearest_slot['source'] == 'slot':
+        slot = Slot.objects.get(
+            court_id=court_id,
+            start_time=nearest_slot['start_time'],
+            end_time=nearest_slot['end_time'],
+            days=nearest_slot['date'].strftime('%A')
+        )
+        serializer = SlotSerializer(slot)
+    else:
+        slot = AdditionalSlot.objects.get(
+            court_id=court_id,
+            start_time=nearest_slot['start_time'],
+            end_time=nearest_slot['end_time'],
+            date=nearest_slot['date']
+        )
+        serializer = AdditionalSlotSerializer(slot)
+    
+    return Response(serializer.data)
+
+
+
