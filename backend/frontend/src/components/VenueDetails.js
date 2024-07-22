@@ -24,13 +24,13 @@ const VenueDetails = ({ club }) => {
                 <img
                   className="club-images"
                   src={organization_images}
-                  alt="Venue"
+                  alt={t("venueAlt")}
                 />
               ) : (
                 <img
                   className="club-images"
                   src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
-                  alt="Venue"
+                  alt={t("venueAlt")}
                 />
               )}
             </>
@@ -48,7 +48,7 @@ const VenueDetails = ({ club }) => {
               {club.rating && (
                 <>
                   <span className="rating-bg">{club.rating}</span>
-                  <span>{club.numRatings} {t("reviews")}</span>
+                  <span>{t("reviews", { count: club.numRatings })}</span>
                 </>
               )}
             </div>
@@ -96,11 +96,11 @@ const VenueDetails = ({ club }) => {
               >
                 <>
                   {organization_images ? (
-                    <img src={organization_images} alt="Venue" />
+                    <img src={organization_images} alt={t("venueAlt")} />
                   ) : (
                     <img
                       src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
-                      alt="Venue"
+                      alt={t("venueAlt")}
                     />
                   )}
                   {organization.organization_name}

@@ -11,5 +11,6 @@
   "dontHaveAccount": "Don't you have an Account?",
   "incorrectPassword": "Incorrect password",
   "login": "Login",
-  "signup": "signup"
+  "signup": "signup",
+  "logoAlt": "Logo"
 }

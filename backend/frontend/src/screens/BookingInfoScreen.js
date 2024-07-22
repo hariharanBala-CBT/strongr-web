@@ -394,7 +394,7 @@ function BookingInfoScreen() {
                           {clubLocation.rating}
                         </span>
                         <span>
-                          {clubLocation.numRatings} {t("reviews")}
+                        {t("reviews", { count: clubLocation?.numRatings })}                        
                         </span>
                       </div>
                     ) : null}
@@ -479,7 +479,7 @@ function BookingInfoScreen() {
                       />
                     )}
                     {loading ? (
-                      <div>Loading slots...</div>
+                      <div>{t("loadingSlots")}</div>
                     ) : slots?.length !== 0 || additionalSlots?.length !== 0 ? (
                       <SelectInput
                         useRadioButtons
@@ -502,7 +502,7 @@ function BookingInfoScreen() {
                       />
                     ) : (
                       <Alert severity="error">
-                        {t("noSlotsAvailable")} {courtName}
+                      {t("noSlotsAvailable", {courtName})}                       
                       </Alert>
                     )}
                   </div>

@@ -110,7 +110,7 @@ function LoginScreen() {
                             <img
                               src={logoImage}
                               className="img-fluid"
-                              alt="Logo"
+                              alt={t("logoAlt")}
                             />
                           </a>
                         </LinkContainer>

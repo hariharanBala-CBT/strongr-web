@@ -98,7 +98,7 @@ function PhoneNumberScreen() {
     // Check if OTP has expired (2 minutes)
     const currentTime = Date.now();
     if (currentTime - otpTimestamp > 2 * 60 * 1000) {
-      toast.error("OTP has expired. Please request a new one.");
+      toast.error(t("otpExpired"));
       setLoading(false);
       setShowOTPInput(false);
       return;
@@ -140,7 +140,7 @@ function PhoneNumberScreen() {
           window.confirmationResult = confirmationResult;
           setOtpTimestamp(Date.now()); // Store the OTP timestamp
           setTimeLeft(120); // Reset the timer to 2 minutes
-          toast.success("OTP Sent Successfully");
+          toast.success(t("otpSentSuccessfully"));
           setShowOTPInput(true);
         })
         .catch((error) => {
@@ -209,7 +209,7 @@ function PhoneNumberScreen() {
                             <img
                               src={logoImage}
                               className="img-fluid"
-                              alt="Logo"
+                              alt={t("logoAlt")}
                             />
                           </a>
                         </LinkContainer>

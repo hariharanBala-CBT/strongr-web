@@ -1,7 +1,8 @@
 {
     "featured": "Featured",
-    "reviews": "reviews",
+    "reviews": "{{count}} Reviews ",
     "bookNow": "Book Now",
-    "nextAvailability": "Next Availability"
+    "nextAvailability": "Next Availability",
+    "organizationAlt": "Organization"
 
 }

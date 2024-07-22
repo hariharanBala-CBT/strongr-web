@@ -44,7 +44,7 @@ function RegisterScreen() {
   const [submit, setSubmit] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { t } = useTranslation("regist0erscreen");
+  const { t } = useTranslation("registerscreen");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -170,7 +170,7 @@ function RegisterScreen() {
                             <img
                               src={logoImage}
                               className="img-fluid"
-                              alt="Logo"
+                              alt={t("logoAlt")}
                             />
                           </a>
                         </LinkContainer>

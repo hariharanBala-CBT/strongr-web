@@ -252,7 +252,7 @@ function ClubListScreen() {
 
                   <div className="suggested-clubs">
                     <h3 className="title-suggested">
-                      {t("suggestedClubsIn")} {areaName}
+                      {t("suggestedClubsIn", {areaName})} 
                     </h3>
                     <Club clubs={suggestedClubList} />
                   </div>
@@ -268,7 +268,7 @@ function ClubListScreen() {
 
                       <div className="suggested-clubs">
                         <h3 className="title-suggested">
-                          {t("suggestedClubsFor")} {gameName}
+                          {t("suggestedClubsFor", {gameName})} 
                         </h3>
                         <Club clubs={suggestedClubGameList} />
                       </div>

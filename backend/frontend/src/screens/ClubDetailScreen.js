@@ -271,7 +271,7 @@ function ClubDetailScreen() {
                     </div>
                     <p className="mb-0">
                       <a href="javascript:;">
-                        {clubLocation?.numRatings} {t("reviews")}
+                      {t("reviews", { count: clubLocation?.numRatings })}
                       </a>
                     </p>
                   </div>
@@ -591,7 +591,7 @@ function ClubDetailScreen() {
                               <div key={image.id}>
                                 <img
                                   src={image.image}
-                                  alt="carousel-img"
+                                  alt={t("carouselImgAlt")}
                                   className="carousel-img"
                                 />
                               </div>
@@ -601,7 +601,7 @@ function ClubDetailScreen() {
                               <div>
                                 <img
                                   src={noImage2}
-                                  alt="carousel-img"
+                                  alt={t("carouselImgAlt")}
                                   className="carousel-img"
                                 />
                               </div>
@@ -847,7 +847,7 @@ function ClubDetailScreen() {
                       {clubReviews?.map((review) => (
                         <div className="review-box d-md-flex">
                           <div className="review-profile">
-                            <img src={profileImage} alt="User" />
+                            <img src={profileImage} alt={t("userAlt")}/>
                           </div>
                           <div className="review-info">
                             <h6 className="mb-2 tittle">{review.name}</h6>

@@ -1,6 +1,7 @@
 {
     "featured": "சிறப்பம்சம்",
-    "reviews": "விமர்சனங்கள்",
+    "reviews": "{{count}} விமர்சனங்கள்",
     "bookNow": "பதிவு செய்யவும்",
-    "nextAvailability": "அடுத்த கிடைக்கும்"
+    "nextAvailability": "அடுத்த கிடைக்கும்",
+    "venueAlt": "இடம்"
 }

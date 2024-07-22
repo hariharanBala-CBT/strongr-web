@@ -175,7 +175,7 @@ function HomeScreen(history) {
       <section className="section work-section" ref={sectionRef}>
         <div className="work-img">
           <div className="work-img-right">
-            <img src={cockImage} alt="Icon" />
+            <img src={cockImage} alt={t("iconAlt")}/>
           </div>
         </div>
         <div className="container">
@@ -219,7 +219,7 @@ function HomeScreen(history) {
               <div className="work-grid w-100 aos" data-aos="fade-up">
                 <div className="work-icon">
                   <div className="work-icon-inner">
-                    <img src={workImage2} alt="Icon" />
+                    <img src={workImage2} alt={t("iconAlt")} />
                   </div>
                 </div>
                 <div className="work-content">
@@ -242,7 +242,7 @@ function HomeScreen(history) {
               <div className="work-grid w-100 aos" data-aos="fade-up">
                 <div className="work-icon">
                   <div className="work-icon-inner">
-                    <img src={workImage3} alt="Icon" />
+                    <img src={workImage3} alt={t("iconAlt")} />
                   </div>
                 </div>
                 <div className="work-content">

@@ -417,7 +417,7 @@ function ProfileScreen() {
         onClose={handleCancelClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Cancel Booking?"}</DialogTitle>
+        <DialogTitle>{t("cancelBookingQuestion")}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             {t("noRefund")}

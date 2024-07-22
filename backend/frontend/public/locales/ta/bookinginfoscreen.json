@@ -5,14 +5,14 @@
     "venue": "இடம்",
     "venueList": "இடம் பட்டியல்",
     "venueDetails": "இடம் விவரங்கள்",
-    "reviews": "மதிப்பீடுகள்",
+    "reviews": "{{count}} விமர்சனங்கள்",
     "bookingForm": "முன்பதிவு படிவம்",
     "areaLabel": "பகுதி",
     "gameLabel": "விளையாட்டு",
     "dateLabel": "தேதி",
     "courtLabel": "நீதிமன்றம்",
     "slotLabel": "இடைவெளி",
-    "noSlotsAvailable": "இல் இடைவெளிகள் கிடைக்கவில்லை",
+    "noSlotsAvailable": "{{courtName}} ஸ்லாட்டுகள் எதுவும் இல்லை ",
     "yourOrder": "உங்கள் ஆர்டர்",
     "gst": "ஜிஎஸ்டி",
     "stateAndCentralTax": "மாநில வரி மற்றும் மத்திய வரி",
@@ -29,6 +29,7 @@
     "loginToProceed": "நீங்கள் ஒரு படி விலகியுள்ளீர்கள்",
     "selectSlot": "ஒரு இடத்தை தேர்ந்தெடுத்து பதிவு செய்யவும்",
     "incorrectCredentials": "தவறான அனுமதிகள்",
-    "loggedInSuccessfully": "வெற்றிகரமாக உள்நுழைந்தது"
+    "loggedInSuccessfully": "வெற்றிகரமாக உள்நுழைந்தது",
+    "loadingSlots": "இடைவெளிகள் ஏற்றுகிறது..."
   }
   

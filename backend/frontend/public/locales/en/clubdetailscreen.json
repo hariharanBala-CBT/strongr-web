@@ -1,7 +1,7 @@
 {
     "venueDetails": "Venue Details",
     "home": "Home",
-    "reviews": "Reviews",
+    "reviews": "{{count}} Reviews",
     "venueType": "Venue Type",
     "venueList": "Venue List",
     "indoor": "Indoor",
@@ -52,6 +52,8 @@
     "powerBackup": "Power Backup",
     "beveragesFacility": "Beverages Facility",
     "coachingFacility": "Coaching Facility",
-    "reviewSubmitted": "Review submitted"
+    "reviewSubmitted": "Review submitted",
+    "carouselImgAlt": "carousel-img",
+    "userAlt": "User"
 
 }

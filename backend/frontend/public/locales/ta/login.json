@@ -11,5 +11,6 @@
   "dontHaveAccount": "உங்களுக்கு கணக்கு இல்லையா?",
   "incorrectPassword": "தவறான கடவுச்சொல்",
   "login": "உள்நுழைய",
-  "signup": "பதிவு செய்க"
+  "signup": "பதிவு செய்க",
+  "logoAlt": "சின்னம்"
 }

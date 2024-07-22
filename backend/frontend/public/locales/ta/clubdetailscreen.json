@@ -1,7 +1,7 @@
 {
     "venueDetails": "இடம் விவரங்கள்",
     "home": "வீடு",
-    "reviews": "விமர்சனங்கள்",
+    "reviews": "{{count}} விமர்சனங்கள்",
     "venueType": "இடம் வகை",
     "venueList": "இடம் பட்டியல்",
     "indoor": "உட்புறம்",
@@ -53,5 +53,7 @@
     "powerBackup": "மின்சாரம் மீண்டும் பொருந்தும் வசதி",
     "beveragesFacility": "பானங்கள் வசதி",
     "coachingFacility": "பயிற்சி வசதி",
-    "reviewSubmitted": "மதிப்பீடு சமர்ப்பிக்கப்பட்டது"
+    "reviewSubmitted": "மதிப்பீடு சமர்ப்பிக்கப்பட்டது",
+    "carouselImgAlt": "சுழற்சி-படம்",
+    "userAlt": "பயனர்"
 }

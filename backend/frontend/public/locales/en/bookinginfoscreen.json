@@ -5,14 +5,14 @@
       "venue": "Venue",
       "venueList": "Venue List",
       "venueDetails": "Venue Details",
-      "reviews": "Reviews",
+      "reviews": "{{count}} Reviews",
       "bookingForm": "Booking Form",
       "areaLabel": "Area",
       "gameLabel": "Game",
       "dateLabel": "Date",
       "courtLabel": "Court",
       "slotLabel": "Slot",
-      "noSlotsAvailable": "No slots available in",
+      "noSlotsAvailable": "No slots available in {{courtName}}",
       "yourOrder": "Your Order",
       "gst": "GST",
       "stateAndCentralTax": "State tax and Central tax",
@@ -29,5 +29,6 @@
       "loginToProceed": "You are one step away from booking",
       "selectSlot": "Select a slot to book",
       "incorrectCredentials": "Incorrect Credentials",
-      "loggedInSuccessfully": "Logged in successfully"
+      "loggedInSuccessfully": "Logged in successfully",
+      "loadingSlots": "Loading slots..."
     }

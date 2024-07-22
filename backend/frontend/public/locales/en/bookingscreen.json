@@ -8,7 +8,7 @@
   "orderConfirmation": "Order Confirmation",
   "thankYou": "Thank you for your order! We're excited to fulfill it with care and efficiency.",
   "organizationDescription": " Where dreams meet excellence in sports education and training.",
-  "reviews": " Reviews",
+  "reviews": "{{count}} Reviews",
   "bookingDetails": "Booking Details",
   "courtName": "Court Name",
   "standardCourt": "Standard Synthetic Court 1",
@@ -32,6 +32,7 @@
   "cancelled": "Cancelled",
   "unknown": "Unknown",
   "booked": "Booked",
-  "checkout": "Checkout"
+  "checkout": "Checkout",
+  "venueAlt": "Venue"
 
 }

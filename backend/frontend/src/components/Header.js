@@ -33,7 +33,7 @@ function Header({ location }) {
             </a>
             <LinkContainer to="/">
               <a href="#" className="navbar-brand logo">
-                <img src={Logo} className="img-fluid" alt="Logo" />
+                <img src={Logo} className="img-fluid" alt={t("logoAlt")} />
               </a>
             </LinkContainer>
           </div>
@@ -43,7 +43,7 @@ function Header({ location }) {
                 <img
                   src="assets/img/logo-black.svg"
                   className="img-fluid"
-                  alt="Logo"
+                  alt={t("logoAlt")}
                 />
               </a>
               <a

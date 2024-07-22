@@ -50,10 +50,10 @@ function Club({ clubs }) {
                           {club && club.organization_images ? (
                             <img
                               src={club.organization_images}
-                              alt="Organization"
+                              alt={t("organizationAlt")}
                             />
                           ) : (
-                            <img src={venueImage} alt="Organization" />
+                            <img src={venueImage} alt={t("organizationAlt")} />
                           )}
                         </a>
                         <div className="fav-item-venues">
@@ -70,7 +70,7 @@ function Club({ clubs }) {
                                 <span className="rating-bg">
                                   {club.rating}
                                 </span>
-                                <span>{club.numRatings} {t("reviews")}</span>
+                                <span>{t("reviews", { count: club?.numRatings })}</span>
                               </div>
                             </div>
                           )}

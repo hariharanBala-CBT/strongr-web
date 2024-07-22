@@ -130,7 +130,7 @@ function BookingScreen() {
                       <img
                         className="corner-radius-10"
                         src={venueImage}
-                        alt="Venue"
+                        alt={t("venueAlt")}
                       />
                     </a>
                     <div className="info">
@@ -140,7 +140,7 @@ function BookingScreen() {
                           {bookingDetails.rating}
                         </span>
                         <span>
-                          {bookingDetails.num_ratings} {t("reviews")}
+                          {t("reviews", { count: bookingDetails.num_ratings })}
                         </span>
                       </div>
                     ) : null}
