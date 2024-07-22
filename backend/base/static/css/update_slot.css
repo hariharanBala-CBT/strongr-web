@@ -1,7 +1,7 @@
 form {
-  max-width: 500px;
+  width: 650px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 40px;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   border-radius: 10px;
   border: 1px solid #ccc;
@@ -14,7 +14,8 @@ form label {
 
 form input[type="text"],
 form select {
-  width: calc(100% - 12px); /* Adjust for padding and border */
+  width: calc(100% - 12px);
+  /* Adjust for padding and border */
   padding: 5px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -87,16 +88,14 @@ td {
   z-index: 9998;
 }
 
-.form-group{
-  display: none;
-  display: flex;
-  justify-content: left;
-}
-
-.id_checkbox{
+.id_checkbox {
   margin-right: 50px;
 }
 
-.buttons{
+.buttons {
   margin-left: 8%;
+}
+
+.none {
+  display: none;
 }

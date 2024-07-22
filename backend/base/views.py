@@ -828,7 +828,7 @@ class SlotCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['location_pk'] = self.request.session.get('location_pk')
+        context['location_pk'] = self.request.session.get('locationpk')
         return context
 
     def form_valid(self, form):
@@ -882,7 +882,7 @@ class SlotUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['locationpk'] = self.request.session.get('location_pk')
+        context['locationpk'] = self.request.session.get('locationpk')
         return context
 
 
