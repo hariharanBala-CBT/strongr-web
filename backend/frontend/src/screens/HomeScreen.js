@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import toast, { Toaster } from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Form } from "react-bootstrap";
@@ -32,6 +33,7 @@ import workImage3 from "../images/icons/work-icon3.svg";
 import Venue from "../components/Venue";
 
 function HomeScreen(history) {
+  const { t } = useTranslation("homescreen");
   const dispatch = useDispatch();
   const sectionRef = useRef(null);
   const navigate = useNavigate();
@@ -69,7 +71,7 @@ function HomeScreen(history) {
   const changeArea = (value) => {
     setAreaName(value);
   };
-  const changeGate = (value) => {
+  const changeDate = (value) => {
     setDate(value);
   };
 
@@ -126,9 +128,9 @@ function HomeScreen(history) {
 
   useEffect(() => {
     if (areaError) {
-      toast.error("error in fetching areas");
+      toast.error(t("errorFetchingAreas"));
     } else if (gameError) {
-      toast.error("error in fetching games");
+      toast.error(t("errorFetchingGames"));
     }
   }, [areaError, gameError]);
 
@@ -160,12 +162,12 @@ function HomeScreen(history) {
           />
         </video>
         <div className="content">
-          <h1>Fuel your spirit, lit your soul</h1>
+          <h1>{t("homeTitle")}</h1>
           <div>
             <Button
               onClick={handleClick}
               className="btn-explore"
-              text="Explore"
+              text={t("explore")}
             />
           </div>
         </div>
@@ -173,20 +175,20 @@ function HomeScreen(history) {
       <section className="section work-section" ref={sectionRef}>
         <div className="work-img">
           <div className="work-img-right">
-            <img src={cockImage} alt="Icon" />
+            <img src={cockImage} alt={t("iconAlt")}/>
           </div>
         </div>
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
 
             <h2>
-              How It <span>Works</span>
+              {t("howIt")} <span>{t("works")}</span>
             </h2>
             <div className="guide-link">
-              <a href={customerGuide} className="guide" target="_blank" rel="noopener noreferrer">Guide</a>
+              <a href={customerGuide} className="guide" target="_blank" rel="noopener noreferrer">{t("guide")}</a>
             </div>
             <p className="sub-title">
-              Simplifying the booking process for coaches, venues, and athletes.
+              {t("howItWorksSubtitle")}
             </p>
           </div>
           <div className="row justify-content-center ">
@@ -199,14 +201,13 @@ function HomeScreen(history) {
                 </div>
                 <div className="work-content">
                   <h5>
-                    <a href="javascript:void(0);">Join Us</a>
+                    <a href="javascript:void(0);">{t("joinUs")}</a>
                   </h5>
                   <p>
-                    Quick and Easy Registration: Get started on our software
-                    platform with a simple account creation process.
+                    {t("joinUsDescription")}
                   </p>
                   <a className="btn" href="javascript:void(0);">
-                    Register Now{" "}
+                  {t("registerNow")}{" "}
                     <span>
                       <ArrowRight />
                     </span>
@@ -218,19 +219,18 @@ function HomeScreen(history) {
               <div className="work-grid w-100 aos" data-aos="fade-up">
                 <div className="work-icon">
                   <div className="work-icon-inner">
-                    <img src={workImage2} alt="Icon" />
+                    <img src={workImage2} alt={t("iconAlt")} />
                   </div>
                 </div>
                 <div className="work-content">
                   <h5>
-                    <a href="javascript:void(0);">Select Coaches/Venues</a>
+                    <a href="javascript:void(0);">{t("selectCoachesVenues")}</a>
                   </h5>
                   <p>
-                    Book Badminton coaches and venues for expert guidance and
-                    premium facilities.
+                    {t("selectCoachesVenuesDescription")}
                   </p>
                   <a className="btn" href="javascript:void(0);">
-                    Go To Coaches{" "}
+                    {t("goToCoaches")}{" "}
                     <span>
                       <ArrowRight />
                     </span>
@@ -242,19 +242,18 @@ function HomeScreen(history) {
               <div className="work-grid w-100 aos" data-aos="fade-up">
                 <div className="work-icon">
                   <div className="work-icon-inner">
-                    <img src={workImage3} alt="Icon" />
+                    <img src={workImage3} alt={t("iconAlt")} />
                   </div>
                 </div>
                 <div className="work-content">
                   <h5>
-                    <a href="javascript:void(0);">Booking Process</a>
+                    <a href="javascript:void(0);">{t("bookingProcess")}</a>
                   </h5>
                   <p>
-                    Easily book, pay, and enjoy a seamless experience on our
-                    user-friendly platform.
+                    {t("bookingProcessDescription")}
                   </p>
                   <a className="btn" href="javascript:void(0);">
-                    Book Now{" "}
+                  {t("bookNow")}{" "}
                     <span>
                       <ArrowRight />
                     </span>
@@ -269,10 +268,10 @@ function HomeScreen(history) {
       <section className="section1-container" id="section1-id">
         <div className="section-heading aos" data-aos="fade-up">
           <h2>
-            Best <span>Deals</span>
+          {t("best")} <span>{t("deals")}</span>
           </h2>
           <p className="sub-title">
-            We offer you the best grounds with best deals.
+          {t("bestDealsSubtitle")}
           </p>
         </div>
         <div className="form-section">
@@ -281,7 +280,7 @@ function HomeScreen(history) {
               <label className="search-label">
                 <input
                   type="search"
-                  placeholder="Search..."
+                  placeholder={t("search")}
                   className="form-control form-control-sm"
                   onChange={(e) => setKeyword(e.target.value)}
                 />
@@ -291,7 +290,7 @@ function HomeScreen(history) {
           </Form>
           <div className="lines">
             <div className="or-line1"></div>
-            OR
+            {t("or")}
             <div className="or-line2"></div>
           </div>
         </div>
@@ -303,7 +302,7 @@ function HomeScreen(history) {
               <Message variant="danger">{gameError}</Message>
             ) : (
               <SelectInput
-                label="Game"
+                label={t("gameLabel")}
                 id="gameName"
                 value={gameName}
                 onChange={changeGame}
@@ -321,7 +320,7 @@ function HomeScreen(history) {
               <Message variant="danger">{areaError}</Message>
             ) : (
               <SelectInput
-                label="Area"
+                label={t("areaLabel")}
                 id="areaName"
                 value={areaName}
                 onChange={changeArea}
@@ -334,17 +333,18 @@ function HomeScreen(history) {
             )}
 
             <DateInput
+              label={t("dateLabel")}
               id="date"
               required="required"
               value={date}
-              onChange={changeGate}
+              onChange={changeDate}
             />
           </div>
           <div className="availability-btn-class">
             <Button
               onClick={handleSubmit}
               className="btn-check-availability-home"
-              text="Check Availability"
+              text={t("checkAvailability")}
             />
           </div>
         </form>
@@ -352,7 +352,7 @@ function HomeScreen(history) {
       {loadingTopRatedClubs ? (
         <CircularProgress />
       ) : topRatedClubs && topRatedClubs.length === 0 ? (
-        <p>No top rated clubs found.</p>
+        <p>{t("noTopRatedClubs")}</p>
       ) : (
         <Venue />
       )}

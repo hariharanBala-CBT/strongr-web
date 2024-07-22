@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { Form } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 import Club from "../components/Club";
 import Footer from "../components/Footer";
@@ -20,6 +21,7 @@ import "../css/clubsearchscreen.css";
 function ClubSearchScreen() {
   const NoDataAnimationUrl =
     "https://cbtstrongr.s3.amazonaws.com/videos/no-data-animation.json";
+  const { t } = useTranslation("clubsearchscreen");
 
   const dispatch = useDispatch();
   const { keyword, setKeyword, recentlySearchedKeywords } = useHomeContext();
@@ -69,7 +71,7 @@ function ClubSearchScreen() {
               <label className="search-label">
                 <input
                   type="search"
-                  placeholder="search..."
+                  placeholder={t("search")}
                   className="form-control form-control-sm"
                   onChange={(e) => setKeyword(e.target.value)}
                 />
@@ -98,7 +100,7 @@ function ClubSearchScreen() {
       )}
       {filteredData?.length > 0 && (
         <div className="recently-searched">
-          <h2>Recently Searched:</h2>
+          <h2>{t("recentlySearched:")}</h2>
           <Club clubs={filteredData} />
         </div>
       )}

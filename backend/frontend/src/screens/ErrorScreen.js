@@ -2,9 +2,11 @@ import React from "react";
 import "../css/errorscreen.css";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function ErrorScreen() {
   const navigate = useNavigate();
+  const { t } = useTranslation("errorscreen");
 
   return (
     <div id="notfound">

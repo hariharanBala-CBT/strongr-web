@@ -101,6 +101,8 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
     organization_location = serializers.SerializerMethodField()
     game_type = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
+    rating = serializers.SerializerMethodField()
+    num_ratings = serializers.SerializerMethodField()
 
     def get_court(self, obj):
         return CourtSerializer(obj.court).data
@@ -131,13 +133,19 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
             # Handle exceptions appropriately
             pass
         return None
+    
+    def get_rating(self, obj):
+        return obj.court.location.rating
+    
+    def get_num_ratings(self, obj):
+        return obj.court.location.numRatings
 
     class Meta:
         model = Booking
         fields = [
             'id', 'name', 'phone_number', 'booking_date', 'booking_status',
             'payment_status', 'tax_price', 'total_price', 'organization_name',
-            'court', 'slot', 'additional_slot', 'organization_location', 'game_type', 'image'
+            'court', 'slot', 'additional_slot', 'organization_location', 'game_type', 'image','rating','num_ratings'
         ]
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,0 +1,11 @@
+{
+    "venueList": "Venue List",
+    "home": "Home",
+    "game": "Game",
+    "area": "Area",
+    "date": "Date",
+    "suggestedClubsIn": "Suggested Clubs in {{areaName}}",
+    "suggestedClubsFor": "Suggested Clubs for {{gameName}}",
+    "fetchingAreas": "பகுதிகளைப் பெறுவதில் பிழை",
+    "fetchingGames": "விளையாட்டுகளைப் பெறுவதில் பிழை"
+}

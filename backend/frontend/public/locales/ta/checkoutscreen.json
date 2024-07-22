@@ -1,0 +1,20 @@
+{
+  "home": "வீடு",
+  "checkout": "சரிபார்",
+  "billingDetails": "பில்லிங் விவரங்கள்",
+  "name": "பெயர்",
+  "email": "மின்னஞ்சல்",
+  "phoneNumber": "தொலைபேசி எண்",
+  "agreeTerms": "நிபந்தனைகளையும் விதிமுறைகளையும் ஏற்கிறேன்",
+  "proceedToPay": "பணம் செலுத்த தொடங்குங்கள்",
+  "yourOrder": "உங்கள் ஆர்டர்",
+  "gst": "ஜிஎஸ்டி",
+  "stateAndCentralTax": "மாநில வரி மற்றும் மத்திய வரி",
+  "convenienceFee": "வசதி கட்டணம்",
+  "onlineBookingFee": "நிகநிலை முன்பதிவு கட்டணம்",
+  "total": "மொத்தம் (INR)",
+  "somethingWentWrong": "ஏதோ தவறு ஏற்பட்டது..",
+  "venueList": "இடம் பட்டியல்",
+  "venueDetails": "இடம் விவரங்கள்",
+  "bookACourt": "ஒரு கோர்ட்டை பதிவு செய்யுங்கள்"
+}

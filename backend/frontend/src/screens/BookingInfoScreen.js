@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { MapPin } from "react-feather";
+import { useTranslation } from "react-i18next";
 import { LinkContainer } from "react-router-bootstrap";
 import venueImage from "../images/owner-venue2.jpg";
 import { useHomeContext } from "../context/HomeContext";
@@ -74,6 +75,7 @@ function BookingInfoScreen() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation("bookinginfoscreen");
 
   const { clubLocation } = useSelector((state) => state.Location);
   const { clubGame } = useSelector((state) => state.clubGame);
@@ -271,7 +273,7 @@ function BookingInfoScreen() {
           setLoader(false);
           navigate("/checkout");
         } else {
-          toast.error("select a slot to book");
+          toast.error(t("selectSlot"));
         }
       } else {
         setLoader(false);
@@ -331,7 +333,7 @@ function BookingInfoScreen() {
 
   useEffect(() => {
     if (LoginError && isLogin) {
-      toast.error("Incorrect Credentials");
+      toast.error(t('incorrectCredentials'));
       setOpenForm(true);
       setLoader(false);
       setIsLogin(false);
@@ -340,7 +342,7 @@ function BookingInfoScreen() {
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
-      toast.success("Logged in successfully");
+      toast.success(t('loggedInSuccessfully'));
       setOpenForm(false);
       setIsLogin(false);
     }
@@ -362,22 +364,22 @@ function BookingInfoScreen() {
       <section className="breadcrumb breadcrumb-list mb-0">
         <span className="primary-right-round"></span>
         <div className="container">
-          <h1 className="text-white">Book A Court</h1>
+          <h1 className="text-white">{t("bookACourt")}</h1>
           <ul>
             <li className="breadcrumb-icons">
-              <a href="/">Home</a>
+              <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to="/clubs">
-                <a>Venue List</a>
+                <a>{t("venueList")}</a>
               </LinkContainer>
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to={`/club/${id}`}>
-                <a>Venue Details</a>
+                <a>{t("venueDetails")}</a>
               </LinkContainer>
             </li>
-            <li>Book A Court</li>
+            <li>{t("bookACourt")}</li>
           </ul>
         </div>
       </section>
@@ -385,9 +387,9 @@ function BookingInfoScreen() {
         <div className="container">
           <section className="card mb-40">
             <div className="text-center mb-40">
-              <h3 className="mb-1">Book A Court</h3>
+              <h3 className="mb-1">{t("bookACourt")}</h3>
               <p className="sub-title mb-0">
-                Hassle-free court bookings and state-of-the-art facilities.
+              {t("hassleFreeBooking")}
               </p>
             </div>
             <div className="master-academy dull-whitesmoke-bg card">
@@ -402,18 +404,21 @@ function BookingInfoScreen() {
                       />
                     </a>
                     <div className="info">
-                      <div className="d-flex justify-content-start align-items-center mb-3">
+                    {clubLocation?.rating ? (
+                      <div className="d-flex align-items-center">
                         <span className="text-white dark-yellow-bg color-white me-2 d-flex justify-content-center align-items-center">
-                          4.5
+                          {clubLocation.rating}
                         </span>
-                        <span>300 Reviews</span>
+                        <span>
+                        {t("reviews", { count: clubLocation?.numRatings })}                        
+                        </span>
                       </div>
+                    ) : null}
                       <h3 className="mb-2">
                         {clubLocation?.organization?.organization_name}
                       </h3>
                       <p>
-                        {clubLocation?.organization?.organization_name}: Where
-                        dreams meet excellence in sports education and training.
+                       {clubLocation?.organization?.description}
                       </p>
                     </div>
                   </div>
@@ -434,10 +439,6 @@ function BookingInfoScreen() {
                       </span>
                     </li>
                     <li>
-                      <h3 className="d-inline-block subtitle-txt">
-                        ₹150
-                        <span>/hr</span>
-                      </h3>
                     </li>
                   </ul>
                 </div>
@@ -447,7 +448,7 @@ function BookingInfoScreen() {
           <div className="row">
             <div className="col-12 col-sm-12 col-md-12 col-lg-6">
               <div className="booking-info-card">
-                <h3 className="border-bottom">Booking Form</h3>
+                <h3 className="border-bottom">{t("bookingForm")}</h3>
                 <form onSubmit={handleSubmit} className="booking-form">
                   <div className="booking-container">
                     <SelectInput
@@ -460,7 +461,7 @@ function BookingInfoScreen() {
                           name: clubLocation?.area?.area_name,
                         },
                       ]}
-                      label="Area"
+                      label={t("areaLabel")}
                     />
                     <SelectInput
                       id="game"
@@ -471,12 +472,13 @@ function BookingInfoScreen() {
                         id: game?.id,
                         name: game?.game_type?.game_name,
                       }))}
-                      label="Game"
+                      label={t("gameLabel")}
                     />
                     <DateInput
                       id="date"
                       value={date}
                       onChange={handleDateChange}
+                      label={t("dateLabel")}
                     />
                     {loading ? (
                       <CircularProgress />
@@ -489,11 +491,11 @@ function BookingInfoScreen() {
                           id: court.id,
                           name: court.name,
                         }))}
-                        label="Court"
+                        label={t("courtLabel")}
                       />
                     )}
                     {loading ? (
-                      <div>Loading slots...</div>
+                      <div>{t("loadingSlots")}</div>
                     ) : slots?.length !== 0 || additionalSlots?.length !== 0 ? (
                       <SelectInput
                         useRadioButtons
@@ -504,7 +506,7 @@ function BookingInfoScreen() {
                           id: slot.id,
                           name: `${slot.start_time}-${slot.end_time}`,
                         }))}
-                        label="Slot"
+                        label={t("slotLabel")}
                         addSlots={additionalSlots?.map((slot) => ({
                           id: slot.id,
                           name: `${slot.start_time}-${slot.end_time}`,
@@ -520,7 +522,7 @@ function BookingInfoScreen() {
                         </Alert>
                       ) : (
                         <Alert severity="error">
-                          No slots available in {courtName}
+                        {t("noSlotsAvailable", {courtName})}                       
                         </Alert>
                       )}
                   </div>
@@ -529,7 +531,7 @@ function BookingInfoScreen() {
             </div>
             <div className="col-12 col-sm-12 col-md-12 col-lg-6">
               <aside className="card booking-details box-min-height">
-                <h3 className="border-bottom">Your Order</h3>
+                <h3 className="border-bottom">{t("yourOrder")}</h3>
                 <div className="card2">
                   <ul className="order-sub-total">
                     <div className="orderset1">
@@ -547,25 +549,25 @@ function BookingInfoScreen() {
                     </div>
                     <div className="orderset2">
                       <li>
-                        <h3>GST</h3>
+                        <h3>{t("gst")}</h3>
                         <h6>
                           {"\u20B9"} {taxPrice}
                         </h6>
                       </li>
-                      <p>state tax and Central tax</p>
+                      <p>{t("stateAndCentralTax")}</p>
                     </div>
                     <div className="orderset3">
                       <li>
-                        <h3>convenience Fee</h3>
+                        <h3>{t("convenienceFee")}</h3>
                         <h6>
                           {"\u20B9"} {bookingFee}
                         </h6>
                       </li>
-                      <p>Online booking fee</p>
+                      <p>{t("onlineBookingFee")}</p>
                     </div>
                   </ul>
                   <div className="order-total d-flex justify-content-between align-items-center">
-                    <h5>Order Total</h5>
+                    <h5>{t("orderTotal")}</h5>
                     <h5>
                       {"\u20B9"} {totalPrice}
                     </h5>
@@ -579,7 +581,7 @@ function BookingInfoScreen() {
                         }
                         onClick={handleSubmit}
                         className="btn btn-primary"
-                        text="Book now"
+                        text={t("bookNow")}
                       />
                     </div>
                   )}
@@ -600,30 +602,30 @@ function BookingInfoScreen() {
             ) : (
               <Box sx={boxStyle}>
                 <Alert severity="info">
-                  You are one step away from booking
+                  {t("loginToProceed")}
                 </Alert>
                 <form
                   onSubmit={loginAndRedirect}
                   className="booking-login-form"
                 >
-                  <h2 className="login-title">Login</h2>
+                  <h2 className="login-title">{t("login")}</h2>
 
-                  <label>Username</label>
+                  <label>{t("username")}</label>
                   <input
                     required
                     type="text"
-                    placeholder="Enter username"
+                    placeholder={t("Enter username")}
                     value={username}
                     onChange={(e) => {
                       setUsername(e.target.value);
                     }}
                   />
 
-                  <label>Password</label>
+                  <label>{t("password")}</label>
                   <input
                     required
                     type="password"
-                    placeholder="Enter password"
+                    placeholder={t("enterPassword")}
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
@@ -634,7 +636,7 @@ function BookingInfoScreen() {
                     <Button
                       type="submit"
                       className="btn-check-availability-home"
-                      text="Login"
+                      text={t("loginButton")}
                     />
                   </div>
                 </form>

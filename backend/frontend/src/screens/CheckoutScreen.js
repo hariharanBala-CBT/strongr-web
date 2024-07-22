@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { LinkContainer } from "react-router-bootstrap";
 import Header from "../components/Header";
 import Button from "../components/Button";
@@ -16,6 +17,7 @@ import "../css/checkoutscreen.css";
 function CheckoutScreen() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation("checkoutscreen");
 
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
@@ -89,9 +91,9 @@ function CheckoutScreen() {
     if (success && booking) {
       navigate(`/booking/${booking.id}`);
     } else if (createBookingError) {
-      toast.error("Something went wrong..");
+      toast.error(t("somethingWentWrong"))
     }
-  }, [booking, createBookingError, navigate, success]);
+  }, [booking, createBookingError, navigate, success, t])
 
   return (
     <div className="checkout-page">
@@ -99,32 +101,27 @@ function CheckoutScreen() {
       <section className="breadcrumb breadcrumb-list mb-0">
         <span className="primary-right-round"></span>
         <div className="container">
-          <h1 className="text-white">Checkout</h1>
+          <h1 className="text-white">{t("checkout")}</h1>
           <ul>
             <li className="breadcrumb-icons">
-              <a href="/">Home</a>
+              <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to="/clubs">
-                <a>Venue List</a>
+                <a>{t("venueList")}</a>
               </LinkContainer>
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to={`/club/${bookingData.id}`}>
-                <a>Venue Details</a>
+                <a>{t("venueDetails")}</a>
               </LinkContainer>
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to={`/bookinginfo/${bookingData.id}`}>
-                <a>Book A Court</a>
+                <a>{t("bookACourt")}</a>
               </LinkContainer>
             </li>
-            <li className="breadcrumb-icons">
-              <LinkContainer to={`/bookinginfo/${bookingData.id}`}>
-                <a>Booked Court</a>
-              </LinkContainer>
-            </li>
-            <li>Checkout</li>
+            <li>{t("checkout")}</li>
           </ul>
         </div>
       </section>
@@ -133,11 +130,11 @@ function CheckoutScreen() {
           <div className="row">
             <div className="col-12 col-sm-12 col-md-12 col-lg-6">
               <div className="checkout-card booking-details box-min-height">
-                <h3 className="border-bottom">Billing Details</h3>
+                <h3 className="border-bottom">{t("billingDetails")}</h3>
                 <form onSubmit={handleSubmit} className="checkout-form">
                   <div className="input-wrapper">
                     <label htmlFor="firstName" className="form-label">
-                      Name
+                      {t("name")}
                     </label>
                     <input
                       type="text"
@@ -152,7 +149,7 @@ function CheckoutScreen() {
 
                   <div className="input-wrapper">
                     <label htmlFor="email" className="form-label">
-                      Email{" "}
+                      {t("email")}{" "}
                     </label>
                     <input
                       type="email"
@@ -166,7 +163,7 @@ function CheckoutScreen() {
 
                   <div className="input-wrapper">
                     <label htmlFor="phone-number" className="form-label">
-                      Phone number{" "}
+                      {t("phoneNumber")}{" "}
                     </label>
                     <input
                       type="tel"
@@ -194,7 +191,7 @@ function CheckoutScreen() {
                       onChange={handleCheckboxChange}
                     />
                     <label className="form-check-label" htmlFor="same-address">
-                      I agree to terms and conditions
+                      {t("agreeTerms")}
                       {/* <a href="" id="termsLink"> */}
                       {/* </a> */}
                     </label>
@@ -206,7 +203,7 @@ function CheckoutScreen() {
                     <div className="d-grid btn-block">
                       <Button
                         className="btn btn-primary"
-                        text="Proceed to Pay"
+                        text={t("proceedToPay")}
                         type="submit"
                       />
                     </div>
@@ -216,7 +213,7 @@ function CheckoutScreen() {
             </div>
             <div className="col-12 col-sm-12 col-md-12 col-lg-6">
               <aside className="checkout-card booking-details box-min-height">
-                <h3 className="border-bottom">Your Order</h3>
+                <h3 className="border-bottom">{t("yourOrder")}</h3>
                 <div className="card2">
                   <ul className="order-sub-total">
                     <div className="orderset1">
@@ -237,25 +234,25 @@ function CheckoutScreen() {
                     </div>
                     <div className="orderset2">
                       <li>
-                        <h3>GST</h3>
+                        <h3>{t("gst")}</h3>
                         <h6>
                           {"\u20B9"} {bookingData.taxPrice}
                         </h6>
                       </li>
-                      <p>state tax and Central tax</p>
+                      <p>{t("stateAndCentralTax")}</p>
                     </div>
                     <div className="orderset3">
                       <li>
-                        <h3>convenience Fee</h3>
+                        <h3>{t("convenienceFee")}</h3>
                         <h6>
                           {"\u20B9"} {bookingData.bookingFee}
                         </h6>
                       </li>
-                      <p>Online booking fee</p>
+                      <p>{t("onlineBookingFee")}</p>
                     </div>
                   </ul>
                   <div className="order-total d-flex justify-content-between align-items-center">
-                    <h5>Total (INR)</h5>
+                    <h5>{t("total")}</h5>
                     <h5>
                       {"\u20B9"} {bookingData.totalPrice}
                     </h5>

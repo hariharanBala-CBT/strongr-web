@@ -5,6 +5,7 @@ import { Carousel } from "react-responsive-carousel";
 import toast, { Toaster } from "react-hot-toast";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { LinkContainer } from "react-router-bootstrap";
+import { useTranslation } from "react-i18next";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import {
   Calendar,
@@ -68,6 +69,7 @@ function ClubDetailScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation("clubdetailscreen");
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -115,7 +117,7 @@ function ClubDetailScreen() {
 
   useEffect(() => {
     if (successclubReview) {
-      toast.success("Review submitted");
+      toast.success(t("reviewSubmitted"));
     }
   }, [successclubReview]);
 
@@ -173,7 +175,7 @@ function ClubDetailScreen() {
 
   useEffect(() => {
     if (LoginError && isLogin) {
-      toast.error("Incorrect Credentials");
+      toast.error(t('incorrectCredentials'));
       setOpenForm(true);
       setLoader(false);
       setIsLogin(false);
@@ -182,7 +184,7 @@ function ClubDetailScreen() {
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
-      toast.success("Logged in successfully");
+      toast.success(t('loggedInSuccessfully'));
       setOpenForm(false);
       setIsLogin(false);
     }
@@ -199,17 +201,17 @@ function ClubDetailScreen() {
       <section className="breadcrumb breadcrumb-list mb-0">
         <span className="primary-right-round"></span>
         <div className="container">
-          <h1 className="text-white">Venue Details</h1>
+          <h1 className="text-white">{t("venueDetails")}</h1>
           <ul>
             <li className="breadcrumb-icons">
-              <a href="/">Home</a>
+              <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to="/clubs">
-                <a>Venue List</a>
+                <a>{t("venueList")}</a>
               </LinkContainer>
             </li>
-            <li>Venue Details</li>
+            <li>{t("venueDetails")}</li>
           </ul>
         </div>
       </section>
@@ -228,14 +230,14 @@ function ClubDetailScreen() {
                   <i className="feather-map-pin">
                     <MapPin />
                   </i>
-                  {clubLocation?.address_line_1}, {clubLocation?.address_line_2}
+                  {clubLocation?.address_line_1} {clubLocation?.address_line_2}
                   ,{clubLocation?.pincode}
                 </li>
                 <li>
                   <i className="feather-phone-call">
                     <Phone />
                   </i>
-                  9999999999
+                  {clubLocation?.organization?.phone_number}
                 </li>
                 <li>
                   <i className="feather-mail">
@@ -257,7 +259,7 @@ function ClubDetailScreen() {
               <ul className="social-options float-lg-end d-sm-flex justify-content-start align-items-center">
                 <li className="venue-review-info d-flex justify-content-start align-items-center">
                   <span className="d-flex justify-content-center align-items-center">
-                    5.0
+                    {clubLocation?.rating}
                   </span>
                   <div className="review">
                     <div className="rating">
@@ -269,7 +271,7 @@ function ClubDetailScreen() {
                     </div>
                     <p className="mb-0">
                       <a href="javascript:;">
-                        {clubLocation?.numRatings} reviews
+                      {t("reviews", { count: clubLocation?.numRatings })}
                       </a>
                     </p>
                   </div>
@@ -280,7 +282,7 @@ function ClubDetailScreen() {
           </div>
           <hr />
           <div className="row bottom-row d-flex align-items-center">
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6">
+            {/* <div className="col-12 col-sm-12 col-md-6 col-lg-6">
               <ul className="d-sm-flex details">
                 <li>
                   <div className="profile-pic">
@@ -293,8 +295,8 @@ function ClubDetailScreen() {
                     </a>
                   </div>
                   <div className="ms-2 venuetype-container">
-                    <p>Venue Type</p>
-                    <h6 className="mb-0">Indoor</h6>
+                    <p>{t("venueType")}</p>
+                    <h6 className="mb-0">{t("indoor")}</h6>
                   </div>
                 </li>
                 <li>
@@ -308,7 +310,7 @@ function ClubDetailScreen() {
                     </a>
                   </div>
                   <div className="ms-2 addedtype-container">
-                    <p>Added By</p>
+                    <p>{t("addedBy")}</p>
                     <h6 className="mb-0">Hendry Williams</h6>
                   </div>
                 </li>
@@ -316,12 +318,12 @@ function ClubDetailScreen() {
             </div>
             <div className="col-12 col-sm-12 col-md-6 col-lg-6">
               <div className="d-flex float-sm-end align-items-center">
-                <p className="d-inline-block me-2 mb-0">Starts From :</p>
+                <p className="d-inline-block me-2 mb-0">{t("startsFrom")}:</p>
                 <h3 className="primary-text mb-0 d-inline-block">
                   ₹150<span>/ hr</span>
                 </h3>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -341,7 +343,7 @@ function ClubDetailScreen() {
                       aria-expanded="true"
                       aria-controls="panelsStayOpen-collapseOne"
                     >
-                      Overview
+                      {t("overview")}
                     </button>
                   </h4>
                   <div
@@ -352,22 +354,13 @@ function ClubDetailScreen() {
                     <div className="accordion-body">
                       <div className="text show-more-height">
                         <p>
-                          Badminton Academy is a renowned sports facility
-                          situated in Sacramento, CA. With a commitment to
-                          providing high-quality services, we offer a range of
-                          amenities and equipment to support athletes in their
-                          training and development.
-                        </p>
-                        <p>
-                          Our facility is equipped with state-of-the-art
-                          features, ensuring a conducive environment for
-                          athletes to excel in their respective sports.
+                        {clubLocation?.organization?.description}
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="accordion-item mb-4" id="includes">
+                {/* <div className="accordion-item mb-4" id="includes">
                   <h4 className="accordion-header" id="panelsStayOpen-includes">
                     <button
                       className="accordion-button"
@@ -377,7 +370,7 @@ function ClubDetailScreen() {
                       aria-expanded="false"
                       aria-controls="panelsStayOpen-collapseTwo"
                     >
-                      Includes
+                      {t("includes")}
                     </button>
                   </h4>
                   <div
@@ -443,7 +436,7 @@ function ClubDetailScreen() {
                       aria-expanded="false"
                       aria-controls="panelsStayOpen-collapseThree"
                     >
-                      Rules
+                      {t("rules")}
                     </button>
                   </h4>
                   <div
@@ -483,7 +476,7 @@ function ClubDetailScreen() {
                       </ul>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="accordion-item mb-4" id="amenities">
                   <h4
                     className="accordion-header"
@@ -497,7 +490,7 @@ function ClubDetailScreen() {
                       aria-expanded="false"
                       aria-controls="panelsStayOpen-collapseFour"
                     >
-                      Amenities
+                      {t("amenities")}
                     </button>
                   </h4>
                   <div
@@ -513,7 +506,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>Parking</span>
+                            <span>{t("parking")}</span>
                           </li>
                         )}
                         {clubAmenity?.is_restrooms === true && (
@@ -522,7 +515,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>Restrooms</span>
+                            <span>{t("restrooms")}</span>
                           </li>
                         )}
                         {clubAmenity?.is_changerooms === true && (
@@ -531,7 +524,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>ChangeRooms</span>
+                            <span>{t("changeRooms")}</span>
                           </li>
                         )}
                         {clubAmenity?.is_powerbackup === true && (
@@ -540,7 +533,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>Power Backup</span>
+                            <span>{t("powerBackup")}</span>
                           </li>
                         )}
                         {clubAmenity?.is_beverages_facility === true && (
@@ -549,7 +542,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>Beverages Facility</span>
+                            <span>{t("beveragesFacility")}</span>
                           </li>
                         )}
                         {clubAmenity?.is_coaching_facilities === true && (
@@ -558,7 +551,7 @@ function ClubDetailScreen() {
                               className="fa fa-check-circle"
                               aria-hidden="true"
                             ></i>
-                            <span>Coaching Facility</span>
+                            <span>{t("coachingFacility")}</span>
                           </li>
                         )}
                       </ul>
@@ -575,7 +568,7 @@ function ClubDetailScreen() {
                       aria-expanded="false"
                       aria-controls="panelsStayOpen-collapseFive"
                     >
-                      Gallery
+                      {t("gallery")}
                     </button>
                   </h4>
                   <div
@@ -598,7 +591,7 @@ function ClubDetailScreen() {
                               <div key={image.id}>
                                 <img
                                   src={image.image}
-                                  alt="carousel-img"
+                                  alt={t("carouselImgAlt")}
                                   className="carousel-img"
                                 />
                               </div>
@@ -608,7 +601,7 @@ function ClubDetailScreen() {
                               <div>
                                 <img
                                   src={noImage2}
-                                  alt="carousel-img"
+                                  alt={t("carouselImgAlt")}
                                   className="carousel-img"
                                 />
                               </div>
@@ -624,18 +617,19 @@ function ClubDetailScreen() {
                   <div className="accordion-header" id="panelsStayOpen-reviews">
                     <div className="review-wrapper-new ">
                       <div>
-                        <span className="w-75 mb-0">Reviews</span>
+                        <span className="w-75 mb-0">{t("reviews")}</span>
                       </div>
                       <div className="review-wrapper-last">
                         <div>
+                          {userInfo && <button> {t("writeReview")}</button>}
                           <p>
                             {!userInfo && (
                               <span className="login-remainder">
-                                Please{" "}
+                                {t("please")}{" "}
                                 <a href="#" onClick={handleSubmit}>
-                                  login
+                                  {t("login")}
                                 </a>{" "}
-                                to write a review
+                                {t("toWriteReview")}
                               </span>
                             )}
                           </p>
@@ -650,7 +644,7 @@ function ClubDetailScreen() {
                     aria-labelledby="panelsStayOpen-reviews"
                   >
                     <div className="accordion-body">
-                      <div className="row review-wrapper">
+                       {/* <div className="row review-wrapper">
                         <div className="col-lg-3">
                           <div className="ratings-info corner-radius-10 text-center">
                             <h3>4.8</h3>
@@ -664,12 +658,12 @@ function ClubDetailScreen() {
                             </div>
                           </div>
                         </div>
-                        <div className="col-lg-9">
+                       <div className="col-lg-9">
                           <div className="recommended">
                             <h5>Recommended by 97% of Players</h5>
                             <div className="row">
                               <div className="col-12 col-sm-12 col-md-4 col-lg-4 mb-3">
-                                <p className="mb-0">Quality of service</p>
+                                <p className="mb-0">{t("qualityOfService")}</p>
                                 <ul>
                                   <li>
                                     <i></i>
@@ -692,7 +686,7 @@ function ClubDetailScreen() {
                                 </ul>
                               </div>
                               <div className="col-12 col-sm-12 col-md-4 col-lg-4 mb-3">
-                                <p className="mb-0">Quality of service</p>
+                                <p className="mb-0">{t("qualityOfService")}</p>
                                 <ul>
                                   <li>
                                     <i></i>
@@ -715,7 +709,7 @@ function ClubDetailScreen() {
                                 </ul>
                               </div>
                               <div className="col-12 col-sm-12 col-md-4 col-lg-4 mb-3">
-                                <p className="mb-0">Quality of service</p>
+                                <p className="mb-0">{t("qualityOfService")}</p>
                                 <ul>
                                   <li>
                                     <i></i>
@@ -738,7 +732,7 @@ function ClubDetailScreen() {
                                 </ul>
                               </div>
                               <div className="col-12 col-sm-12 col-md-4 col-lg-4">
-                                <p className="mb-0">Quality of service</p>
+                                <p className="mb-0">{t("qualityOfService")}</p>
                                 <ul>
                                   <li>
                                     <i></i>
@@ -761,7 +755,7 @@ function ClubDetailScreen() {
                                 </ul>
                               </div>
                               <div className="col-12 col-sm-12 col-md-4 col-lg-4">
-                                <p className="mb-0">Quality of service</p>
+                                <p className="mb-0">{t("qualityOfService")}</p>
                                 <ul>
                                   <li>
                                     <i></i>
@@ -785,21 +779,21 @@ function ClubDetailScreen() {
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
+                        </div> 
+                      </div>*/}
                       <div className="row review-wrapper review-form-wrapper">
                         {loadingclubReview && <Loader />}
 
                         {userInfo && (
                           <>
-                            <h4>Write a review</h4>
+                            <h4>{t("writeReview")}</h4>
                             <form onSubmit={submitHandler}>
                               <div className="row mb-3">
                                 <label
                                   htmlFor="inputEmail3"
                                   className="col-sm-2 col-form-label"
                                 >
-                                  Rating
+                                  {t("rating")}
                                 </label>
                                 <div className="col-sm-10">
                                   <select
@@ -808,12 +802,12 @@ function ClubDetailScreen() {
                                     value={rating}
                                     onChange={(e) => setRating(e.target.value)}
                                   >
-                                    <option value="">Select...</option>
-                                    <option value="1">1 - Poor</option>
-                                    <option value="2">2 - Fair</option>
-                                    <option value="3">3 - Good</option>
-                                    <option value="4">4 - Very Good</option>
-                                    <option value="5">5 - Excellent</option>
+                                    <option value="">{t("select")}...</option>
+                                    <option value="1">1 - {t("poor")}</option>
+                                    <option value="2">2 - {t("fair")}</option>
+                                    <option value="3">3 - {t("good")}</option>
+                                    <option value="4">4 - {t("veryGood")}</option>
+                                    <option value="5">5 - {t("excellent")}</option>
                                   </select>
                                 </div>
                               </div>
@@ -822,7 +816,7 @@ function ClubDetailScreen() {
                                   htmlFor="floatingTextarea2"
                                   className="col-sm-2 col-form-label"
                                 >
-                                  Comments
+                                  {t("comments")}
                                 </label>
                                 <div className="col-sm-10">
                                   <div className="form-floating">
@@ -843,7 +837,7 @@ function ClubDetailScreen() {
                                   disabled={loadingclubReview}
                                   className="btn btn-gradient pull-right write-review add-review"
                                 >
-                                  Submit
+                                  {t("submit")}
                                 </button>
                               </div>
                             </form>
@@ -853,7 +847,7 @@ function ClubDetailScreen() {
                       {clubReviews?.map((review) => (
                         <div className="review-box d-md-flex">
                           <div className="review-profile">
-                            <img src={profileImage} alt="User" />
+                            <img src={profileImage} alt={t("userAlt")}/>
                           </div>
                           <div className="review-info">
                             <h6 className="mb-2 tittle">{review.name}</h6>
@@ -881,7 +875,7 @@ function ClubDetailScreen() {
                     </div>
                     <div className="club-timings">
                       <h4>
-                        <a onClick={handleOverlayClick}>View Timings</a>
+                        <a onClick={handleOverlayClick}>{t("viewTimings")}</a>
                       </h4>
                     </div>
                   </>
@@ -893,13 +887,13 @@ function ClubDetailScreen() {
                         onClick={handlePopupToggle}
                         style={{ float: "right" }}
                       />
-                      <h4>Working Timings</h4>
+                      <h4>{t("workingTimings")}</h4>
                       <table className="table">
                         <thead>
                           <tr>
-                            <th>Day</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
+                            <th>{t("day")}</th>
+                            <th>{t("startTime")}</th>
+                            <th>{t("endTime")}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -916,9 +910,9 @@ function ClubDetailScreen() {
                   </div>
                 )}
               </div>
-              <div className="white-bg d-flex justify-content-start align-items-center availability">
-                <div className="gamesList">
-                  <h4>Games</h4>
+              {/*  <div className="white-bg d-flex justify-content-start align-items-center availability">
+               <div className="gamesList">
+                  <h4>{t("games")}</h4>
                   {clubGame?.map((game) => (
                     <span key={game.id}>
                       {game.game_type.game_name}: ₹{game.pricing}
@@ -926,30 +920,38 @@ function ClubDetailScreen() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </div> */}
               <div className="white-bg book-court">
-                <h4 className="border-bottom">Book A Court</h4>
-                <h5 className="d-inline-block">Badminton Academy,</h5>
-                <p className="d-inline-block"> available Now</p>
+                <h4 className="border-bottom">{t("bookACourt")}</h4>
+                <h5 className="d-inline-block">{t("games")} </h5>
+                <br/>
+                <p className="d-inline-block"> {t("availableNow")}</p>
                 <ul className="d-sm-flex align-items-center justify-content-evenly">
                   <li>
-                    <h3 className="d-inline-block primary-text">₹150</h3>
-                    <span>/hr</span>
-                    <p>up to 1 guests</p>
+                    <div className="games-container">
+                      {clubGame?.map((game) => (
+                        <div key={game.id} className="game-item">
+                          <h3 className="primary-text">
+                            {game.game_type.game_name}
+                          </h3>
+                          <p>₹{game.pricing}</p>
+                        </div>
+                      ))}
+                    </div>
                   </li>
-                  <li>
+                  {/* <li>
                     <span>
                       <i className="feather-plus"></i>
                     </span>
-                  </li>
-                  <li>
+                  </li> */}
+                  {/* <li>
                     <h4 className="d-inline-block primary-text">₹500</h4>
                     <span>/hr</span>
                     <p>
-                      each additional guest <br />
-                      up to 4 guests max
+                    {t("eachAdditionalGuest")} <br />
+                    {t("maxGuests")}
                     </p>
-                  </li>
+                  </li> */}
                 </ul>
                 <div className="d-grid btn-block mt-3">
                   <a
@@ -959,12 +961,12 @@ function ClubDetailScreen() {
                     <i className="feather-calendar">
                       <Calendar />
                     </i>
-                    Book Now
+                    {t("book")}
                   </a>
                 </div>
               </div>
-              <div className="white-bg listing-owner">
-                <h4 className="border-bottom">Listing By Owner</h4>
+              {/* <div className="white-bg listing-owner">
+                <h4 className="border-bottom">{("listingByOwner")}</h4>
                 <ul>
                   <li className="d-flex justify-content-start align-items-center">
                     <div className>
@@ -1007,7 +1009,7 @@ function ClubDetailScreen() {
                     </div>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </aside>
           </div>
         </div>
@@ -1024,26 +1026,27 @@ function ClubDetailScreen() {
           </Box>
         ) : (
           <Box sx={style}>
-            <Alert severity="info">Login to write a review</Alert>
+            <Alert severity="info">{t('loginToWriteReview')}</Alert>
             <form onSubmit={loginAndRedirect} className="booking-login-form">
-              <h2 className="login-title">Login</h2>
+              <h2 className="login-title">{t("login")}</h2>
 
-              <label>Username</label>
+              <label>{t("username")}</label>
               <input
                 required
                 type="text"
-                placeholder="Enter username"
+                placeholder={t("enterUsername")}
                 value={username}
                 onChange={(e) => {
                   setUsername(e.target.value);
                 }}
               />
 
-              <label>Password</label>
+              <label>{t("password")}</label>
               <input
                 required
                 type="password"
-                placeholder="Enter password"
+                placeholder={t("enterPassword")}
+
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -1054,12 +1057,12 @@ function ClubDetailScreen() {
                 <Button
                   type="submit"
                   className="btn-check-availability-home"
-                  text="Login"
+                  text={t("login")}
                 />
               </div>
-              <span>Don't have an account?</span>
+              <span>{t("dontHaveAnAccount")}</span>
               <LinkContainer to="/signup" style={linkStyle}>
-                <span>Signup</span>
+                <span>{t("signup")}</span>
               </LinkContainer>
             </form>
           </Box>
