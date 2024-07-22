@@ -584,19 +584,21 @@ def getNearestSlot(request):
     
     date_obj = parse_datetime(date_str)
     current_datetime = datetime.datetime.now().replace(microsecond=0)
-    current_time = (current_datetime + datetime.timedelta(hours=1)).time()
+    current_date = current_datetime.date()
     selected_date = date_obj.date() if date_obj else current_datetime.date()
+    if (selected_date == current_date):
+        current_time = (current_datetime + datetime.timedelta(hours=1)).time()
 
     # Exclude unavailable and booked slots
     unavailable_slots = UnavailableSlot.objects.filter(
         court_id=court_id, 
-        date__gte=current_datetime.date(), 
+        date__gte=selected_date, 
         is_active=True
     ).values_list('start_time', 'end_time')
     
     booked_slots = Booking.objects.filter(
         court_id=court_id, 
-        booking_date__gte=current_datetime.date()
+        booking_date__gte=selected_date
     ).values_list('slot__start_time', 'slot__end_time')
     
     excluded_times = list(unavailable_slots) + list(booked_slots)
@@ -605,7 +607,7 @@ def getNearestSlot(request):
 
     # Find nearest slot from Slot table
     for i in range(0, 7):  # Search for up to one week
-        target_date = current_datetime + timedelta(days=i)
+        target_date = selected_date + timedelta(days=i)
         target_weekday = target_date.strftime('%A')
 
         slots = Slot.objects.filter(
@@ -619,7 +621,7 @@ def getNearestSlot(request):
 
         for slot in slots:
             slot_info = {
-                'date': target_date.date(),
+                'date': target_date,
                 'start_time': slot.start_time,
                 'end_time': slot.end_time,
                 'source': 'slot'
@@ -628,11 +630,11 @@ def getNearestSlot(request):
         
     # Find nearest slot from AdditionalSlot table
     for i in range(0, 7):  # Search for up to one week
-        target_date = current_datetime + timedelta(days=i)
+        target_date = selected_date + timedelta(days=i)
 
         additional_slots = AdditionalSlot.objects.filter(
             court_id=court_id,
-            date=target_date.date(),
+            date=target_date,
             is_active=True,
             start_time__gte=(current_time if i == 0 and selected_date == current_datetime.date() else datetime.datetime.min.time())
         ).exclude(

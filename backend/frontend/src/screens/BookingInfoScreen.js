@@ -353,7 +353,7 @@ function BookingInfoScreen() {
     if (slots?.length !== 0 && additionalSlots?.length !== 0 && courtId) {
       dispatch(getNearestSlot(courtId, date));
     }
-  }, [dispatch, courtName, slots, additionalSlots, courts, date]);
+  }, [additionalSlots, courts, courtName, date, dispatch, slots]);
 
   return (
     <div>
@@ -516,7 +516,7 @@ function BookingInfoScreen() {
                       />
                     ) : nearestSlot ? (
                         <Alert severity="info">
-                          Next slot available on {nearestSlot?.days ? nearestSlot.days : formatDate(nearestSlot.date)} at {nearestSlot?.start_time?.slice(0, 5)}
+                          Currently No slots available in {courtName}, Next slot available on {nearestSlot?.days ? nearestSlot.days : formatDate(nearestSlot.date)} at {nearestSlot?.start_time?.slice(0, 5)}
                         </Alert>
                       ) : (
                         <Alert severity="error">
