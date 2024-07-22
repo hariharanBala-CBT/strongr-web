@@ -2,14 +2,18 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { GiShuttlecock } from "react-icons/gi";
 import { Calendar, MapPin } from "react-feather";
+import { useTranslation } from "react-i18next";
+
 import { useHomeContext } from "../context/HomeContext";
 import profileImage from "../images/profile.jpg";
 import venueImage from "../images/venue3.jpg";
+
 
 import "../css/club.css";
 
 function Club({ clubs }) {
   const navigate = useNavigate();
+  const { t } = useTranslation("clubcard");
 
   const { recentlySearchedKeywords, setRecentlySearchedKeywords } =
     useHomeContext();
@@ -46,26 +50,30 @@ function Club({ clubs }) {
                           {club && club.organization_images ? (
                             <img
                               src={club.organization_images}
-                              alt="Organization"
+                              alt={t("organizationAlt")}
                             />
                           ) : (
-                            <img src={venueImage} alt="Organization" />
+                            <img src={venueImage} alt={t("organizationAlt")} />
                           )}
                         </a>
                         <div className="fav-item-venues">
-                          <span className="tag tag-blue">Featured</span>
-                          <h5 className="tag tag-primary">
+                          <span className="tag tag-blue">{t("featured")}</span>
+                          {/* <h5 className="tag tag-primary">
                             $450<span>/hr</span>
-                          </h5>
+                          </h5> */}
                         </div>
                       </div>
                       <div className="listing-content">
-                        <div className="list-reviews">
-                          <div className="d-flex align-items-center">
-                            <span className="rating-bg">4.2</span>
-                            <span>300 Reviews</span>
-                          </div>
-                        </div>
+                        {club.rating > 0 && (
+                            <div className="list-reviews">
+                              <div className="d-flex align-items-center">
+                                <span className="rating-bg">
+                                  {club.rating}
+                                </span>
+                                <span>{t("reviews", { count: club?.numRatings })}</span>
+                              </div>
+                            </div>
+                          )}
                         <h3 className="listing-title">
                           <a onClick={() => handleViewDetails(club)}>
                             {club.organization.organization_name}
@@ -73,8 +81,7 @@ function Club({ clubs }) {
                         </h3>
                         <div className="listing-details-group">
                           <p>
-                            Elevate your athletic journey at Sarah Sports
-                            Academy, where excellence meets opportunity.
+                            {club.organization.description}
                           </p>
                           <ul className="listing-details-info">
                             <li>
@@ -82,7 +89,7 @@ function Club({ clubs }) {
                                 <i className="feather-map-pin">
                                   <MapPin />
                                 </i>
-                                {club.address_line_1},{club?.area?.area_name}
+                                {club.address_line_1}{club?.area?.area_name}
                               </span>
                             </li>
                             {club?.next_availabilty && (
@@ -90,7 +97,7 @@ function Club({ clubs }) {
                                 <span>
                                   <i className="fa-solid fa-calendar-days"> </i>
                                   <span className="primary-text">
-                                    next availability :{" "}
+                                    {t("nextAvailability")} :{" "}
                                     {club?.next_availabilty?.days}-
                                     {club?.next_availabilty?.start_time}
                                   </span>
@@ -100,12 +107,12 @@ function Club({ clubs }) {
                           </ul>
                         </div>
                         <div className="listing-button">
-                          <div className="listing-venue-owner">
+                          {/* <div className="listing-venue-owner">
                             <a className="navigation">
                               <img src={profileImage} alt="User" />
                               Mart Sublin
                             </a>
-                          </div>
+                          </div> */}
                           <a
                             onClick={() => handleViewDetails(club)}
                             className="user-book-now"
@@ -115,7 +122,7 @@ function Club({ clubs }) {
                                 <Calendar />
                               </i>
                             </span>
-                            Book Now
+                            {t("bookNow")}
                           </a>
                         </div>
                       </div>
