@@ -43,7 +43,7 @@
                                 <div class="row mt-4">
                                     <div class="col-md-6 text-end">
                                         <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit">Update</button>
-                                        {% comment %} <button id="nextTabBtn" class="btn btn-primary">Next Tab</button> {% endcomment %}
+                                        <button id="nextTabBtn" class="btn btn-primary">Next Tab</button>
                                     </div>
                                 </div>
                             </form>
@@ -65,8 +65,17 @@
             </div>
         </div>
     </div>
-
+    <script src="{% static 'js/tab.js' %}"></script>
     <script>
+        function showToast(message) {
+                    const toast = $('#successToast');
+                    toast.text(message);
+                    toast.show();
+                    setTimeout(() => {
+                        toast.hide();
+                    }, 2500);
+                }
+
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('workingdays_form');
             const modal = document.getElementById('confirmationModal');
@@ -136,21 +145,4 @@
             }
             });
             
-            $(document).ready(function () {
-                $('#nextTabBtn').click(function (event) {
-                    event.preventDefault(); 
-                    const activeTab = $('.tab-button.active');
-                    const nextTab = activeTab.next('.tab-button');
-            
-                    if (nextTab.length > 0) {
-                        activeTab.removeClass('active');
-                        nextTab.addClass('active');
-            
-                        const url = nextTab.data('url');
-                        $('#tab-content').load(url, function () {
-                            initFormSubmission();
-                        });
-                    }
-                });
-            });
     </script>
