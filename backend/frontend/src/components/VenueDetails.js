@@ -3,6 +3,11 @@ import { Calendar, MapPin, Heart } from "react-feather";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import dayjs from 'dayjs';
+
+const formatDate = (date) => {
+  return dayjs(date).format('DD-MM-YYYY');
+};
 
 const VenueDetails = ({ club }) => {
   const { address_line_1, organization, organization_images } = club;
@@ -78,8 +83,7 @@ const VenueDetails = ({ club }) => {
                   <span>
                     <i className="fa-solid fa-calendar-days"> </i>
                     <span className="primary-text">
-                    {t("nextAvailability")}  : {club?.next_availabilty?.days}-
-                      {club?.next_availabilty?.start_time}
+                    {t("NextAvailability")} : {club?.next_availabilty?.days ? club?.next_availabilty?.days : formatDate(club?.next_availabilty?.date)} - {club?.next_availabilty?.start_time}
                     </span>
                   </span>
                 </li>

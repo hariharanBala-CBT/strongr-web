@@ -111,6 +111,9 @@ import {
   TOPRATED_CLUBS_REQUEST,
   TOPRATED_CLUBS_SUCCESS,
   TOPRATED_CLUBS_FAIL,
+  NEAREST_SLOT_REQUEST,
+  NEAREST_SLOT_SUCCESS,
+  NEAREST_SLOT_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -1154,6 +1157,31 @@ export const getTopRatedClubs = () => async (dispatch) => {
 
     dispatch({
       type: TOPRATED_CLUBS_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const getNearestSlot = (courtId, date) => async (dispatch) => {
+  try {
+    dispatch({ type: NEAREST_SLOT_REQUEST });
+
+    const { data } = await axios.get(`/api/slots/nearest/`, {
+      params: { courtId: courtId, date: date },
+    });
+
+    dispatch({
+      type: NEAREST_SLOT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    console.error("Error fetching available slots:", error);
+
+    dispatch({
+      type: NEAREST_SLOT_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

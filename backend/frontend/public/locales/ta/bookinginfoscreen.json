@@ -30,6 +30,7 @@
     "selectSlot": "ஒரு இடத்தை தேர்ந்தெடுத்து பதிவு செய்யவும்",
     "incorrectCredentials": "தவறான அனுமதிகள்",
     "loggedInSuccessfully": "வெற்றிகரமாக உள்நுழைந்தது",
-    "loadingSlots": "இடைவெளிகள் ஏற்றுகிறது..."
+    "loadingSlots": "இடைவெளிகள் ஏற்றுகிறது...",
+    "nextSlotAvailable": "தற்போது {{courtName}} இல் இடைவெளிகள் இல்லை, அடுத்த இடைவெளி {{date}} அன்று {{time}} மணிக்கு கிடைக்கும்"
   }
   

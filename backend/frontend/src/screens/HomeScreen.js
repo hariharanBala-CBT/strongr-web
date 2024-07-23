@@ -13,7 +13,6 @@ import Button from "../components/Button";
 import Message from "../components/Message";
 import SelectInput from "../components/SelectInput";
 import DateInput from "../components/DateInput";
-import Venue from "../components/Venue";
 import Footer from "../components/Footer";
 import Testimonial from "../components/Testimonial";
 import customerGuide from "../guide/customer.pdf";
@@ -31,6 +30,7 @@ import cockImage from "../images/icons/work-cock.svg";
 import workImage from "../images/icons/work-icon1.svg";
 import workImage2 from "../images/icons/work-icon2.svg";
 import workImage3 from "../images/icons/work-icon3.svg";
+import Venue from "../components/Venue";
 
 function HomeScreen(history) {
   const { t } = useTranslation("homescreen");

@@ -13,11 +13,15 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from dateutil.parser import parse
+from django.utils.dateparse import parse_datetime
+from django.db.models import Q
+from django.db.models import Avg, Count
 import datetime
 from datetime import timedelta
 from django.db import transaction
 from django.contrib.auth.hashers import make_password
 from base.utils import update_completed_bookings
+from .utils import get_nearest_available_slot
 
 
 @api_view(['GET'])
@@ -34,7 +38,7 @@ def ValidateUser(request):
 
     except Exception:
         return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
-    
+
 @api_view(['GET'])
 def ValidateUserDetails(request):
     try:
@@ -45,7 +49,7 @@ def ValidateUserDetails(request):
             return Response({'detail': 'email is required'},status=status.HTTP_400_BAD_REQUEST)
         if not phone:
             return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
-        
+
         user = User.objects.filter(email=email)
         customer = Customer.objects.filter(phone_number = phone)
 
@@ -54,7 +58,7 @@ def ValidateUserDetails(request):
 
         if customer:
             return Response({'detail': 'User exists with this phone number'}, status=status.HTTP_200_OK)
-        
+
         return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
 
     except Exception:
@@ -554,7 +558,6 @@ def PhoneLoginView(request):
         message = {'phone_number is required'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-from django.db.models import Avg, Count
 
 @api_view(['GET'])
 def getHighRatedClubs(request):
@@ -572,3 +575,45 @@ def getHighRatedClubs(request):
     except Exception as e:
         print(e)
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def getNearestSlot(request):
+    court_id = request.query_params.get('courtId')
+    date_str = request.query_params.get('date')
+
+    if not court_id or not date_str:
+        return Response({"message": "Court ID and date parameters are required"}, status=400)
+
+    try:
+        date_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+    except ValueError:
+        return Response({"message": "Invalid date format. Use YYYY-MM-DD."}, status=400)
+
+    court = Court.objects.get(id=court_id)
+    selected_date = date_obj.date()
+    current_datetime = datetime.datetime.now().replace(microsecond=0)
+
+    nearest_slot = get_nearest_available_slot(court, current_datetime, selected_date)
+
+    if not nearest_slot:
+        return Response({"message": "No slots available"}, status=404)
+
+    if nearest_slot['source'] == 'slot':
+        slot = Slot.objects.get(
+            court=court,
+            start_time=nearest_slot['start_time'],
+            end_time=nearest_slot['end_time'],
+            days=nearest_slot['date'].strftime('%A')
+        )
+        serializer = SlotSerializer(slot)
+    else:
+        slot = AdditionalSlot.objects.get(
+            court=court,
+            start_time=nearest_slot['start_time'],
+            end_time=nearest_slot['end_time'],
+            date=nearest_slot['date']
+        )
+        serializer = AdditionalSlotSerializer(slot)
+
+    return Response(serializer.data)

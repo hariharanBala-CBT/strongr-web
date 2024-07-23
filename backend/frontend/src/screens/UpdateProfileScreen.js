@@ -49,6 +49,10 @@ function UpdateprofileScreen() {
   const [loader, setLoader] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [otp, setOtp] = useState("");
+  const [otpValid, setOtpValid] = useState(true);
+  const [otpError, setOtpError] = useState(false);
+  const [resendCount, setResendCount] = useState(0);
+  const [incorrectAttempts, setIncorrectAttempts] = useState(0);
 
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
@@ -66,10 +70,17 @@ function UpdateprofileScreen() {
   const [phone, setPhone] = useState(customerDetails?.phone_number || "");
 
   const regenerateOtp = () => {
-    setLoader(true);
-    setOtp("");
-    setOpenForm(true);
-    dispatch(generateUpdateOTP(email, userInfo?.id));
+    if (resendCount < 3) {
+      setLoader(true);
+      setOtp("");
+      setOtpError('');
+      setOtpValid(true);
+      dispatch(generateUpdateOTP(email, userInfo?.id));
+      setResendCount(resendCount + 1);
+    }else {
+      toast.error("You have reached the maximum number of resend attempts.");
+      setOpenForm(false);
+    }
   };
 
   const updateCustomer = (e) => {
@@ -114,13 +125,22 @@ function UpdateprofileScreen() {
       toast.success(t("userDetailsUpdated"));
       setSubmit(false);
     } else if (userUpdateError && submit) {
-      toast.error(t("incorrectOtp"));
-      setOpenForm(false);
+      setOtp("");
+      setOtpError(true);
+      setOtpValid(false);
+      setIncorrectAttempts(incorrectAttempts + 1);
+      if (incorrectAttempts >= 3) {
+        setOpenForm(false);
+        toast.error("Too many invalid attempts, try again later");
+      } else {
+        toast.error(t("incorrectOtp"));
+      }
+      setSubmit(false);
     }
     dispatch({
       type: USER_UPDATE_PROFILE_RESET,
     });
-  }, [dispatch, navigate, submit, userUpdateError, userUpdateSuccess]);
+  }, [dispatch, incorrectAttempts, navigate, submit, userUpdateError, userUpdateSuccess]);
 
   useEffect(() => {
     setOpenForm(false);
@@ -306,7 +326,11 @@ function UpdateprofileScreen() {
                               <OTPInput
                                 className="otp-input-field"
                                 value={otp}
-                                onChange={setOtp}
+                                onChange={(otp) => {
+                                  setOtp(otp);
+                                  setOtpValid(true);
+                                  setOtpError('');
+                                }}
                                 autoFocus
                                 OTPLength={4}
                                 otpType="number"
@@ -317,13 +341,15 @@ function UpdateprofileScreen() {
                                 <ResendOTP
                                   onResendClick={regenerateOtp}
                                   className="resend-btn"
+                                  disabled={resendCount >= 3}
                                 />
                               </div>
                             </div>
                             <Button
                               type="submit"
                               className="otp-login-btn"
-                              text={t("submit")}
+                              text={t("Submit")}
+                              disabled={!otpValid}
                             />
                           </form>
                         </div>
