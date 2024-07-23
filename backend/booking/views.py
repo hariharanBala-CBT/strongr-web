@@ -13,11 +13,15 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from dateutil.parser import parse
+from django.utils.dateparse import parse_datetime
+from django.db.models import Q
+from django.db.models import Avg, Count
 import datetime
 from datetime import timedelta
 from django.db import transaction
 from django.contrib.auth.hashers import make_password
 from base.utils import update_completed_bookings
+from .utils import get_nearest_available_slot
 
 
 @api_view(['GET'])
@@ -34,7 +38,7 @@ def ValidateUser(request):
 
     except Exception:
         return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
-    
+
 @api_view(['GET'])
 def ValidateUserDetails(request):
     try:
@@ -45,7 +49,7 @@ def ValidateUserDetails(request):
             return Response({'detail': 'email is required'},status=status.HTTP_400_BAD_REQUEST)
         if not phone:
             return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
-        
+
         user = User.objects.filter(email=email)
         customer = Customer.objects.filter(phone_number = phone)
 
@@ -54,7 +58,7 @@ def ValidateUserDetails(request):
 
         if customer:
             return Response({'detail': 'User exists with this phone number'}, status=status.HTTP_200_OK)
-        
+
         return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
 
     except Exception:
@@ -554,7 +558,6 @@ def PhoneLoginView(request):
         message = {'phone_number is required'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-from django.db.models import Avg, Count
 
 @api_view(['GET'])
 def getHighRatedClubs(request):
@@ -574,96 +577,31 @@ def getHighRatedClubs(request):
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-from django.utils.dateparse import parse_datetime
-from django.db.models import Q
-
 @api_view(['GET'])
 def getNearestSlot(request):
     court_id = request.query_params.get('courtId')
     date_str = request.query_params.get('date')
-    
-    date_obj = parse_datetime(date_str)
+
+    if not court_id or not date_str:
+        return Response({"message": "Court ID and date parameters are required"}, status=400)
+
+    try:
+        date_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+    except ValueError:
+        return Response({"message": "Invalid date format. Use YYYY-MM-DD."}, status=400)
+
+    court = Court.objects.get(id=court_id)
+    selected_date = date_obj.date()
     current_datetime = datetime.datetime.now().replace(microsecond=0)
-    current_date = current_datetime.date()
-    selected_date = date_obj.date() if date_obj else current_datetime.date()
-    if (selected_date == current_date):
-        current_time = (current_datetime + datetime.timedelta(hours=1)).time()
 
-    # Exclude unavailable and booked slots
-    unavailable_slots = UnavailableSlot.objects.filter(
-        court_id=court_id, 
-        date__gte=selected_date, 
-        is_active=True
-    ).values_list('start_time', 'end_time')
-    
-    booked_slots = Booking.objects.filter(
-        court_id=court_id, 
-        booking_date__gte=selected_date
-    ).values_list('slot__start_time', 'slot__end_time')
-    
-    excluded_times = list(unavailable_slots) + list(booked_slots)
+    nearest_slot = get_nearest_available_slot(court, current_datetime, selected_date)
 
-    nearest_slots = []
-
-    # Find nearest slot from Slot table
-    for i in range(0, 7):  # Search for up to one week
-        target_date = selected_date + timedelta(days=i)
-        target_weekday = target_date.strftime('%A')
-
-        slots = Slot.objects.filter(
-            court_id=court_id,
-            days=target_weekday,
-            start_time__gte=(current_time if i == 0 and selected_date == current_datetime.date() else datetime.datetime.min.time())
-        ).exclude(
-            Q(start_time__in=[time[0] for time in excluded_times]) |
-            Q(end_time__in=[time[1] for time in excluded_times])
-        )
-
-        for slot in slots:
-            slot_info = {
-                'date': target_date,
-                'start_time': slot.start_time,
-                'end_time': slot.end_time,
-                'source': 'slot'
-            }
-            nearest_slots.append(slot_info)
-        
-    # Find nearest slot from AdditionalSlot table
-    for i in range(0, 7):  # Search for up to one week
-        target_date = selected_date + timedelta(days=i)
-
-        additional_slots = AdditionalSlot.objects.filter(
-            court_id=court_id,
-            date=target_date,
-            is_active=True,
-            start_time__gte=(current_time if i == 0 and selected_date == current_datetime.date() else datetime.datetime.min.time())
-        ).exclude(
-            Q(start_time__in=[time[0] for time in excluded_times]) |
-            Q(end_time__in=[time[1] for time in excluded_times])
-        )
-
-        for slot in additional_slots:
-            slot_info = {
-                'date': slot.date,
-                'start_time': slot.start_time,
-                'end_time': slot.end_time,
-                'source': 'additional_slot'
-            }
-            nearest_slots.append(slot_info)
-
-    # Sort the collected slots by date and start_time and select the nearest one
-    nearest_slots.sort(key=lambda x: (x['date'], x['start_time']))
-
-    # If there are no available slots, return an empty response or handle accordingly
-    if not nearest_slots:
+    if not nearest_slot:
         return Response({"message": "No slots available"}, status=404)
-    
-    # Serialize and return the nearest slot
-    nearest_slot = nearest_slots[0]
-    
+
     if nearest_slot['source'] == 'slot':
         slot = Slot.objects.get(
-            court_id=court_id,
+            court=court,
             start_time=nearest_slot['start_time'],
             end_time=nearest_slot['end_time'],
             days=nearest_slot['date'].strftime('%A')
@@ -671,14 +609,11 @@ def getNearestSlot(request):
         serializer = SlotSerializer(slot)
     else:
         slot = AdditionalSlot.objects.get(
-            court_id=court_id,
+            court=court,
             start_time=nearest_slot['start_time'],
             end_time=nearest_slot['end_time'],
             date=nearest_slot['date']
         )
         serializer = AdditionalSlotSerializer(slot)
-    
+
     return Response(serializer.data)
-
-
-

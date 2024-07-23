@@ -30,5 +30,6 @@
       "selectSlot": "Select a slot to book",
       "incorrectCredentials": "Incorrect Credentials",
       "loggedInSuccessfully": "Logged in successfully",
-      "loadingSlots": "Loading slots..."
+      "loadingSlots": "Loading slots...",
+      "nextSlotAvailable": "Currently no slots available in {{courtName}}, next slot available on {{date}} at {{time}}"
     }
