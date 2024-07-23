@@ -617,7 +617,7 @@ function ClubDetailScreen() {
                   <div className="accordion-header" id="panelsStayOpen-reviews">
                     <div className="review-wrapper-new ">
                       <div>
-                        <span className="w-75 mb-0">{t("reviews")}</span>
+                        <span className="w-75 mb-0">{t("review")}</span>
                       </div>
                       <div className="review-wrapper-last">
                         <div>
