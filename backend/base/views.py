@@ -691,7 +691,7 @@ class OrganizationDeleteLocationImageView(DeleteView):
     model = OrganizationGameImages
     template_name = 'delete_image.html'
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
 
@@ -759,7 +759,7 @@ class CourtDeleteView(DeleteView):
     model = Court
     template_name = 'delete_court.html'
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         messages.success(request, SUCCESS_MESSAGES.get('delete_court'))
         return super().delete(request, *args, **kwargs)
 
@@ -891,7 +891,7 @@ class SlotDeleteView(DeleteView):
     model = Slot
     template_name = 'delete_slot.html'
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         messages.success(request, SUCCESS_MESSAGES.get('delete_slot'))
         return super().delete(request, *args, **kwargs)
 
