@@ -38,10 +38,14 @@
 
 .booked-cage .booking-order-confirmation ul li h6 {
     margin-bottom: 8px;
+    display: flex;
+    justify-content: center;
 }
 
 .booked-cage .booking-order-confirmation ul li p {
     margin-bottom: 0;
+    display: flex;
+    justify-content: center;
 }
 
 .booked-cage .booking-order-confirmation ul {
@@ -50,7 +54,18 @@
     padding: 0 0 24px 0;
 }
 
-.booked-cage .booking-order-confirmation ul.contact-info li, .booking-order-confirmation ul.payment-info li {
+.booking-order-confirmation .address-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .booking-order-confirmation .address-details p {
+    margin: 0; 
+    padding: 2px 0; 
+  }
+
+.booked-cage .booking-order-confirmation ul.contact-info li,
+.booking-order-confirmation ul.payment-info li {
     padding-right: 6.25rem;
 }
 
@@ -90,9 +105,8 @@
     color: #495057 !important;
     font-weight: 500 !important;
     padding: 0.5rem 1rem !important;
-  }
-  
-  .form-select.mt-3 {
+}
+
+.form-select.mt-3 {
     margin-top: 1rem !important;
-  }
-  
+}
