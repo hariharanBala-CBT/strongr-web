@@ -321,7 +321,7 @@
                                                                             </tr>
                                                                             {% empty %}
                                                                             <tr>
-                                                                                <td class="empty">No Courts Added</td>
+                                                                                <td class="empty">No Courts Added <a href="{% url 'mainview' location_item.location.id %}">Add Here</a></td>
                                                                             </tr>
                                                                         {% endfor %}
                                                                     </tbody>
@@ -350,7 +350,7 @@
                                                                     </table>
                                                                 </div>
                                                                 {% else %}
-                                                                <li class="empty">No Slot Added</li>
+                                                                <li class="empty">No Slot Added <a href="{% url 'slot-list' location_item.location.id %}">Add Here</a></li>
                                                                 {% endif %}
                                                             </ul>
                                                         </div>

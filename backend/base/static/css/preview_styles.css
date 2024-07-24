@@ -369,7 +369,7 @@ ul.checkbox-list li input[type="checkbox"] {
 
 .submit-button:disabled {
     padding: 10px 20px;
-    background: #dc0f0f;
+    background: #607D8B;
     border: 0;
     color: #fff;
     text-transform: uppercase;
