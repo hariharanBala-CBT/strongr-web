@@ -142,7 +142,7 @@
     toast.style.display = "block";
     setTimeout(() => {
       toast.style.display = "none";
-    }, 2000); // Hide toast after 2 seconds
+    }, 5000); // Increase duration for better visibility
   }
 
   function submitFormData() {
@@ -155,32 +155,32 @@
         "X-CSRFToken": "{{ csrf_token }}",
       },
     })
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((data) => {
-            if (data.errors) {
-              displayFormErrors(data.errors);
-              throw new Error(
-                `HTTP error! status: ${response.status}`,
-                displayFormErrors(data.errors)
-              );
-            }
-          });
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.status === "success") {
-          showToast(data.message);
-          setTimeout(() => {
-            window.location.href = "{% url 'organization_locationlist' %}";
-          }, 2000);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        showToast("Error submitting form. " + error.message);
-      });
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((data) => {
+          if (data.errors) {
+            displayFormErrors(data.errors);
+          } else {
+            showToast("Error submitting form. Please try again.");
+          }
+        }).catch(() => {
+          showToast("Error processing the response. Please try again.");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data && data.status === "success") {
+        showToast(data.message);
+        setTimeout(() => {
+          window.location.href = "{% url 'organization_locationlist' %}";
+        }, 2000);
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      showToast("Error submitting form. " + error.message);
+    });
   }
 
   function displayFormErrors(errors) {
@@ -192,7 +192,7 @@
         errorElement.style.display = "block";
         setTimeout(() => {
           errorElement.style.display = "none";
-        }, 2500);
+        }, 5000); // Increased duration for form error messages
       }
     });
   }
