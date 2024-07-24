@@ -121,6 +121,9 @@ import {
   TOPRATED_CLUBS_SUCCESS,
   TOPRATED_CLUBS_FAIL,
   TOPRATED_CLUBS_RESET,
+  NEAREST_SLOT_REQUEST,
+  NEAREST_SLOT_SUCCESS,
+  NEAREST_SLOT_FAIL,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -813,3 +816,16 @@ export const topRatedClubsReducer = (state = {}, action) => {
       return state;
   }
 }
+
+export const nearestSlotReducer = (state = { nearestSlot: [] }, action) => {
+  switch (action.type) {
+    case NEAREST_SLOT_REQUEST:
+      return { loading: true };
+    case NEAREST_SLOT_SUCCESS:
+      return { loading: false, nearestSlot: action.payload };
+    case NEAREST_SLOT_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};

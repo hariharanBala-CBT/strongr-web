@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
@@ -48,6 +48,12 @@ function RegisterScreen() {
   const [submit, setSubmit] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [resendCount, setResendCount] = useState(0);
+  const [timer, setTimer] = useState(120);
+  const [otpAttempts, setOtpAttempts] = useState(0);
+  const [otpValid, setOtpValid] = useState(true); // Track OTP validity
+  const intervalRef = useRef(null);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -68,12 +74,25 @@ function RegisterScreen() {
 
   const otpGenerate = () => {
     setOpenForm(true);
+    setOtp('');
+    setOtpValid(true); // Reset OTP validity
     dispatch(generateOTP(email));
+    setTimer(120);
+    startTimer();
   };
 
   const regenerateOtp = () => {
-    setLoader(true);
-    dispatch(generateOTP(email));
+    if (resendCount < 3) {
+      setLoader(true);
+      setOtp('');
+      setOtpValid(true); // Reset OTP validity
+      dispatch(generateOTP(email));
+      setResendCount(resendCount + 1);
+      setTimer(120);
+    } else {
+      toast.error("You have reached the maximum number of resend attempts.");
+      setOpenForm(false);
+    }
   };
 
   const validateDetails = (e) => {
@@ -93,10 +112,55 @@ function RegisterScreen() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (otp === "") {
-      toast.error("Please enter the OTP");
+      setOtpError("Please enter the OTP");
       return;
     }
-    dispatch(register(email, name, otp, password, phoneNumber));
+
+    dispatch(register(email, name, otp, password, phoneNumber))
+      .then((res) => {
+        if (res.error) {
+          handleOtpError("Invalid OTP. Please try again.");
+        } else {
+          handleOtpSuccess();
+        }
+      })
+      .catch(() => {
+        handleOtpError("Invalid OTP. Please try again.");
+      });
+  };
+
+  const handleOtpError = (errorMessage) => {
+    setOtpError(errorMessage);
+    setOtpAttempts(otpAttempts + 1);
+    setOtp('');
+    setOtpValid(false);
+
+    if (otpAttempts + 1 >= 3) {
+      setOpenForm(false);
+      toast.error("Too many incorrect attempts. Please try again later.");
+      setOtpAttempts(0);
+    }
+  };
+
+  const handleOtpSuccess = () => {
+    setOtpError("");
+    setOtpAttempts(0);
+    setOpenForm(false);
+    navigate("/");
+  };
+
+  const startTimer = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setTimer((prev) => {
+        if (prev === 1) {
+          clearInterval(intervalRef.current);
+          setOpenForm(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   };
 
   useEffect(() => {
@@ -122,7 +186,6 @@ function RegisterScreen() {
       } else {
         toast.error(registerError);
       }
-      setOpenForm(false);
       dispatch({
         type: USER_LOGOUT,
       });
@@ -136,6 +199,34 @@ function RegisterScreen() {
       setLoader(true);
     }
   }, [otpLoading]);
+
+  // Reset states when the modal opens
+  useEffect(() => {
+    if (openForm) {
+      setOtp('');
+      setOtpError('');
+      setTimer(120);
+      setResendCount(0);
+      setOtpAttempts(0);
+      setOtpValid(true); // Reset OTP validity
+    }
+  }, [openForm]);
+
+  // Timer effect
+  useEffect(() => {
+    if (openForm && timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev === 1) {
+            clearInterval(interval);
+            setOpenForm(false);
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [openForm, timer]);
 
   return (
     <div className="register-page">
@@ -374,7 +465,7 @@ function RegisterScreen() {
                             <OTPInput
                               className="otp-input-field"
                               value={otp}
-                              onChange={setOtp}
+                              onChange={(otp) => setOtp(otp)}
                               autoFocus
                               OTPLength={4}
                               otpType="number"
@@ -382,10 +473,14 @@ function RegisterScreen() {
                               secure
                             />
                           </div>
+                          {/* {otpError && (
+                            <p className="text-danger">{otpError}</p>
+                          )} */}
                           <Button
                             type="submit"
                             className="otp-login-btn"
                             text="submit"
+                            disabled={loader || !otpValid}
                           />
                         </form>
 

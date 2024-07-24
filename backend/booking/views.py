@@ -13,11 +13,15 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from dateutil.parser import parse
+from django.utils.dateparse import parse_datetime
+from django.db.models import Q
+from django.db.models import Avg, Count
 import datetime
 from datetime import timedelta
 from django.db import transaction
 from django.contrib.auth.hashers import make_password
 from base.utils import update_completed_bookings
+from .utils import get_nearest_available_slot
 
 
 @api_view(['GET'])
@@ -34,7 +38,8 @@ def ValidateUser(request):
 
     except Exception:
         return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 @api_view(['GET'])
 def ValidateUserDetails(request):
     try:
@@ -45,7 +50,7 @@ def ValidateUserDetails(request):
             return Response({'detail': 'email is required'},status=status.HTTP_400_BAD_REQUEST)
         if not phone:
             return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
-        
+
         user = User.objects.filter(email=email)
         customer = Customer.objects.filter(phone_number = phone)
 
@@ -54,7 +59,7 @@ def ValidateUserDetails(request):
 
         if customer:
             return Response({'detail': 'User exists with this phone number'}, status=status.HTTP_200_OK)
-        
+
         return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
 
     except Exception:
@@ -91,6 +96,7 @@ def search(request):
 
     serializer = ClubLocationSerializerWithImages(organization_locations, many=True)
     serialized_data = serializer.data
+
     return Response(serialized_data)
 
 
@@ -102,6 +108,7 @@ def recentSearch(request):
         id__in=stored_keywords)
 
     serializer = ClubLocationSerializerWithImages(organization_locations, many=True)
+
     return Response(serializer.data)
 
 
@@ -109,6 +116,7 @@ def recentSearch(request):
 def getAreas(request):
     areas = Area.objects.all()
     serializer = AreaSerializer(areas, many=True)
+
     return Response(serializer.data)
 
 
@@ -116,6 +124,7 @@ def getAreas(request):
 def getGameTypes(request):
     games = GameType.objects.all()
     serializer = GameTypeSerializer(games, many=True)
+
     return Response(serializer.data)
 
 
@@ -123,6 +132,7 @@ def getGameTypes(request):
 def getClubs(request):
     clubs = Organization.objects.all()
     serializer = ClubSerializer(clubs, many=True)
+
     return Response(serializer.data)
 
 
@@ -130,6 +140,7 @@ def getClubs(request):
 def getClub(request, pk):
     club = Organization.objects.get(id=pk)
     serializer = ClubSerializer(club, many=False)
+
     return Response(serializer.data)
 
 
@@ -137,6 +148,7 @@ def getClub(request, pk):
 def getClubLocation(request, pk):
     club = OrganizationLocation.objects.get(id=pk)
     serializer = ClubLocationSerializer(club, many=False)
+
     return Response(serializer.data)
 
 
@@ -145,6 +157,7 @@ def getClubGame(request, pk):
     game = OrganizationLocationGameType.objects.filter(
         organization_location_id=pk)
     serializer = OrganizationLocationGameTypeSerializer(game, many=True)
+
     return Response(serializer.data)
 
 
@@ -153,6 +166,7 @@ def getClubAmenities(request, pk):
     amenities = OrganizationLocationAmenities.objects.get(
         organization_location_id=pk)
     serializer = OrganizationLocationAmenitiesSerializer(amenities, many=False)
+
     return Response(serializer.data)
 
 
@@ -161,6 +175,7 @@ def getClubWorkingDays(request, pk):
     days = OrganizationLocationWorkingDays.objects.filter(
         organization_location_id=pk)
     serializer = OrganizationLocationWorkingDaysSerializer(days, many=True)
+
     return Response(serializer.data)
 
 
@@ -168,6 +183,7 @@ def getClubWorkingDays(request, pk):
 def getClubImages(request, pk):
     images = OrganizationGameImages.objects.filter(organization_id=pk)
     serializer = OrganizationGameImagesSerializer(images, many=True)
+
     return Response(serializer.data)
 
 
@@ -175,6 +191,7 @@ def getClubImages(request, pk):
 def getBookingDetails(request, pk):
     booking = Booking.objects.get(id=pk)
     serializer = BookingDetailsSerializer(booking)
+
     return Response(serializer.data)
 
 
@@ -182,6 +199,7 @@ def getBookingDetails(request, pk):
 def getCourt(request, pk):
     court = Court.objects.get(id=pk)
     serializer = CourtSerializer(court, many=False)
+
     return Response(serializer.data)
 
 
@@ -189,6 +207,7 @@ def getCourt(request, pk):
 def getSlot(request, pk):
     slot = Slot.objects.get(id=pk)
     serializer = SlotSerializer(slot, many=False)
+
     return Response(serializer.data)
 
 
@@ -197,6 +216,7 @@ def getUserBookings(request, pk):
     update_completed_bookings();
     booking = Booking.objects.filter(user=pk)
     serializer = UserBookingsSerializer(booking, many=True)
+
     return Response(serializer.data)
 
 
@@ -204,6 +224,7 @@ def getUserBookings(request, pk):
 def getCustomer(request, pk):
     customer = Customer.objects.get(user=pk)
     serializer = CustomerSerializer(customer, many=False)
+
     return Response(serializer.data)
 
 
@@ -242,6 +263,7 @@ def filterClubs(request):
     ]
 
     serializer = ClubLocationSerializerWithImages(organizationlocations, many=True)
+
     return Response(serializer.data)
 
 
@@ -254,6 +276,7 @@ def getSuggestedClub(request):
         organizationlocations = OrganizationLocation.objects.filter(
             area=selected_area_obj, status=1, organization__status=1)
         serializer = ClubLocationSerializerWithImages(organizationlocations, many=True)
+
         return Response(serializer.data)
 
     except Area.DoesNotExist:
@@ -315,6 +338,7 @@ def createBooking(request):
                 )
 
             serializer = BookingDetailsSerializer(booking)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         except Exception:
@@ -359,6 +383,7 @@ def getCourts(request, pk):
     courts = Court.objects.filter(location_id=pk,
                                   game__game_type__game_name=game)
     serializer = CourtSerializer(courts, many=True)
+
     return Response(serializer.data)
 
 
@@ -390,6 +415,7 @@ def getAvailableSlots(request):
     # Exclude booked slots
     slots = slots.exclude(id__in=bookings)
     serializer = SlotSerializer(slots, many=True)
+
     return Response(serializer.data)
 
 
@@ -397,11 +423,15 @@ def getAvailableSlots(request):
 def getAdditionalSlots(request):
     court = request.query_params.get('courtId')
     date_str = request.query_params.get('date')
+    current_datetime = datetime.datetime.now().replace(microsecond=0)
+    current_time = (current_datetime + timedelta(hours=1)).time()
 
     slots = AdditionalSlot.objects.filter(court=court,
                                           date=date_str,
+                                          start_time__gte=current_time,
                                           is_active=True)
     serializer = AdditionalSlotSerializer(slots, many=True)
+
     return Response(serializer.data)
 
 
@@ -414,6 +444,7 @@ def getUnavailableSlots(request):
                                            date=date_str,
                                            is_active=True)
     serializer = UnAvailableSlotSerializer(slots, many=True)
+
     return Response(serializer.data)
 
 
@@ -452,6 +483,7 @@ def cancelBooking(request, pk):
     booking.booking_status = 3
     booking.save()
     serializer = BookingDetailsSerializer(booking, many=False)
+
     return Response(serializer.data)
 
 
@@ -474,6 +506,7 @@ def resetPassword(request):
 def getClubReviews(request, pk):
     reviews = Review.objects.filter(organization_location=pk)
     serializer = ReviewSerializer(reviews, many=True)
+
     return Response(serializer.data)
 
 
@@ -543,6 +576,7 @@ def PhoneLoginView(request):
         user = User.objects.get(id=customer.user_id)
 
         serializer = UserSerializerWithToken(user, many=False)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     except Customer.DoesNotExist:
@@ -554,7 +588,6 @@ def PhoneLoginView(request):
         message = {'phone_number is required'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-from django.db.models import Avg, Count
 
 @api_view(['GET'])
 def getHighRatedClubs(request):
@@ -567,8 +600,52 @@ def getHighRatedClubs(request):
         locations_sorted = locations_with_avg_rating.order_by('-avg_rating')
         top_locations = locations_sorted[:6]
         serializer = ClubLocationSerializerWithImages(top_locations, many=True)
+
         return Response(serializer.data)
 
     except Exception as e:
         print(e)
         return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def getNearestSlot(request):
+    court_id = request.query_params.get('courtId')
+    date_str = request.query_params.get('date')
+
+    if not court_id or not date_str:
+        return Response({"message": "Court ID and date parameters are required"}, status=400)
+
+    try:
+        date_obj = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+    except ValueError:
+        return Response({"message": "Invalid date format. Use YYYY-MM-DD."}, status=400)
+
+    court = Court.objects.get(id=court_id)
+    selected_date = date_obj.date()
+    current_datetime = datetime.datetime.now().replace(microsecond=0)
+    # current_datetime = current_datetime + datetime.timedelta(hours=1)
+
+    nearest_slot = get_nearest_available_slot(court, current_datetime, selected_date)
+
+    if not nearest_slot:
+        return Response({"message": "No slots available"}, status=404)
+
+    if nearest_slot['source'] == 'slot':
+        slot = Slot.objects.get(
+            court=court,
+            start_time=nearest_slot['start_time'],
+            end_time=nearest_slot['end_time'],
+            days=nearest_slot['date'].strftime('%A')
+        )
+        serializer = SlotSerializer(slot)
+    else:
+        slot = AdditionalSlot.objects.get(
+            court=court,
+            start_time=nearest_slot['start_time'],
+            end_time=nearest_slot['end_time'],
+            date=nearest_slot['date']
+        )
+        serializer = AdditionalSlotSerializer(slot)
+
+    return Response(serializer.data)
