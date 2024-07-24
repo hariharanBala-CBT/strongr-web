@@ -156,7 +156,7 @@ function BookingScreen() {
                         <span>
                           <MapPin />
                         </span>
-                        {bookingDetails?.organization_location}
+                        {bookingDetails?.area_name}
                       </h3>
                     </li>
                     <li>
@@ -192,8 +192,12 @@ function BookingScreen() {
                 <p>{bookingDetails?.slot?.end_time?.slice(0, 5)}</p>
               </li>
               <li>
+              <div className="address-details">
                 <h6>Address</h6>
-                <p>{bookingDetails?.organization_location}</p>
+                {bookingDetails?.organization_location?.split('\n').map((line, index) => (
+                    <p key={index}>{line}</p>
+                  ))}
+              </div>
               </li>
             </ul>
             <h5 className="mb-3">Contact Information</h5>

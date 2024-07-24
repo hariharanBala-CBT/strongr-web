@@ -100,6 +100,7 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
     organization_name = serializers.SerializerMethodField()
     organization_location = serializers.SerializerMethodField()
     game_type = serializers.SerializerMethodField()
+    area_name = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
 
     def get_court(self, obj):
@@ -115,7 +116,11 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
         return obj.court.location.organization.organization_name
 
     def get_organization_location(self, obj):
-        return obj.court.location.address_line_1
+        address = f"{obj.court.location.address_line_1}\n{obj.court.location.address_line_2}\n{obj.court.location.area}\n{obj.court.location.pincode}"
+        return address
+    
+    def get_area_name(self, obj):
+        return obj.court.location.area.area_name
 
     def get_game_type(self, obj):
         return obj.court.game.game_type.game_name
@@ -137,7 +142,7 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'phone_number', 'booking_date', 'booking_status',
             'payment_status', 'tax_price', 'total_price', 'organization_name',
-            'court', 'slot', 'additional_slot', 'organization_location', 'game_type', 'image'
+            'court', 'slot', 'additional_slot', 'organization_location', 'game_type', 'area_name', 'image'
         ]
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
