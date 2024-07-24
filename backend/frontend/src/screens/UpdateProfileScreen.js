@@ -124,8 +124,7 @@ function UpdateprofileScreen() {
       setOtp("");
       setOtpError(true);
       setOtpValid(false);
-      setIncorrectAttempts(incorrectAttempts + 1);
-      if (incorrectAttempts >= 3) {
+      if (incorrectAttempts + 1 >= 3) {
         setOpenForm(false);
         toast.error("Too many invalid attempts, try again later");
       } else {
