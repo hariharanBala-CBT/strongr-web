@@ -111,6 +111,9 @@ import {
   TOPRATED_CLUBS_REQUEST,
   TOPRATED_CLUBS_SUCCESS,
   TOPRATED_CLUBS_FAIL,
+  NEAREST_SLOT_REQUEST,
+  NEAREST_SLOT_SUCCESS,
+  NEAREST_SLOT_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -125,7 +128,7 @@ export const filterLocation =
           game: gameName,
           date: date,
         },
-      }); 
+      });
 
       dispatch({
         type: FILTER_CLUB_SUCCESS,
@@ -730,7 +733,7 @@ export const listcustomerDetails = (id) => async (dispatch) => {
     });
   }
 };
- 
+
 export const updateUserProfile = (user) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -905,7 +908,7 @@ export const createClubReview = (id, review) => async (dispatch, getState) => {
 
       const { data } = await axios.post(
           `/api/club/reviews//${id}`,
-          review, 
+          review,
           config
       )
       dispatch({
@@ -961,7 +964,7 @@ export const loginPhoneNumber = (phoneNumber) => async (dispatch) => {
 
     const { data } = await axios.post(
       "/api/login/phone/",
-      { phone_number: phoneNumber }, 
+      { phone_number: phoneNumber },
       config
     );
 
@@ -985,7 +988,7 @@ export const loginPhoneNumber = (phoneNumber) => async (dispatch) => {
 export const RecentSearch = (storedKeywords) => async (dispatch) => {
   try {
     dispatch({ type: RECENT_SEARCH_REQUEST });
-    
+
     const { data } = await axios.get("/api/recentsearch/", {
       params: {
         storedKeywords: storedKeywords,
@@ -996,7 +999,7 @@ export const RecentSearch = (storedKeywords) => async (dispatch) => {
       type: RECENT_SEARCH_SUCCESS,
       payload: data,
     });
-    
+
   } catch (error) {
     dispatch({
       type: RECENT_SEARCH_FAIL,
@@ -1012,7 +1015,7 @@ export const listSuggestedClub = (areaName) => async (dispatch) => {
     dispatch({ type: SUGGESTED_CLUB_REQUEST });
 
     const { data } = await axios.get("/api/club/suggested/", {
-      params: { 
+      params: {
         area: areaName,
        },
     });
@@ -1039,7 +1042,7 @@ export const listSuggestedClubGame = (gameName) => async (dispatch) => {
     dispatch({ type: SUGGESTED_CLUBGAME_REQUEST });
 
     const { data } = await axios.get("/api/club/suggestedgame/", {
-      params: { 
+      params: {
         game: gameName,
        },
     });
@@ -1066,7 +1069,7 @@ export const validateUser = (username) => async (dispatch) => {
     dispatch({ type: USER_VALIDATE_REQUEST });
 
     const { data } = await axios.get("/api/username/validate/", {
-      params: { 
+      params: {
         username: username,
        },
     });
@@ -1093,7 +1096,7 @@ export const validateUserDetails = (email, phone) => async (dispatch) => {
     dispatch({ type: USERDETAILS_VALIDATE_REQUEST });
 
     const { data } = await axios.get("/api/userdetails/validate/", {
-      params: { 
+      params: {
         email: email,
         phone: phone,
        },
@@ -1121,7 +1124,7 @@ export const validatePhone = (phone) => async (dispatch) => {
     dispatch({ type: PHONE_VALIDATE_REQUEST });
 
     const { data } = await axios.get("/api/phone/validate/", {
-      params: { 
+      params: {
         phone: phone,
        },
     });
@@ -1154,6 +1157,31 @@ export const getTopRatedClubs = () => async (dispatch) => {
 
     dispatch({
       type: TOPRATED_CLUBS_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const getNearestSlot = (courtId, date) => async (dispatch) => {
+  try {
+    dispatch({ type: NEAREST_SLOT_REQUEST });
+
+    const { data } = await axios.get(`/api/slots/nearest/`, {
+      params: { courtId: courtId, date: date },
+    });
+
+    dispatch({
+      type: NEAREST_SLOT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    console.error("Error fetching available slots:", error);
+
+    dispatch({
+      type: NEAREST_SLOT_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

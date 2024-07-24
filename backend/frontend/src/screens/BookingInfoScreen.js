@@ -24,7 +24,9 @@ import {
   listCourts,
   listclubWorking,
   login,
+  getNearestSlot,
 } from "../actions/actions";
+import dayjs from 'dayjs';
 
 import {
   BOOKING_CREATE_RESET,
@@ -49,6 +51,10 @@ const boxStyle = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+};
+
+const formatDate = (date) => {
+  return dayjs(date).format('DD-MM-YYYY');
 };
 
 function BookingInfoScreen() {
@@ -76,6 +82,7 @@ function BookingInfoScreen() {
   const { slots } = useSelector((state) => state.slot);
   const { additionalSlots } = useSelector((state) => state.additionalSlot);
   const { unavailableSlots } = useSelector((state) => state.unavailableSlot);
+  const { nearestSlot } = useSelector((state) => state.nearestSlot);
   const { userInfo, LoginError, userLoginSuccess } = useSelector(
     (state) => state.userLogin
   );
@@ -339,6 +346,15 @@ function BookingInfoScreen() {
     }
   }, [isLogin, userLoginSuccess]);
 
+  
+  useEffect(() => {
+    const theCourt = courts?.find((court) => court.name === courtName);
+    const courtId = theCourt?.id;
+    if (slots?.length !== 0 && additionalSlots?.length !== 0 && courtId) {
+      dispatch(getNearestSlot(courtId, date));
+    }
+  }, [additionalSlots, courts, courtName, date, dispatch, slots]);
+
   return (
     <div>
       <Header location="nav-all" />
@@ -498,11 +514,15 @@ function BookingInfoScreen() {
                           name: `${slot.start_time}-${slot.end_time}`,
                         }))}
                       />
-                    ) : (
-                      <Alert severity="error">
-                        No slots available in {courtName}
-                      </Alert>
-                    )}
+                    ) : nearestSlot ? (
+                        <Alert severity="info">
+                          Currently No slots available in {courtName}, Next slot available on {nearestSlot?.days ? nearestSlot.days : formatDate(nearestSlot.date)} at {nearestSlot?.start_time?.slice(0, 5)}
+                        </Alert>
+                      ) : (
+                        <Alert severity="error">
+                          No slots available in {courtName}
+                        </Alert>
+                      )}
                   </div>
                 </form>
               </div>

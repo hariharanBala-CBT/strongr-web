@@ -85,18 +85,6 @@ function Club({ clubs }) {
                                 {club.address_line_1},{club?.area?.area_name}
                               </span>
                             </li>
-                            {club?.next_availabilty && (
-                              <li>
-                                <span>
-                                  <i className="fa-solid fa-calendar-days"> </i>
-                                  <span className="primary-text">
-                                    next availability :{" "}
-                                    {club?.next_availabilty?.days}-
-                                    {club?.next_availabilty?.start_time}
-                                  </span>
-                                </span>
-                              </li>
-                            )}
                           </ul>
                         </div>
                         <div className="listing-button">

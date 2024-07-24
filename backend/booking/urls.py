@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views 
+from . import views
 
 urlpatterns = [
     path('areas/', views.getAreas, name='areas'),
@@ -14,7 +14,8 @@ urlpatterns = [
     path('login/phone/', views.PhoneLoginView, name='phone_login'),
     path('profile/update/', views.updateUserProfile, name="user-profile-update"),
     path('slots/unavailable/', views.getUnavailableSlots, name='get-slots'),
-    path('slots/additional/', views.getAdditionalSlots, name='get-slots'),
+    path('slots/additional/', views.getAdditionalSlots, name='get-additional-slots'),
+    path('slots/nearest/', views.getNearestSlot, name='get-nearest-slots'),
     path('username/validate/', views.ValidateUser, name='user-validate'),
     path('userdetails/validate/', views.ValidateUserDetails, name='user-details-validate'),
     path('phone/validate/', views.ValidatePhone, name='phone-validate'),
@@ -36,4 +37,4 @@ urlpatterns = [
     path('clubworking/<str:pk>/', views.getClubWorkingDays, name="club-working-days"),
     path('slot/<str:pk>/', views.getSlot, name='get-slot'),
     path('userbookings/<str:pk>/', views.getUserBookings, name='user-bookings'),
-]                                                                        
+]
