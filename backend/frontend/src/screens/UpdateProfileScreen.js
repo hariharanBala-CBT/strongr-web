@@ -8,7 +8,6 @@ import { ArrowRightCircle } from "react-feather";
 import Button from "../components/Button";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
 import { Box, CircularProgress, Modal } from "@mui/material/";
 import ModalClose from "@mui/joy/ModalClose";
 import {
@@ -17,12 +16,10 @@ import {
   updateUserProfile,
   validateUser,
 } from "../actions/actions";
-
 import {
   RESET_PASSWORD_RESET,
   USER_UPDATE_PROFILE_RESET,
 } from "../constants/constants";
-
 import "../css/updateprofilescreen.css";
 
 const style = {
@@ -73,7 +70,7 @@ function UpdateprofileScreen() {
       setOtpValid(true);
       dispatch(generateUpdateOTP(email, userInfo?.id));
       setResendCount(resendCount + 1);
-    }else {
+    } else {
       toast.error("You have reached the maximum number of resend attempts.");
       setOpenForm(false);
     }
@@ -124,6 +121,7 @@ function UpdateprofileScreen() {
       setOtp("");
       setOtpError(true);
       setOtpValid(false);
+      setIncorrectAttempts(incorrectAttempts + 1);
       if (incorrectAttempts + 1 >= 3) {
         setOpenForm(false);
         toast.error("Too many invalid attempts, try again later");
