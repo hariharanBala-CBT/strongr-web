@@ -3,6 +3,7 @@ from rest_framework import serializers
 from base.models import *
 from .models import *
 from .utils import get_nearest_available_slot
+from .utils import get_nearest_available_slot
 
 class AreaSerializer(serializers.ModelSerializer):
     class Meta:

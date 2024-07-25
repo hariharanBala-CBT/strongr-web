@@ -53,28 +53,11 @@
               {% endfor %}
             </tbody>
           </table>
-          {% comment %} <button id="nextTabBtn" class="btn btn-primary">Next Tab</button> {% endcomment %}
+          <button id="nextTabBtn" class="btn btn-primary">Next Tab</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<script>
-  $(document).ready(function () {
-    $("#nextTabBtn").click(function () {
-      const activeTab = $(".tab-button.active");
-      const nextTab = activeTab.next(".tab-button");
-
-      if (nextTab.length > 0) {
-        activeTab.removeClass("active");
-        nextTab.addClass("active");
-
-        const url = nextTab.data("url");
-        $("#tab-content").load(url, function () {
-          initFormSubmission();
-        });
-      }
-    });
-  });
-</script>
+<script src="{% static 'js/tab.js' %}"></script>

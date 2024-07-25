@@ -27,7 +27,7 @@
 
                     <div class="buttons text-center mt-4 mx-5">
                         <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2">Update</button>
-                        {% comment %} <button id="nextTabBtn" class="btn btn-primary">Next</button>  {% endcomment %}
+                        <button id="nextTabBtn" class="btn btn-primary">Next</button>
                     </div>
 
                     <input type="hidden" name="organization" value="{{ request.user.organization.id }}">
@@ -50,6 +50,7 @@
     
     <div class="overlay" id="overlay"></div>
 
+    <script src="{% static 'js/tab.js' %}"></script>
     <script>
         
         function handleYes(event){
@@ -72,21 +73,5 @@
             document.getElementById("overlay").style.display = "none";
         }
 
-        $(document).ready(function () {
-            $('#nextTabBtn').click(function () {
-                const activeTab = $('.tab-button.active');
-                const nextTab = activeTab.next('.tab-button');
-
-                if (nextTab.length > 0) {
-                    activeTab.removeClass('active');
-                    nextTab.addClass('active');
-
-                    const url = nextTab.data('url');
-                    $('#tab-content').load(url, function () {
-                        initFormSubmission();
-                    });
-                }
-            });
-        })
         
     </script>
