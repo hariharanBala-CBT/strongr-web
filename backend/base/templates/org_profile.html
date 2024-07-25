@@ -1,4 +1,5 @@
-{% extends 'base_org.html' %}{% load static %} {% block content %}
+{% extends 'base_org.html' %}{% load static %}
+{% block content %}
 <link href="{% static './css/profile.css' %}" rel="stylesheet" />
 <div class="container-fluid px-4 m">
   <ol class="breadcrumb mb-1">
@@ -118,9 +119,10 @@
 
   updateButton.addEventListener("submit", function (event) {
     event.preventDefault();
-    modal.style.display = "block";
-    modal.setAttribute("aria-hidden", "false");
-    return false;
+    if (validateForm()) {
+      modal.style.display = "block";
+      modal.setAttribute("aria-hidden", "false");
+    }
   });
 
   window.onclick = function (event) {
@@ -142,7 +144,7 @@
     toast.style.display = "block";
     setTimeout(() => {
       toast.style.display = "none";
-    }, 5000); // Increase duration for better visibility
+    }, 5000);
   }
 
   function submitFormData() {
@@ -183,6 +185,26 @@
     });
   }
 
+  function validateForm() {
+    let isValid = true;
+
+    const phoneField = document.getElementById("id_phone_number");
+    const phoneError = document.getElementById("error_phone_number");
+
+    if (!phoneField.value.trim()) {
+      phoneError.textContent = "This field is required.";
+      phoneError.style.display = "block";
+      setTimeout(() => {
+        phoneError.style.display = "none";
+      }, 1500);
+      isValid = false;
+    } else {
+      phoneError.style.display = "none";
+    }
+
+    return isValid;
+  }
+
   function displayFormErrors(errors) {
     Object.keys(errors).forEach((field) => {
       const errorMessages = errors[field].join(", ");
@@ -192,7 +214,7 @@
         errorElement.style.display = "block";
         setTimeout(() => {
           errorElement.style.display = "none";
-        }, 5000); // Increased duration for form error messages
+        }, 5000); 
       }
     });
   }

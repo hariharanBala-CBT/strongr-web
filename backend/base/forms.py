@@ -66,11 +66,6 @@ class OrganizationProfileForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 2, 'cols': 25})
         }
-    def clean_phone_number(self):
-        phone_number = self.cleaned_data.get('phone_number')
-        if not phone_number:
-            raise forms.ValidationError('This field is required.')
-        return phone_number
         
 class OrganizationLocationForm(ModelForm):
     class Meta:
