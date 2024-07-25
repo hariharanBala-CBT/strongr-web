@@ -190,6 +190,7 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
 
     def get_next_availabilty(self, obj):
         now = datetime.datetime.now().replace(microsecond=0)
+        now += datetime.timedelta(hours=1)
         selected_date = now.date()
 
         try:
