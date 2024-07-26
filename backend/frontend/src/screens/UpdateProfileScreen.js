@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,10 +42,12 @@ function UpdateprofileScreen() {
   const [loader, setLoader] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [otp, setOtp] = useState("");
-  const [otpValid, setOtpValid] = useState(true);
-  const [otpError, setOtpError] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [showOtpError, setShowOtpError] = useState(false);
   const [resendCount, setResendCount] = useState(0);
-  const [incorrectAttempts, setIncorrectAttempts] = useState(0);
+  const [timer, setTimer] = useState(120);
+  const [otpAttempts, setOtpAttempts] = useState(0);
+  const intervalRef = useRef(null);
 
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
@@ -63,16 +65,19 @@ function UpdateprofileScreen() {
   const [phone, setPhone] = useState(customerDetails?.phone_number || "");
 
   const regenerateOtp = () => {
-    if (resendCount < 3) {
+    if (resendCount < 2) {
       setLoader(true);
       setOtp("");
       setOtpError('');
-      setOtpValid(true);
       dispatch(generateUpdateOTP(email, userInfo?.id));
       setResendCount(resendCount + 1);
+      setTimer(120); // Reset the timer on OTP resend
+      setShowOtpError(false);
+      startTimer();
     } else {
       toast.error("You have reached the maximum number of resend attempts.");
       setOpenForm(false);
+      setResendCount(0);
     }
   };
 
@@ -94,10 +99,29 @@ function UpdateprofileScreen() {
     }
   };
 
+  const startTimer = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setTimer((prev) => {
+        if (prev === 0) {
+          clearInterval(intervalRef.current);
+          setOpenForm(false);
+          return prev;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
   const otpGenerate = () => {
     setLoader(true);
     setOpenForm(true);
+    setOtp('');
+    setOtpError('');
+    setShowOtpError(false);
     dispatch(generateUpdateOTP(email, userInfo?.id));
+    setTimer(120);
+    startTimer();
   };
 
   const validateEmail = (e) => {
@@ -119,12 +143,15 @@ function UpdateprofileScreen() {
       setSubmit(false);
     } else if (userUpdateError && submit) {
       setOtp("");
-      setOtpError(true);
-      setOtpValid(false);
-      setIncorrectAttempts(incorrectAttempts + 1);
-      if (incorrectAttempts + 1 >= 3) {
+      const attemptsLeft = 3 - otpAttempts;
+      setOtpError(`Attempt ${otpAttempts+1} of 3. Attempts remaining: ${attemptsLeft-1}`);
+      setShowOtpError(true);
+      setTimeout(() => setShowOtpError(false), 4000);
+      setOtpAttempts(otpAttempts + 1);
+      if (otpAttempts + 1 >= 3) {
         setOpenForm(false);
         toast.error("Too many invalid attempts, try again later");
+        setOtpAttempts(0);
       } else {
         toast.error("Incorrect OTP");
       }
@@ -133,7 +160,7 @@ function UpdateprofileScreen() {
     dispatch({
       type: USER_UPDATE_PROFILE_RESET,
     });
-  }, [dispatch, incorrectAttempts, navigate, submit, userUpdateError, userUpdateSuccess]);
+  }, [dispatch, navigate, otpAttempts, submit, userUpdateError, userUpdateSuccess]);
 
   useEffect(() => {
     setOpenForm(false);
@@ -255,11 +282,11 @@ function UpdateprofileScreen() {
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space mb-0">
-                          <label className="form-label">Phone Number</label>
+                          <label className="form-label">Phone</label>
                           <input
                             className="form-control pass-input"
                             required
-                            type="tel"
+                            type="text"
                             value={phone}
                             onChange={(e) => {
                               setPhone(e.target.value);
@@ -314,16 +341,15 @@ function UpdateprofileScreen() {
                           <form onSubmit={updateCustomer} className="otp-form">
                             <div className="otp-input">
                               <label className="update-prof-label">
-                                Enter OTP sent to email
+                                Enter OTP sent to {email}
                               </label>
+                              {showOtpError && (
+                                <p className="text-danger">{otpError}</p>
+                              )}
                               <OTPInput
                                 className="otp-input-field"
                                 value={otp}
-                                onChange={(otp) => {
-                                  setOtp(otp);
-                                  setOtpValid(true);
-                                  setOtpError('');
-                                }}
+                                onChange={(otp) => setOtp(otp)}
                                 autoFocus
                                 OTPLength={4}
                                 otpType="number"
@@ -331,18 +357,20 @@ function UpdateprofileScreen() {
                                 secure
                               />
                               <div className="resend-wrapper">
-                                <ResendOTP
-                                  onResendClick={regenerateOtp}
-                                  className="resend-btn"
-                                  disabled={resendCount >= 3}
-                                />
+                                <div>OTP expires in {timer} secs</div>
+                                <div className="auth-footer">
+                                  Didn’t receive? Resend Attempts ({resendCount}/2)
+                                  <ResendOTP
+                                    onResendClick={regenerateOtp}
+                                    className="btn1"
+                                  />
+                                </div>
                               </div>
                             </div>
                             <Button
                               type="submit"
                               className="otp-login-btn"
                               text="Submit"
-                              disabled={!otpValid}
                             />
                           </form>
                         </div>

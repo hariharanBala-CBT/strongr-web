@@ -49,8 +49,9 @@ function RegisterScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [otpError, setOtpError] = useState("");
+  const [showOtpError, setShowOtpError] = useState(false);
   const [resendCount, setResendCount] = useState(0);
-  const [timer, setTimer] = useState(120);
+  const [timer, setTimer] = useState(123);
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [otpValid, setOtpValid] = useState(true); // Track OTP validity
   const intervalRef = useRef(null);
@@ -82,7 +83,7 @@ function RegisterScreen() {
   };
 
   const regenerateOtp = () => {
-    if (resendCount < 3) {
+    if (resendCount < 2) {
       setLoader(true);
       setOtp('');
       setOtpValid(true); // Reset OTP validity
@@ -92,6 +93,7 @@ function RegisterScreen() {
     } else {
       toast.error("You have reached the maximum number of resend attempts.");
       setOpenForm(false);
+      setResendCount(0);
     }
   };
 
@@ -113,6 +115,8 @@ function RegisterScreen() {
     e.preventDefault();
     if (otp === "") {
       setOtpError("Please enter the OTP");
+      setShowOtpError(true);
+      setTimeout(() => setShowOtpError(false), 4000);
       return;
     }
 
@@ -130,8 +134,11 @@ function RegisterScreen() {
   };
 
   const handleOtpError = (errorMessage) => {
-    setOtpError(errorMessage);
-    setOtpAttempts(otpAttempts + 1);
+    setOtpAttempts((prev) => prev + 1);
+      const attemptsLeft = 3 - otpAttempts;
+    setOtpError(`Attempt ${otpAttempts+1} of 3. Attempts remaining: ${attemptsLeft-1}`);
+    setShowOtpError(true);
+    setTimeout(() => setShowOtpError(false), 4000); // Hide error after 4 seconds
     setOtp('');
     setOtpValid(false);
 
@@ -457,11 +464,14 @@ function RegisterScreen() {
                       <div className="login">
                         <div className="title-auth">
                           <h5>OTP Authentication</h5>
-                          <p>Enter the 4 digit OTP sent to your email.</p>
+                          <p>Enter the 4 digit OTP sent to {email}.</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="otp-form">
                           <div className="otp-input">
+                          {showOtpError && (
+                            <p className="text-danger">{otpError}</p>
+                          )}
                             <OTPInput
                               className="otp-input-field"
                               value={otp}
@@ -473,9 +483,6 @@ function RegisterScreen() {
                               secure
                             />
                           </div>
-                          {/* {otpError && (
-                            <p className="text-danger">{otpError}</p>
-                          )} */}
                           <Button
                             type="submit"
                             className="otp-login-btn"
@@ -483,12 +490,12 @@ function RegisterScreen() {
                             disabled={loader || !otpValid}
                           />
                         </form>
-
+                         <div>OTP closes in {timer} secs</div>       
                         <div className="auth-footer">
-                          Didn’t receive an OTP.
-                          <ResendOTP
+                          Didn’t receive? Resend Attempts({resendCount}/2)
+                          <ResendOTP 
                             onResendClick={regenerateOtp}
-                            className="resend-btn"
+                            className="btn1"
                           />
                         </div>
                       </div>
