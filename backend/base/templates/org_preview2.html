@@ -170,24 +170,28 @@
 
                                                             <!-- Accordion for games -->
                                                             <div class="accordion" id="gamesAccordion-{{ location_item.location.id }}">
-                                                                {% for game in location_item.games %}
-                                                                <div class="accordion-item">
-                                                                    <h2 class="accordion-header" id="heading{{ game.id }}">
-                                                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ game.id }}" aria-expanded="{% if forloop.first %}true{% endif %}" aria-controls="collapse{{ game.id }}">
-                                                                            {{ game.game_type }}
-                                                                        </button>
-                                                                    </h2>
-                                                                    <div id="collapse{{ game.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ game.id }}" data-bs-parent="#gamesAccordion-{{ location_item.location.id }}">
-                                                                        <div class="accordion-body">
-                                                                            <ul class="list-unstyled">
-                                                                                <li>Pricing: {{ game.pricing }}</li>
-                                                                                <li>Description: {% if game.description %}{{ game.description }}{% else %}None{% endif %}</li>
-                                                                            </ul>
+                                                                {% if location_item.games %}
+                                                                    {% for game in location_item.games %}
+                                                                    <div class="accordion-item">
+                                                                        <h2 class="accordion-header" id="heading{{ game.id }}">
+                                                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ game.id }}" aria-expanded="{% if forloop.first %}true{% endif %}" aria-controls="collapse{{ game.id }}">
+                                                                                {{ game.game_type }}
+                                                                            </button>
+                                                                        </h2>
+                                                                        <div id="collapse{{ game.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ game.id }}" data-bs-parent="#gamesAccordion-{{ location_item.location.id }}">
+                                                                            <div class="accordion-body">
+                                                                                <ul class="list-unstyled">
+                                                                                    <li>Pricing: {{ game.pricing }}</li>
+                                                                                    <li>Description: {% if game.description %}{{ game.description }}{% else %}None{% endif %}</li>
+                                                                                </ul>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                {% endfor %}
-                                                            </div>
+                                                                    {% endfor %}
+                                                                {% else %}
+                                                                    <p>No games available. <a href="{% url 'mainview' location_item.location.id %}#gameTab">Add Games</a></p>
+                                                                {% endif %}
+                                                            </div>                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -301,8 +305,12 @@
                                                                         {% endfor %}
                                                                     </tbody>
                                                                 </table>
+                                                                {% if location_item.all_times_none %}
+                                                                    <a href="{% url 'mainview' location_item.location.id %}#workingDaysTab">Go to Working Days</a>
+                                                                {% endif %}
                                                             </div>
                                                         </div>
+
 
                                                         <!-- Courts Tab -->
                                                         <div class="tab-pane fade" id="courts-{{ location_item.location.id }}" role="tabpanel"
@@ -321,7 +329,7 @@
                                                                             </tr>
                                                                             {% empty %}
                                                                             <tr>
-                                                                                <td class="empty">No Courts Added <a href="{% url 'mainview' location_item.location.id %}">Add Here</a></td>
+                                                                                <td class="empty">No Courts Added <a href="{% url 'mainview' location_item.location.id %}#courtTab">Add Here</a></td>
                                                                             </tr>
                                                                         {% endfor %}
                                                                     </tbody>

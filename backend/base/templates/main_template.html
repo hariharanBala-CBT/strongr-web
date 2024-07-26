@@ -134,11 +134,11 @@
                                 {% else %}
                                     <button class="tab-button" disabled>Update (Location not specified)</button>
                                 {% endif %}
-                                <button tabindex="0" data-url="{% url 'organization_locationgamelist' locationpk %}" class="tab-button">Game</button>
-                                <button tabindex="0" data-url="{% url 'court-list' locationpk %}" class="tab-button">Court</button>
-                                <button tabindex="0" data-url="{% url 'organization_imageslist' locationpk %}" class="tab-button">Images</button>
-                                <button tabindex="0" data-url="{% url 'organization_locationworkingdays' locationpk %}" class="tab-button">Working Days</button>
-                                <button tabindex="0" data-url="{% url 'organization_locationamenities' locationpk %}" class="tab-button">Amenities</button>
+                                    <button id="gameTab" tabindex="0" data-url="{% url 'organization_locationgamelist' locationpk %}" class="tab-button">Game</button>
+                                    <button id="courtTab" tabindex="0" data-url="{% url 'court-list' locationpk %}" class="tab-button">Court</button>
+                                    <button id="imagesTab" tabindex="0" data-url="{% url 'organization_imageslist' locationpk %}" class="tab-button">Images</button>
+                                    <button id="workingDaysTab" tabindex="0" data-url="{% url 'organization_locationworkingdays' locationpk %}" class="tab-button">Working Days</button>
+                                    <button id="amenitiesTab" tabindex="0" data-url="{% url 'organization_locationamenities' locationpk %}" class="tab-button">Amenities</button>
                             </div>
                             <div id="tab-content"></div>
                         </div>
@@ -197,14 +197,13 @@
                                 'X-CSRFToken': csrftoken,
                                 'X-Requested-With': 'XMLHttpRequest'
                             },
-                               success: function(response) {
-                            if (response.status === 'success') {
-                                showToast(response.message);
-
-                            } else {
-                                showToast(response.message || 'Error submitting form.');
-                            }
-                        },
+                            success: function(response) {
+                                if (response.status === 'success') {
+                                    showToast(response.message);
+                                } else {
+                                    showToast(response.message || 'Error submitting form.');
+                                }
+                            },
                             error: function (xhr, status, error) {
                                 console.error('Error:', error);
                                 showToast('Error submitting form. ' + error);
@@ -239,7 +238,6 @@
                     });
                 });
 
-                // Load the last active tab on page load if location hasn't changed
                 const initialTab = localStorage.getItem('activeTab');
                 const currentLocationPk = '{{ locationpk }}';
                 const savedLocationPk = localStorage.getItem('locationPk');
@@ -266,6 +264,28 @@
                     });
                 }
 
+                // Function to activate tab from URL hash
+                function activateTabFromHash() {
+                    var hash = window.location.hash;
+                    if (hash) {
+                        var tab = $(hash);
+                        if (tab.length) {
+                            setActiveTab(tab);
+                            $('#tab-content').load(tab.data('url'), function () {
+                                initFormSubmission();
+                            });
+                        }
+                    }
+                }
+
+                // Activate the tab on page load based on URL fragment
+                activateTabFromHash();
+
+                // Ensure the tab is activated when the hash changes
+                $(window).on('hashchange', function () {
+                    activateTabFromHash();
+                });
+
                 // Handle location change
                 $('#locationSelect').change(function () {
                     const selectedLocation = $(this).val();
@@ -274,17 +294,27 @@
                     }
                 });
 
-            const $successAlert = $('#successAlert');
-            if ($successAlert.length) {
-                setTimeout(() => {
-                    $successAlert.hide();
-                }, 2500);
-            }
+                // Initialize default active tab if no hash is present
+                if (!window.location.hash) {
+                    const defaultTabElement = $('.tab-button').first();
+                    setActiveTab(defaultTabElement);
+                    $('#tab-content').load(defaultTabElement.data('url'), function () {
+                        initFormSubmission();
+                    });
+                }
 
-            const $datatablesSimple = $('#datatablesSimple');
-            if ($datatablesSimple.length) {
-                new simpleDatatables.DataTable(datatablesSimple[0]);
-            }
+                // Additional setup for sidebar toggle, data tables, etc.
+                const $successAlert = $('#successAlert');
+                if ($successAlert.length) {
+                    setTimeout(() => {
+                        $successAlert.hide();
+                    }, 2500);
+                }
+
+                const $datatablesSimple = $('#datatablesSimple');
+                if ($datatablesSimple.length) {
+                    new simpleDatatables.DataTable(datatablesSimple[0]);
+                }
 
                 const $sidebarToggle = $('#sidebarToggle');
                 if ($sidebarToggle.length) {
@@ -307,13 +337,14 @@
 
                         const url = nextTab.data('url');
                         $('#tab-content').load(url, function () {
-                               initFormSubmission();
+                            initFormSubmission();
                         });
                     }
                 });
             });
 
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
         </script>
     </body>
 </html>
