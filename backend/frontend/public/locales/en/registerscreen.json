@@ -20,5 +20,8 @@
     "passwordMinLength": "Password must be at least 8 characters",
     "passwordMismatch": "Passwords do not match",
     "emailRegistered": "This email is already registered. Please use a different email.",
-    "logoAlt": "Logo"
-  }
+    "logoAlt": "Logo",
+    "maxAttempts": "You have reached the maximum number of resend attempts.",
+    "invalidOtp": "Invalid OTP. Please try again.",
+    "tooManyAttempts": "Too many incorrect attempts. Please try again later."
+}
