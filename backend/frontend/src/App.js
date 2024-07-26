@@ -1,6 +1,5 @@
 import React, { Suspense } from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import { Container } from "react-bootstrap";
 import HomeScreen from "./screens/HomeScreen";
 import ClubListScreen from "./screens/ClubListScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -19,6 +18,7 @@ import ErrorScreen from "./screens/ErrorScreen";
 import Scrolltotop from "./components/Scrolltotop";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./react-i18n";
+import "./css/loading.css";
 
 function App() {
   return (

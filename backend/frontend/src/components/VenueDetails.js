@@ -1,7 +1,8 @@
 import React from "react";
-import { Calendar, MapPin, Heart } from "react-feather";
+import { Calendar, MapPin } from "react-feather";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import dayjs from 'dayjs';
 
 const formatDate = (date) => {
@@ -11,6 +12,7 @@ const formatDate = (date) => {
 const VenueDetails = ({ club }) => {
   const { address_line_1, organization, organization_images } = club;
   const navigate = useNavigate();
+  const { t } = useTranslation("venuedetails");
 
   return (
     <div className="venue-wrapper">
@@ -26,22 +28,19 @@ const VenueDetails = ({ club }) => {
                 <img
                   className="club-images"
                   src={organization_images}
-                  alt="Venue"
+                  alt={t("venueAlt")}
                 />
               ) : (
                 <img
                   className="club-images"
                   src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
-                  alt="Venue"
+                  alt={t("venueAlt")}
                 />
               )}
             </>
           </a>
           <div className="fav-item-venues">
-            <span className="tag tag-blue">Featured</span>
-            {/* <h5 className="tag tag-primary">
-              ₹450<span>/hr</span>
-            </h5> */}
+            <span className="tag tag-blue">{t("featured")}</span>
           </div>
         </div>
         <div className="listing-content">
@@ -50,7 +49,7 @@ const VenueDetails = ({ club }) => {
               {club.rating && (
                 <>
                   <span className="rating-bg">{club.rating}</span>
-                  <span>{club.numRatings} reviews</span>
+                  <span>{t("reviews", { count: club.numRatings })}</span>
                 </>
               )}
             </div>
@@ -80,7 +79,7 @@ const VenueDetails = ({ club }) => {
                   <span>
                     <i className="fa-solid fa-calendar-days"> </i>
                     <span className="primary-text">
-                      Next availability: {club?.next_availabilty?.days ? club?.next_availabilty?.days : formatDate(club?.next_availabilty?.date)} - {club?.next_availabilty?.start_time}
+                      {t("nextAvailability")}: {club?.next_availabilty?.days ? club?.next_availabilty?.days : formatDate(club?.next_availabilty?.date)} - {club?.next_availabilty?.start_time}
                     </span>
                   </span>
                 </li>
@@ -97,11 +96,11 @@ const VenueDetails = ({ club }) => {
               >
                 <>
                   {organization_images ? (
-                    <img src={organization_images} alt="Venue" />
+                    <img src={organization_images} alt={t("venueAlt")} />
                   ) : (
                     <img
                       src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
-                      alt="Venue"
+                      alt={t("venueAlt")}
                     />
                   )}
                   {organization.organization_name}
@@ -111,7 +110,7 @@ const VenueDetails = ({ club }) => {
             <LinkContainer to={`/club/${club.id}`} className="user-book-now">
               <i className="feather-calendar me-2">
                 <Calendar />
-                Book Now
+                {t("bookNow")}
               </i>
             </LinkContainer>
           </div>

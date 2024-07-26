@@ -1,8 +1,10 @@
 import React from "react";
 import { Mail, Phone } from "react-feather";
 import "../css/footer.css";
+import { useTranslation } from "react-i18next";
 
 function Footer({ name }) {
+  const { t } = useTranslation("footer");
   return (
     <footer className="footer">
       <div className="container">
@@ -10,10 +12,10 @@ function Footer({ name }) {
           <div className="row">
             <div className="col-lg-3 col-md-6">
               <div className="footer-widget footer-menu">
-                <h4 className="footer-title">Contact us</h4>
+                <h4 className="footer-title">{t("contactUs")}</h4>
                 <div className="footer-address-blk">
                   <div className="footer-call">
-                    <span>Toll free Customer Care</span>
+                    <span>{t("tollFreeCustomerCare")}</span>
                     <p>
                       <span>
                         <Phone size={20} />
@@ -22,7 +24,7 @@ function Footer({ name }) {
                     </p>
                   </div>
                   <div className="footer-call">
-                    <span>Need Live Support</span>
+                    <span>{t("needLiveSupport")}</span>
                     <p>
                       <span>
                         <Mail size={20} />
@@ -59,66 +61,66 @@ function Footer({ name }) {
             </div>
             <div className="col-lg-3 col-md-6">
               <div className="footer-widget footer-menu">
-                <h4 className="footer-title">Quick Links</h4>
+                <h4 className="footer-title">{t("quickLinks")}</h4>
                 <ul>
                   <li>
-                    <a href="javascript:void(0);">About us</a>
+                    <a href="javascript:void(0);">{t("aboutUs")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Services</a>
+                    <a href="javascript:void(0);">{t("services")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Events</a>
+                    <a href="javascript:void(0);">{t("events")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Blogs</a>
+                    <a href="javascript:void(0);">{t("blogs")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Contact us</a>
+                    <a href="javascript:void(0);">{t("contactUs")}</a>
                   </li>
                 </ul>
               </div>
             </div>
             <div className="col-lg-3 col-md-6">
               <div className="footer-widget footer-menu">
-                <h4 className="footer-title">Support</h4>
+                <h4 className="footer-title">{t("support")}</h4>
                 <ul>
                   <li>
-                    <a href="javascript:void(0);">Contact Us</a>
+                    <a href="javascript:void(0);">{t("contactUs")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Faq</a>
+                    <a href="javascript:void(0);">{t("faq")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Privacy Policy</a>
+                    <a href="javascript:void(0);">{t("privacyPolicy")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Terms & Conditions</a>
+                    <a href="javascript:void(0);">{t("termsConditions")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Pricing</a>
+                    <a href="javascript:void(0);">{t("pricing")}</a>
                   </li>
                 </ul>
               </div>
             </div>
             <div className="col-lg-3 col-md-6">
               <div className="footer-widget footer-menu">
-                <h4 className="footer-title">Other Links</h4>
+                <h4 className="footer-title">{t("otherLinks")}</h4>
                 <ul>
                   <li>
-                    <a href="javascript:void(0);">Coaches</a>
+                    <a href="javascript:void(0);">{t("coaches")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Sports Venue</a>
+                    <a href="javascript:void(0);">{t("sportsVenue")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Join As Coach</a>
+                    <a href="javascript:void(0);">{t("joinAsCoach")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">Add Venue</a>
+                    <a href="javascript:void(0);">{t("addVenue")}</a>
                   </li>
                   <li>
-                    <a href="javascript:void(0);">My Account</a>
+                    <a href="javascript:void(0);">{t("myAccount")}</a>
                   </li>
                 </ul>
               </div>
@@ -134,8 +136,7 @@ function Footer({ name }) {
               <div className="col-md-6">
                 <div className="copyright-text">
                   <p className="mb-0">
-                    Copyright &copy; {new Date().getFullYear()} Strongr. All
-                    rights reserved.
+                    {t("copyright")} &copy; {new Date().getFullYear()} Strongr. {t("allRightsReserved")}
                   </p>
                 </div>
               </div>

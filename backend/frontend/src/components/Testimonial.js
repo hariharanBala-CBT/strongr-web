@@ -5,8 +5,11 @@ import "owl.carousel/dist/assets/owl.theme.default.css";
 import "../css/testimonial.css";
 import TestimonialDetails from "./TestimonialDetails";
 import testimonialProfile from "../images/profile.jpg";
+import LanguageSelector from "./LanguageSelector"; 
+import { useTranslation } from "react-i18next";
 
 const Testimonial = () => {
+  const { t } = useTranslation("testimonial");
   const testiMonials = [
     {
       title: "Personalized Attention",
@@ -69,11 +72,10 @@ const Testimonial = () => {
       <div className="container">
         <div className="section-heading aos" data-aos="fade-up">
           <h2>
-            Our <span>Testimonials</span>
+            {t("our")} <span>{t("testimonials")}</span>
           </h2>
           <p className="sub-title">
-            Glowing testimonials from passionate badminton enthusiasts
-            worldwide, showcasing our exceptional services.
+          {t("subtitle")}
           </p>
         </div>
         <div className="row">
