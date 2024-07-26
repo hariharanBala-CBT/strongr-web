@@ -8,6 +8,9 @@ import { CircularProgress, TextField } from "@mui/material";
 import logoImage from "../images/logo-color.png";
 import { login, validateUser } from "../actions/actions";
 
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "../components/LanguageSelector";
+
 import { USER_LOGIN_RESET } from "../constants/constants";
 
 import "../css/loginscreen.css";
@@ -15,6 +18,7 @@ import "../css/loginscreen.css";
 function LoginScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation("login");
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -39,7 +43,7 @@ function LoginScreen() {
       navigate(-1);
       setErrorMessage("");
     } else if (!userInfo && LoginError && password.length > 0) {
-      setErrorMessage("Incorrect Password");
+      setErrorMessage(t("incorrectPassword"));
       setPassword("");
     }
   }, [dispatch, LoginError, navigate, userInfo]);
@@ -69,9 +73,10 @@ function LoginScreen() {
   };
 
   return (
-    <div className="register-page">
+<div className="register-page">
       <Toaster />
       <div className="main-wrapper authendication-pages">
+        <LanguageSelector />
         <div className="register-content">
           <div className="container wrapper no-padding">
             <div className="row no-margin vph-100">
@@ -85,14 +90,10 @@ function LoginScreen() {
                             type="button"
                             className="btn btn-limegreen text-capitalize"
                           >
-                            <i className="fa-solid fa-thumbs-up me-3"></i>Login
-                            User
+                            <i className="fa-solid fa-thumbs-up me-3"></i>
+                            {t("loginButton")}
                           </button>
-                          <p>
-                            Log in right away for our advanced sports software
-                            solutions, created to address issues in regular
-                            sporting events and activities.
-                          </p>
+                          <p>{t("loginParagraph")}</p>
                         </div>
                       </div>
                     </div>
@@ -109,14 +110,14 @@ function LoginScreen() {
                             <img
                               src={logoImage}
                               className="img-fluid"
-                              alt="Logo"
+                              alt={t("logoAlt")}
                             />
                           </a>
                         </LinkContainer>
                       </header>
                       <div className="shadow-card">
-                        <h2>Welcome Back</h2>
-                        <p>Login into your Account</p>
+                        <h2>{t("welcomeBack")}</h2>
+                        <p>{t("loginIntoYourAccount")}</p>
                         {loading ? (
                           <CircularProgress className="loader" />
                         ) : (
@@ -149,15 +150,14 @@ function LoginScreen() {
                                       helperText={
                                         username.length > 0 &&
                                         userValidateError &&
-                                        "Invalid username"
+                                        t("invalidUsername")
                                       }
                                       required
                                       className="form-control pass-input"
                                       type="text"
-                                      placeholder="Enter Username"
+                                      placeholder={t("enterUsername")}
                                       value={username}
                                       onChange={handleUsername}
-                                      color={userValidateError && "success"}
                                     />
                                   </div>
                                 </div>
@@ -189,7 +189,7 @@ function LoginScreen() {
                                       required
                                       type={showPassword ? "text" : "password"}
                                       className="form-control pass-input"
-                                      placeholder="Enter Password"
+                                      placeholder={t("enterPassword")}
                                       value={password}
                                       onChange={handlePassword}
                                     />
@@ -199,7 +199,7 @@ function LoginScreen() {
                                   className="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-100 btn-block"
                                   type="submit"
                                 >
-                                  Login
+                                  {t("login")}
                                   <span className="right-arrow">
                                     <ArrowRightCircle size={20} />
                                   </span>
@@ -212,7 +212,7 @@ function LoginScreen() {
                       <div className="bottom-texts">
                         <div className="bottom-text-one text-center">
                           <p>
-                            Login using Phone Number?&nbsp;
+                            {t("LoginThroughPhoneNumber")}&nbsp;
                             <LinkContainer
                               to="/phonenumberlogin"
                               style={{
@@ -220,13 +220,13 @@ function LoginScreen() {
                                 color: "#192335",
                               }}
                             >
-                              <span>Login</span>
+                              <span>{t("login")}</span>
                             </LinkContainer>
                           </p>
                         </div>
                         <div className="bottom-text-two text-center">
                           <p>
-                            Don’t have an Account?&nbsp;
+                            {t("dontHaveAccount")}&nbsp;
                             <LinkContainer
                               to="/signup"
                               style={{
@@ -234,7 +234,7 @@ function LoginScreen() {
                                 color: "#192335",
                               }}
                             >
-                              <span>Signup</span>
+                              <span>{t("signup")}</span>
                             </LinkContainer>
                           </p>
                         </div>
