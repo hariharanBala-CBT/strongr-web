@@ -61,13 +61,9 @@
   
 
 .section1-container {
-  width: 100%;
-  height: 550px;
-  background-color: #f5f5f5;
-  padding-top: 0.5rem;
-  padding-left: 20px; 
-  text-align: center;
-  box-sizing: border-box;
+    background-color: #f5f5f5;
+    padding: 80px 0 55px;
+    overflow: hidden;
 }
 
 .section1-container h1 {
@@ -412,12 +408,6 @@
 .work-grid .work-content p {
   margin: 0 auto 100px;
   max-width: 280px;
-}
-
-@media (max-width: 767.98px) {
-  .work-grid .work-content p {
-    margin-bottom: 20px;
-  }
 }
 
 .work-grid .work-content .btn {

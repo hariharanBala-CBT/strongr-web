@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/actions";
 import "../css/header.css";
 import Logo from "../images/logo.png";
+import mobileLogo from "../images/logo-color.png";
 
 function Header({ location }) {
   const dispatch = useDispatch();
@@ -37,12 +38,8 @@ function Header({ location }) {
           </div>
           <div className="main-menu-wrapper">
             <div className="menu-header">
-              <a href="#" className="menu-logo">
-                <img
-                  src="assets/img/logo-black.svg"
-                  className="img-fluid"
-                  alt="Logo"
-                />
+              <a href="/" className="menu-logo">
+                <img src={mobileLogo} className="img-fluid" alt="Logo" />
               </a>
               <a
                 id="menu_close"
@@ -55,7 +52,7 @@ function Header({ location }) {
             </div>
             <ul className="main-nav">
               <li className="active">
-                <a href="#/">Home</a>
+                <a href="/">Home</a>
               </li>
               <li className="has-submenu">
                 <a href="#">User</a>
@@ -65,6 +62,16 @@ function Header({ location }) {
               </li>
               <li>
                 <a href="#">Contact Us</a>
+              </li>
+              <li>
+                <LinkContainer to="/login">
+                  <a>Login</a>
+                </LinkContainer>
+              </li>
+              <li>
+                <LinkContainer to="/signup">
+                  <a>Register</a>
+                </LinkContainer>
               </li>
             </ul>
           </div>
