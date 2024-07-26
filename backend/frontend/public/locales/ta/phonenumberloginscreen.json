@@ -1,7 +1,7 @@
 {
     "loginUser": "பயனர் உள்நுழை",
     "loginDescription": "முக்கியமான விளையாட்டு நிகழ்வுகள் மற்றும் செயல்பாடுகளில் உள்ள பிரச்சினைகளைத் தீர்க்க உருவாக்கப்பட்ட எங்கள் முன்னேற்ற விளையாட்டு மென்பொருள் தீர்வுகளுக்காக உடனடியாக உள்நுழையுங்கள்.",
-    "getStartedWithStrongr": "ஸ்ட்ராங்கருடன் தொடங்குங்கள்",
+    "getStartedWithStrongr": "{{ brandName }} ௨டனஂ தொடங்குங்கள்",
     "enterRegisteredPhoneNumber": "பதிவுசெய்யப்பட்ட தொலைபேசி எண் உள்ளிடவும்",
     "enterPhoneNumber": "தொலைபேசி எண் உள்ளிடவும்",
     "enterOtp": "OTP உள்ளிடவும்",
@@ -12,6 +12,7 @@
     "dontHaveAccount": "கணக்கு இல்லையா?",
     "signupLink": "பதிவுசெய்க",
     "pleaseEnterPhoneNumber": "தயவுசெய்து தொலைபேசி எண்ணை உள்ளிடவும்!",
+    "otpExpires": "OTP காலாவதியாகும் காலம்",
     "userDoesNotExist": "பயனர் இல்லை.",
     "otpSentSuccessfully": "OTP வெற்றிகரமாக அனுப்பப்பட்டது",
     "incorrectOtp": "தவறான OTP. மீண்டும் முயற்சிக்கவும்.",

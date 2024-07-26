@@ -1,7 +1,7 @@
 {
     "loginUser": "Login User",
     "loginDescription": "Log in right away for our advanced sports software solutions, created to address issues in regular sporting events and activities.",
-    "getStartedWithStrongr": "Get Started With Strongr",
+    "getStartedWithStrongr": "Get Started With {{ brandName }}",
     "enterRegisteredPhoneNumber": "Enter Registered Phone Number",
     "enterPhoneNumber": "Enter phone number",
     "enterOtp": "Enter OTP",
@@ -12,6 +12,7 @@
     "dontHaveAccount": "Don't have an Account?",
     "signupLink": "Signup",
     "pleaseEnterPhoneNumber": "Please enter a phone number!",
+    "otpExpires": "OTP expires in ",
     "userDoesNotExist": "User does not exist.",
     "otpSentSuccessfully": "OTP Sent Successfully",
     "incorrectOtp": "Incorrect OTP. Please try again.",

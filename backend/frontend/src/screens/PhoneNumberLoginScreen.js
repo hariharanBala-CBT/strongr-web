@@ -19,6 +19,7 @@ import { loginPhoneNumber, validatePhone } from "../actions/actions";
 
 import logoImage from "../images/logo-color.png";
 import "../css/phonenumscreen.css";
+import { brandName } from "../constants/constants";
 
 function PhoneNumberScreen() {
   const location = useLocation();
@@ -216,7 +217,7 @@ function PhoneNumberScreen() {
                       </header>
                       <div className="shadow-card">
                         <div id="recaptcha-container"></div>
-                        <h2 className="login-title">{t("getStartedWithStrongr")}</h2>
+                        <h2 className="login-title">{t("getStartedWithStrongr", {brandName})}</h2>
                         <form>
                           <label className="phone-textp">{t("enterRegisteredPhoneNumber")}</label>
                           <PhoneInput
@@ -242,7 +243,7 @@ function PhoneNumberScreen() {
                                 renderInput={renderInput}
                               />
                               <div className="otp-timer">
-                                OTP expires in: {formatTime(timeLeft)}
+                              {t("otpExpires")}: {formatTime(timeLeft)}
                               </div>
                             </div>
                           )}
