@@ -1,0 +1,22 @@
+{
+    "loginUser": "Login User",
+    "loginDescription": "Log in right away for our advanced sports software solutions, created to address issues in regular sporting events and activities.",
+    "getStartedWithStrongr": "Get Started With Strongr",
+    "enterRegisteredPhoneNumber": "Enter Registered Phone Number",
+    "enterPhoneNumber": "Enter phone number",
+    "enterOtp": "Enter OTP",
+    "generateOtp": "Generate OTP",
+    "login": "Login",
+    "loginThroughUsername": "Login through Username",
+    "loginLink": "Login",
+    "dontHaveAccount": "Don't have an Account?",
+    "signupLink": "Signup",
+    "pleaseEnterPhoneNumber": "Please enter a phone number!",
+    "userDoesNotExist": "User does not exist.",
+    "otpSentSuccessfully": "OTP Sent Successfully",
+    "incorrectOtp": "Incorrect OTP. Please try again.",
+    "failedToSendOtp": "Failed to send OTP. Please refresh the page and try again.",
+    "otpExpired": "OTP has expired. Please request a new one.",
+    "logoAlt": "Logo"
+  }
+  
