@@ -695,10 +695,11 @@ class OrganizationDeleteLocationImageView(DeleteView):
         self.object = self.get_object()
         success_url = self.get_success_url()
 
-        if self.object.image:
-            image_path = self.object.image.path
-            if os.path.exists(image_path):
-                os.remove(image_path)
+        if DEBUG == 'True':
+            if self.object.image:
+                image_path = self.object.image.path
+                if os.path.exists(image_path):
+                    os.remove(image_path)
 
         self.object.delete()
         messages.success(request, SUCCESS_MESSAGES.get('delete_image'))
