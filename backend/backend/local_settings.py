@@ -204,6 +204,11 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/images/'
 MEDIA_ROOT = BASE_DIR / 'static/images'
 
+STATICFILES_DIRS = [
+    # BASE_DIR / 'base/static',
+    BASE_DIR / 'frontend/build/static',
+    BASE_DIR / 'frontend/build/',
+]
 
 
 # Default primary key field type
