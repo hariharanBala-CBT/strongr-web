@@ -9,9 +9,10 @@ import venueImage2 from "../images/venue2.jpg";
 import venueImage3 from "../images/venue3.jpg";
 import venueImage4 from "../images/venue4.jpg";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const Venue = () => {
-
+  const { t } = useTranslation("venue");
   const { topRatedClubs } = useSelector(
     (state) => state.topRatedClubs
   );
@@ -75,11 +76,10 @@ const Venue = () => {
       <div className="container">
         <div className="section-heading aos" data-aos="fade-up">
           <h2>
-            Featured <span>Clubs</span>
+            {t("heading")} <span>{t("sub")}</span>
           </h2>
           <p className="sub-title">
-            Advanced sports venues offer the latest facilities, dynamic and
-            unique environments for enhanced badminton performance.
+            {t("subTitle")}
           </p>
         </div>
         <div className="row">
@@ -123,7 +123,7 @@ const Venue = () => {
             href="javascript:void(0);"
             className="btn btn-secondary d-inline-flex align-items-center"
           >
-            View All Featured
+            {t("viewAll")}
             <span className="lh-1">
               <i className="feather-arrow-right-circle ms-2"></i>
             </span>

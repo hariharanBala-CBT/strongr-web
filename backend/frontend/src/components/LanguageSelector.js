@@ -36,8 +36,6 @@ const LanguageSelector = () => {
     if (savedLanguage) {
       i18n.changeLanguage(savedLanguage);
       setSelectedLanguage(savedLanguage);
-    } else {
-      setSelectedLanguage(i18n.language);
     }
   }, [i18n]);
 
@@ -55,13 +53,18 @@ const LanguageSelector = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
+  const getLanguageKey = (code) => {
+    const language = languages.find((lng) => lng.code === code);
+    return language ? t(language.key) : "";
+  };
+
   return (
     <div className="dropdown-container" ref={dropdownRef}>
       <div className="language-selector">
         <Globe className="globe-icon-wrapper" onClick={toggleDropdown} />
         <ChevronDown className="dropdown-icon" onClick={toggleDropdown} />
         {selectedLanguage && (
-          <span className="selected-language">{t(selectedLanguage)}</span>
+          <span className="selected-language">{getLanguageKey(selectedLanguage)}</span>
         )}
         {dropdownVisible && (
           <div className="dropdown-language">
