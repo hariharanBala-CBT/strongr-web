@@ -1,0 +1,23 @@
+{
+    "userProfile": "User Profile",
+    "updateProfile": "Update Profile",
+    "home": "Home",
+    "profile": "Profile",
+    "username": "User Name",
+    "name": "Name",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "verifyAndUpdate": "Verify & Update",
+    "sendingOtp": "Sending OTP...",
+    "enterOtp": "Enter OTP sent to {{email}}",
+    "otpExpires": "OTP expires in {{timer}} seconds",
+    "submit": "Submit",
+    "updatePasswordPrompt": "Want to update your password?",
+    "updatePassword": "Update Password",
+    "fillAllFields": "Please fill all fields and enter a valid OTP",
+    "userDetailsUpdated": "User details updated",
+    "incorrectOtp": "Incorrect OTP",
+    "emailExists": "Account with this email exists",
+    "tooManyAttempts": "You have reached the maximum number of resend attempts.",
+    "tooManyInvalidAttempts": "Too many invalid attempts, try again later"
+}

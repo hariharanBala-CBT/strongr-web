@@ -5,9 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import OTPInput, { ResendOTP } from "otp-input-react";
 import { ArrowRightCircle } from "react-feather";
+import { useTranslation } from "react-i18next";
 import Button from "../components/Button";
 import Header from "../components/Header";
+
 import Footer from "../components/Footer";
+
 import { Box, CircularProgress, Modal } from "@mui/material/";
 import ModalClose from "@mui/joy/ModalClose";
 import {
@@ -16,10 +19,12 @@ import {
   updateUserProfile,
   validateUser,
 } from "../actions/actions";
+
 import {
   RESET_PASSWORD_RESET,
   USER_UPDATE_PROFILE_RESET,
 } from "../constants/constants";
+
 import "../css/updateprofilescreen.css";
 
 const style = {
@@ -37,6 +42,8 @@ const style = {
 function UpdateprofileScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation("updateprofilescreen");
+
   const { id } = useParams();
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -75,7 +82,7 @@ function UpdateprofileScreen() {
       setShowOtpError(false);
       startTimer();
     } else {
-      toast.error("You have reached the maximum number of resend attempts.");
+      toast.error(t("tooManyAttempts"));
       setOpenForm(false);
       setResendCount(0);
     }
@@ -95,7 +102,7 @@ function UpdateprofileScreen() {
         })
       );
     } else {
-      toast.error("Please fill all fields and enter a valid OTP");
+      toast.error(t("fillAllFields"));
     }
   };
 
@@ -139,7 +146,7 @@ function UpdateprofileScreen() {
 
   useEffect(() => {
     if (userUpdateSuccess && submit) {
-      toast.success("User details updated");
+      toast.success(t("userDetailsUpdated"));
       setSubmit(false);
     } else if (userUpdateError && submit) {
       setOtp("");
@@ -150,17 +157,17 @@ function UpdateprofileScreen() {
       setOtpAttempts(otpAttempts + 1);
       if (otpAttempts + 1 >= 3) {
         setOpenForm(false);
-        toast.error("Too many invalid attempts, try again later");
+        toast.error(t("tooManyInvalidAttempts"));
         setOtpAttempts(0);
       } else {
-        toast.error("Incorrect OTP");
+        toast.error(t("incorrectOtp"));
       }
       setSubmit(false);
     }
     dispatch({
       type: USER_UPDATE_PROFILE_RESET,
     });
-  }, [dispatch, navigate, otpAttempts, submit, userUpdateError, userUpdateSuccess]);
+  }, [dispatch, navigate, otpAttempts, submit, t, userUpdateError, userUpdateSuccess]);
 
   useEffect(() => {
     setOpenForm(false);
@@ -182,13 +189,13 @@ function UpdateprofileScreen() {
       otpGenerate();
       setSubmit(false);
     } else if (userValidate && submit && email !== userInfo?.email) {
-      toast.error("Account with this email exists");
+      toast.error(t("emailExists"));
       setSubmit(false);
     } else if (userValidate && submit && email === userInfo?.email) {
       otpGenerate();
       setSubmit(false);
     }
-  }, [userValidate, userValidateError]);
+  }, [email, otpGenerate, submit, t, userInfo?.email, userValidate, userValidateError]);
 
   return (
     <div className="user-profile-wrapper update-profile-screen">
@@ -197,17 +204,17 @@ function UpdateprofileScreen() {
       <section className="breadcrumb breadcrumb-list mb-0">
         <span className="primary-right-round"></span>
         <div className="container">
-          <h1 className="text-white">Update Profile</h1>
+          <h1 className="text-white">{t("updateProfile")}</h1>
           <ul>
             <li className="breadcrumb-icons">
-              <a href="/">Home</a>
+              <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
               <LinkContainer to="/profile">
-                <a>User Profile</a>
+                <a>{t("userProfile")}</a>
               </LinkContainer>
             </li>
-            <li>Update Profile</li>
+            <li>{t("updateProfile")}</li>
           </ul>
         </div>
       </section>
@@ -217,15 +224,15 @@ function UpdateprofileScreen() {
             <ul className="nav">
               <li>
                 <LinkContainer to="/profile">
-                  <a>Profile</a>
+                  <a>{t("profile")}</a>
                 </LinkContainer>
               </li>
               <li>
-                <a className="active">Update Profile</a>
+                <a className="active">{t("updateProfile")}</a>
               </li>
               <li>
                 <LinkContainer to="/updatepassword">
-                  <a>Update Password</a>
+                  <a>{t("updatePassword")}</a>
                 </LinkContainer>
               </li>
             </ul>
@@ -235,11 +242,11 @@ function UpdateprofileScreen() {
               <div className="profile-detail-group">
                 <div className="update-userprofile">
                   <form onSubmit={validateEmail}>
-                    <h2 className="profile-title">Update Profile</h2>
+                    <h2 className="profile-title">{t("updateProfile")}</h2>
                     <div className="row">
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space">
-                          <label className="form-label">Username</label>
+                          <label className="form-label">{t("username")}</label>
                           <input
                             className="form-control pass-input"
                             required
@@ -254,7 +261,7 @@ function UpdateprofileScreen() {
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space">
-                          <label className="form-label">First Name</label>
+                          <label className="form-label">{t("name")}</label>
                           <input
                             className="form-control pass-input"
                             required
@@ -268,7 +275,7 @@ function UpdateprofileScreen() {
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space mb-0">
-                          <label className="form-label">Email</label>
+                          <label className="form-label">{t("email")}</label>
                           <input
                             className="form-control pass-input"
                             required
@@ -282,7 +289,7 @@ function UpdateprofileScreen() {
                       </div>
                       <div className="col-lg-6 col-md-6">
                         <div className="input-space mb-0">
-                          <label className="form-label">Phone</label>
+                          <label className="form-label">{t("phoneNumber")}</label>
                           <input
                             className="form-control pass-input"
                             required
@@ -300,7 +307,7 @@ function UpdateprofileScreen() {
                         className="btn btn-secondary register-btn d-inline-flex justify-content-center align-items-center w-50 btn-block"
                         type="submit"
                       >
-                        <span>Verify & Update</span>
+                        <span>{t("verifyAndUpdate")}</span>
 
                         <span className="right-arrow">
                           <ArrowRightCircle size={20} />
@@ -309,11 +316,11 @@ function UpdateprofileScreen() {
                     )}
                     <div className="bottom-text">
                       <span>
-                        Want to update your password?&nbsp;
+                        {t("updatePasswordPrompt")}&nbsp;
                         <LinkContainer to="/updatepassword">
                           <span className="linked-para-text">
                             {" "}
-                            Update Password
+                            {t("updatePassword")}
                           </span>
                         </LinkContainer>
                       </span>
@@ -327,7 +334,7 @@ function UpdateprofileScreen() {
                   >
                     {loader ? (
                       <Box sx={style} className="otp-loader">
-                        <span>Sending OTP...</span>
+                        <span>{t("sendingOtp")}</span>
                         <CircularProgress />
                       </Box>
                     ) : (
@@ -341,7 +348,7 @@ function UpdateprofileScreen() {
                           <form onSubmit={updateCustomer} className="otp-form">
                             <div className="otp-input">
                               <label className="update-prof-label">
-                                Enter OTP sent to {email}
+                                {t("enterOtp",{email})}
                               </label>
                               {showOtpError && (
                                 <p className="text-danger">{otpError}</p>
@@ -357,7 +364,7 @@ function UpdateprofileScreen() {
                                 secure
                               />
                               <div className="resend-wrapper">
-                                <div>OTP expires in {timer} secs</div>
+                                <div>{t("otpExpires", {timer})}</div>
                                 <div className="auth-footer">
                                   Didn’t receive? Resend Attempts ({resendCount}/2)
                                   <ResendOTP
@@ -370,7 +377,7 @@ function UpdateprofileScreen() {
                             <Button
                               type="submit"
                               className="otp-login-btn"
-                              text="Submit"
+                              text={t("submit")}
                             />
                           </form>
                         </div>

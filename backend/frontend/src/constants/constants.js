@@ -165,3 +165,5 @@ export const TOPRATED_CLUBS_RESET = "TOPRATED_CLUBS_RESET";
 export const NEAREST_SLOT_REQUEST = "NEAREST_SLOT_REQUEST";
 export const NEAREST_SLOT_SUCCESS = "NEAREST_SLOT_SUCCESS";
 export const NEAREST_SLOT_FAIL = "NEAREST_SLOT_FAIL";
+
+export const brandName = "Strongr";

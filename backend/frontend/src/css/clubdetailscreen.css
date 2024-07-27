@@ -310,7 +310,7 @@ ul {
 
 .venue-club-details aside .book-court ul {
   padding: 20px;
-  background: #F9F9F6;
+  /* background: #F9F9F6; */
 }
 
 .venue-club-details .accordion .accordion-item#reviews .review-box .review-profile img {
@@ -569,4 +569,10 @@ ul {
 
 .venue-club-details .accordion-button::after {
   display: none;
+}
+.games-container {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }

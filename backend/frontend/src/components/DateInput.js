@@ -1,13 +1,11 @@
 import React from "react";
 
-function DateInput({ id, value, onChange, required }) {
+function DateInput({ label, id, value, onChange, required }) {
   return (
-    <div className="select-date">
-      <label className="form-label" htmlFor={id}>
-        Date
-      </label>
+    <div className='select-date'>
+    <label htmlFor={id}>{label}</label>
       <input
-        className="form-control"
+        className="form-control mt-3"
         type="date"
         id={id}
         value={value}
