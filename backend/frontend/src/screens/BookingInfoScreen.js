@@ -526,7 +526,7 @@ function BookingInfoScreen() {
                       </Alert>
                     ) : (
                       <Alert severity="error">
-                      {t("noSlotAvailable", {courtName})}                       
+                      {t("noSlotsAvailable", {courtName})}                       
                       </Alert>
                     )}
                   </div>

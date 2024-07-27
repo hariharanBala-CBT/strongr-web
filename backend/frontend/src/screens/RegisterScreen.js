@@ -23,6 +23,7 @@ import { generateOTP, register, validateUserDetails } from "../actions/actions";
 import { USER_LOGOUT } from "../constants/constants";
 
 import "../css/registerscreen.css";
+import { brandName } from "../constants/constants";
 
 const style = {
   position: "absolute",
@@ -275,7 +276,7 @@ function RegisterScreen() {
                         </LinkContainer>
                       </header>
                       <div className="shadow-card">
-                        <h2>{t("getStarted")}</h2>
+                        <h2>{t("getStarted", {brandName})}</h2>
                         <div className="tab-content" id="myTabContent">
                           <div
                             className="tab-pane fade show active"
