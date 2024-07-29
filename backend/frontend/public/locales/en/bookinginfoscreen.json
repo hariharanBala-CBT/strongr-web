@@ -12,7 +12,7 @@
     "dateLabel": "Date",
     "courtLabel": "Court",
     "slotLabel": "Slot",
-    "noSlotAvailable": "No slots available in {{courtName}}",
+    "noSlotsAvailable": "No slots available in {{courtName}}",
     "yourOrder": "Your Order",
     "gst": "GST",
     "stateAndCentralTax": "State tax and Central tax",
