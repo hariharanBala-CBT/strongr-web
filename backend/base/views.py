@@ -941,6 +941,7 @@ class PreviewView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         locationdetails = []
+
         locations = OrganizationLocation.objects.filter(
             organization__user=self.request.user)
         for location in locations:
@@ -952,16 +953,24 @@ class PreviewView(FormView):
             context_item[
                 'amenities'] = OrganizationLocationAmenities.objects.filter(
                     organization_location=location)
-            context_item[
-                'workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
-                    organization_location=location)
+            workingtimes = OrganizationLocationWorkingDays.objects.filter(
+                organization_location=location)
+            context_item['workingtimes'] = workingtimes
             context_item['courts'] = Court.objects.filter(location=location)
             context_item['images'] = OrganizationGameImages.objects.filter(
                 organization=location)
             context_item['slots'] = Slot.objects.filter(location_id=location)
             context_item['has_courts'] = context_item['courts'].exists()
             context_item['has_slots'] = context_item['slots'].exists()
+            
+            # Set flag for all times being None
+            context_item['all_times_none'] = all(
+                wt.work_from_time is None and wt.work_to_time is None
+                for wt in workingtimes
+            )
+            
             locationdetails.append(context_item)
+
         context['all_locations'] = locationdetails
         profile = Organization.objects.filter(user=self.request.user)
         context['profiles'] = profile
