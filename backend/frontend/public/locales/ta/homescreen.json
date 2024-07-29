@@ -26,5 +26,6 @@
     "errorFetchingAreas": "பகுதிகளை மீட்கத் தோல்வி",
     "errorFetchingGames": "விளையாட்டுகளை மீட்கத் தோல்வி",
     "guide":"வழிகாட்டி",
+    "success": "{{brandName}} அமைப்புக்கு வரவேற்கிறோம்",
     "iconAlt": "ஐகான்"
 }
