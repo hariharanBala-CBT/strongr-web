@@ -624,3 +624,15 @@
 .css-1wc848c-MuiFormHelperText-root.Mui-error {
   color: #d32f2f !important;
 }
+
+.btn1{
+  cursor: pointer;
+  color: #329d9a;
+}
+
+.btn1:disabled{
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  pointer-events: none;
+}
