@@ -1,24 +1,25 @@
 {% extends 'base_org.html' %}{% load static %}
 {% block content %}
     <link href="{% static './css/add-slot.css' %}" rel="stylesheet"/>
-                
+
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a></li>
         <li class="breadcrumb-item"><a href="{% url 'slot-location' %}">Slot List Location</a></li>
         <li class="breadcrumb-item"><a href="{% url 'slot-list' locationpk=location_pk %}">Slot List</a></li>
         <li class="breadcrumb-item">Add-Slot</li>
-    </ol>    
-    
+    </ol>
+
     <div class="container-fluid px-4 m">
         <div class="profile-card">
             <h3 class="my-4">Slots:</h3>
             <h6 class="mb-5">Add your Slots here</h6>
-            
+
             {% if form.non_field_errors %}
                 <div class="alert alert-danger alert-dismissible fade show">
                     {% for error in form.non_field_errors %}
                         {{ error }}
                     {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endif %}
 
@@ -53,10 +54,12 @@
           <i class="fa-solid fa-arrow-right-long"></i>
         </button>
       </div>
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        Note: Please add court and then try to add slot
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+      {% if form.court_field_empty %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          Note: Please add a court before adding slot
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
     </form>
   </div>
 </div>

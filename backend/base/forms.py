@@ -169,6 +169,8 @@ class TermsandConditionsForm(forms.Form):
     agree = forms.BooleanField(required=True)
 
 class CourtForm(forms.ModelForm):
+    game_field_empty = False  # Default flag for empty game field
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(CourtForm, self).__init__(*args, **kwargs)
@@ -176,6 +178,10 @@ class CourtForm(forms.ModelForm):
             key = self.request.session.get('location_pk')
             if key:
                 self.fields['game'].queryset = OrganizationLocationGameType.objects.filter(organization_location_id=key)
+                if not self.fields['game'].queryset.exists():
+                    self.game_field_empty = True
+                else:
+                    self.game_field_empty = False
 
     class Meta:
         model = Court
@@ -187,6 +193,7 @@ class CourtForm(forms.ModelForm):
 class SlotForm(forms.ModelForm):
     start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
     end_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
+    game_field_empty = False
 
     class Meta:
         model = Slot
@@ -200,6 +207,10 @@ class SlotForm(forms.ModelForm):
             if key:
                 self.fields['court'].queryset = Court.objects.filter(location_id=key)
                 self.fields['days'].queryset = OrganizationLocationWorkingDays.objects.filter(organization_location=key, is_active=True)
+                if not self.fields['court'].queryset.exists():
+                    self.court_field_empty = True
+                else:
+                    self.court_field_empty = False
 
     def clean(self):
         cleaned_data = super().clean()

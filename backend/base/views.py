@@ -843,8 +843,7 @@ class SlotCreateView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        error_messages = ''.join([f'{error}' for error in form.errors.values()])
-        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
+        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed'))
         return self.render_to_response(self.get_context_data(form=form))
 
     def get_success_url(self):
