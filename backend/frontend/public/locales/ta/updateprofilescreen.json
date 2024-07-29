@@ -9,7 +9,7 @@
     "phoneNumber": "தொலைபேசி எண்",
     "verifyAndUpdate": "சரிபார்த்து புதுப்பிக்கவும்",
     "sendingOtp": "OTP அனுப்புகிறது...",
-    "enterOtp": "மின்னஞ்சலுக்கு அனுப்பிய OTP ஐ உள்ளிடவும்",
+    "enterOtp": "{{ email }} அனுப்பிய 4 இலக்க OTP ஐ உள்ளிடவும்.",
     "otpExpires": "OTP காலாவதியாகும் காலம் {{ timer }}",
     "didNotReceiveOtp": "OTP கிடைக்கவில்லையா? மீண்டும் அனுப்பும் முயற்சிகள் ({{ resendCount }}/2)",
     "submit": "சமர்ப்பிக்கவும்",

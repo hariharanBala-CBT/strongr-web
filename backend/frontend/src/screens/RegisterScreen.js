@@ -465,7 +465,7 @@ function RegisterScreen() {
                       <div className="login">
                         <div className="title-auth">
                         <h5>{t("otpAuthentication")}</h5>
-                        <p>{t("enterOtp", {email})}</p>
+                        {t("enterOtp", {email})}
                         </div>
 
                         <form onSubmit={handleSubmit} className="otp-form">

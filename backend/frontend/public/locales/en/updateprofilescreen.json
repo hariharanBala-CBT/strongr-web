@@ -9,7 +9,7 @@
     "phoneNumber": "Phone Number",
     "verifyAndUpdate": "Verify & Update",
     "sendingOtp": "Sending OTP...",
-    "enterOtp": "Enter OTP sent to {{email}}",
+    "enterOtp": "Enter the 4 digit OTP sent to your {{email}}.",
     "otpExpires": "OTP expires in {{timer}} seconds",
     "didNotReceiveOtp": "Didn't receive? Resend attempts ({{ resendCount }}/2)",
     "submit": "Submit",

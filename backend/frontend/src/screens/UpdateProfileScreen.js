@@ -76,6 +76,7 @@ function UpdateprofileScreen() {
       setLoader(true);
       setOtp("");
       setOtpError('');
+      // setOtpValid(true);
       dispatch(generateUpdateOTP(email, userInfo?.id));
       setResendCount(resendCount + 1);
       setTimer(120); // Reset the timer on OTP resend
@@ -167,7 +168,7 @@ function UpdateprofileScreen() {
     dispatch({
       type: USER_UPDATE_PROFILE_RESET,
     });
-  }, [dispatch, navigate, otpAttempts, submit, t, userUpdateError, userUpdateSuccess]);
+  }, [dispatch, navigate, otpAttempts, submit, userUpdateError, userUpdateSuccess]);
 
   useEffect(() => {
     setOpenForm(false);
@@ -195,7 +196,7 @@ function UpdateprofileScreen() {
       otpGenerate();
       setSubmit(false);
     }
-  }, [email, otpGenerate, submit, t, userInfo?.email, userValidate, userValidateError]);
+  }, [userValidate, userValidateError]);
 
   return (
     <div className="user-profile-wrapper update-profile-screen">
@@ -293,7 +294,7 @@ function UpdateprofileScreen() {
                           <input
                             className="form-control pass-input"
                             required
-                            type="text"
+                            type="tel"
                             value={phone}
                             onChange={(e) => {
                               setPhone(e.target.value);
@@ -348,7 +349,7 @@ function UpdateprofileScreen() {
                           <form onSubmit={updateCustomer} className="otp-form">
                             <div className="otp-input">
                               <label className="update-prof-label">
-                                {t("enterOtp",{email})}
+                                {t("enterOtp", {email})}
                               </label>
                               {showOtpError && (
                                 <p className="text-danger">{otpError}</p>
