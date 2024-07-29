@@ -11,6 +11,7 @@
     "sendingOtp": "Sending OTP...",
     "enterOtp": "Enter OTP sent to {{email}}",
     "otpExpires": "OTP expires in {{timer}} seconds",
+    "didNotReceiveOtp": "Didn't receive? Resend attempts ({{ resendCount }}/2)",
     "submit": "Submit",
     "updatePasswordPrompt": "Want to update your password?",
     "updatePassword": "Update Password",

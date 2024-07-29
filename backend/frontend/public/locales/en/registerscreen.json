@@ -15,7 +15,7 @@
     "otpAuthentication": "OTP Authentication",
     "enterOtp": "Enter the 4 digit OTP sent to your {{email}}.",
     "submit": "Submit",
-    "didNotReceiveOtp": "Didn't receive an OTP.",
+    "didNotReceiveOtp": "Didn't receive? Resend attempts ({{ resendCount }}/2)",
     "sendingOtp": "Sending OTP...",
     "otpExpires": "OTP expires in {{timer}} seconds",
     "passwordMinLength": "Password must be at least 8 characters",

@@ -493,7 +493,7 @@ function RegisterScreen() {
                         </form>
                         <div>{t("otpExpires", {timer})}</div>       
                         <div className="auth-footer">
-                          Didn’t receive? Resend Attempts({resendCount}/2)
+                        {t("didNotReceiveOtp",{resendCount})}
                           <ResendOTP 
                             onResendClick={regenerateOtp}
                             className="btn1"
