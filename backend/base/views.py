@@ -843,7 +843,7 @@ class SlotCreateView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed'))
+        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed_generic'))
         return self.render_to_response(self.get_context_data(form=form))
 
     def get_success_url(self):
@@ -864,9 +864,9 @@ class SlotUpdateView(UpdateView):
         flat_error_list = ' '.join(error_list).replace('<ul class="errorlist nonfield"><li>', '').replace('</li></ul>', '').replace('</li><li>', ' ')
 
         if custom_error_message_1 in flat_error_list:
-            error_message = ERROR_MESSAGES.get('form_validation_failed_slot_1')
+            error_message =  messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed_slot_1'))
         elif custom_error_message_2 in flat_error_list:
-            error_message = ERROR_MESSAGES.get('form_validation_failed_slot_2')
+            error_message =  messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed_slot_2'))
         else:
             error_message = flat_error_list
 
