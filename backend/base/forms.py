@@ -193,7 +193,7 @@ class CourtForm(forms.ModelForm):
 class SlotForm(forms.ModelForm):
     start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
     end_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
-    game_field_empty = False
+    court_field_empty = False
 
     class Meta:
         model = Slot
