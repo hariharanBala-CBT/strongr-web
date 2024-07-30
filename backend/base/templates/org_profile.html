@@ -64,7 +64,7 @@
               </tr>
               <tr>
                 <td>
-                  <label for="id_alt_phone_number"
+                  <label for="id_alt_number"
                     >Alternate Phone Number</label
                   >
                 </td>
@@ -139,6 +139,12 @@
     submitFormData();
   });
 
+  cancelButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+  });
+
   function showToast(message) {
     toast.textContent = message;
     toast.style.display = "block";
@@ -190,6 +196,8 @@
 
     const phoneField = document.getElementById("id_phone_number");
     const phoneError = document.getElementById("error_phone_number");
+    const altPhoneField = document.getElementById("id_alt_number");
+    const altPhoneError = document.getElementById("error_alt_number");
 
     if (!phoneField.value.trim()) {
       phoneError.textContent = "This field is required.";
@@ -198,8 +206,26 @@
         phoneError.style.display = "none";
       }, 1500);
       isValid = false;
+    } else if (phoneField.value.length != 10) {
+      phoneError.textContent = "Phone number must be exactly 10 digits.";
+      phoneError.style.display = "block";
+      setTimeout(() => {
+        phoneError.style.display = "none";
+      }, 1500);
+      isValid = false;
     } else {
       phoneError.style.display = "none";
+    }
+
+    if (altPhoneField && altPhoneField.value && altPhoneField.value.length !== 10) {
+      altPhoneError.textContent = "Alternate number must be exactly 10 digits.";
+      altPhoneError.style.display = "block";
+      setTimeout(() => {
+        altPhoneError.style.display = "none";
+      }, 1500);
+      isValid = false;
+    } else {
+      altPhoneError.style.display = "none";
     }
 
     return isValid;
@@ -219,10 +245,5 @@
     });
   }
 
-  cancelButton.addEventListener("click", function (e) {
-    e.preventDefault();
-    modal.style.display = "none";
-    modal.setAttribute("aria-hidden", "true");
-  });
 </script>
 {% endblock %}
