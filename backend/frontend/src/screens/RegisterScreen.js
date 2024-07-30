@@ -157,7 +157,9 @@ function RegisterScreen() {
     setOtpError("");
     setOtpAttempts(0);
     setOpenForm(false);
+    toast.success(t("success", { brandName }), { duration: 4000, });
     navigate("/");
+
   };
 
   const startTimer = () => {
@@ -189,7 +191,7 @@ function RegisterScreen() {
   useEffect(() => {
     if (userInfo) {
       navigate("/");
-      toast.success(t("success", { brandName }), { duration: 8000, });
+      toast.success(t("success", { brandName }), { duration: 4000 });
     } else if (registerError) {
       if (registerError === "Email is already registered") {
         toast.error(t("emailRegistered"));
