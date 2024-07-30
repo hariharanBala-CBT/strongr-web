@@ -513,10 +513,7 @@ function BookingInfoScreen() {
                       />
                     ) : courts?.length === 0 ? (
                       <Alert severity="warning">
-                        {t(
-                          "BookingInfoScreen.no-courts-available",
-                          "No courts available for the selected game and date."
-                        )}
+                        {t("noCourtsAvailable")}
                       </Alert>
                     ) : nearestSlot ? (
                       <Alert severity="info">
