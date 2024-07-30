@@ -375,25 +375,6 @@ class OrganizationProfileView(UpdateView):
     success_url = reverse_lazy('organization_locationlist')
 
     def form_valid(self, form):
-        phone_number = form.cleaned_data.get('phone_number')
-        alt_number = form.cleaned_data.get('alt_number')
-
-        # Validate phone number
-        if phone_number and not self.is_valid_number(phone_number):
-            if len(str(phone_number)) > 10:
-                form.add_error('phone_number', 'Phone number exceeds 10 digits')
-            elif len(str(phone_number)) < 10:
-                form.add_error('phone_number', 'Phone number must be at least 10 digits')
-            return self.form_invalid(form)
-
-        # Validate alternate number
-        if alt_number and not self.is_valid_number(alt_number):
-            if len(str(alt_number)) > 10:
-                form.add_error('alt_number', 'Alternate number exceeds 10 digits')
-            elif len(str(alt_number)) < 10:
-                form.add_error('alt_number', 'Alternate number must be at least 10 digits')
-            return self.form_invalid(form)
-
         # If all validations pass
         response = super().form_valid(form)
         if self.is_ajax_request():
