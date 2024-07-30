@@ -110,10 +110,9 @@ const Testimonial = () => {
                       </a>
                       <div className="testimonial-content">
                         <h5>
-                          <a href="javascript:;">Ariyan Rusov</a>
+                          <a>Ariyan Rusov</a>
                         </h5>
                         <a
-                          href="javascript:void(0);"
                           className="btn btn-primary "
                         >
                           Badminton

@@ -1,11 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { GiShuttlecock } from "react-icons/gi";
 import { Calendar, MapPin } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 import { useHomeContext } from "../context/HomeContext";
-import profileImage from "../images/profile.jpg";
 import venueImage from "../images/venue3.jpg";
 
 

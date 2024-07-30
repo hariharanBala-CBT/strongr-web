@@ -120,7 +120,6 @@ const Venue = () => {
           data-aos="fade-up"
         >
           <a
-            href="javascript:void(0);"
             className="btn btn-secondary d-inline-flex align-items-center"
           >
             {t("viewAll")}

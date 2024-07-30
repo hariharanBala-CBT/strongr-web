@@ -281,7 +281,7 @@ function ClubDetailScreen() {
               <ul className="d-sm-flex details">
                 <li>
                   <div className="profile-pic">
-                    <a href="javascript:void(0);" className="venue-type">
+                    <a className="venue-type">
                       <img
                         className="img-fluid"
                         src={venueTypeImage}
@@ -296,7 +296,7 @@ function ClubDetailScreen() {
                 </li>
                 <li>
                   <div className="profile-pic">
-                    <a href="javascript:void(0);">
+                    <a>
                       <img
                         className="img-fluid"
                         src={profileImage}
