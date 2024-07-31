@@ -188,8 +188,8 @@ function RegisterScreen() {
 
   useEffect(() => {
     if (userInfo) {
+      localStorage.setItem("registrationSuccess", "true");
       navigate("/");
-      toast.success(t("success", { brandName }), { duration: 4000 });
     } else if (registerError) {
       if (registerError === "Email is already registered") {
         toast.error(t("emailRegistered"));
