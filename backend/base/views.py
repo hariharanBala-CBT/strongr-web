@@ -372,14 +372,13 @@ class OrganizationProfileView(UpdateView):
     model = Organization
     template_name = 'org_profile.html'
     form_class = OrganizationProfileForm
-    success_url = reverse_lazy('organization_locationlist')
 
     def form_valid(self, form):
+        form.save()
         # If all validations pass
-        response = super().form_valid(form)
         if self.is_ajax_request():
             return JsonResponse({'status': 'success', 'message': SUCCESS_MESSAGES.get('update_profile')}, status=200)
-        return response
+        return self.render_to_response(self.get_context_data(form=form))
 
     def form_invalid(self, form):
         # Collect all form errors
