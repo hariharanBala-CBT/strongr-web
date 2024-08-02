@@ -189,6 +189,7 @@ function RegisterScreen() {
 
   useEffect(() => {
     if (userInfo) {
+      localStorage.setItem("registrationSuccess", "true");
       navigate("/");
     } else if (registerError) {
       if (registerError === "Email is already registered") {

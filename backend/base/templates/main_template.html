@@ -294,15 +294,6 @@
                     }
                 });
 
-                // Initialize default active tab if no hash is present
-                if (!window.location.hash) {
-                    const defaultTabElement = $('.tab-button').first();
-                    setActiveTab(defaultTabElement);
-                    $('#tab-content').load(defaultTabElement.data('url'), function () {
-                        initFormSubmission();
-                    });
-                }
-
                 // Additional setup for sidebar toggle, data tables, etc.
                 const $successAlert = $('#successAlert');
                 if ($successAlert.length) {

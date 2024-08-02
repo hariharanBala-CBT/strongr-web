@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import toast, { Toaster } from "react-hot-toast";
 import { Form } from "react-bootstrap";
 import "../css/homescreen.css";
+import { brandName } from "../constants/constants";
 
 import Header from "../components/Header";
 import Button from "../components/Button";
@@ -73,6 +74,13 @@ function HomeScreen(history) {
   const changeDate = (value) => {
     setDate(value);
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("registrationSuccess") === "true") {
+      toast.success(t("success", { brandName }), { duration: 4000 });
+      localStorage.removeItem("registrationSuccess");
+    }
+  }, [t]);
 
   useEffect(() => {
     dispatch(listGames());

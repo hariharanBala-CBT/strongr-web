@@ -4,9 +4,7 @@
 
 <ol class="breadcrumb mb-4">
   <li class="breadcrumb-item">
-    <a href="{% url 'organization_page' %}"
-      ><i class="fa fa-home" aria-hidden="true"></i
-    ></a>
+    <a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a>
   </li>
   <li class="breadcrumb-item">
     <a href="{% url 'organization_locationlist'%}">Location List</a>
@@ -47,26 +45,18 @@
       </table>
 
       <div class="buttons px-4 py-4">
-        <a
-          href="{% url 'mainview' locationpk %}"
-          class="btn btn-secondary"
-          data-toggle="tooltip"
-          title="back"
-          ><i class="fa-solid fa-arrow-left-long"></i
-        ></a>
-        <button
-          type="submit"
-          class="btn btn-primary"
-          data-toggle="tooltip"
-          title="submit"
-        >
+        <a href="{% url 'mainview' locationpk %}" class="btn btn-secondary" data-toggle="tooltip" title="back"><i
+            class="fa-solid fa-arrow-left-long"></i></a>
+        <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit">
           <i class="fa-solid fa-arrow-right-long"></i>
         </button>
       </div>
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        Note: Please add game and then try to add court
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>    
+      {% if form.game_field_empty %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          Note: Please add a game before adding a court.
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endif %}
     </form>
   </div>
 </div>

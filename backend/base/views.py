@@ -372,33 +372,13 @@ class OrganizationProfileView(UpdateView):
     model = Organization
     template_name = 'org_profile.html'
     form_class = OrganizationProfileForm
-    success_url = reverse_lazy('organization_locationlist')
 
     def form_valid(self, form):
-        phone_number = form.cleaned_data.get('phone_number')
-        alt_number = form.cleaned_data.get('alt_number')
-
-        # Validate phone number
-        if phone_number and not self.is_valid_number(phone_number):
-            if len(str(phone_number)) > 10:
-                form.add_error('phone_number', 'Phone number exceeds 10 digits')
-            elif len(str(phone_number)) < 10:
-                form.add_error('phone_number', 'Phone number must be at least 10 digits')
-            return self.form_invalid(form)
-
-        # Validate alternate number
-        if alt_number and not self.is_valid_number(alt_number):
-            if len(str(alt_number)) > 10:
-                form.add_error('alt_number', 'Alternate number exceeds 10 digits')
-            elif len(str(alt_number)) < 10:
-                form.add_error('alt_number', 'Alternate number must be at least 10 digits')
-            return self.form_invalid(form)
-
+        form.save()
         # If all validations pass
-        response = super().form_valid(form)
         if self.is_ajax_request():
             return JsonResponse({'status': 'success', 'message': SUCCESS_MESSAGES.get('update_profile')}, status=200)
-        return response
+        return self.render_to_response(self.get_context_data(form=form))
 
     def form_invalid(self, form):
         # Collect all form errors
@@ -843,8 +823,7 @@ class SlotCreateView(CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        error_messages = ''.join([f'{error}' for error in form.errors.values()])
-        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
+        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed_generic'))
         return self.render_to_response(self.get_context_data(form=form))
 
     def get_success_url(self):
@@ -865,9 +844,9 @@ class SlotUpdateView(UpdateView):
         flat_error_list = ' '.join(error_list).replace('<ul class="errorlist nonfield"><li>', '').replace('</li></ul>', '').replace('</li><li>', ' ')
 
         if custom_error_message_1 in flat_error_list:
-            error_message = ERROR_MESSAGES.get('form_validation_failed_slot_1')
+            error_message =  messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed_slot_1'))
         elif custom_error_message_2 in flat_error_list:
-            error_message = ERROR_MESSAGES.get('form_validation_failed_slot_2')
+            error_message =  messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed_slot_2'))
         else:
             error_message = flat_error_list
 
