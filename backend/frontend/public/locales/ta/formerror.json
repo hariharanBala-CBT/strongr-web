@@ -1,0 +1,12 @@
+{
+    "invalidOTP": "தவறான OTP",
+    "phoneNumberRequired": "தொலைபேசி எண் தேவை",
+    "emailAlreadyRegistered": "மின்னஞ்சல் ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது",
+    "emailRequired": "மின்னஞ்சல் தேவையுள்ளது",
+    "phoneRequired": "தொலைபேசி எண் தேவையுள்ளது",
+    "userExistsEmail": "இந்த மின்னஞ்சலுடன் பயனர் உள்ளது",
+    "userExistsPhone": "இந்த தொலைபேசி எண்ணுடன் பயனர் உள்ளது",
+    "userNotExist": "பயனர் இல்லை",
+    "validationError": "பயனர் சரிபார்க்க முடியவில்லை"
+
+  }

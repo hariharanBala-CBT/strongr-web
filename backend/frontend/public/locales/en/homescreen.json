@@ -26,6 +26,7 @@
     "errorFetchingAreas": "Error in fetching areas",
     "errorFetchingGames": "Error in fetching games",
     "guide":"Guide",
-    "iconAlt": "Icon"
+    "iconAlt": "Icon",
+    "guideLink": "/guide/english.pdf"
 
 }

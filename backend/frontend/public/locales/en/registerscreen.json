@@ -24,5 +24,6 @@
     "logoAlt": "Logo",
     "maxAttempts": "You have reached the maximum number of resend attempts.",
     "invalidOtp": "Invalid OTP. Please try again.",
-    "tooManyAttempts": "Too many incorrect attempts. Please try again later."
+    "tooManyAttempts": "Too many incorrect attempts. Please try again later.",
+    "attemptRemaining": "Attempt {{current}} of 3. Attempts remaining: {{remaining}}"
 }

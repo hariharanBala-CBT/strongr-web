@@ -1,6 +1,6 @@
 {
     "venueDetails": "இடம் விவரங்கள்",
-    "home": "வீடு",
+    "home": "முகப்பு",
     "reviews": "{{count}} விமர்சனங்கள்",
     "review": "விமர்சனங்கள்",
     "venueType": "இடம் வகை",
@@ -49,7 +49,7 @@
     "incorrectCredentials": "தவறான நுழைவு விவரங்கள்",
     "loggedInSuccessfully": "வெற்றிகரமாக உள்நுழைந்தது",
     "parking": "கார் நிறுத்தும் இடம்",
-    "restrooms": "மலசலவிடங்கள்",
+    "restrooms": "கழிப்பறை",
     "changeRooms": "மாற்றும் அறைகள்",
     "powerBackup": "மின்சாரம் மீண்டும் பொருந்தும் வசதி",
     "beveragesFacility": "பானங்கள் வசதி",

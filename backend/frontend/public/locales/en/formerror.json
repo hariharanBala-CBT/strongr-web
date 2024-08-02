@@ -1,0 +1,12 @@
+{
+    "invalidOTP": "Invalid OTP",
+    "phoneNumberRequired": "Phone number is required",
+    "emailAlreadyRegistered": "Email is already registered",
+    "emailRequired": "Email is required",
+    "phoneRequired": "Phone is required",
+    "userExistsEmail": "User exists with this email",
+    "userExistsPhone": "User exists with this phone number",
+    "userNotExist": "User does not exist",
+    "validationError": "User cannot be validated"
+
+  }

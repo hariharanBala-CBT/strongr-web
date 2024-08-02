@@ -146,13 +146,13 @@ def registerUser(request):
         phone = data.get('phone')
 
         if not otp_from_session or otp_from_session != otp_from_client:
-            return Response({'detail': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'invalidOTP'}, status=status.HTTP_400_BAD_REQUEST)
 
         if not phone:
-            return Response({'detail': 'Phone number is required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'phoneNumberRequired'}, status=status.HTTP_400_BAD_REQUEST)
 
         if User.objects.filter(email=data['email']).exists():
-            return Response({'detail': 'Email is already registered'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'emailAlreadyRegistered'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.create(
             first_name=data['name'],
