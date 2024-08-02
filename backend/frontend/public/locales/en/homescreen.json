@@ -28,6 +28,6 @@
     "guide":"Guide",
     "success": "Welcome to {{brandName}}",
     "iconAlt": "Icon",
-    "guideLink": "/guide/english.pdf"
+    "guideLink": "static/guide/english.pdf"
 
 }

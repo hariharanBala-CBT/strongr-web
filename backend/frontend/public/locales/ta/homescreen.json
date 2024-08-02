@@ -28,5 +28,5 @@
     "guide":"வழிகாட்டி",
     "success": "{{brandName}} அமைப்புக்கு வரவேற்கிறோம்",
     "iconAlt": "ஐகான்",
-    "guideLink": "/guide/tamil.pdf"
+    "guideLink": "static/guide/tamil.pdf"
 }
