@@ -152,7 +152,7 @@ function UpdateprofileScreen() {
     } else if (userUpdateError && submit) {
       setOtp("");
       const attemptsLeft = 3 - otpAttempts;
-      setOtpError(`Attempt ${otpAttempts+1} of 3. Attempts remaining: ${attemptsLeft-1}`);
+      setOtpError(t('attemptRemaining', { current: otpAttempts + 1, remaining: attemptsLeft - 1 }));    
       setShowOtpError(true);
       setTimeout(() => setShowOtpError(false), 4000);
       setOtpAttempts(otpAttempts + 1);

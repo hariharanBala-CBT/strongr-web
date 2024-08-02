@@ -494,7 +494,7 @@ function ClubDetailScreen() {
                     aria-labelledby="panelsStayOpen-amenities"
                   >
                     <div className="accordion-body">
-                      <ul className="d-md-flex justify-content-between align-items-center">
+                      <ul className="d-md-flex justify-content-between align-items-center amenity">
                         {clubAmenity?.is_parking === true && (
                           <li>
                             <i

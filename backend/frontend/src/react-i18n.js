@@ -26,7 +26,7 @@ i18n
     // Load only language (ignore country codes)
     load: 'languageOnly',
     // Default namespace to load (if not specified, it will attempt to load `/en/translation.json`)
-    ns: [],
+    ns: ['formerror'],
     // Define where your translations files are located
     backend: {
       loadPath: 'static/locales/{{lng}}/{{ns}}.json',

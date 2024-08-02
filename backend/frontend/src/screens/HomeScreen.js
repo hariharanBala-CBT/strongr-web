@@ -16,7 +16,6 @@ import DateInput from "../components/DateInput";
 import Venue from "../components/Venue";
 import Footer from "../components/Footer";
 import Testimonial from "../components/Testimonial";
-import customerGuide from "../guide/customer.pdf";
 import {
   listAreas,
   listGames,
@@ -34,6 +33,7 @@ import workImage3 from "../images/icons/work-icon3.svg";
 
 function HomeScreen(history) {
   const { t } = useTranslation("homescreen");
+  const guideLink = t("guideLink");
   const dispatch = useDispatch();
   const sectionRef = useRef(null);
   const navigate = useNavigate();
@@ -192,7 +192,7 @@ function HomeScreen(history) {
               {t("howIt")} <span>{t("works")}</span>
             </h2>
             <div className="guide-link">
-              <a href={customerGuide} className="guide" target="_blank" rel="noopener noreferrer">{t("guide")}</a>
+            <a href={guideLink} className="guide" target="_blank" rel="noopener noreferrer">{t("guide")}</a>           
             </div>
             <p className="sub-title">
               {t("howItWorksSubtitle")}

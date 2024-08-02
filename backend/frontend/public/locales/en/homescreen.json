@@ -27,6 +27,7 @@
     "errorFetchingGames": "Error in fetching games",
     "guide":"Guide",
     "success": "Welcome to {{brandName}}",
-    "iconAlt": "Icon"
+    "iconAlt": "Icon",
+    "guideLink": "/guide/english.pdf"
 
 }

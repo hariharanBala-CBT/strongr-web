@@ -20,5 +20,6 @@
     "incorrectOtp": "Incorrect OTP",
     "emailExists": "Account with this email exists",
     "tooManyAttempts": "You have reached the maximum number of resend attempts.",
-    "tooManyInvalidAttempts": "Too many invalid attempts, try again later"
+    "tooManyInvalidAttempts": "Too many invalid attempts, try again later",
+    "attemptRemaining": "Attempt {{current}} of 3. Attempts remaining: {{remaining}}"
 }
