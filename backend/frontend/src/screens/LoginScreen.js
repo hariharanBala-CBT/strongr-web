@@ -40,6 +40,7 @@ function LoginScreen() {
 
   useEffect(() => {
     if (userInfo) {
+      localStorage.setItem("userName", userInfo.name);
       navigate(-1);
       setErrorMessage("");
     } else if (!userInfo && LoginError && password.length > 0) {
@@ -48,16 +49,16 @@ function LoginScreen() {
     }
   }, [dispatch, LoginError, navigate, userInfo]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(validateUser(username));
-  };
-
   useEffect(() => {
     if (userValidate) {
       dispatch(login(username, password));
     }
   }, [dispatch, userValidate]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(validateUser(username));
+  };
 
   const handleUsername = (e) => {
     setUsername(e.target.value);
@@ -73,7 +74,7 @@ function LoginScreen() {
   };
 
   return (
-<div className="register-page">
+    <div className="register-page">
       <Toaster />
       <div className="main-wrapper authendication-pages">
         <LanguageSelector />
