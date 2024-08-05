@@ -624,7 +624,7 @@ def getNearestSlot(request):
     court = Court.objects.get(id=court_id)
     selected_date = date_obj.date()
     current_datetime = datetime.datetime.now().replace(microsecond=0)
-    # current_datetime = current_datetime + datetime.timedelta(hours=1)
+    current_datetime = current_datetime + datetime.timedelta(hours=1)
 
     nearest_slot = get_nearest_available_slot(court, current_datetime, selected_date)
 

@@ -43,6 +43,7 @@ urlpatterns = [
      path('temp-slot-list/<int:id>', TempSlotListView.as_view(), name='temp-slot-list'),
      path('add-unavailable-slot/<int:pk>/', UnavailableSlotCreateView.as_view(), name='add-unavailable-slot'),
      path('unavailable-slot-list/<int:pk>/', UnavailableSlotListView.as_view(), name='unavailable-slot-list'),
+     path('access-restricted/', TemplateView.as_view(template_name='403.html'), name='access-restricted'),
 
      path('slot-list/<int:locationpk>/', SlotListView.as_view(), name='slot-list'),
      path('tenant-slot-list/<int:locationpk>/', TenantSlotListView.as_view(), name='tenant-slot-list'),

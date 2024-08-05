@@ -46,15 +46,43 @@ from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
-from django.contrib.auth.mixins import LoginRequiredMixin
-
 from dotenv import load_dotenv
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
+from functools import wraps
+
+def group_required(group_name):
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            if not request.user.is_authenticated:
+                return login_required(view_func)(request, *args, **kwargs)
+            if not request.user.groups.filter(name=group_name).exists():
+                raise PermissionDenied
+            return view_func(request, *args, **kwargs)
+        return _wrapped_view
+    return decorator
+
 load_dotenv()
 DEBUG = os.environ.get('DJANGO_DEBUG')
 if DEBUG == 'True':
     from backend.local_settings import *
 else:
     from backend.production_settings import *
+
+class GroupAccessMixin(UserPassesTestMixin):
+    group_required = []
+
+    def test_func(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return False
+
+        return any(user.groups.filter(name=group).exists() for group in self.group_required)
+
+    def handle_no_permission(self):
+        raise PermissionDenied
 
 #FOR CUSTOMER ------------
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -259,7 +287,7 @@ class LoginView(View):
 
                 # Redirect users based on their group
                 if user.groups.filter(name='Customer').exists():
-                    return redirect('home_page')
+                    return redirect('access-restricted')
                 elif user.groups.filter(name='Organization').exists():
                     profile_page_url = reverse('organization_profile')
                     return redirect(profile_page_url)
@@ -282,8 +310,9 @@ class LogoutView(View):
         return redirect('login')
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationHomeView(TemplateView):
+class OrganizationHomeView(GroupAccessMixin,TemplateView):
     template_name = 'org_dashboard.html'
+    group_required = ['Organization']
 
     def get_context_data(self, **kwargs):
         organization = Organization.objects.get(user=self.request.user)
@@ -305,8 +334,9 @@ class OrganizationHomeView(TemplateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class ListofConfirmBookingView(TemplateView):
+class ListofConfirmBookingView(GroupAccessMixin,TemplateView):
     template_name = 'confirmed_bookings.html'
+    group_required = ['Organization']
 
     def get_context_data(self, **kwargs):
         organization = Organization.objects.get(user=self.request.user)
@@ -326,8 +356,9 @@ class ListofConfirmBookingView(TemplateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class ListofPendingBookingView(TemplateView):
+class ListofPendingBookingView(GroupAccessMixin,TemplateView):
     template_name = 'pending_bookings.html'
+    group_required = ['Organization']
 
     def get_context_data(self, **kwargs):
         organization = Organization.objects.get(user=self.request.user)
@@ -347,8 +378,9 @@ class ListofPendingBookingView(TemplateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class ListofCancelledBookingView(TemplateView):
+class ListofCancelledBookingView(GroupAccessMixin,TemplateView):
     template_name = 'cancelled_bookings.html'
+    group_required = ['Organization']
 
     def get_context_data(self, **kwargs):
         organization = Organization.objects.get(user=self.request.user)
@@ -368,10 +400,11 @@ class ListofCancelledBookingView(TemplateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationProfileView(UpdateView):
+class OrganizationProfileView(GroupAccessMixin,UpdateView):
     model = Organization
     template_name = 'org_profile.html'
     form_class = OrganizationProfileForm
+    group_required = ['Organization']
 
     def form_valid(self, form):
         form.save()
@@ -406,10 +439,11 @@ class OrganizationProfileView(UpdateView):
         return self.request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationAddLocationView(CreateView):
+class OrganizationAddLocationView(GroupAccessMixin,CreateView):
     model = OrganizationLocation
     template_name = 'org_createlocation.html'
     form_class = OrganizationLocationForm
+    group_required = ['Organization']
 
     def form_valid(self, form):
         organization = get_object_or_404(Organization, user=self.request.user)
@@ -442,6 +476,7 @@ class OrganizationAddLocationView(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 @login_required
+@group_required('Organization')
 def update_location(request, pk):
     location = get_object_or_404(OrganizationLocation, pk=pk)
     organization = get_object_or_404(Organization, user=request.user)
@@ -467,43 +502,47 @@ def update_location(request, pk):
 
     return render(request, 'update_location.html', {'form': form, 'pk': pk})
 
-    
+
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationLocationListView(ListView):
+class OrganizationLocationListView(GroupAccessMixin,ListView):
     model = OrganizationLocation
     template_name = 'org_locations.html'
     context_object_name = 'locations'
+    group_required = ['Organization']
 
     def get_queryset(self):
         organization = get_object_or_404(Organization, user=self.request.user)
         return OrganizationLocation.objects.filter(organization=organization)
 
 @method_decorator(login_required, name='dispatch')
-class TempslotLocationListView(ListView):
+class TempslotLocationListView(GroupAccessMixin,ListView):
     model = OrganizationLocation
     template_name = 'temp-slot-location.html'
     context_object_name = 'locations'
+    group_required = ['Organization']
 
     def get_queryset(self):
         organization = get_object_or_404(Organization, user=self.request.user)
         return OrganizationLocation.objects.filter(organization=organization)
 
 @method_decorator(login_required, name='dispatch')
-class TempdeslotLocationListView(ListView):
+class TempdeslotLocationListView(GroupAccessMixin,ListView):
     model = OrganizationLocation
     template_name = 'temp-deslot-location.html'
     context_object_name = 'locations'
+    group_required = ['Organization']
 
     def get_queryset(self):
         organization = get_object_or_404(Organization, user=self.request.user)
         return OrganizationLocation.objects.filter(organization=organization)
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationLocationGameListView(ListView):
+class OrganizationLocationGameListView(GroupAccessMixin,ListView):
     model = OrganizationLocationGameType
     template_name = 'org_locationgames.html'
     context_object_name = 'games'
+    group_required = ['Organization']
 
     def get_queryset(self):
         pk = self.kwargs.get('locationpk')
@@ -515,10 +554,11 @@ class OrganizationLocationGameListView(ListView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationLocationGameTypeView(CreateView):
+class OrganizationLocationGameTypeView(GroupAccessMixin,CreateView):
     model = OrganizationLocationGameType
     template_name = 'add_game.html'
     form_class = OrganizationLocationGameTypeCreateForm
+    group_required = ['Organization']
 
     def get_success_url(self):
         locationpk = self.request.session.get('location_pk')
@@ -562,10 +602,11 @@ class OrganizationLocationGameTypeView(CreateView):
         return redirect(self.get_success_url())
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationUpdateLocationGameTypeView(UpdateView):
+class OrganizationUpdateLocationGameTypeView(GroupAccessMixin,UpdateView):
     model = OrganizationLocationGameType
     template_name = 'update_game.html'
     form_class = OrganizationLocationGameTypeForm
+    group_required = ['Organization']
 
     def get_object(self):
         locationpk = self.kwargs.get('locationpk')
@@ -589,10 +630,11 @@ class OrganizationUpdateLocationGameTypeView(UpdateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationLocationImageListView(ListView):
+class OrganizationLocationImageListView(GroupAccessMixin,ListView):
     model = OrganizationGameImages
     template_name = 'org_locationimages.html'
     context_object_name = 'images'
+    group_required = ['Organization']
 
     def get_queryset(self):
         pk = self.kwargs.get('locationpk')
@@ -603,23 +645,13 @@ class OrganizationLocationImageListView(ListView):
         context['locationpk'] = self.kwargs.get('locationpk')
         return context
 
-    # def post(self, request, *args, **kwargs):
-    #     image_id = request.POST.get('image_id')
-    #     if image_id:
-    #         image = OrganizationGameImages.objects.get(id=image_id)
-    #         if image.image:
-    #             image_path = image.image.path
-    #             if os.path.exists(image_path):
-    #                 os.remove(image_path)
-    #         image.delete()
-    #         messages.success(request, 'Image deleted successfully.')
-    #     return redirect(reverse('mainview', kwargs={'locationpk': self.kwargs.get('locationpk')}))
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationLocationImageView(CreateView):
+class OrganizationLocationImageView(GroupAccessMixin,CreateView):
     model = OrganizationGameImages
     template_name = 'add_images.html'
     form_class = OrganizationGameImagesForm
+    group_required = ['Organization']
 
     def form_valid(self, form):
         form_instance = form.save(commit=False)
@@ -635,11 +667,11 @@ class OrganizationLocationImageView(CreateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationUpdateLocationImageView(UpdateView):
+class OrganizationUpdateLocationImageView(GroupAccessMixin,UpdateView):
     model = OrganizationGameImages
     template_name = 'update_image.html'
     form_class = OrganizationGameImagesForm
-    # success_url = reverse_lazy('organization_imageslist')
+    group_required = ['Organization']
 
     def form_valid(self, form):
         clear_image = self.request.POST.get('image-clear', False)
@@ -667,9 +699,10 @@ class OrganizationUpdateLocationImageView(UpdateView):
         return reverse('mainview',kwargs={'location_pk' : location_pk})
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationDeleteLocationImageView(DeleteView):
+class OrganizationDeleteLocationImageView(GroupAccessMixin,DeleteView):
     model = OrganizationGameImages
     template_name = 'delete_image.html'
+    group_required = ['Organization']
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -695,10 +728,11 @@ class OrganizationDeleteLocationImageView(DeleteView):
         return reverse('mainview', kwargs={'location_pk': locationpk})
 
 @method_decorator(login_required, name='dispatch')
-class CourtUpdateView(UpdateView):
+class CourtUpdateView(GroupAccessMixin,UpdateView):
     model = Court
     template_name = 'update_court.html'
     form_class = CourtForm
+    group_required = ['Organization']
 
     def get_object(self):
         locationpk = self.kwargs.get('locationpk')
@@ -721,10 +755,11 @@ class CourtUpdateView(UpdateView):
         context['locationpk'] = self.kwargs.get('locationpk')
         return context
 
-class CourtsListView(ListView):
+class CourtsListView(GroupAccessMixin,ListView):
     model = Court
     template_name = 'org_locationcourts.html'
     context_object_name = 'courts'
+    group_required = ['Organization']
 
     def get_queryset(self):
         pk = self.kwargs.get('locationpk')
@@ -736,9 +771,10 @@ class CourtsListView(ListView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class CourtDeleteView(DeleteView):
+class CourtDeleteView(GroupAccessMixin,DeleteView):
     model = Court
     template_name = 'delete_court.html'
+    group_required = ['Organization']
 
     def post(self, request, *args, **kwargs):
         messages.success(request, SUCCESS_MESSAGES.get('delete_court'))
@@ -754,10 +790,11 @@ class CourtDeleteView(DeleteView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class SlotListView(ListView):
+class SlotListView(GroupAccessMixin,ListView):
     model = Slot
     template_name = 'slot-list.html'
     context_object_name = 'slots'
+    group_required = ['Organization']
 
     def get_queryset(self):
         pk = self.kwargs.get('locationpk')
@@ -771,10 +808,11 @@ class SlotListView(ListView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class TenantSlotListView(ListView):
+class TenantSlotListView(GroupAccessMixin,ListView):
     model = Slot
     template_name = 'tenant_slot_list.html'
     context_object_name = 'slots'
+    group_required = ['Organization']
 
     def get_queryset(self):
         pk = self.kwargs.get('locationpk')
@@ -788,19 +826,21 @@ class TenantSlotListView(ListView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class SlotLocationListView(ListView):
+class SlotLocationListView(GroupAccessMixin,ListView):
     model = OrganizationLocation
     template_name = 'slot_location.html'
     context_object_name = 'locations'
+    group_required = ['Organization']
 
     def get_queryset(self):
         organization = get_object_or_404(Organization, user=self.request.user)
         return OrganizationLocation.objects.filter(organization=organization)
 
 @method_decorator(login_required, name='dispatch')
-class SlotCreateView(CreateView):
+class SlotCreateView(GroupAccessMixin,CreateView):
     template_name = 'add_slot.html'
     form_class = SlotForm
+    group_required = ['Organization']
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -830,10 +870,11 @@ class SlotCreateView(CreateView):
         location_pk = self.request.session.get('locationpk')
         return reverse('slot-list', kwargs={'locationpk': location_pk})
 
-class SlotUpdateView(UpdateView):
+class SlotUpdateView(GroupAccessMixin,UpdateView):
     model = Slot
     template_name = 'update_slot.html'
     form_class = SlotUpdateForm
+    group_required = ['Organization']
 
     def form_invalid(self, form):
         custom_error_message_1 = 'A slot with the same details already exists.'
@@ -867,9 +908,10 @@ class SlotUpdateView(UpdateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class SlotDeleteView(DeleteView):
+class SlotDeleteView(GroupAccessMixin,DeleteView):
     model = Slot
     template_name = 'delete_slot.html'
+    group_required = ['Organization']
 
     def post(self, request, *args, **kwargs):
         messages.success(request, SUCCESS_MESSAGES.get('delete_slot'))
@@ -884,9 +926,10 @@ class SlotDeleteView(DeleteView):
         context['pk'] = self.request.session.get('location_pk')
         return context
 
-class CourtCreateView(CreateView):
+class CourtCreateView(GroupAccessMixin,CreateView):
     template_name = 'add_court.html'
     form_class = CourtForm
+    group_required = ['Organization']
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -912,10 +955,11 @@ class CourtCreateView(CreateView):
             locationpk = self.request.session.get('location_pk')
             return reverse('mainview' , kwargs={'location_pk': locationpk})
 
-class PreviewView(FormView):
+class PreviewView(GroupAccessMixin,FormView):
     template_name = 'org_preview2.html'
     form_class = TermsandConditionsForm
     success_url = reverse_lazy('status')
+    group_required = ['Organization']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -941,13 +985,13 @@ class PreviewView(FormView):
             context_item['slots'] = Slot.objects.filter(location_id=location)
             context_item['has_courts'] = context_item['courts'].exists()
             context_item['has_slots'] = context_item['slots'].exists()
-            
+
             # Set flag for all times being None
             context_item['all_times_none'] = all(
                 wt.work_from_time is None and wt.work_to_time is None
                 for wt in workingtimes
             )
-            
+
             locationdetails.append(context_item)
 
         context['all_locations'] = locationdetails
@@ -967,10 +1011,11 @@ class PreviewView(FormView):
         return HttpResponseRedirect(self.success_url)
 
 @method_decorator(login_required, name='dispatch')
-class TermsandConditionsView(FormView):
+class TermsandConditionsView(GroupAccessMixin,FormView):
     template_name = 'org_terms.html'
     form_class = TermsandConditionsForm
     success_url = reverse_lazy('organization_page')
+    group_required = ['Organization']
 
     def get_context_data(self):
         context = super().get_context_data()
@@ -985,12 +1030,14 @@ class TenantTermsandConditionsView(FormView):
     form_class = TermsandConditionsForm
 
 @method_decorator(login_required, name='dispatch')
-class PrivacyPolicyView(TemplateView):
+class PrivacyPolicyView(GroupAccessMixin,TemplateView):
     template_name = 'privacy_policy.html'
+    group_required = ['Organization']
 
 @method_decorator(login_required, name='dispatch')
-class StatusView(TemplateView):
+class StatusView(GroupAccessMixin,TemplateView):
     template_name = 'status.html'
+    group_required = ['Organization']
 
     def get_organization(self):
         try:
@@ -1135,9 +1182,10 @@ class ChangeOrganizationLocationStatusView(View):
             return redirect('error')
 
 @method_decorator(login_required, name='dispatch')
-class ChangePasswordView(PasswordChangeView):
+class ChangePasswordView(GroupAccessMixin,PasswordChangeView):
     template_name = 'change_password.html'
     success_url = reverse_lazy('login')
+    group_required = ['Organization']
 
     def form_valid(self, form):
         messages.success(self.request, SUCCESS_MESSAGES.get('change_password'))
@@ -1148,9 +1196,10 @@ class ChangePasswordView(PasswordChangeView):
         messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
         return super().form_invalid(form)
 
-class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+class ResetPasswordView(GroupAccessMixin,SuccessMessageMixin, PasswordResetView):
     template_name = 'password_reset.html'
     email_template_name = 'password_reset_email.html'
+    group_required = ['Organization']
     subject_template_name = 'password_reset_subject.txt'
     success_message = "We've emailed you instructions for setting your password, " \
                       "if an account exists with the email you entered. You should receive them shortly." \
@@ -1158,7 +1207,8 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('login')
 
-class CreateMultipleSlotsView(View):
+class CreateMultipleSlotsView(GroupAccessMixin,View):
+    group_required = ['Organization']
 
     def get(self, request, *args, **kwargs):
         pk = request.session.get('location_pk')
@@ -1324,10 +1374,11 @@ class TenantOrganizationPreviewView(DetailView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationsCustomerlist(LoginRequiredMixin, ListView):
+class OrganizationsCustomerlist(GroupAccessMixin,LoginRequiredMixin, ListView):
     model = Customer
     template_name = 'org_customers.html'
     context_object_name = 'customers'
+    group_required = ['Organization']
     login_url = '/orglogin/'
 
     def get_queryset(self):
@@ -1354,8 +1405,9 @@ class TenantsCustomerlist(LoginRequiredMixin, ListView):
             tenant = tenant_object)
         return customers
 
-class AddMultipleTempSlotsView(View):
+class AddMultipleTempSlotsView(GroupAccessMixin,View):
     template_name = 'add_temp_slot.html'
+    group_required = ['Organization']
 
     def get(self, request, *args, **kwargs):
         form = TempSlotForm(prefix='0')  # Start with prefix '0' for the first form
@@ -1381,10 +1433,11 @@ class AddMultipleTempSlotsView(View):
         return render(request, self.template_name, {'forms': forms})
 
 
-class TempSlotListView(ListView):
+class TempSlotListView(GroupAccessMixin,ListView):
     model = AdditionalSlot
     template_name = 'temp-slots-list.html'
     context_object_name = 'tempSlots'
+    group_required = ['Organization']
 
     def get_queryset(self):
         pk = self.kwargs.get('pk')
@@ -1413,9 +1466,10 @@ class TempSlotListView(ListView):
             print("Error: No slot ID provided")
 
 @method_decorator(login_required, name='dispatch')
-class TempSlotCreateView(CreateView):
+class TempSlotCreateView(GroupAccessMixin,CreateView):
     template_name = 'add_temp_slot.html'
     form_class = TempSlotForm
+    group_required = ['Organization']
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -1455,10 +1509,11 @@ class TempSlotCreateView(CreateView):
         return context
 
 @method_decorator(login_required, name='dispatch')
-class UnavailableSlotListView(ListView):
+class UnavailableSlotListView(GroupAccessMixin,ListView):
     model = UnavailableSlot
     template_name = 'unavailable-slot-list.html'
     context_object_name = 'tempSlots'
+    group_required = ['Organization']
 
     def get_queryset(self):
         pk = self.kwargs.get('pk')
@@ -1487,9 +1542,10 @@ class UnavailableSlotListView(ListView):
             print("Error: No slot ID provided")
 
 @method_decorator(login_required, name='dispatch')
-class UnavailableSlotCreateView(CreateView):
+class UnavailableSlotCreateView(GroupAccessMixin,CreateView):
     form_class = unavailableSlotForm
     template_name = 'add-unavailable-slot.html'
+    group_required = ['Organization']
 
     def clean_date(self):
         date = self.cleaned_data.get('date')
@@ -1536,6 +1592,7 @@ class UnavailableSlotCreateView(CreateView):
         return context
 
 @login_required
+@group_required('Organization')
 @ensure_csrf_cookie
 def main_view(request, location_pk=None):
     context = {}
@@ -1551,6 +1608,7 @@ def main_view(request, location_pk=None):
 
 
 @login_required
+@group_required('Organization')
 def update_working_days(request, location_pk):
     queryset = OrganizationLocationWorkingDays.objects.filter(organization_location_id=location_pk)
 
@@ -1601,6 +1659,7 @@ def update_working_days(request, location_pk):
     return render(request, 'update_workingdays.html', {'formset': formset, 'locationpk': location_pk})
 
 @login_required
+@group_required('Organization')
 def update_amenities(request, location_pk):
     amenities = OrganizationLocationAmenities.objects.filter(organization_location_id=location_pk).first()
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
