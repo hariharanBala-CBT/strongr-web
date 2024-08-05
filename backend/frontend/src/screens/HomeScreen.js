@@ -83,6 +83,14 @@ function HomeScreen(history) {
   }, [t]);
 
   useEffect(() => {
+    const userName = localStorage.getItem("userName");
+    if (userName) {
+      toast.success(`Login successful. Welcome back, ${userName}!`, { duration: 4000 });
+      localStorage.removeItem("userName");
+    }
+  }, [t]);
+
+  useEffect(() => {
     dispatch(listGames());
     dispatch(listAreas());
     dispatch(getTopRatedClubs());
