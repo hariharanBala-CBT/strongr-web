@@ -40,7 +40,7 @@ function LoginScreen() {
 
   useEffect(() => {
     if (userInfo) {
-      localStorage.setItem("userName", userInfo.name);
+      localStorage.setItem("userName", userInfo.first_name);
       navigate(-1);
       setErrorMessage("");
     } else if (!userInfo && LoginError && password.length > 0) {

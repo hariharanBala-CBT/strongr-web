@@ -85,7 +85,7 @@ function HomeScreen(history) {
   useEffect(() => {
     const userName = localStorage.getItem("userName");
     if (userName) {
-      toast.success(`Welcome back!`, { duration: 4000 });
+      toast.success(`You have successfully login. Welcome back!, ${userName}`, { duration: 4000 });
       localStorage.removeItem("userName");
     }
   }, [t]);
