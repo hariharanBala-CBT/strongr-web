@@ -1202,11 +1202,11 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'password_reset.html'
     email_template_name = 'password_reset_email.html'
     subject_template_name = 'password_reset_subject.txt'
-    success_message = "We've emailed you instructions for setting your password, " \
-                      "if an account exists with the email you entered. You should receive them shortly." \
-                      " If you don't receive an email, " \
-                      "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('login')
+    form_class = CustomPasswordResetForm
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
 class CreateMultipleSlotsView(GroupAccessMixin, View):
     group_required = ['Organization']
@@ -1649,6 +1649,12 @@ def update_working_days(request, location_pk):
 
             if times_empty:
                 return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_time_failure')})
+            
+            if any(form.cleaned_data.get('work_from_time') == form.cleaned_data.get('work_to_time') for form in formset):
+                return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_start_time_failure')})
+            
+            if any(form.cleaned_data.get('work_to_time') < form.cleaned_data.get('work_from_time') for form in formset):
+                return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_failure')})
 
             # Save instances if validation is successful
             for instance in instances:
