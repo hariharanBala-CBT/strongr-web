@@ -253,7 +253,9 @@ class SlotUpdateForm(forms.ModelForm):
         court = cleaned_data.get("court")
         days = cleaned_data.get("days")
 
-        if Slot.objects.filter(start_time=start_time, end_time=end_time, court=court, days=days).exists():
+        existing_entries = Slot.objects.filter(start_time=start_time, end_time=end_time, court=court, days=days).exclude(pk=self.instance.pk)
+
+        if existing_entries.exists():
             raise forms.ValidationError("A slot with the same details already exists.")
 
         time_diff_seconds = (end_time.hour * 3600 + end_time.minute * 60 + end_time.second) - \
