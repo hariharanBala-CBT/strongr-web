@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { MapPin } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { LinkContainer } from "react-router-bootstrap";
 import venueImage from "../images/owner-venue2.jpg";
 import { useHomeContext } from "../context/HomeContext";
 
@@ -35,12 +34,6 @@ import {
 } from "../constants/constants";
 
 import "../css/bookinginfoscreen.css";
-
-const linkStyle = {
-  textDecoration: "underline",
-  color: "purple",
-  cursor: "pointer",
-};
 
 const boxStyle = {
   position: "absolute",
@@ -338,7 +331,7 @@ function BookingInfoScreen() {
       setLoader(false);
       setIsLogin(false);
     }
-  }, [isLogin, LoginError]);
+  }, [isLogin, LoginError, t]);
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
@@ -346,7 +339,7 @@ function BookingInfoScreen() {
       setOpenForm(false);
       setIsLogin(false);
     }
-  }, [isLogin, userLoginSuccess]);
+  }, [isLogin, t, userLoginSuccess]);
 
   
   useEffect(() => {
@@ -355,7 +348,7 @@ function BookingInfoScreen() {
     if (slots?.length !== 0 && additionalSlots?.length !== 0 && courtId) {
       dispatch(getNearestSlot(courtId, date));
     }
-  }, [additionalSlots, courts, courtName, date, dispatch, slots]);
+  }, [additionalSlots, courts, courtName, date, dispatch, slots, t]);
 
   return (
     <div>
@@ -370,14 +363,14 @@ function BookingInfoScreen() {
               <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to="/clubs">
-                <a>{t("venueList")}</a>
-              </LinkContainer>
+              <Link to="/clubs">
+                {t("venueList")}
+              </Link>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to={`/club/${id}`}>
-                <a>{t("venueDetails")}</a>
-              </LinkContainer>
+              <Link to={`/club/${id}`}>
+                {t("venueDetails")}
+              </Link>
             </li>
             <li>{t("bookACourt")}</li>
           </ul>
@@ -396,13 +389,13 @@ function BookingInfoScreen() {
               <div className="row d-flex align-items-center justify-content-center">
                 <div className="col-12 col-sm-12 col-md-12 col-lg-6">
                   <div className="d-sm-flex justify-content-start align-items-center">
-                    <a>
+                    <div>
                       <img
                         className="corner-radius-10"
                         src={venueImage}
                         alt="Venue"
                       />
-                    </a>
+                    </div>
                     <div className="info">
                     {clubLocation?.rating ? (
                       <div className="d-flex align-items-center">

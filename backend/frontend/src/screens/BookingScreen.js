@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import { MapPin } from "react-feather";
 import { MdSportsEsports } from "react-icons/md";
 import { useTranslation } from "react-i18next";
-import { LinkContainer } from "react-router-bootstrap";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -21,7 +20,6 @@ import "../css/bookingscreen.css";
 function BookingScreen() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { t } = useTranslation("bookingscreen");
 
   const { bookingDetails } = useSelector((state) => state.bookingDetails);
@@ -90,24 +88,24 @@ function BookingScreen() {
               <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to="/clubs">
-                <a>{t("venueList")}</a>
-              </LinkContainer>
+              <Link to="/clubs">
+                {t("venueList")}
+              </Link>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to={`/club/${id}`}>
-                <a>{t("venueDetails")}</a>
-              </LinkContainer>
+              <Link to={`/club/${id}`}>
+                {t("venueDetails")}
+              </Link>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to={`/bookinginfo/${id}`}>
-                <a>{t("bookACourt")}</a>
-              </LinkContainer>
+              <Link to={`/bookinginfo/${id}`}>
+                {t("bookACourt")}
+              </Link>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to={"/checkout"}>
-                <a>{t("checkout")}</a>
-              </LinkContainer>
+              <Link to={"/checkout"}>
+                {t("checkout")}
+              </Link>
             </li>
             <li>{t("bookedCourt")}</li>
           </ul>
