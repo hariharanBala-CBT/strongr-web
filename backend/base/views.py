@@ -1196,7 +1196,6 @@ class ChangePasswordView(GroupAccessMixin,PasswordChangeView):
 
     def form_invalid(self, form):
         error_messages = ''.join([f'{error}' for error in form.errors.values()])
-        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
         return super().form_invalid(form)
 
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
