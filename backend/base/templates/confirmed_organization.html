@@ -82,7 +82,7 @@
         </div>
       </nav>
     </div>
-    
+
     <div id="layoutSidenav_content">
       <main>
         <div class="container-fluid px-4">
@@ -124,14 +124,14 @@
               </table>
             </div>
           </div>
-          <a href="{% url 'tenantuser_page' %}" class="btn btn-primary mt-4" data-toggle="tooltip" title="Back" style="border-radius: 50%; height: max-content; width: max-content; margin-left: auto; margin-right: auto; display: block;">
+          <a href="{% url 'tenantuser_page' %}" class="btn btn-primary mt-4" data-toggle="tooltip" title="Back">
             <i class="fas fa-arrow-left"></i>
           </a>
         </div>
       </main>
       <footer class="py-4 bg-light mt-auto">
         <div class="container-fluid px-4 d-flex align-items-center justify-content-center">
-          <div class="text-muted">Copyright &copy; Your Website 2023</div>
+          <div class="text-muted">Copyright &copy; Your Website 2024</div>
         </div>
       </footer>
     </div>
@@ -143,15 +143,15 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       // Initialize Simple-DataTables
-      const datatablesSimple = document.getElementById("datatablesSimple");
-      if (datatablesSimple) {
-        new simpleDatatables.DataTable(datatablesSimple);
+      const $datatablesSimple = document.getElementById("datatablesSimple");
+      if ($datatablesSimple) {
+        new simpleDatatables.DataTable($datatablesSimple);
       }
 
       // Toggle the side navigation
-      const sidebarToggle = document.querySelector("#sidebarToggle");
-      if (sidebarToggle) {
-        sidebarToggle.addEventListener("click", (event) => {
+      const $sidebarToggle = document.querySelector("#sidebarToggle");
+      if ($sidebarToggle) {
+        $sidebarToggle.addEventListener("click", (event) => {
           event.preventDefault();
           document.body.classList.toggle("sb-sidenav-toggled");
           localStorage.setItem(
