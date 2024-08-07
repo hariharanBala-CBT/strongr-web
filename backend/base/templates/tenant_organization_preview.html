@@ -18,7 +18,6 @@
 	<div class="card-body">
 		<!-- Organization Details -->
 		<div class="row">
-
 		<div class="card mb-4">
 			<div class="card-body">
 				<h5 class="card-title"><strong>Organization Details</strong></h5>
@@ -50,7 +49,6 @@
 							<button type="submit" class="btn btn-success me-2">Approve</button>
 						</form>
 						{% if organization.status != 1 and organization.status != 4 %}
-							<!-- Cancel Button -->
 							<button class="btn btn-danger cancel-button" id="cancelBtn">Cancel</button>
 						{% endif %}
 					</div>
@@ -77,11 +75,8 @@
 				</div>
 			</div>
 		</div>
-		
 		{% if organization.status == 1 %}
-			<!-- Locations -->
 			<h3 class="mb-4">Locations</h3>
-			
 			<!-- Tab Navigation -->
 			<ul class="nav nav-tabs" id="locationTabs" role="tablist">
 				{% for location_item in all_locations %}
@@ -92,7 +87,6 @@
 					{% endif %}
 				{% endfor %}
 			</ul>
-			
 			<!-- Tab Content -->
 			<div class="tab-content" id="locationTabsContent">
 				{% for location_item in all_locations %}
@@ -116,15 +110,11 @@
 												<p>Please Contact the Service Provider.</p>
 											{% endif %}
 										</li>
-
-
-										<!-- Location Address -->
 										<ul><strong>Address:</strong><br>
 											{{ location_item.location.address_line_1 }}<br>
 											{{ location_item.location.address_line_2 }}<br>
 											{{ location_item.location.area }}-{{ location_item.location.pincode }}
 										</ul>
-										<!-- Games -->
 										<h5>Games</h5>
 										<ul>
 											{% for game in location_item.games %}
@@ -135,7 +125,6 @@
 												</ul>
 											{% endfor %}
 										</ul>
-										<!-- Amenities -->
 										<h5><strong>Amenities</strong></h5>
 										<ul class="checkbox-list">
 											{% for amenity in location_item.amenities %}
@@ -144,47 +133,38 @@
 													<input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled>
 													<span></span> Parking
 												</label><br>
-												
 												<label class="checkbox-custom">
 													<input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled>
 													<span></span> Restroom
 												</label><br>
-												
 												<label class="checkbox-custom">
 													<input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled>
 													<span></span> Changeroom
 												</label><br>
-												
 												<label class="checkbox-custom">
 													<input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled>
 													<span></span> Power Backup
 												</label><br>
-												
 												<label class="checkbox-custom">
 													<input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled>
 													<span></span> Beverage
 												</label><br>
-												
 												<label class="checkbox-custom">
 													<input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled>
 													<span></span> Coaching
 												</label><br>
-												
 												<label>
 													Description: {{ amenity.description }}
 												</label>
 											</li>
 											{% endfor %}
 										</ul>
-
-										<!-- Working Times -->
 										<h5><strong>Working Times</strong></h5>
 										<ul>
 											{% for workingtime in location_item.workingtimes %}
 											<li><div class="label">{{ workingtime.get_days_display }}</div>: {{ workingtime.work_from_time }} - {{ workingtime.work_to_time }}</li>
 											{% endfor %}
 										</ul>
-										<!-- Courts -->
 										<h5><strong>Courts</strong></h5>
 										<ul>
 											{% for court in location_item.courts %}
@@ -193,7 +173,6 @@
 												<li>No Courts Addded</li>
 											{% endfor %}
 										</ul>
-										<!-- Images -->
 										<h5><strong>Images</strong></h5>
 										<ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
 											{% for image in location_item.images %}
@@ -202,7 +181,6 @@
 												<li>No images Addded</li>
 											{% endfor %}
 										</ul>
-										<!-- Slots -->
 										<h5><strong>Slots</strong></h5>
 										<ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
 											{% if location_item.slots %}
@@ -219,7 +197,6 @@
 													<button type="submit" class="btn btn-success me-2">Approve</button>
 												</form>
 												{% if location_item.location.status != 4 %}
-													<!-- Cancel Button -->
 													<button class="btn btn-danger" style="border-radius: 15px;" data-bs-toggle="modal" data-bs-target="#cancelModal2">Cancel</button>
 												{% endif %}
 													<!-- Modal -->
@@ -245,7 +222,6 @@
 													</div>
 											</div>
 											{% endif %}
-											
 										</div>   
 									</div>
 								</div>
@@ -253,20 +229,13 @@
 						</div>                                        
 					{% endif %}     
 				{% endfor %}
-
 			</div>
 		{% elif organization.status != 1 %}
 			<p style="message-margin">Locations data appear only if the organization submission and tenant is approved !!!</p>
 		{% endif %}
 	</div>
 </div>
-
-
-
-<!-- Organization Status Buttons -->
 <div class="text-center mb-4">
-	
-	<!-- Back Button -->
 	<button class="btn btn-secondary" data-toggle="tooltip"
 	title="go back" onclick="history.back();"><i class="fa-solid fa-arrow-left-long"></i></button>
 </div>
