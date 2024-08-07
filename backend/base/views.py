@@ -1240,18 +1240,15 @@ class ChangeOrganizationLocationStatusView(View):
             return redirect('error')
 
 @method_decorator(login_required, name='dispatch')
-class ChangePasswordView(GroupAccessMixin,PasswordChangeView):
+class ChangePasswordView(GroupAccessMixin, PasswordChangeView):
     template_name = 'change_password.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('password_change_done')
     group_required = ['Organization']
 
     def form_valid(self, form):
         messages.success(self.request, SUCCESS_MESSAGES.get('change_password'))
+        logout(self.request)
         return super().form_valid(form)
-
-    def form_invalid(self, form):
-        error_messages = ''.join([f'{error}' for error in form.errors.values()])
-        return super().form_invalid(form)
 
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'password_reset.html'
@@ -1704,10 +1701,10 @@ def update_working_days(request, location_pk):
 
             if times_empty:
                 return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_time_failure')})
-            
+
             if any(form.cleaned_data.get('work_from_time') == form.cleaned_data.get('work_to_time') for form in formset):
                 return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_start_time_failure')})
-            
+
             if any(form.cleaned_data.get('work_to_time') < form.cleaned_data.get('work_from_time') for form in formset):
                 return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_failure')})
 
