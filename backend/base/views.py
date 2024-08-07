@@ -1047,10 +1047,33 @@ class StatusView(GroupAccessMixin, TemplateView):
 
     def get_organization_location(self, organization):
         try:
-            return OrganizationLocation.objects.filter(
-                organization=organization)
+            return OrganizationLocation.objects.filter(organization=organization)
         except OrganizationLocation.DoesNotExist:
             raise Http404("Organization Location not found")
+
+    def get_organization_games(self, location):
+        return OrganizationLocationGameType.objects.filter(organization_location=location)
+
+    def get_organization_courts(self, location):
+        return Court.objects.filter(location=location)
+
+    def get_organization_images(self, location):
+        return OrganizationGameImages.objects.filter(organization=location)
+
+    def get_organization_working_days(self, location):
+        return OrganizationLocationWorkingDays.objects.filter(organization_location=location)
+
+    def get_organization_amenities(self, location):
+        return OrganizationLocationAmenities.objects.filter(organization_location=location)
+
+    def get_organization_slots(self, location):
+        return Slot.objects.filter(location=location)
+
+    def get_additional_slots(self, location):
+        return AdditionalSlot.objects.filter(location=location)
+
+    def get_unavailable_slots(self, location):
+        return UnavailableSlot.objects.filter(location=location)
 
     def get(self, request, *args, **kwargs):
         try:
@@ -1060,11 +1083,43 @@ class StatusView(GroupAccessMixin, TemplateView):
             context = {
                 'organization': organization,
                 'locations': locations,
+                'location_details': [],
             }
+
+            for location in locations:
+                location_detail = {
+                    'location': location,
+                    'empty_message': {}
+                }
+
+                if not self.get_organization_games(location):
+                    location_detail['empty_message']['games'] = "No games found for this location."
+
+                if not self.get_organization_courts(location):
+                    location_detail['empty_message']['courts'] = "No courts found for this location."
+
+                if not self.get_organization_images(location):
+                    location_detail['empty_message']['images'] = "No images found for this location."
+
+                working_days = self.get_organization_working_days(location)
+                if not working_days or all(not wd.work_from_time or not wd.work_to_time for wd in working_days):
+                    location_detail['empty_message']['working_days'] = "No working days found for this location."
+
+                if not self.get_organization_amenities(location):
+                    location_detail['empty_message']['amenities'] = "No amenities found for this location."
+
+                slots = self.get_organization_slots(location)
+                additional_slots = self.get_additional_slots(location)
+                unavailable_slots = self.get_unavailable_slots(location)
+
+                if not slots and not additional_slots and not unavailable_slots:
+                    location_detail['empty_message']['slots'] = "No slots found for this location."
+
+                context['location_details'].append(location_detail)
+
             return render(request, self.template_name, context)
         except Http404 as e:
-            return render(request, self.template_name,
-                          {'error_message': str(e)})
+            return render(request, self.template_name, {'error_message': str(e)})
 
 #FOR TENANT USER:
 
