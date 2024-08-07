@@ -1659,8 +1659,11 @@ class UnavailableSlotCreateView(GroupAccessMixin, CreateView):
 @ensure_csrf_cookie
 def main_view(request, location_pk=None):
     context = {}
+    referrer_url = request.META.get('HTTP_REFERER')
+    print(referrer_url)
     organization_locations = OrganizationLocation.objects.filter(organization=request.user.organization)
     context['organization_locations'] = organization_locations
+    context['referrer_url'] = referrer_url
 
     if location_pk is not None:
         request.session['location_pk'] = location_pk
