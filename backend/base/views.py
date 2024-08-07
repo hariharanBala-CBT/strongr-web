@@ -1660,7 +1660,6 @@ class UnavailableSlotCreateView(GroupAccessMixin, CreateView):
 def main_view(request, location_pk=None):
     context = {}
     referrer_url = request.META.get('HTTP_REFERER')
-    print(referrer_url)
     organization_locations = OrganizationLocation.objects.filter(organization=request.user.organization)
     context['organization_locations'] = organization_locations
     context['referrer_url'] = referrer_url
