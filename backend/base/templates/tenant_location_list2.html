@@ -1,58 +1,58 @@
-{% extends 'base_tenant.html' %} {% block content %}
-   <link href="../static/tenant_location.css" rel="stylesheet" />
-                    {% if messages %}
-                        <div class="alert alert-success" role="alert" id="successAlert">
-                            {% for message in messages %}
-                                <p>{{ message }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4 mb-4" style="margin-left: 35%;">Location List</h1>
-                        <p style="margin-left: 30%;"><small>Note: Only approved organization's locations appear here</small></p>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Location List
-                            </div>
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Location</th>
-                                            <th>Area</th>
-                                            <th>Phone Number</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Location</th>
-                                            <th>Area</th>
-                                            <th>Phone Number</th>
-                                            <th>Status</th>
-                                            
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        {% for location in organizationlocations %}
-                                            {% if location.organization.status == 1 %}
-                                                {% if location.status != 2 %}
-                                                    <tr>
-                                                        <td><a href="{% url 'organization_preview' location.organization.pk %}">{{ location.organization.organization_name }}</a></td>
-                                                        <td>{{ location.address_line_1 }}</td>
-                                                        <td>{{ location.area }}</td>
-                                                        <td>{{ location.organization.phone_number }}</td>
-                                                        <td>{{ location.get_status_display }}</td>
-                                                    </tr>
-                                                {% endif %}    
-                                            {% endif %}
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+{% extends 'base_tenant.html' %} {% block content %} {% load static %} 
+<link href="{% static './css/tenant_location.css' %}" rel="stylesheet" />
+{% if messages %}
+	<div class="alert alert-success" role="alert" id="successAlert">
+		{% for message in messages %}
+			<p>{{ message }}</p>
+		{% endfor %}
+	</div>
+{% endif %}
+<div class="container-fluid px-4">
+	<h1 class="mt-4 mb-4 centered-title">Location List</h1>
+	<p class="note-text"><small>Note: Only approved organization's locations appear here</small></p>
+	<div class="card mb-4">
+		<div class="card-header">
+			<i class="fas fa-table me-1"></i>
+			Location List
+		</div>
+		<div class="card-body">
+			<table id="datatablesSimple">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Location</th>
+						<th>Area</th>
+						<th>Phone Number</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<th>Name</th>
+						<th>Location</th>
+						<th>Area</th>
+						<th>Phone Number</th>
+						<th>Status</th>
+						
+					</tr>
+				</tfoot>
+				<tbody>
+					{% for location in organizationlocations %}
+						{% if location.organization.status == 1 %}
+							{% if location.status != 2 %}
+								<tr>
+									<td><a href="{% url 'organization_preview' location.organization.pk %}">{{ location.organization.organization_name }}</a></td>
+									<td>{{ location.address_line_1 }}</td>
+									<td>{{ location.area }}</td>
+									<td>{{ location.organization.phone_number }}</td>
+									<td>{{ location.get_status_display }}</td>
+								</tr>
+							{% endif %}    
+						{% endif %}
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
 {% endblock %}

@@ -1,68 +1,68 @@
 {%  extends 'base_tenant.html' %} {% block content %}    
 {% load static %}
-        <link href="{% static './css/organization-list.css' %}" rel="stylesheet"/>
-                    {% if messages %}
-                        <div class="alert alert-success" role="alert" id="successAlert">
-                            {% for message in messages %}
-                                <p>{{ message }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4 mb-4" style="margin-left: 35%;">Organization List</h1>
-                    
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Organization List
-                            </div>
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Phone Number</th>
-                                            <th>Status</th>
-                                            <th>Approve/Reject</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Phone Number</th>
-                                            <th>Status</th>
-                                            <th>Approve/Reject</th>
-                                            
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        {% for organization in organizations %}
-                                            {% if organization.status != 2 %}
-                                                <tr>
-                                                    <td><a href="{% url 'organization_preview' organization.pk %}">{{ organization.organization_name }}</a></td>
-                                                    <td>{{ organization.phone_number }}</td>
-                                                    <td>{{ organization.get_status_display }}</td>
-                                                    <td> <div>
-                                                            {% if organization.status != 1 and organization.status != 4 %}
-                                                                <div class="btn-group" role="group">
-                                                                    <form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
-                                                                    {% csrf_token %}
-                                                                        <button type="submit" class="btn btn-success me-2">Accept</i></button>
-                                                                    </form>
-                                                                    <form method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
-                                                                        {% csrf_token %}
-                                                                        <button type="submit" class="btn btn-danger">Reject</i></button>
-                                                                    </form>
-                                                                </div>
-                                                            {% endif %}
-                                                            </div>
-                                                    </td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+<link href="{% static './css/organization-list.css' %}" rel="stylesheet" />
+{% if messages %}
+	<div class="alert alert-success" role="alert" id="successAlert">
+		{% for message in messages %}
+			<p>{{ message }}</p>
+		{% endfor %}
+	</div>
+{% endif %}
+<div class="container-fluid px-4">
+	<h1 class="mt-4 mb-4 organization-list-title">Organization List</h1>
+
+	<div class="card mb-4">
+		<div class="card-header">
+			<i class="fas fa-table me-1"></i>
+			Organization List
+		</div>
+		<div class="card-body">
+			<table id="datatablesSimple">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Phone Number</th>
+						<th>Status</th>
+						<th>Approve/Reject</th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<th>Name</th>
+						<th>Phone Number</th>
+						<th>Status</th>
+						<th>Approve/Reject</th>
+						
+					</tr>
+				</tfoot>
+				<tbody>
+					{% for organization in organizations %}
+						{% if organization.status != 2 %}
+							<tr>
+								<td><a href="{% url 'organization_preview' organization.pk %}">{{ organization.organization_name }}</a></td>
+								<td>{{ organization.phone_number }}</td>
+								<td>{{ organization.get_status_display }}</td>
+								<td> <div>
+										{% if organization.status != 1 and organization.status != 4 %}
+											<div class="btn-group" role="group">
+												<form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
+												{% csrf_token %}
+													<button type="submit" class="btn btn-success me-2">Accept</i></button>
+												</form>
+												<form method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
+													{% csrf_token %}
+													<button type="submit" class="btn btn-danger">Reject</i></button>
+												</form>
+											</div>
+										{% endif %}
+										</div>
+								</td>
+							</tr>
+						{% endif %}
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
 {% endblock %}

@@ -13,3 +13,38 @@
     margin: 0;
     }
 }
+
+.booking-list-title {
+    margin-left: 40%;
+}
+
+.pending-org-title {
+    margin-left: 30%;
+}
+
+.back-btn {
+    border-radius: 50%;
+    height: max-content;
+    width: max-content;
+    margin-left: 50%;
+}
+
+.location-title {
+    margin-left: 35%;
+}
+
+.centered-title {
+    margin-left: 35%;
+}
+
+.note-text {
+    margin-left: 30%;
+}
+
+.buttons {
+    margin-left: 40%;
+}
+
+.dashboard-title {
+    margin-left: 40%;
+}

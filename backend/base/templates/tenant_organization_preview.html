@@ -2,280 +2,272 @@
 {% load static %}{% load url_filters %}
 <link href="{% static 'styles.css' %}" rel="stylesheet" />
 <link href="{% static './css/tenant_orgprev.css' %}" rel="stylesheet" />
-                {% if messages %}
-                        <div class="alert alert-success" role="alert" id="successAlert">
-                            {% for message in messages %}
-                                <p>{{ message }}</p>
-                            {% endfor %}
-                        </div>
-                {% endif %}
-                <h1 class="mt-1 mb-4" style="margin-left: 35%;">Organization Details</h1>
-                <!-- Organization Card -->
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="m-0">{{ organization.organization_name }}</h2>
-                    </div>
-                    <div class="card-body">
-                        <!-- Organization Details -->
-                        <div class="row">
-                
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong>Organization Details</strong></h5>
-                                <ul>
-                                    <li><div class="label">Name</div>:&nbsp; {{ organization.organization_name }}</li>
-                                    <li><div class="label">Email</div>:&nbsp; {{ organization.user.email }}</li>
-                                    <li><div class="label">Phone</div>:&nbsp; {{ organization.phone_number }}</li>
-                                    <li><div class="label">Alternate Phone</div>:  {{ organization.alt_number }}</li>
-                                    <li><div class="label">Description</div>:&nbsp; {{ organization.description }}</li>
-                                    <li><div class="label">Status</div>:&nbsp; 
-                                        {% if organization.status == 1 %}
-                                            <span class="status-approved"style="margin: left 10px;" >Approved</span>
-                                        {% elif organization.status == 2 %}
-                                            <span class="status-pending">Pending</span>
-                                        {% elif organization.status == 3 %}
-                                            <span class="status-in-progress">In Progress</span>
-                                        {% elif organization.status == 4 %}
-                                            <span class="status-cancelled">Cancelled</span>
-                                        {% else %}
-                                            <span class="status-unknown">Unknown</span>
-                                            <p>Please Contact the Service Provider.</p>
-                                        {% endif %}
-                                    </li>
-                                </ul>
-                                {% if organization.status == 3 %}
-                                    <div class="btn-group" role="group">
-                                        <form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-success me-2">Approve</button>
-                                        </form>
-                                        <!-- <form method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Reject</button>
-                                        </form> -->
-                                        {% if organization.status != 1 and organization.status != 4 %}
-                                            <!-- Cancel Button -->
-                                            <button class="btn btn-danger" style="border-radius: 15px;;" id="cancelBtn">Cancel</button>
-                                        {% endif %}
-                                    </div>
-                                 {% endif %}
-                            </div>
-                        </div>
-                        <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="cancelModalLabel">Reason for Cancellation</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="cancelForm" method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
-                                            {% csrf_token %}
-                                            <div class="mb-3">
-                                                <label for="reason" class="form-label">Please provide a reason for cancellation:</label>
-                                                <textarea class="form-control" id="reason" name="reason_for_cancellation" rows="3" required aria-describedby="cancelForm"></textarea>
-                                            </div>
-                                            <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        {% if organization.status == 1 %}
-                            <!-- Locations -->
-                            <h3 class="mb-4">Locations</h3>
-                            
-                            <!-- Tab Navigation -->
-                            <ul class="nav nav-tabs" id="locationTabs" role="tablist">
-                                {% for location_item in all_locations %}
-                                    {% if location_item.location.status != 2 %}
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" type="button" role="tab" aria-controls="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">{{ location_item.location.address_line_1 }}</button>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                            
-                            <!-- Tab Content -->
-                            <div class="tab-content" id="locationTabsContent">
-                                {% for location_item in all_locations %}
-                                    {% if location_item.location.status != 2 %}
-                                        <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}-tab">
-                                            <div class="row">
-                                                <div class="card mb-4">
-                                                    <div class="card-body">
-                                                        <li style="list-style: none;">
-                                                            <div class="label">Status</div>:&nbsp; 
-                                                            {% if location_item.location.status == 1 %}
-                                                                <span class="status-approved">Approved</span>
-                                                            {% elif location_item.location.status == 2 %}
-                                                                <span class="status-pending">Pending</span>
-                                                            {% elif location_item.location.status == 3 %}
-                                                                <span class="status-in-progress">In Progress</span>
-                                                            {% elif location_item.location.status == 4 %}
-                                                                <span class="status-cancelled">Cancelled</span>
-                                                            {% else %}
-                                                                <span class="status-unknown">Unknown</span>
-                                                                <p>Please Contact the Service Provider.</p>
-                                                            {% endif %}
-                                                        </li>
+{% if messages %}
+		<div class="alert alert-success" role="alert" id="successAlert">
+			{% for message in messages %}
+				<p>{{ message }}</p>
+			{% endfor %}
+		</div>
+{% endif %}
+<h1 class="mt-1 mb-4 organization-details-title">Organization Details</h1>
+<!-- Organization Card -->
+<div class="card mb-4">
+	<div class="card-header bg-primary text-white">
+		<h2 class="m-0">{{ organization.organization_name }}</h2>
+	</div>
+	<div class="card-body">
+		<!-- Organization Details -->
+		<div class="row">
+
+		<div class="card mb-4">
+			<div class="card-body">
+				<h5 class="card-title"><strong>Organization Details</strong></h5>
+				<ul>
+					<li><div class="label">Name</div>:&nbsp; {{ organization.organization_name }}</li>
+					<li><div class="label">Email</div>:&nbsp; {{ organization.user.email }}</li>
+					<li><div class="label">Phone</div>:&nbsp; {{ organization.phone_number }}</li>
+					<li><div class="label">Alternate Phone</div>:  {{ organization.alt_number }}</li>
+					<li><div class="label">Description</div>:&nbsp; {{ organization.description }}</li>
+					<li><div class="label">Status</div>:&nbsp; 
+						{% if organization.status == 1 %}
+							<span class="status-approved" >Approved</span>
+						{% elif organization.status == 2 %}
+							<span class="status-pending">Pending</span>
+						{% elif organization.status == 3 %}
+							<span class="status-in-progress">In Progress</span>
+						{% elif organization.status == 4 %}
+							<span class="status-cancelled">Cancelled</span>
+						{% else %}
+							<span class="status-unknown">Unknown</span>
+							<p>Please Contact the Service Provider.</p>
+						{% endif %}
+					</li>
+				</ul>
+				{% if organization.status == 3 %}
+					<div class="btn-group" role="group">
+						<form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
+							{% csrf_token %}
+							<button type="submit" class="btn btn-success me-2">Approve</button>
+						</form>
+						{% if organization.status != 1 and organization.status != 4 %}
+							<!-- Cancel Button -->
+							<button class="btn btn-danger cancel-button" id="cancelBtn">Cancel</button>
+						{% endif %}
+					</div>
+					{% endif %}
+			</div>
+		</div>
+		<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="cancelModalLabel">Reason for Cancellation</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="cancelForm" method="post" action="{% url 'change_organization_status' organization.pk '4' %}">
+							{% csrf_token %}
+							<div class="mb-3">
+								<label for="reason" class="form-label">Please provide a reason for cancellation:</label>
+								<textarea class="form-control" id="reason" name="reason_for_cancellation" rows="3" required aria-describedby="cancelForm"></textarea>
+							</div>
+							<button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		{% if organization.status == 1 %}
+			<!-- Locations -->
+			<h3 class="mb-4">Locations</h3>
+			
+			<!-- Tab Navigation -->
+			<ul class="nav nav-tabs" id="locationTabs" role="tablist">
+				{% for location_item in all_locations %}
+					{% if location_item.location.status != 2 %}
+						<li class="nav-item" role="presentation">
+							<button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" type="button" role="tab" aria-controls="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">{{ location_item.location.address_line_1 }}</button>
+						</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+			
+			<!-- Tab Content -->
+			<div class="tab-content" id="locationTabsContent">
+				{% for location_item in all_locations %}
+					{% if location_item.location.status != 2 %}
+						<div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}-tab">
+							<div class="row">
+								<div class="card mb-4">
+									<div class="card-body">
+										<li style="list-style: none;">
+											<div class="label">Status</div>:&nbsp; 
+											{% if location_item.location.status == 1 %}
+												<span class="status-approved">Approved</span>
+											{% elif location_item.location.status == 2 %}
+												<span class="status-pending">Pending</span>
+											{% elif location_item.location.status == 3 %}
+												<span class="status-in-progress">In Progress</span>
+											{% elif location_item.location.status == 4 %}
+												<span class="status-cancelled">Cancelled</span>
+											{% else %}
+												<span class="status-unknown">Unknown</span>
+												<p>Please Contact the Service Provider.</p>
+											{% endif %}
+										</li>
 
 
-                                                        <!-- Location Address -->
-                                                        <ul><strong>Address:</strong><br>
-                                                            {{ location_item.location.address_line_1 }}<br>
-                                                            {{ location_item.location.address_line_2 }}<br>
-                                                            {{ location_item.location.area }}-{{ location_item.location.pincode }}
-                                                        </ul>
-                                                        <!-- Games -->
-                                                        <h5>Games</h5>
-                                                        <ul>
-                                                            {% for game in location_item.games %}
-                                                                <ul>
-                                                                    <strong>{{ game.game_type }}</strong>
-                                                                    <li><div class="label">Pricing</div>: {{ game.pricing }}</li>
-                                                                    <li><div class="label">Description</div>: {{ game.description }}</li>
-                                                                </ul>
-                                                            {% endfor %}
-                                                        </ul>
-                                                        <!-- Amenities -->
-                                                        <h5><strong>Amenities</strong></h5>
-                                                        <ul class="checkbox-list">
-                                                            {% for amenity in location_item.amenities %}
-                                                            <li>
-                                                                <label class="checkbox-custom">
-                                                                    <input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled>
-                                                                    <span></span> Parking
-                                                                </label><br>
-                                                                
-                                                                <label class="checkbox-custom">
-                                                                    <input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled>
-                                                                    <span></span> Restroom
-                                                                </label><br>
-                                                                
-                                                                <label class="checkbox-custom">
-                                                                    <input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled>
-                                                                    <span></span> Changeroom
-                                                                </label><br>
-                                                                
-                                                                <label class="checkbox-custom">
-                                                                    <input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled>
-                                                                    <span></span> Power Backup
-                                                                </label><br>
-                                                                
-                                                                <label class="checkbox-custom">
-                                                                    <input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled>
-                                                                    <span></span> Beverage
-                                                                </label><br>
-                                                                
-                                                                <label class="checkbox-custom">
-                                                                    <input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled>
-                                                                    <span></span> Coaching
-                                                                </label><br>
-                                                                
-                                                                <label>
-                                                                    Description: {{ amenity.description }}
-                                                                </label>
-                                                            </li>
-                                                            {% endfor %}
-                                                        </ul>
+										<!-- Location Address -->
+										<ul><strong>Address:</strong><br>
+											{{ location_item.location.address_line_1 }}<br>
+											{{ location_item.location.address_line_2 }}<br>
+											{{ location_item.location.area }}-{{ location_item.location.pincode }}
+										</ul>
+										<!-- Games -->
+										<h5>Games</h5>
+										<ul>
+											{% for game in location_item.games %}
+												<ul>
+													<strong>{{ game.game_type }}</strong>
+													<li><div class="label">Pricing</div>: {{ game.pricing }}</li>
+													<li><div class="label">Description</div>: {{ game.description }}</li>
+												</ul>
+											{% endfor %}
+										</ul>
+										<!-- Amenities -->
+										<h5><strong>Amenities</strong></h5>
+										<ul class="checkbox-list">
+											{% for amenity in location_item.amenities %}
+											<li>
+												<label class="checkbox-custom">
+													<input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled>
+													<span></span> Parking
+												</label><br>
+												
+												<label class="checkbox-custom">
+													<input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled>
+													<span></span> Restroom
+												</label><br>
+												
+												<label class="checkbox-custom">
+													<input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled>
+													<span></span> Changeroom
+												</label><br>
+												
+												<label class="checkbox-custom">
+													<input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled>
+													<span></span> Power Backup
+												</label><br>
+												
+												<label class="checkbox-custom">
+													<input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled>
+													<span></span> Beverage
+												</label><br>
+												
+												<label class="checkbox-custom">
+													<input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled>
+													<span></span> Coaching
+												</label><br>
+												
+												<label>
+													Description: {{ amenity.description }}
+												</label>
+											</li>
+											{% endfor %}
+										</ul>
 
-                                                        <!-- Working Times -->
-                                                        <h5><strong>Working Times</strong></h5>
-                                                        <ul>
-                                                            {% for workingtime in location_item.workingtimes %}
-                                                            <li><div class="label">{{ workingtime.get_days_display }}</div>: {{ workingtime.work_from_time }} - {{ workingtime.work_to_time }}</li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                        <!-- Courts -->
-                                                        <h5><strong>Courts</strong></h5>
-                                                        <ul>
-                                                            {% for court in location_item.courts %}
-                                                                <li>{{ court.name }}</li>
-                                                            {% empty %}
-                                                                <li>No Courts Addded</li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                        <!-- Images -->
-                                                        <h5><strong>Images</strong></h5>
-                                                        <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
-                                                            {% for image in location_item.images %}
-                                                                <img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
-                                                            {% empty %}
-                                                                <li>No images Addded</li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                        <!-- Slots -->
-                                                        <h5><strong>Slots</strong></h5>
-                                                        <ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
-                                                            {% if location_item.slots %}
-                                                                <li><a href="{% url 'tenant-slot-list' locationpk=location_item.location.pk %}">Slot list</a></li>
-                                                            {% else %}
-                                                                <li>No Slot Added</li>
-                                                            {% endif %}
-                                                        </ul>
-                                                        <div class="text-center mb-4">
-                                                            {% if location_item.location.status == 3 %}
-                                                            <div class="btn-group" role="group">
-                                                                <form method="post" action="{% url 'change_location_status' location_item.location.id '1' %}">
-                                                                    {% csrf_token %}
-                                                                    <button type="submit" class="btn btn-success me-2">Approve</button>
-                                                                </form>
-                                                                <!-- <form method="post" action="{% url 'change_location_status' location_item.location.id '4' %}">
-                                                                    {% csrf_token %}
-                                                                    <button type="submit" class="btn btn-danger">Reject</button>
-                                                                </form> -->
-                                                                {% if location_item.location.status != 4 %}
-                                                                    <!-- Cancel Button -->
-                                                                    <button class="btn btn-danger" style="border-radius: 15px;" data-bs-toggle="modal" data-bs-target="#cancelModal2">Cancel</button>
-                                                                {% endif %}
-                                                                    <!-- Modal -->
-                                                                    <div class="modal fade" id="cancelModal2" tabindex="-1" aria-labelledby="cancelModalLabel2" aria-hidden="true">
-                                                                        <div class="modal-dialog">
-                                                                            <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                    <h5 class="modal-title" id="cancelModalLabel2">Reason for Cancellation</h5>
-                                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                                </div>
-                                                                                <div class="modal-body">
-                                                                                    <form id="cancelForm2" method="post" action="{% url 'change_location_status' location_item.location.id '4' %}">
-                                                                                        {% csrf_token %}
-                                                                                        <div class="mb-3">
-                                                                                            <label for="reason" class="form-label">Please provide a reason for cancellation:</label>
-                                                                                            <textarea class="form-control" id="reason" name="reason_for_cancellation" rows="3" required aria-describedby="cancelForm2"></textarea>
-                                                                                        </div>
-                                                                                        <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
-                                                                                    </form>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                            </div>
-                                                            {% endif %}
-                                                            
-                                                        </div>   
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>                                        
-                                    {% endif %}     
-                                {% endfor %}
-                
-                            </div>
-                        {% elif organization.status != 1 %}
-                            <p style="margin-left: 350px;;">Locations data appear only if the organization is approved !!!</p>
-                        {% endif %}
-                    </div>
-                </div>
+										<!-- Working Times -->
+										<h5><strong>Working Times</strong></h5>
+										<ul>
+											{% for workingtime in location_item.workingtimes %}
+											<li><div class="label">{{ workingtime.get_days_display }}</div>: {{ workingtime.work_from_time }} - {{ workingtime.work_to_time }}</li>
+											{% endfor %}
+										</ul>
+										<!-- Courts -->
+										<h5><strong>Courts</strong></h5>
+										<ul>
+											{% for court in location_item.courts %}
+												<li>{{ court.name }}</li>
+											{% empty %}
+												<li>No Courts Addded</li>
+											{% endfor %}
+										</ul>
+										<!-- Images -->
+										<h5><strong>Images</strong></h5>
+										<ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
+											{% for image in location_item.images %}
+												<img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
+											{% empty %}
+												<li>No images Addded</li>
+											{% endfor %}
+										</ul>
+										<!-- Slots -->
+										<h5><strong>Slots</strong></h5>
+										<ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
+											{% if location_item.slots %}
+												<li><a href="{% url 'tenant-slot-list' locationpk=location_item.location.pk %}">Slot list</a></li>
+											{% else %}
+												<li>No Slot Added</li>
+											{% endif %}
+										</ul>
+										<div class="text-center mb-4">
+											{% if location_item.location.status == 3 %}
+											<div class="btn-group" role="group">
+												<form method="post" action="{% url 'change_location_status' location_item.location.id '1' %}">
+													{% csrf_token %}
+													<button type="submit" class="btn btn-success me-2">Approve</button>
+												</form>
+												{% if location_item.location.status != 4 %}
+													<!-- Cancel Button -->
+													<button class="btn btn-danger" style="border-radius: 15px;" data-bs-toggle="modal" data-bs-target="#cancelModal2">Cancel</button>
+												{% endif %}
+													<!-- Modal -->
+													<div class="modal fade" id="cancelModal2" tabindex="-1" aria-labelledby="cancelModalLabel2" aria-hidden="true">
+														<div class="modal-dialog">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h5 class="modal-title" id="cancelModalLabel2">Reason for Cancellation</h5>
+																	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+																</div>
+																<div class="modal-body">
+																	<form id="cancelForm2" method="post" action="{% url 'change_location_status' location_item.location.id '4' %}">
+																		{% csrf_token %}
+																		<div class="mb-3">
+																			<label for="reason" class="form-label">Please provide a reason for cancellation:</label>
+																			<textarea class="form-control" id="reason" name="reason_for_cancellation" rows="3" required aria-describedby="cancelForm2"></textarea>
+																		</div>
+																		<button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+																	</form>
+																</div>
+															</div>
+														</div>
+													</div>
+											</div>
+											{% endif %}
+											
+										</div>   
+									</div>
+								</div>
+							</div>
+						</div>                                        
+					{% endif %}     
+				{% endfor %}
 
-                
+			</div>
+		{% elif organization.status != 1 %}
+			<p style="message-margin">Locations data appear only if the organization submission and tenant is approved !!!</p>
+		{% endif %}
+	</div>
+</div>
 
-                <!-- Organization Status Buttons -->
-                <div class="text-center mb-4">
-                    
-                    <!-- Back Button -->
-                    <button class="btn btn-secondary" data-toggle="tooltip"
-                    title="go back" onclick="history.back();"><i class="fa-solid fa-arrow-left-long"></i></button>
-                </div>
+
+
+<!-- Organization Status Buttons -->
+<div class="text-center mb-4">
+	
+	<!-- Back Button -->
+	<button class="btn btn-secondary" data-toggle="tooltip"
+	title="go back" onclick="history.back();"><i class="fa-solid fa-arrow-left-long"></i></button>
+</div>
 {% endblock %}

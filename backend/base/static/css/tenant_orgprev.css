@@ -16,7 +16,7 @@ li {
 
 li .label {
     display: inline-block;
-    width: 100px;
+    width: 168px;
 }
 
 .navbar-brand {
@@ -231,4 +231,21 @@ ul.checkbox-list li input[type="checkbox"] {
     text-align: center;
     margin: 0;
     }
+}
+
+.organization-details-title {
+    margin-left: 35%;
+}
+
+.status-approved {
+    margin-left: 10px;
+    color: green;
+}
+
+.cancel-button {
+    border-radius: 15px;
+}
+
+.message-margin {
+    margin-left: 350px;
 }

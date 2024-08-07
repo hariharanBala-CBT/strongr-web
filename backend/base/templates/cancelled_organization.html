@@ -1,46 +1,46 @@
 {% extends 'base_tenant.html' %} {% block content %} {% load static %}
-  <link href="{% static './css/org-status-list.css' %}" rel="stylesheet" />
-        <div class="container-fluid px-4">
-          <h1 class="header1 mt-4 mb-4">Cancelled Organization List</h1>
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-table me-1"></i>
-              Organization List
-            </div>
-            <div class="card-body">
-              <table id="datatablesSimple">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Phone Number</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tfoot>
-                  <tr>
-                    <th>Name</th>
-                    <th>Phone Number</th>
-                    <th>Status</th>
-                  </tr>
-                </tfoot>
-                <tbody>
-                  {% for organization in organizations %}
-                    {% if organization.status == 4 %}
-                      <tr>
-                        <td>
-                          <a href="{% url 'organization_preview' organization.pk %}">{{ organization.organization_name }}</a>
-                        </td>
-                        <td>{{ organization.phone_number }}</td>
-                        <td>{{ organization.get_status_display }}</td>
-                      </tr>
-                    {% endif %}
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <a href="{% url 'tenantuser_page' %}" class="btn btn-primary mt-4" data-toggle="tooltip" title="Back">
-            <i class="fas fa-arrow-left"></i>
-          </a>
-        </div>
+<link href="{% static './css/org-status-list.css' %}" rel="stylesheet" />
+	<div class="container-fluid px-4">
+		<h1 class="header1 mt-4 mb-4">Cancelled Organization List</h1>
+		<div class="card mb-4">
+			<div class="card-header">
+				<i class="fas fa-table me-1"></i>
+				Organization List
+			</div>
+			<div class="card-body">
+				<table id="datatablesSimple">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Phone Number</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<th>Name</th>
+							<th>Phone Number</th>
+							<th>Status</th>
+						</tr>
+					</tfoot>
+					<tbody>
+						{% for organization in organizations %}
+							{% if organization.status == 4 %}
+								<tr>
+									<td>
+										<a href="{% url 'organization_preview' organization.pk %}">{{ organization.organization_name }}</a>
+									</td>
+									<td>{{ organization.phone_number }}</td>
+									<td>{{ organization.get_status_display }}</td>
+								</tr>
+							{% endif %}
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<a href="{% url 'tenantuser_page' %}" class="btn btn-primary mt-4" data-toggle="tooltip" title="Back">
+			<i class="fas fa-arrow-left"></i>
+		</a>
+	</div>
 {% endblock %}
