@@ -66,7 +66,7 @@ function ClubDetailScreen() {
   const dispatch = useDispatch();
   const { t } = useTranslation("clubdetailscreen");
 
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -232,7 +232,7 @@ function ClubDetailScreen() {
                   <i className="feather-phone-call">
                     <Phone />
                   </i>
-                  {clubLocation?.organization?.phone_number}
+                  {clubLocation?.phone_number}
                 </li>
                 <li>
                   <i className="feather-mail">
@@ -797,7 +797,7 @@ function ClubDetailScreen() {
                                     value={rating}
                                     onChange={(e) => setRating(e.target.value)}
                                   >
-                                    <option value="">{t("select")}...</option>
+                                    <option value="" disabled hidden>{t("select")}...</option>
                                     <option value="1">1 - {t("poor")}</option>
                                     <option value="2">2 - {t("fair")}</option>
                                     <option value="3">3 - {t("good")}</option>
