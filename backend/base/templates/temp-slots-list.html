@@ -48,7 +48,7 @@
                                     <td>{{ slot.location }}</td>
                                     <td>{{ slot.court.name }}</td>
                                     <td>{{ slot.date }}</td>
-                                    <td>{{ slot.start_time }} - {{ slot.end_time }}</td>
+                                    <td>{{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</td>
                                     <td>
                                         <form id="delform-{{ slot.id }}" action="{% url 'temp-slot-list' slot.location.id %}" method="post">
                                             {% csrf_token %}

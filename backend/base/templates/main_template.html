@@ -238,30 +238,41 @@
                     });
                 });
 
-                const initialTab = localStorage.getItem('activeTab');
-                const currentLocationPk = '{{ locationpk }}';
-                const savedLocationPk = localStorage.getItem('locationPk');
+                const referrerUrl = "{{ referrer_url }}";
+                const normalizedReferrerUrl = referrerUrl ? referrerUrl.replace(/^(https?:\/\/)[^\/]+/, '') : ''; // Normalize referrer URL by removing the host
 
-                if (savedLocationPk !== currentLocationPk) {
-                    localStorage.removeItem('activeTab');
-                    localStorage.setItem('locationPk', currentLocationPk);
+                if (normalizedReferrerUrl === '/organizationlocationlist/') {
                     const defaultTabElement = $('.tab-button').first();
                     setActiveTab(defaultTabElement);
                     $('#tab-content').load(defaultTabElement.data('url'), function () {
-                        initFormSubmission();
-                    });
-                } else if (initialTab) {
-                    const activeTabElement = $(`.tab-button[data-url='${initialTab}']`);
-                    setActiveTab(activeTabElement);
-                    $('#tab-content').load(initialTab, function () {
                         initFormSubmission();
                     });
                 } else {
-                    const defaultTabElement = $('.tab-button').first();
-                    setActiveTab(defaultTabElement);
-                    $('#tab-content').load(defaultTabElement.data('url'), function () {
-                        initFormSubmission();
-                    });
+                    const initialTab = localStorage.getItem('activeTab');
+                    const currentLocationPk = '{{ locationpk }}';
+                    const savedLocationPk = localStorage.getItem('locationPk');
+
+                    if (savedLocationPk !== currentLocationPk) {
+                        localStorage.removeItem('activeTab');
+                        localStorage.setItem('locationPk', currentLocationPk);
+                        const defaultTabElement = $('.tab-button').first();
+                        setActiveTab(defaultTabElement);
+                        $('#tab-content').load(defaultTabElement.data('url'), function () {
+                            initFormSubmission();
+                        });
+                    } else if (initialTab) {
+                        const activeTabElement = $(`.tab-button[data-url='${initialTab}']`);
+                        setActiveTab(activeTabElement);
+                        $('#tab-content').load(initialTab, function () {
+                            initFormSubmission();
+                        });
+                    } else {
+                        const defaultTabElement = $('.tab-button').first();
+                        setActiveTab(defaultTabElement);
+                        $('#tab-content').load(defaultTabElement.data('url'), function () {
+                            initFormSubmission();
+                        });
+                    }
                 }
 
                 // Function to activate tab from URL hash

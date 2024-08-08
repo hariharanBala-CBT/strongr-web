@@ -53,7 +53,7 @@
             {% for slot in slots %}
             <tr>
               <td>
-                {{ slot.court.name }} ({{ slot.get_days_display }} -- {{ slot.start_time }} - {{ slot.end_time }})
+                {{ slot.court.name }} ({{ slot.get_days_display }} -- {{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }})
               </td>
               <td>
                 <a

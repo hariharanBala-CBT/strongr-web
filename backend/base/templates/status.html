@@ -37,37 +37,57 @@
         <div class="container">
             <!-- Tab Navigation -->
             <ul class="nav nav-tabs" id="locationTabs" role="tablist">
-                {% for location in locations %}
+                {% for location_detail in location_details %}
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link {% if forloop.first %}active{% endif %}" id="locationTab{{ location.id }}" data-bs-toggle="tab" data-bs-target="#location{{ location.id }}" type="button" role="tab" aria-controls="location{{ location.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">{{ location.address_line_1 }}</button>
+                        <button class="nav-link {% if forloop.first %}active{% endif %}" id="locationTab{{ location_detail.location.id }}" data-bs-toggle="tab" data-bs-target="#location{{ location_detail.location.id }}" type="button" role="tab" aria-controls="location{{ location_detail.location.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">{{ location_detail.location.address_line_1 }}</button>
                     </li>
                 {% endfor %}
             </ul>
 
             <!-- Tab Content -->
             <div class="tab-content" id="locationTabsContent">
-                {% for location in locations %}
-                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="location{{ location.id }}" role="tabpanel" aria-labelledby="locationTab{{ location.id }}">
+                {% for location_detail in location_details %}
+                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="location{{ location_detail.location.id }}" role="tabpanel" aria-labelledby="locationTab{{ location_detail.location.id }}">
                         <div class="card">
                             <div class="card-body">
-                                <p><strong>Location:</strong> {{ location.address_line_1 }}</p>
+                                <p><strong>Location:</strong> {{ location_detail.location.address_line_1 }}</p>
                                 <p><strong>Status:</strong>
-                                {% if location.status == 1 %}
-                                    <span class="status-approved">Approved</span>
-                                {% elif location.status == 2 %}
-                                    <span class="status-pending">Pending</span>
-                                    <p>Submit the required data to proceed</p>
-                                {% elif location.status == 3 %}
-                                    <span class="status-in-progress">In Progress</span>
-                                    <p>The Process is ongoing. Service Provider will Contact you after info verification</p>
-                                {% elif location.status == 4 %}
-                                    <span class="status-cancelled">Cancelled</span>
-                                    <p><strong>Cancellation Messages:</strong>{{ location.status_description }}</p>
-                                {% else %}
-                                    <span class="status-unknown">Unknown</span>
-                                    <p>Please Contact the Service Provider.</p>
-                                {% endif %}
+                                    {% if location_detail.location.status == 1 %}
+                                        <span class="status-approved">Approved</span>
+                                    {% elif location_detail.location.status == 2 %}
+                                        <span class="status-pending">Pending</span>
+                                        <p>Submit the suggested data to proceed</p>
+                                    {% elif location_detail.location.status == 3 %}
+                                        <span class="status-in-progress">In Progress</span>
+                                        <p>The Process is ongoing. Service Provider will Contact you after info verification</p>
+                                    {% elif location_detail.location.status == 4 %}
+                                        <span class="status-cancelled">Cancelled</span>
+                                        <p><strong>Cancellation Messages:</strong>{{ location_detail.location.status_description }}</p>
+                                    {% else %}
+                                        <span class="status-unknown">Unknown</span>
+                                        <p>Please Contact the Service Provider.</p>
+                                    {% endif %}
                                 </p>
+
+                                {% for key, message in location_detail.empty_message.items %}
+                                    <p class="alert alert-warning">
+                                        {% if key == "working_days" %}
+                                            {{ message|safe }} <a href="{% url 'mainview' location_detail.location.pk %}#workingDaysTab"> Add working days</a>
+                                        {% elif key == "games" %}
+                                            {{ message|safe }} <a href="{% url 'mainview' location_detail.location.pk %}#gameTab"> Add games</a>
+                                        {% elif key == "courts" %}
+                                            {{ message|safe }} <a href="{% url 'mainview' location_detail.location.pk %}#courtTab"> Add courts</a>
+                                        {% elif key == "images" %}
+                                            {{ message|safe }} <a href="{% url 'mainview' location_detail.location.pk %}#imagesTab"> Add images</a>
+                                        {% elif key == "slots" %}
+                                            {{ message|safe }} <a href="{% url 'slot-list' location_detail.location.pk %}"> Add slots</a>
+                                        {% elif key == "amenities" %}
+                                            {{ message|safe }} <a href="{% url 'mainview' location_detail.location.pk %}#amenitiesTab"> Add amenities</a>
+                                        {% else %}
+                                            {{ message|safe }}
+                                        {% endif %}
+                                    </p>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>

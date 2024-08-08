@@ -100,6 +100,26 @@
                 console.error('Element not found');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const $alert = document.querySelector('.alert');
+            if ($alert) {
+                setTimeout(() => {
+                    $alert.style.display = 'none';
+                }, 2500);
+            }
+
+            const passwordField = document.getElementById('id_password');
+            if (passwordField) {
+                passwordField.addEventListener('input', () => {
+                    const $alert = document.querySelector('.alert');
+                    if ($alert) {
+                        $alert.style.display = 'none';
+                    }
+                });
+            }
+        });
     </script>
+
 </body>
 </html>

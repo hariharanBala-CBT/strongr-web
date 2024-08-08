@@ -1047,10 +1047,33 @@ class StatusView(GroupAccessMixin, TemplateView):
 
     def get_organization_location(self, organization):
         try:
-            return OrganizationLocation.objects.filter(
-                organization=organization)
+            return OrganizationLocation.objects.filter(organization=organization)
         except OrganizationLocation.DoesNotExist:
             raise Http404("Organization Location not found")
+
+    def get_organization_games(self, location):
+        return OrganizationLocationGameType.objects.filter(organization_location=location)
+
+    def get_organization_courts(self, location):
+        return Court.objects.filter(location=location)
+
+    def get_organization_images(self, location):
+        return OrganizationGameImages.objects.filter(organization=location)
+
+    def get_organization_working_days(self, location):
+        return OrganizationLocationWorkingDays.objects.filter(organization_location=location)
+
+    def get_organization_amenities(self, location):
+        return OrganizationLocationAmenities.objects.filter(organization_location=location)
+
+    def get_organization_slots(self, location):
+        return Slot.objects.filter(location=location)
+
+    def get_additional_slots(self, location):
+        return AdditionalSlot.objects.filter(location=location)
+
+    def get_unavailable_slots(self, location):
+        return UnavailableSlot.objects.filter(location=location)
 
     def get(self, request, *args, **kwargs):
         try:
@@ -1060,11 +1083,43 @@ class StatusView(GroupAccessMixin, TemplateView):
             context = {
                 'organization': organization,
                 'locations': locations,
+                'location_details': [],
             }
+
+            for location in locations:
+                location_detail = {
+                    'location': location,
+                    'empty_message': {}
+                }
+
+                if not self.get_organization_games(location):
+                    location_detail['empty_message']['games'] = "No games found for this location."
+
+                if not self.get_organization_courts(location):
+                    location_detail['empty_message']['courts'] = "No courts found for this location."
+
+                if not self.get_organization_images(location):
+                    location_detail['empty_message']['images'] = "No images found for this location."
+
+                working_days = self.get_organization_working_days(location)
+                if not working_days or all(not wd.work_from_time or not wd.work_to_time for wd in working_days):
+                    location_detail['empty_message']['working_days'] = "No working days found for this location."
+
+                if not self.get_organization_amenities(location):
+                    location_detail['empty_message']['amenities'] = "No amenities found for this location."
+
+                slots = self.get_organization_slots(location)
+                additional_slots = self.get_additional_slots(location)
+                unavailable_slots = self.get_unavailable_slots(location)
+
+                if not slots and not additional_slots and not unavailable_slots:
+                    location_detail['empty_message']['slots'] = "No slots found for this location."
+
+                context['location_details'].append(location_detail)
+
             return render(request, self.template_name, context)
         except Http404 as e:
-            return render(request, self.template_name,
-                          {'error_message': str(e)})
+            return render(request, self.template_name, {'error_message': str(e)})
 
 #FOR TENANT USER:
 
@@ -1185,28 +1240,25 @@ class ChangeOrganizationLocationStatusView(View):
             return redirect('error')
 
 @method_decorator(login_required, name='dispatch')
-class ChangePasswordView(GroupAccessMixin,PasswordChangeView):
+class ChangePasswordView(GroupAccessMixin, PasswordChangeView):
     template_name = 'change_password.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('password_change_done')
     group_required = ['Organization']
 
     def form_valid(self, form):
         messages.success(self.request, SUCCESS_MESSAGES.get('change_password'))
+        logout(self.request)
         return super().form_valid(form)
-
-    def form_invalid(self, form):
-        error_messages = ''.join([f'{error}' for error in form.errors.values()])
-        return super().form_invalid(form)
 
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'password_reset.html'
     email_template_name = 'password_reset_email.html'
     subject_template_name = 'password_reset_subject.txt'
-    success_message = "We've emailed you instructions for setting your password, " \
-                      "if an account exists with the email you entered. You should receive them shortly." \
-                      " If you don't receive an email, " \
-                      "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('login')
+    form_class = CustomPasswordResetForm
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
 class CreateMultipleSlotsView(GroupAccessMixin, View):
     group_required = ['Organization']
@@ -1607,8 +1659,10 @@ class UnavailableSlotCreateView(GroupAccessMixin, CreateView):
 @ensure_csrf_cookie
 def main_view(request, location_pk=None):
     context = {}
+    referrer_url = request.META.get('HTTP_REFERER')
     organization_locations = OrganizationLocation.objects.filter(organization=request.user.organization)
     context['organization_locations'] = organization_locations
+    context['referrer_url'] = referrer_url
 
     if location_pk is not None:
         request.session['location_pk'] = location_pk
@@ -1649,6 +1703,12 @@ def update_working_days(request, location_pk):
 
             if times_empty:
                 return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_time_failure')})
+
+            if any(form.cleaned_data.get('work_from_time') == form.cleaned_data.get('work_to_time') for form in formset):
+                return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_start_time_failure')})
+
+            if any(form.cleaned_data.get('work_to_time') < form.cleaned_data.get('work_from_time') for form in formset):
+                return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_failure')})
 
             # Save instances if validation is successful
             for instance in instances:

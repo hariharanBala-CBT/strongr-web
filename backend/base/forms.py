@@ -8,6 +8,7 @@ from .models import *
 from booking.models import *
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.forms import PasswordResetForm
 
 class OrganizationSignupForm(forms.Form):
     phone_number = forms.IntegerField()
@@ -349,3 +350,11 @@ class unavailableSlotForm(forms.ModelForm):
             raise forms.ValidationError("Time difference between slots must exactly be one hour.", code='time_error')
 
         return cleaned_data
+
+class CustomPasswordResetForm(PasswordResetForm):
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError("There is no user registered with the specified email address!")
+        return email
