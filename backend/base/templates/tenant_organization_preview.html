@@ -174,7 +174,7 @@
 											{% endfor %}
 										</ul>
 										<h5><strong>Images</strong></h5>
-										<ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
+										<ul class="image-gallery">
 											{% for image in location_item.images %}
 												<img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
 											{% empty %}
@@ -182,7 +182,7 @@
 											{% endfor %}
 										</ul>
 										<h5><strong>Slots</strong></h5>
-										<ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
+										<ul class="image-gallery">
 											{% if location_item.slots %}
 												<li><a href="{% url 'tenant-slot-list' locationpk=location_item.location.pk %}">Slot list</a></li>
 											{% else %}
@@ -197,7 +197,7 @@
 													<button type="submit" class="btn btn-success me-2">Approve</button>
 												</form>
 												{% if location_item.location.status != 4 %}
-													<button class="btn btn-danger" style="border-radius: 15px;" data-bs-toggle="modal" data-bs-target="#cancelModal2">Cancel</button>
+													<button class="btn btn-danger cancel-button" data-bs-toggle="modal" data-bs-target="#cancelModal2">Cancel</button>
 												{% endif %}
 													<!-- Modal -->
 													<div class="modal fade" id="cancelModal2" tabindex="-1" aria-labelledby="cancelModalLabel2" aria-hidden="true">
@@ -231,7 +231,7 @@
 				{% endfor %}
 			</div>
 		{% elif organization.status != 1 %}
-			<p style="message-margin">Locations data appear only if the organization submission and tenant is approved !!!</p>
+			<p class="message">Locations data appear only if the organization submission and tenant is approved !!!</p>
 		{% endif %}
 	</div>
 </div>
@@ -239,4 +239,18 @@
 	<button class="btn btn-secondary" data-toggle="tooltip"
 	title="go back" onclick="history.back();"><i class="fa-solid fa-arrow-left-long"></i></button>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabId = urlParams.get('tab');
+        
+        if (tabId) {
+            const tabTrigger = document.querySelector(`#${tabId}`);
+            if (tabTrigger) {
+                const tab = new bootstrap.Tab(tabTrigger);
+                tab.show();
+            }
+        }
+    });
+</script>
 {% endblock %}
