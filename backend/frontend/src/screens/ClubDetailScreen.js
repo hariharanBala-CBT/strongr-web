@@ -894,9 +894,9 @@ function ClubDetailScreen() {
                         <tbody>
                           {clubWorking?.map((day) => (
                             <tr key={day.id}>
-                              <td>{day.days}</td>
-                              <td>{day.work_from_time}</td>
-                              <td>{day.work_to_time}</td>
+                              <td>{t(day.days)}</td>
+                              <td>{day.work_from_time?.slice(0, 5)}</td>
+                              <td>{day.work_to_time?.slice(0, 5)}</td>
                             </tr>
                           ))}
                         </tbody>

@@ -173,8 +173,20 @@ def getClubAmenities(request, pk):
 @api_view(['GET'])
 def getClubWorkingDays(request, pk):
     days = OrganizationLocationWorkingDays.objects.filter(
-        organization_location_id=pk)
-    serializer = OrganizationLocationWorkingDaysSerializer(days, many=True)
+        organization_location_id=pk, is_active=True)
+    
+    day_order = {
+        'Sunday': 0,
+        'Monday': 1,
+        'Tuesday': 2,
+        'Wednesday': 3,
+        'Thursday': 4,
+        'Friday': 5,
+        'Saturday': 6
+    }
+
+    sorted_days = sorted(days, key=lambda day: day_order[day.days])
+    serializer = OrganizationLocationWorkingDaysSerializer(sorted_days, many=True)
 
     return Response(serializer.data)
 
