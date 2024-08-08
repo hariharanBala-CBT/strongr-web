@@ -56,7 +56,6 @@
                                         <span class="status-approved">Approved</span>
                                     {% elif location_detail.location.status == 2 %}
                                         <span class="status-pending">Pending</span>
-                                        <p>Submit the suggested data to proceed</p>
                                     {% elif location_detail.location.status == 3 %}
                                         <span class="status-in-progress">In Progress</span>
                                         <p>The Process is ongoing. Service Provider will Contact you after info verification</p>
@@ -69,25 +68,32 @@
                                     {% endif %}
                                 </p>
 
-                                {% for key, message in location_detail.empty_message.items %}
-                                    <p class="alert alert-warning">
-                                        {% if key == "working_days" %}
-                                            {{ message|safe }} <a href="{% url 'mainview' location_detail.location.pk %}#workingDaysTab"> Add working days</a>
-                                        {% elif key == "games" %}
-                                            {{ message|safe }} <a href="{% url 'mainview' location_detail.location.pk %}#gameTab"> Add games</a>
-                                        {% elif key == "courts" %}
-                                            {{ message|safe }} <a href="{% url 'mainview' location_detail.location.pk %}#courtTab"> Add courts</a>
-                                        {% elif key == "images" %}
-                                            {{ message|safe }} <a href="{% url 'mainview' location_detail.location.pk %}#imagesTab"> Add images</a>
-                                        {% elif key == "slots" %}
-                                            {{ message|safe }} <a href="{% url 'slot-list' location_detail.location.pk %}"> Add slots</a>
-                                        {% elif key == "amenities" %}
-                                            {{ message|safe }} <a href="{% url 'mainview' location_detail.location.pk %}#amenitiesTab"> Add amenities</a>
-                                        {% else %}
-                                            {{ message|safe }}
-                                        {% endif %}
-                                    </p>
-                                {% endfor %}
+                                {% if location_detail.location.status == 2 %}
+                                    {% if location_detail.empty_message %}
+                                        <p>Suggestion: Please follow below to proceed further</p>
+                                        {% for key, message in location_detail.empty_message.items %}
+                                            <p class="alert alert-warning">
+                                                {% if key == "working_days" %}
+                                                    {{ message|safe }},<a href="{% url 'mainview' location_detail.location.pk %}#workingDaysTab"> Add working days</a>
+                                                {% elif key == "games" %}
+                                                    {{ message|safe }},<a href="{% url 'mainview' location_detail.location.pk %}#gameTab"> Add games</a>
+                                                {% elif key == "courts" %}
+                                                    {{ message|safe }},<a href="{% url 'mainview' location_detail.location.pk %}#courtTab"> Add courts</a>
+                                                {% elif key == "images" %}
+                                                    {{ message|safe }},<a href="{% url 'mainview' location_detail.location.pk %}#imageTab"> Add images</a>
+                                                {% elif key == "slots" %}
+                                                    {{ message|safe }},<a href="{% url 'slot-list' location_detail.location.pk %}#slotsTab"> Add slots</a>
+                                                {% elif key == "amenities" %}
+                                                    {{ message|safe }},<a href="{% url 'mainview' location_detail.location.pk %}#amenitiesTab"> Add amenities</a>
+                                                {% else %}
+                                                    {{ message|safe }}
+                                                {% endif %}
+                                            </p>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p class="alert alert-info">Submit data in <a href="{% url 'preview' %}">preview.</a></p>
+                                    {% endif %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>

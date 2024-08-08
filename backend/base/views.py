@@ -965,23 +965,16 @@ class PreviewView(GroupAccessMixin, FormView):
         context = super().get_context_data(**kwargs)
         locationdetails = []
 
-        locations = OrganizationLocation.objects.filter(
-            organization__user=self.request.user)
+        locations = OrganizationLocation.objects.filter(organization__user=self.request.user)
         for location in locations:
             context_item = {}
             context_item['location'] = location
-            context_item[
-                'games'] = OrganizationLocationGameType.objects.filter(
-                    organization_location=location)
-            context_item[
-                'amenities'] = OrganizationLocationAmenities.objects.filter(
-                    organization_location=location)
-            workingtimes = OrganizationLocationWorkingDays.objects.filter(
-                organization_location=location)
+            context_item['games'] = OrganizationLocationGameType.objects.filter(organization_location=location)
+            context_item['amenities'] = OrganizationLocationAmenities.objects.filter(organization_location=location)
+            workingtimes = OrganizationLocationWorkingDays.objects.filter(organization_location=location)
             context_item['workingtimes'] = workingtimes
             context_item['courts'] = Court.objects.filter(location=location)
-            context_item['images'] = OrganizationGameImages.objects.filter(
-                organization=location)
+            context_item['images'] = OrganizationGameImages.objects.filter(organization=location)
             context_item['slots'] = Slot.objects.filter(location_id=location)
             context_item['has_courts'] = context_item['courts'].exists()
             context_item['has_slots'] = context_item['slots'].exists()
@@ -1283,10 +1276,7 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
             organization_location=location_pk,
             is_active=True)
 
-        Slot.objects.filter(
-            court__location_id=location_pk,
-            days__in=[day.days for day in active_days]
-        ).delete()
+        Slot.objects.filter(court__location_id=location_pk).delete()
 
         for court in courts:
             for day in active_days:
