@@ -13,6 +13,7 @@ import { CircularProgress } from "@mui/material";
 import { createBooking, listcustomerDetails } from "../actions/actions";
 
 import "../css/checkoutscreen.css";
+import dayjs from 'dayjs';
 
 function CheckoutScreen() {
   const navigate = useNavigate();
@@ -21,6 +22,9 @@ function CheckoutScreen() {
 
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
+  const formatDate = (date) => {
+    return dayjs(date).format('DD-MM-YYYY');
+  };
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isChecked, setIsChecked] = useState(false);
 
@@ -227,7 +231,7 @@ function CheckoutScreen() {
                         </h6>
                       </li>
                       <p>
-                        {bookingData.gameName}-{bookingData.selectedSlot}- 1 hrs
+                        {bookingData.gameName}-{bookingData.selectedSlot} ({formatDate(bookingData.date)})
                       </p>
                     </div>
                     <div className="orderset2">

@@ -200,7 +200,7 @@ function HomeScreen(history) {
               {t("howIt")} <span>{t("works")}</span>
             </h2>
             <div className="guide-link">
-            <a href={guideLink} className="guide" target="_blank" rel="noopener noreferrer">{t("guide")}</a>           
+            <a href={`static/guide/${guideLink}`} className="guide" target="_blank" rel="noopener noreferrer">{t("guide")}</a>           
             </div>
             <p className="sub-title">
               {t("howItWorksSubtitle")}

@@ -27,7 +27,7 @@
     "errorFetchingGames": "Error in fetching games",
     "guide":"Guide",
     "success": "Welcome to {{brandName}}",
-    "guideLink": "static/guide/english.pdf",
+    "guideLink": "Booking step by step in STRONGR.pdf",
     "iconAlt": "Icon"
 
 }
