@@ -19,8 +19,8 @@
 			<table id="datatablesSimple">
 				<thead>
 					<tr>
-						<th>Name</th>
 						<th>Location</th>
+						<th>Organization Name</th>
 						<th>Area</th>
 						<th>Phone Number</th>
 						<th>Status</th>
@@ -28,8 +28,8 @@
 				</thead>
 				<tfoot>
 					<tr>
-						<th>Name</th>
 						<th>Location</th>
+						<th>Organization Name</th>
 						<th>Area</th>
 						<th>Phone Number</th>
 						<th>Status</th>
@@ -40,8 +40,8 @@
 						{% if location.organization.status == 1 %}
 							{% if location.status != 2 %}
 								<tr>
-									<td><a href="{% url 'organization_preview' location.organization.pk %}">{{ location.organization.organization_name }}</a></td>
-									<td>{{ location.address_line_1 }}</td>
+									<td><a href="{% url 'organization_preview' location.organization.pk %}?tab={{ location.address_line_1|slugify }}-{{ location.id }}-tab">{{ location.address_line_1 }}</a></td>
+									<td>{{ location.organization.organization_name }}</td>
 									<td>{{ location.area }}</td>
 									<td>{{ location.organization.phone_number }}</td>
 									<td>{{ location.get_status_display }}</td>
