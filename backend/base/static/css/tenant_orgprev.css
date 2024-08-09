@@ -18,14 +18,6 @@ li .label {
 	width: 168px;
 }
 
-.navbar-brand {
-	font-weight: 700;
-}
-
-.navbar-toggler-icon {
-	color: white;
-}
-
 .card {
 	border: none;
 	border-radius: 15px;
@@ -57,21 +49,6 @@ li .label {
 	width: 50px;
 	height: 50px;
 	font-size: 20px;
-}
-
-footer {
-	background-color: #fff;
-	border-top: 1px solid #e0e0e0;
-}
-
-footer a {
-	color: #333;
-	text-decoration: none;
-	margin-left: 10px;
-}
-
-footer a:hover {
-	text-decoration: underline;
 }
 
 .btn-group {
@@ -237,6 +214,17 @@ ul.checkbox-list li input[type="checkbox"] {
 	border-radius: 15px;
 }
 
-.message-margin {
+.message {
 	margin-left: 350px;
+}
+
+.cancel-button {
+    border-radius: 15px;
+}
+
+.image-gallery {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 2rem;
 }

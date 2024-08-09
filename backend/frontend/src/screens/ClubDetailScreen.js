@@ -37,6 +37,7 @@ import {
   login,
 } from "../actions/actions";
 import { fixImageUrls } from "../utils/imageUtils";
+import { formatAddress } from "../utils/spacingUtils";
 
 import { CLUB_CREATE_REVIEW_RESET } from "../constants/constants";
 
@@ -188,7 +189,7 @@ function ClubDetailScreen() {
   useEffect(() => {
     fixImageUrls();
   }, [clubImage]);
-
+  
   return (
     <div className="venue-club-details">
       <Header location="nav-all" />
@@ -225,9 +226,10 @@ function ClubDetailScreen() {
                   <i className="feather-map-pin">
                     <MapPin />
                   </i>
-                  {clubLocation?.address_line_1} {clubLocation?.address_line_2}
-                  ,{clubLocation?.pincode}
-                </li>
+                    {formatAddress(clubLocation?.address_line_1)}
+                    {formatAddress(clubLocation?.address_line_2)}
+                    {(clubLocation?.pincode)}                
+                  </li>
                 <li>
                   <i className="feather-phone-call">
                     <Phone />
