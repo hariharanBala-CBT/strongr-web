@@ -77,6 +77,14 @@ function BookingScreen() {
     fixImageUrls();
   }, [bookingDetails]);
 
+  useEffect(() => {
+    const userName = localStorage.getItem("userName");
+    if (userName) {
+      toast.success(`Login successful. Welcome back, ${userName}!`, { duration: 4000 });
+      localStorage.removeItem("userName");
+    }
+  }, [t]);
+
   return (
     <div className="booked-page">
       <Header location="nav-all" />

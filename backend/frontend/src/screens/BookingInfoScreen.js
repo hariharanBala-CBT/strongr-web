@@ -349,6 +349,14 @@ function BookingInfoScreen() {
   }, [isLogin, userLoginSuccess]);
 
   useEffect(() => {
+    const userName = localStorage.getItem("userName");
+    if (userName) {
+      toast.success(`Login successful. Welcome back, ${userName}!`, { duration: 4000 });
+      localStorage.removeItem("userName");
+    }
+  }, [t]);
+
+  useEffect(() => {
     const theCourt = courts?.find((court) => court.name === courtName);
     const courtId = theCourt?.id;
     if (slots?.length !== 0 && additionalSlots?.length !== 0 && courtId) {
