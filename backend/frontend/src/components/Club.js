@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useHomeContext } from "../context/HomeContext";
 import profileImage from "../images/profile.jpg";
 import venueImage from "../images/venue3.jpg";
+import { formatAddress } from "../utils/spacingUtils";
 
 
 import "../css/club.css";
@@ -31,7 +32,7 @@ function Club({ clubs }) {
     }
     navigate(`/club/${club.id}`);
   };
-
+  
   return (
     <div className="container">
       <div className="content listing-list-page">
@@ -86,7 +87,8 @@ function Club({ clubs }) {
                                 <i className="feather-map-pin">
                                   <MapPin />
                                 </i>
-                                {club.address_line_1}{"\u00A0"}{club?.area?.area_name}
+                                {formatAddress(club.address_line_1)}
+                                {(club?.area?.area_name)}
                               </span>
                             </li>
                           </ul>
