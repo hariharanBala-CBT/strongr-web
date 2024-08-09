@@ -26,7 +26,7 @@ import {
   login,
   getNearestSlot,
 } from "../actions/actions";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 import {
   BOOKING_CREATE_RESET,
@@ -48,7 +48,7 @@ const boxStyle = {
 };
 
 const formatDate = (date) => {
-  return dayjs(date).format('DD-MM-YYYY');
+  return dayjs(date).format("DD-MM-YYYY");
 };
 
 function BookingInfoScreen() {
@@ -326,7 +326,7 @@ function BookingInfoScreen() {
 
   useEffect(() => {
     if (LoginError && isLogin) {
-      toast.error(t('incorrectCredentials'));
+      toast.error(t("incorrectCredentials"));
       setOpenForm(true);
       setLoader(false);
       setIsLogin(false);
@@ -335,13 +335,12 @@ function BookingInfoScreen() {
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
-      toast.success(t('loggedInSuccessfully'));
+      toast.success(t("loggedInSuccessfully"));
       setOpenForm(false);
       setIsLogin(false);
     }
   }, [isLogin, t, userLoginSuccess]);
 
-  
   useEffect(() => {
     const theCourt = courts?.find((court) => court.name === courtName);
     const courtId = theCourt?.id;
@@ -381,9 +380,7 @@ function BookingInfoScreen() {
           <section className="card mb-40">
             <div className="text-center mb-40">
               <h3 className="mb-1">{t("bookACourt")}</h3>
-              <p className="sub-title mb-0">
-              {t("hassleFreeBooking")}
-              </p>
+              <p className="sub-title mb-0">{t("hassleFreeBooking")}</p>
             </div>
             <div className="master-academy dull-whitesmoke-bg card">
               <div className="row d-flex align-items-center justify-content-center">
@@ -397,22 +394,20 @@ function BookingInfoScreen() {
                       />
                     </div>
                     <div className="info">
-                    {clubLocation?.rating ? (
-                      <div className="d-flex align-items-center">
-                        <span className="text-white dark-yellow-bg color-white me-2 d-flex justify-content-center align-items-center">
-                          {clubLocation.rating}
-                        </span>
-                        <span>
-                        {t("reviews", { count: clubLocation?.numRatings })}                        
-                        </span>
-                      </div>
-                    ) : null}
+                      {clubLocation?.rating ? (
+                        <div className="d-flex align-items-center">
+                          <span className="text-white dark-yellow-bg color-white me-2 d-flex justify-content-center align-items-center">
+                            {clubLocation.rating}
+                          </span>
+                          <span>
+                            {t("reviews", { count: clubLocation?.numRatings })}
+                          </span>
+                        </div>
+                      ) : null}
                       <h3 className="mb-2">
                         {clubLocation?.organization?.organization_name}
                       </h3>
-                      <p>
-                       {clubLocation?.organization?.description}
-                      </p>
+                      <p>{clubLocation?.organization?.description}</p>
                     </div>
                   </div>
                 </div>
@@ -431,8 +426,7 @@ function BookingInfoScreen() {
                         <i className="feather-plus"></i>
                       </span>
                     </li>
-                    <li>
-                    </li>
+                    <li></li>
                   </ul>
                 </div>
               </div>
@@ -459,7 +453,6 @@ function BookingInfoScreen() {
                     <SelectInput
                       id="game"
                       value={gameName}
-                      // disabled
                       onChange={handleGameChange}
                       options={clubGame?.map((game) => ({
                         id: game?.id,
@@ -489,7 +482,9 @@ function BookingInfoScreen() {
                     )}
                     {loading ? (
                       <div>{t("loadingSlots")}</div>
-                    ) : slots?.length !== 0 || additionalSlots?.length !== 0 ? (
+                    ) : (slots?.length !== 0 ||
+                        additionalSlots?.length !== 0) &&
+                      courts?.length !== 0 ? (
                       <SelectInput
                         useRadioButtons
                         id="slot"
@@ -509,17 +504,23 @@ function BookingInfoScreen() {
                           name: `${slot.start_time}-${slot.end_time}`,
                         }))}
                       />
+                    ) : courts?.length === 0 ? (
+                      <Alert severity="warning">
+                        {t("noCourtsAvailable")}
+                      </Alert>
                     ) : nearestSlot ? (
                       <Alert severity="info">
                         {t("currentlyNoSlotsAvailable", {
                           courtName: courtName,
-                          date: nearestSlot.days ? nearestSlot.days : formatDate(nearestSlot.date),
-                          time: nearestSlot?.start_time?.slice(0, 5)
-                        })}                        
+                          date: nearestSlot.days
+                            ? nearestSlot.days
+                            : formatDate(nearestSlot.date),
+                          time: nearestSlot?.start_time?.slice(0, 5),
+                        })}
                       </Alert>
                     ) : (
                       <Alert severity="error">
-                      {t("noSlotsAvailable", {courtName})}                       
+                        {t("noSlotsAvailable", { courtName })}
                       </Alert>
                     )}
                   </div>
@@ -590,21 +591,17 @@ function BookingInfoScreen() {
             open={openForm}
             onClose={() => setOpenForm(false)}
             aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
+            aria-describedby="modal-modal-description">
             {loader ? (
               <Box sx={boxStyle} className="otp-loader">
                 <CircularProgress />
               </Box>
             ) : (
               <Box sx={boxStyle}>
-                <Alert severity="info">
-                  {t("loginToProceed")}
-                </Alert>
+                <Alert severity="info">{t("loginToProceed")}</Alert>
                 <form
                   onSubmit={loginAndRedirect}
-                  className="booking-login-form"
-                >
+                  className="booking-login-form">
                   <h2 className="login-title">{t("login")}</h2>
 
                   <label>{t("username")}</label>

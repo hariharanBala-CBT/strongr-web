@@ -17,6 +17,7 @@
     "submit": "Submit",
     "didNotReceiveOtp": "Didn't receive? Resend attempts ({{ resendCount }}/2)",
     "sendingOtp": "Sending OTP...",
+    "success": "Welcome to {{brandName}}",
     "otpExpires": "OTP expires in {{timer}} seconds",
     "passwordMinLength": "Password must be at least 8 characters",
     "passwordMismatch": "Passwords do not match",
@@ -24,5 +25,6 @@
     "logoAlt": "Logo",
     "maxAttempts": "You have reached the maximum number of resend attempts.",
     "invalidOtp": "Invalid OTP. Please try again.",
-    "tooManyAttempts": "Too many incorrect attempts. Please try again later."
+    "tooManyAttempts": "Too many incorrect attempts. Please try again later.",
+    "attemptRemaining": "Attempt {{current}} of 3. Attempts remaining: {{remaining}}"
 }

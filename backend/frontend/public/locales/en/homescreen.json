@@ -26,6 +26,8 @@
     "errorFetchingAreas": "Error in fetching areas",
     "errorFetchingGames": "Error in fetching games",
     "guide":"Guide",
+    "success": "Welcome to {{brandName}}",
+    "guideLink": "Booking step by step in STRONGR.pdf",
     "iconAlt": "Icon"
 
 }

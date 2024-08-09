@@ -84,7 +84,7 @@ function Club({ clubs }) {
                                 <i className="feather-map-pin">
                                   <MapPin />
                                 </i>
-                                {club.address_line_1}{club?.area?.area_name}
+                                {club.address_line_1}{"\u00A0"}{club?.area?.area_name}
                               </span>
                             </li>
                           </ul>

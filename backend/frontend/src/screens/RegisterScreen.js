@@ -59,6 +59,7 @@ function RegisterScreen() {
   const [otpValid, setOtpValid] = useState(true); // Track OTP validity
   const intervalRef = useRef(null);
   const { t } = useTranslation("registerscreen");
+  const { t: fet } = useTranslation("formerror");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -140,9 +141,9 @@ function RegisterScreen() {
   const handleOtpError = (errorMessage) => {
     setOtpAttempts((prev) => prev + 1);
       const attemptsLeft = 3 - otpAttempts;
-    setOtpError(`Attempt ${otpAttempts+1} of 3. Attempts remaining: ${attemptsLeft-1}`);
+      setOtpError(t('attemptRemaining', { current: otpAttempts + 1, remaining: attemptsLeft - 1 }));    
     setShowOtpError(true);
-    setTimeout(() => setShowOtpError(false), 4000); // Hide error after 4 seconds
+    setTimeout(() => setShowOtpError(false), 4000);
     setOtp('');
     setOtpValid(false);
 
@@ -179,7 +180,7 @@ function RegisterScreen() {
       otpGenerate();
       setSubmit(false);
     } else if (userDetailsValidate && submit) {
-      toast.error(userDetailsValidate.detail);
+      toast.error(fet(userDetailsValidate.detail));
       setLoader(false);
       setOpenForm(false);
       setSubmit(false);
@@ -188,12 +189,13 @@ function RegisterScreen() {
 
   useEffect(() => {
     if (userInfo) {
+      localStorage.setItem("registrationSuccess", "true");
       navigate("/");
     } else if (registerError) {
       if (registerError === "Email is already registered") {
         toast.error(t("emailRegistered"));
       } else {
-        toast.error(registerError);
+        toast.error(fet(registerError));
       }
       dispatch({
         type: USER_LOGOUT,

@@ -1,0 +1,19 @@
+.header1 {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.nav-link.highlight {
+  background-color: #444;
+  color: #fff;
+}
+
+.btn-primary.mt-4 {
+  border-radius: 50%;
+  height: max-content;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}

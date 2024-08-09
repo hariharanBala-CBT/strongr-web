@@ -576,3 +576,6 @@ ul {
   flex-wrap: wrap;
   justify-content: space-evenly;
 }
+.accordion-body .amenity{
+  flex-wrap: wrap;
+}

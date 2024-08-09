@@ -47,23 +47,23 @@ def ValidateUserDetails(request):
         phone = request.GET.get('phone')
 
         if not email:
-            return Response({'detail': 'email is required'},status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'emailRequired'}, status=status.HTTP_400_BAD_REQUEST)
         if not phone:
-            return Response({'detail': 'phone is required'},status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'phoneRequired'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.filter(email=email)
-        customer = Customer.objects.filter(phone_number = phone)
+        customer = Customer.objects.filter(phone_number=phone)
 
         if user:
-            return Response({'detail': 'User exists with this email'}, status=status.HTTP_200_OK)
+            return Response({'detail': 'userExistsEmail'}, status=status.HTTP_200_OK)
 
         if customer:
-            return Response({'detail': 'User exists with this phone number'}, status=status.HTTP_200_OK)
+            return Response({'detail': 'userExistsPhone'}, status=status.HTTP_200_OK)
 
-        return Response({'detail': 'User does not exist'},status=status.HTTP_404_NOT_FOUND)
+        return Response({'detail': 'userNotExist'}, status=status.HTTP_404_NOT_FOUND)
 
     except Exception:
-        return Response({'detail': 'User cannot be validated'},status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': 'validationError'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def ValidatePhone(request):
@@ -173,8 +173,20 @@ def getClubAmenities(request, pk):
 @api_view(['GET'])
 def getClubWorkingDays(request, pk):
     days = OrganizationLocationWorkingDays.objects.filter(
-        organization_location_id=pk)
-    serializer = OrganizationLocationWorkingDaysSerializer(days, many=True)
+        organization_location_id=pk, is_active=True)
+    
+    day_order = {
+        'Sunday': 0,
+        'Monday': 1,
+        'Tuesday': 2,
+        'Wednesday': 3,
+        'Thursday': 4,
+        'Friday': 5,
+        'Saturday': 6
+    }
+
+    sorted_days = sorted(days, key=lambda day: day_order[day.days])
+    serializer = OrganizationLocationWorkingDaysSerializer(sorted_days, many=True)
 
     return Response(serializer.data)
 
@@ -624,7 +636,7 @@ def getNearestSlot(request):
     court = Court.objects.get(id=court_id)
     selected_date = date_obj.date()
     current_datetime = datetime.datetime.now().replace(microsecond=0)
-    # current_datetime = current_datetime + datetime.timedelta(hours=1)
+    current_datetime = current_datetime + datetime.timedelta(hours=1)
 
     nearest_slot = get_nearest_available_slot(court, current_datetime, selected_date)
 

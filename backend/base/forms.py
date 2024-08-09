@@ -8,6 +8,7 @@ from .models import *
 from booking.models import *
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.forms import PasswordResetForm
 
 class OrganizationSignupForm(forms.Form):
     phone_number = forms.IntegerField()
@@ -169,6 +170,8 @@ class TermsandConditionsForm(forms.Form):
     agree = forms.BooleanField(required=True)
 
 class CourtForm(forms.ModelForm):
+    game_field_empty = False  # Default flag for empty game field
+
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(CourtForm, self).__init__(*args, **kwargs)
@@ -176,6 +179,10 @@ class CourtForm(forms.ModelForm):
             key = self.request.session.get('location_pk')
             if key:
                 self.fields['game'].queryset = OrganizationLocationGameType.objects.filter(organization_location_id=key)
+                if not self.fields['game'].queryset.exists():
+                    self.game_field_empty = True
+                else:
+                    self.game_field_empty = False
 
     class Meta:
         model = Court
@@ -187,6 +194,7 @@ class CourtForm(forms.ModelForm):
 class SlotForm(forms.ModelForm):
     start_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
     end_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}))
+    court_field_empty = False
 
     class Meta:
         model = Slot
@@ -200,6 +208,10 @@ class SlotForm(forms.ModelForm):
             if key:
                 self.fields['court'].queryset = Court.objects.filter(location_id=key)
                 self.fields['days'].queryset = OrganizationLocationWorkingDays.objects.filter(organization_location=key, is_active=True)
+                if not self.fields['court'].queryset.exists():
+                    self.court_field_empty = True
+                else:
+                    self.court_field_empty = False
 
     def clean(self):
         cleaned_data = super().clean()
@@ -242,7 +254,9 @@ class SlotUpdateForm(forms.ModelForm):
         court = cleaned_data.get("court")
         days = cleaned_data.get("days")
 
-        if Slot.objects.filter(start_time=start_time, end_time=end_time, court=court, days=days).exists():
+        existing_entries = Slot.objects.filter(start_time=start_time, end_time=end_time, court=court, days=days).exclude(pk=self.instance.pk)
+
+        if existing_entries.exists():
             raise forms.ValidationError("A slot with the same details already exists.")
 
         time_diff_seconds = (end_time.hour * 3600 + end_time.minute * 60 + end_time.second) - \
@@ -336,3 +350,11 @@ class unavailableSlotForm(forms.ModelForm):
             raise forms.ValidationError("Time difference between slots must exactly be one hour.", code='time_error')
 
         return cleaned_data
+
+class CustomPasswordResetForm(PasswordResetForm):
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError("There is no user registered with the specified email address!")
+        return email

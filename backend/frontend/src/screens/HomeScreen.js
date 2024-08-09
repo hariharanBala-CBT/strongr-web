@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import toast, { Toaster } from "react-hot-toast";
 import { Form } from "react-bootstrap";
 import "../css/homescreen.css";
+import { brandName } from "../constants/constants";
 
 import Header from "../components/Header";
 import Button from "../components/Button";
@@ -15,7 +16,6 @@ import DateInput from "../components/DateInput";
 import Venue from "../components/Venue";
 import Footer from "../components/Footer";
 import Testimonial from "../components/Testimonial";
-import customerGuide from "../guide/customer.pdf";
 import {
   listAreas,
   listGames,
@@ -33,6 +33,7 @@ import workImage3 from "../images/icons/work-icon3.svg";
 
 function HomeScreen(history) {
   const { t } = useTranslation("homescreen");
+  const guideLink = t("guideLink");
   const dispatch = useDispatch();
   const sectionRef = useRef(null);
   const navigate = useNavigate();
@@ -73,6 +74,21 @@ function HomeScreen(history) {
   const changeDate = (value) => {
     setDate(value);
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("registrationSuccess") === "true") {
+      toast.success(t("success", { brandName }), { duration: 4000 });
+      localStorage.removeItem("registrationSuccess");
+    }
+  }, [t]);
+
+  useEffect(() => {
+    const userName = localStorage.getItem("userName");
+    if (userName) {
+      toast.success(`Login successful. Welcome back, ${userName}!`, { duration: 4000 });
+      localStorage.removeItem("userName");
+    }
+  }, [t]);
 
   useEffect(() => {
     dispatch(listGames());
@@ -184,7 +200,7 @@ function HomeScreen(history) {
               {t("howIt")} <span>{t("works")}</span>
             </h2>
             <div className="guide-link">
-              <a href={customerGuide} className="guide" target="_blank" rel="noopener noreferrer">{t("guide")}</a>
+            <a href={`static/guide/${guideLink}`} className="guide" target="_blank" rel="noopener noreferrer">{t("guide")}</a>           
             </div>
             <p className="sub-title">
               {t("howItWorksSubtitle")}
