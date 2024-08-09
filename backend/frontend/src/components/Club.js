@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useHomeContext } from "../context/HomeContext";
 import profileImage from "../images/profile.jpg";
 import venueImage from "../images/venue3.jpg";
+import { formatAddress } from "../utils/spacingUtils";
 
 
 import "../css/club.css";
@@ -31,12 +32,7 @@ function Club({ clubs }) {
     }
     navigate(`/club/${club.id}`);
   };
-function formatAddress(part) {
-  if (!part) return ''; // Return an empty string if the part is undefined or null
-  const partString = String(part).trim(); // Convert part to a string and trim whitespace
-  // Add a comma and a space if it doesn't end with a comma
-  return partString.endsWith(',') ? partString + ' ' : partString + ', ';
-}
+  
   return (
     <div className="container">
       <div className="content listing-list-page">

@@ -37,6 +37,7 @@ import {
   login,
 } from "../actions/actions";
 import { fixImageUrls } from "../utils/imageUtils";
+import { formatAddress } from "../utils/spacingUtils";
 
 import { CLUB_CREATE_REVIEW_RESET } from "../constants/constants";
 
@@ -188,12 +189,6 @@ function ClubDetailScreen() {
   useEffect(() => {
     fixImageUrls();
   }, [clubImage]);
-  
-  function formatAddress(part) {
-    if (!part) return '';
-    const partString = String(part).trim();
-    return partString.endsWith(',') ? partString + ' ' : partString + ', ';
-  }  
   
   return (
     <div className="venue-club-details">
