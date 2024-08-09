@@ -44,7 +44,7 @@ function Club({ clubs }) {
                   <div className="featured-venues-item venue-list-item">
                     <div className="listing-item listing-item-grid">
                       <div className="listing-img">
-                        <a>
+                        <>
                           {club && club.organization_images ? (
                             <img
                               src={club.organization_images}
@@ -53,7 +53,7 @@ function Club({ clubs }) {
                           ) : (
                             <img src={venueImage} alt={t("organizationAlt")} />
                           )}
-                        </a>
+                        </>
                         <div className="fav-item-venues">
                           <span className="tag tag-blue">{t("featured")}</span>
                         </div>

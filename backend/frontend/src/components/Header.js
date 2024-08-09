@@ -32,7 +32,7 @@ function Header({ location }) {
               </span>
             </a>
             <LinkContainer to="/">
-              <a href="#" className="navbar-brand logo">
+              <a href="#/" className="navbar-brand logo">
                 <img src={Logo} className="img-fluid" alt={t("logoAlt")} />
               </a>
             </LinkContainer>
@@ -59,7 +59,15 @@ function Header({ location }) {
                 <a href="#/">{t("home")}</a>
               </li>
               <li>
-                <a href="#">{t("contactUs")}</a>
+                <a
+                  href="#contact-us-footer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById("contact-us-footer").scrollIntoView({ behavior: "smooth" });
+                  }}
+                  >
+                  {t("contactUs")}
+                </a>
               </li>
             </ul>
           </div>
