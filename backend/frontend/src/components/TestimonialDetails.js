@@ -21,9 +21,9 @@ const TestimonialDetails = ({ testiMonialDetail }) => {
         </a>
         <div className="testimonial-content">
           <h5>
-            <a href="javascript:;">{name}</a>
+            <a>{name}</a>
           </h5>
-          <a href="javascript:void(0);" className="btn btn-primary ">
+          <a className="btn btn-primary ">
             {gametype}
           </a>
         </div>

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
+import { useNavigate, Link } from "react-router-dom";
 import { Clock, CheckCircle, XCircle, CheckSquare, Eye } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { isAfter } from "date-fns";
@@ -10,7 +9,6 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -21,7 +19,6 @@ import {
   Tooltip,
   IconButton,
   Paper,
-  Stack,
   styled,
   Table,
   TableBody,
@@ -48,11 +45,6 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
-}));
-
-const Content = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  textAlign: "left",
 }));
 
 function ProfileScreen() {
@@ -93,10 +85,6 @@ function ProfileScreen() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
-  };
-
-  const updateUser = () => {
-    navigate(`/profile/${userInfo.id}`);
   };
 
   const redirectBooking = (value) => {
@@ -153,9 +141,9 @@ function ProfileScreen() {
                 </a>
               </li>
               <li>
-                <LinkContainer to="/updatepassword">
-                  <a>{t("updatePassword")}</a>
-                </LinkContainer>
+                <Link to="/updatepassword">
+                  {t("updatePassword")}
+                </Link>
               </li>
             </ul>
           </div>

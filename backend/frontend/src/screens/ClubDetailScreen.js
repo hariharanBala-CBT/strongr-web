@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Carousel } from "react-responsive-carousel";
 import toast, { Toaster } from "react-hot-toast";
@@ -115,7 +115,7 @@ function ClubDetailScreen() {
     if (successclubReview) {
       toast.success(t("reviewSubmitted"));
     }
-  }, [successclubReview]);
+  }, [successclubReview, t]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -176,7 +176,7 @@ function ClubDetailScreen() {
       setLoader(false);
       setIsLogin(false);
     }
-  }, [isLogin, LoginError]);
+  }, [isLogin, LoginError, t]);
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
@@ -184,7 +184,7 @@ function ClubDetailScreen() {
       setOpenForm(false);
       setIsLogin(false);
     }
-  }, [isLogin, userLoginSuccess]);
+  }, [isLogin, userLoginSuccess, t]);
 
   useEffect(() => {
     fixImageUrls();
@@ -203,9 +203,9 @@ function ClubDetailScreen() {
               <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to="/clubs">
-                <a>{t("venueList")}</a>
-              </LinkContainer>
+              <Link to="/clubs">
+                {t("venueList")}
+              </Link>
             </li>
             <li>{t("venueDetails")}</li>
           </ul>
@@ -267,7 +267,7 @@ function ClubDetailScreen() {
                       <i className="fas fa-star filled"></i>
                     </div>
                     <p className="mb-0">
-                      <a href="javascript:;">
+                      <a>
                       {t("reviews", { count: clubLocation?.numRatings })}
                       </a>
                     </p>
@@ -283,7 +283,7 @@ function ClubDetailScreen() {
               <ul className="d-sm-flex details">
                 <li>
                   <div className="profile-pic">
-                    <a href="javascript:void(0);" className="venue-type">
+                    <a className="venue-type">
                       <img
                         className="img-fluid"
                         src={venueTypeImage}
@@ -298,7 +298,7 @@ function ClubDetailScreen() {
                 </li>
                 <li>
                   <div className="profile-pic">
-                    <a href="javascript:void(0);">
+                    <a>
                       <img
                         className="img-fluid"
                         src={profileImage}
