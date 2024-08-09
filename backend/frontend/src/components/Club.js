@@ -31,7 +31,12 @@ function Club({ clubs }) {
     }
     navigate(`/club/${club.id}`);
   };
-
+function formatAddress(part) {
+  if (!part) return ''; // Return an empty string if the part is undefined or null
+  const partString = String(part).trim(); // Convert part to a string and trim whitespace
+  // Add a comma and a space if it doesn't end with a comma
+  return partString.endsWith(',') ? partString + ' ' : partString + ', ';
+}
   return (
     <div className="container">
       <div className="content listing-list-page">
@@ -86,7 +91,8 @@ function Club({ clubs }) {
                                 <i className="feather-map-pin">
                                   <MapPin />
                                 </i>
-                                {club.address_line_1}{"\u00A0"}{club?.area?.area_name}
+                                {formatAddress(club.address_line_1)}
+                                {(club?.area?.area_name)}
                               </span>
                             </li>
                           </ul>

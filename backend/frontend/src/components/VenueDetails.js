@@ -71,7 +71,7 @@ const VenueDetails = ({ club }) => {
                   <i className="feather-map-pin">
                     <MapPin />
                   </i>
-                  {address_line_1}
+                  {address_line_1.replace(/,\s*$/, '')}
                 </span>
               </li>
               {club?.next_availabilty && (

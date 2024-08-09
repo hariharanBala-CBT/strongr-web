@@ -188,7 +188,13 @@ function ClubDetailScreen() {
   useEffect(() => {
     fixImageUrls();
   }, [clubImage]);
-
+  
+  function formatAddress(part) {
+    if (!part) return '';
+    const partString = String(part).trim();
+    return partString.endsWith(',') ? partString + ' ' : partString + ', ';
+  }  
+  
   return (
     <div className="venue-club-details">
       <Header location="nav-all" />
@@ -225,9 +231,10 @@ function ClubDetailScreen() {
                   <i className="feather-map-pin">
                     <MapPin />
                   </i>
-                  {clubLocation?.address_line_1} {clubLocation?.address_line_2}
-                  ,{clubLocation?.pincode}
-                </li>
+                    {formatAddress(clubLocation?.address_line_1)}
+                    {formatAddress(clubLocation?.address_line_2)}
+                    {(clubLocation?.pincode)}                
+                  </li>
                 <li>
                   <i className="feather-phone-call">
                     <Phone />
