@@ -82,7 +82,7 @@
 				{% for location_item in all_locations %}
 					{% if location_item.location.status != 2 %}
 						<li class="nav-item" role="presentation">
-							<button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" type="button" role="tab" aria-controls="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">{{ location_item.location.address_line_1 }}</button>
+							<button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" type="button" role="tab" aria-controls="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">{{ location_item.location.address_line_1 }}</button>
 						</li>
 					{% endif %}
 				{% endfor %}
@@ -91,7 +91,7 @@
 			<div class="tab-content" id="locationTabsContent">
 				{% for location_item in all_locations %}
 					{% if location_item.location.status != 2 %}
-						<div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ location_item.location.area|slugify }}-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}-tab">
+						<div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}-tab">
 							<div class="row">
 								<div class="card mb-4">
 									<div class="card-body">
