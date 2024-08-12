@@ -15,6 +15,7 @@
                         <th>Availability</th>
                     </tr>
                 </thead>
+                <div id="formset-errors" class="alert alert-danger"></div>
                 <tbody>
                     {% for form in formset %}
                     <tr class="form-group">
@@ -38,7 +39,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <div id="formset-errors" class="alert alert-danger" style="display: none;"></div>
             <div class="row mt-4">
                 <div class="col-md-6 text-end">
                     <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit">Update</button>
