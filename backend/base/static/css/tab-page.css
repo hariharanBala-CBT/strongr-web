@@ -66,13 +66,6 @@ footer {
     width: 100%;
 }
 
-.form-group {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-}
-
 .select-location {
     display: flex;
     flex-direction: row;
