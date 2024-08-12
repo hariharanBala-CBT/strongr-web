@@ -40,7 +40,7 @@
 						{% if location.organization.status == 1 %}
 							{% if location.status != 2 %}
 								<tr>
-									<td><a href="{% url 'organization_preview' location.organization.pk %}?tab={{ location.area|slugify }}-{{ location.id }}-tab">{{ location.address_line_1 }}</a></td>
+									<td><a href="{% url 'organization_preview' location.organization.pk %}?tab={{ location.address_line_1|slugify }}-{{ location.id }}-tab">{{ location.address_line_1 }}</a></td>
 									<td>{{ location.organization.organization_name }}</td>
 									<td>{{ location.area }}</td>
 									<td>{{ location.organization.phone_number }}</td>
