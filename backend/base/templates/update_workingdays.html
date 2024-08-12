@@ -1,148 +1,114 @@
 {% load static %}
-    <link href="{% static './css/workingdaysstyle.css' %}" rel="stylesheet" />
-                    <div class="container-fluid my-4 px-4 m">
-                        <div class="profile-card">
-                            <form action="{% url 'organization_locationworkingdays' locationpk %}" id="workingdays_form" method="post">
-                                {% csrf_token %}
-                                {{ formset.management_form }}
-                                <table>
-                                    <tr>
-                                        <th>Days</th>
-                                        <th>Opening Time</th>
-                                        <th>Closing Time</th>
-                                        <th>Availability</th>
-                                    </tr>
-                                    {% for form in formset %}
-                                    <tr>
-                                        <td id="form-id">{{ form.id }}</td>
-                                        <td>{{ form.instance.days }}</td>
-                                        <td>
-                                            {{ form.work_from_time }}
-                                            <div class="form-error" id="{{ form.prefix }}-work_from_time-error"></div>
-                                        </td>
-                                        <td>
-                                            {{ form.work_to_time }}
-                                            <div class="form-error" id="{{ form.prefix }}-work_to_time-error"></div>
-                                        </td>
-                                        <td>
-                                            {{ form.is_active }}
-                                            <div class="form-error" id="{{ form.prefix }}-is_active-error"></div>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </table>
-                                {% if formset.non_form_errors %}
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        {% for error in formset.non_form_errors %}
-                                        <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                                {% endif %}
-                                <div class="row mt-4">
-                                    <div class="col-md-6 text-end">
-                                        <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit">Update</button>
-                                        <button type="button" id="nextTabBtn" class="btn btn-primary">Next Tab</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+<link href="{% static 'css/workingdaysstyle.css' %}" rel="stylesheet" />
+
+<div class="container-fluid my-4 px-4">
+    <div class="profile-card">
+        <form id="working-days-form" action="{% url 'organization_locationworkingdays' locationpk %}" method="post">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Days</th>
+                        <th>Opening Time</th>
+                        <th>Closing Time</th>
+                        <th>Availability</th>
+                    </tr>
+                </thead>
+                <div id="formset-errors" class="alert alert-danger"></div>
+                <tbody>
+                    {% for form in formset %}
+                    <tr class="form-group">
+                        <td>
+                            {{ form.id }}
+                            {{ form.instance.days }}
+                        </td>
+                        <td>
+                            {{ form.work_from_time }}
+                            <div class="form-error" id="form-{{ forloop.counter0 }}-work_from_time-error"></div>
+                        </td>
+                        <td>
+                            {{ form.work_to_time }}
+                            <div class="form-error" id="form-{{ forloop.counter0 }}-work_to_time-error"></div>
+                        </td>
+                        <td>
+                            {{ form.is_active }}
+                            <div class="form-error" id="form-{{ forloop.counter0 }}-is_active-error"></div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="row mt-4">
+                <div class="col-md-6 text-end">
+                    <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="submit">Update</button>
+                    <button type="button" id="nextTabBtn" class="btn btn-primary">Next Tab</button>
                 </div>
-            
-        </div>
-    </div>
-
-    <div class="toast" id="successToast"></div>
-    <div class="modal" id="confirmationModal">
-        <div class="modal-content">
-            <h2>Confirm Update</h2>
-            <p>Are you sure you want to update the working day details?</p>
-            <div class="button-modal">
-                <button id="cancelButton">Cancel</button>
-                <button id="confirmButton">Confirm</button>
             </div>
-        </div>
+        </form>
     </div>
+</div>
 
-    <script src="{% static 'js/tab.js' %}"></script> 
-    <script>
-           function showToast(message) {
-                    const toast = $('#successToast');
-                    toast.text(message);
-                    toast.show();
-                    setTimeout(() => {
-                        toast.hide();
-                    }, 2500);
-                }
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('workingdays_form');
-            const modal = document.getElementById('confirmationModal');
-            const confirmButton = document.getElementById('confirmButton');
-            const cancelButton = document.getElementById('cancelButton');
-            const toast = document.getElementById('successToast');
+<div class="toast" id="successToast"></div>
 
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-                modal.style.display = "block";
-            });
-
-            confirmButton.addEventListener('click', function() {
-                modal.style.display = "none";
-                submitFormData();
-            });
-
-            cancelButton.addEventListener('click', function() {
-                modal.style.display = "none";
-            });
-
-            function submitFormData() {
-                const formData = new FormData(form);
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.status === 'success') {
-                        showToast(data.message);
-                        setTimeout(() => {
-                            window.location.href = "{% url 'mainview' locationpk %}";
-                        }, 2000);
-                    } else {
-                        showToast(data.message && 'Error updating working days.');
-                        displayFormErrors(data.errors);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('Error submitting form. ' + error.message);
-                });
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/tab.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('#working-days-form').on('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault(); // Prevent form submission
+                return false;
             }
+        });
 
-            function displayFormErrors(errors) {
-                const formFields = document.querySelectorAll('form .form-error');
-                formFields.forEach(field => field.innerHTML = '');  // Clear previous errors
+        function validateForm() {
+            let isValid = true;
+            let formsetErrorMessages = [];
+            let hasActiveDay = false;
 
-                if (errors) {
-                    for (const [field, errorList] of Object.entries(errors)) {
-                        const errorElement = document.getElementById(`${field}-error`);
-                        if (errorElement) {
-                            errorElement.innerHTML = JSON.parse(errorList).map(error => error.message).join('<br>');
-                        }
+            // Clear all previous errors
+            $('.form-error').empty();
+            $('#formset-errors').hide().empty();
+
+            $('tr.form-group').each(function(index) {
+                const workFromTimeInput = $(this).find(`input[name^="form-${index}-work_from_time"]`);
+                const workToTimeInput = $(this).find(`input[name^="form-${index}-work_to_time"]`);
+                const isActiveInput = $(this).find(`input[name^="form-${index}-is_active"]`);
+                const workFromTimeError = $(`#form-${index}-work_from_time-error`);
+                const workToTimeError = $(`#form-${index}-work_to_time-error`);
+
+                const isActive = isActiveInput.is(':checked');
+                const workFromTime = workFromTimeInput.val();
+                const workToTime = workToTimeInput.val();
+
+                if (isActive) {
+                    hasActiveDay = true;
+
+                    if (!workFromTime || !workToTime) {
+                        isValid = false;
+                        workFromTimeError.text('Work from time and work to time are required.');
+                        workToTimeError.text('');  // Clear the workToTime error to avoid redundancy
+                    } else if (workFromTime === workToTime) {
+                        isValid = false;
+                        workFromTimeError.text('Work from time cannot be the same as work to time.');
+                    } else if (workToTime < workFromTime) {
+                        isValid = false;
+                        workToTimeError.text('Work to time cannot be earlier than work from time.');
                     }
                 }
-            }
             });
-            
-    </script>
+
+            if (!hasActiveDay) {
+                isValid = false;
+                formsetErrorMessages.push('At least one day must be active.');
+            }
+
+            if (formsetErrorMessages.length > 0) {
+                $('#formset-errors').html(formsetErrorMessages.join('<br>')).show();
+            }
+
+            return isValid;
+        }
+    });
+</script>
