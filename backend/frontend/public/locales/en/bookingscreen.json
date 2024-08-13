@@ -33,5 +33,6 @@
     "unknown": "Unknown",
     "booked": "Booked",
     "checkout": "Checkout",
-    "venueAlt": "Venue"
+    "venueAlt": "Venue",
+    "message": "Login successful. Welcome back, {{userName}}!"
 }
