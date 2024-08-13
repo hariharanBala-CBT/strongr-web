@@ -28,6 +28,6 @@
     "guide":"Guide",
     "success": "Welcome to {{brandName}}",
     "guideLink": "Booking step by step in STRONGR.pdf",
-    "iconAlt": "Icon"
-
+    "iconAlt": "Icon",
+    "message": "Login successful. Welcome back, {{userName}}!"
 }

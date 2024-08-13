@@ -62,6 +62,7 @@
     "coachingFacility": "Coaching Facility",
     "reviewSubmitted": "Review submitted",
     "carouselImgAlt": "carousel-img",
-    "userAlt": "User"
+    "userAlt": "User",
+    "message": "Login successful. Welcome back, {{userName}}!"
 
 }

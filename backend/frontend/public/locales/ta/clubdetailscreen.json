@@ -63,5 +63,7 @@
     "coachingFacility": "பயிற்சி வசதி",
     "reviewSubmitted": "மதிப்பீடு சமர்ப்பிக்கப்பட்டது",
     "carouselImgAlt": "சுழற்சி-படம்",
-    "userAlt": "பயனர்"
+    "userAlt": "பயனர்",
+    "message": "உள்நுழைவு வெற்றிகரமாக முடிந்தது. திரும்ப வந்ததற்கு நன்றி, {{userName}}!"
+
 }

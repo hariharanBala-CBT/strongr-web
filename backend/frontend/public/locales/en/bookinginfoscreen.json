@@ -32,9 +32,6 @@
     "loggedInSuccessfully": "Logged in successfully",
     "loadingSlots": "Loading slots...",
     "noCourtsAvailable": "No courts available for the selected game and date.",
-    "currentlyNoSlotsAvailable": "Currently No slots available in {{courtName}}, Next slot available on {{date}} at {{time}}"
-
-
-
-      
+    "currentlyNoSlotsAvailable": "Currently No slots available in {{courtName}}, Next slot available on {{date}} at {{time}}",
+    "message": "Login successful. Welcome back, {{userName}}!"     
 }
