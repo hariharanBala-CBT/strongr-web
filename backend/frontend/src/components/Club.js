@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { GiShuttlecock } from "react-icons/gi";
 import { Calendar, MapPin } from "react-feather";
@@ -8,6 +8,7 @@ import { useHomeContext } from "../context/HomeContext";
 import profileImage from "../images/profile.jpg";
 import venueImage from "../images/venue3.jpg";
 import { formatAddress } from "../utils/spacingUtils";
+import { fixImageUrls } from "../utils/imageUtils";
 
 
 import "../css/club.css";
@@ -32,6 +33,10 @@ function Club({ clubs }) {
     }
     navigate(`/club/${club.id}`);
   };
+
+  useEffect(() => {
+    fixImageUrls();
+  }, []);
   
   return (
     <div className="container">
