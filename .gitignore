@@ -13,3 +13,4 @@ node_modules
 /backend/.env
 /backend/backend/local_settings.py
 staticfiles
+*.pyc

@@ -105,7 +105,7 @@
                             <div class="row">
                                 <div class="card mb-4">
                                     <div class="card-body">
-                                        <li style="list-style: none;">
+                                        <ul>
                                             <div class="label">Status</div>:&nbsp; 
                                             {% if location_item.location.status == 1 %}
                                                 <span class="status-approved">Approved</span>
@@ -119,7 +119,7 @@
                                                 <span class="status-unknown">Unknown</span>
                                                 <p>Please Contact the Service Provider.</p>
                                             {% endif %}
-                                        </li>
+                                        </ul>
                                         <ul><strong>Address:</strong><br>
 											{{ location_item.location.address_line_1 }}<br>
 											{{ location_item.location.address_line_2 }}<br>
@@ -184,7 +184,7 @@
 											{% endfor %}
 										</ul>
 										<h5><strong>Images</strong></h5>
-										<ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
+										<ul class="image-gallery">
 											{% for image in location_item.images %}
 												<img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
 											{% empty %}
@@ -192,7 +192,7 @@
 											{% endfor %}
 										</ul>
 										<h5><strong>Slots</strong></h5>
-										<ul style="display: flex; flex-direction: row; flex-wrap: wrap; column-gap: 2rem;">
+										<ul class="image-gallery">
 											{% if location_item.slots %}
 												<li><a href="{% url 'tenant-slot-list' locationpk=location_item.location.pk %}">Slot list</a></li>
 											{% else %}
