@@ -40,11 +40,21 @@ function SearchClub({ clubs, onClubClick }) {
               </LinkContainer>
             )}
 
-            <Card.Img
-              variant="top"
-              src="https://source.unsplash.com/Jr5x1CAWySo"
-              alt="Image"
-            />
+            <>
+              {club.organization_images ? (
+                <img
+                  className="club-images"
+                  src={club.organization_images}
+                  alt={("venueAlt")}
+                />
+              ) : (
+                <img
+                  className="club-images"
+                  src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg"
+                  alt={("venueAlt")}
+                />
+              )}
+            </>
 
             <Card.Body>
               <Card.Title>{club.organization_name}</Card.Title>
