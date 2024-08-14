@@ -16,16 +16,16 @@ const TestimonialDetails = ({ testiMonialDetail }) => {
         <p>{description}</p>
       </div>
       <div className="listing-venue-owner">
-        <a className="navigation">
+        <div className="navigation">
           <img src={img} alt="User" />
-        </a>
+        </div>
         <div className="testimonial-content">
           <h5>
-            <a>{name}</a>
+            <div>{name}</div>
           </h5>
-          <a className="btn btn-primary ">
+          <div className="btn btn-primary ">
             {gametype}
-          </a>
+          </div>
         </div>
       </div>
     </div>

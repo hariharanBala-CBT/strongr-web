@@ -71,9 +71,9 @@ function Club({ clubs }) {
                             </div>
                           )}
                         <h3 className="listing-title">
-                          <a onClick={() => handleViewDetails(club)}>
+                          <div onClick={() => handleViewDetails(club)}>
                             {club.organization.organization_name}
-                          </a>
+                          </div>
                         </h3>
                         <div className="listing-details-group">
                           <p>
@@ -92,7 +92,7 @@ function Club({ clubs }) {
                           </ul>
                         </div>
                         <div className="listing-button">
-                          <a
+                          <div
                             onClick={() => handleViewDetails(club)}
                             className="user-book-now"
                           >
@@ -102,7 +102,7 @@ function Club({ clubs }) {
                               </i>
                             </span>
                             {t("bookNow")}
-                          </a>
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -872,7 +872,7 @@ function ClubDetailScreen() {
                     </div>
                     <div className="club-timings">
                       <h4>
-                        <a onClick={handleOverlayClick}>{t("viewTimings")}</a>
+                        <div onClick={handleOverlayClick}>{t("viewTimings")}</div>
                       </h4>
                     </div>
                   </>
@@ -951,7 +951,7 @@ function ClubDetailScreen() {
                   </li> */}
                 </ul>
                 <div className="d-grid btn-block mt-3">
-                  <a
+                  <div
                     className="btn btn-secondary d-inline-flex justify-content-center align-items-center booknow-wrapper"
                     onClick={handleClick}
                   >
@@ -959,7 +959,7 @@ function ClubDetailScreen() {
                       <Calendar />
                     </i>
                     {t("book")}
-                  </a>
+                  </div>
                 </div>
               </div>
               {/* <div className="white-bg listing-owner">

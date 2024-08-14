@@ -124,13 +124,13 @@ function BookingScreen() {
               <div className="row d-flex align-items-center justify-content-center">
                 <div className="col-12 col-sm-12 col-md-12 col-lg-6">
                   <div className="d-sm-flex justify-content-start align-items-center">
-                    <a>
+                    <div>
                       <img
                         className="corner-radius-10"
                         src={venueImage}
                         alt={t("venueAlt")}
                       />
-                    </a>
+                    </div>
                     <div className="info">
                     {bookingDetails?.rating ? (
                       <div className="d-flex justify-content-start align-items-center mb-3">

@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 
 import { ArrowRightCircle, Eye, EyeOff } from "react-feather";
 import Header from "../components/Header";
-import Button from "../components/Button";
 import Footer from "../components/Footer";
 import "../css/updatepassword.css";
 import { resetUserPassword } from "../actions/actions";

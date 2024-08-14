@@ -4,10 +4,6 @@ import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import "../css/venue.css";
-import venueImage1 from "../images/venue1.jpg";
-import venueImage2 from "../images/venue2.jpg";
-import venueImage3 from "../images/venue3.jpg";
-import venueImage4 from "../images/venue4.jpg";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -17,36 +13,6 @@ const Venue = () => {
     (state) => state.topRatedClubs
   );
 
-  const Venues = [
-    {
-      name: "Ramesh Kumar",
-      description:
-        "outdoor sports, concerts, or other events and consists of a field or stage completely surrounded by a tiered structure designed to allow spectators to stand or sit and view the event.",
-      address: "Ramapuram",
-      img: venueImage1,
-    },
-    {
-      name: "Brandon Savage",
-      description:
-        "outdoor sports, concerts, or other events and consists of a field or stage completely surrounded by a tiered structure designed to allow spectators to stand or sit and view the event.",
-      address: "Ashok Nagar",
-      img: venueImage2,
-    },
-    {
-      name: "Steve Burns",
-      description:
-        "outdoor sports, concerts, or other events and consists of a field or stage completely surrounded by a tiered structure designed to allow spectators to stand or sit and view the event.",
-      address: "Ashok Nagar",
-      img: venueImage3,
-    },
-    {
-      name: "Kevin Canlas",
-      description:
-        "outdoor sports, concerts, or other events and consists of a field or stage completely surrounded by a tiered structure designed to allow spectators to stand or sit and view the event.",
-      address: "Ashok Nagar",
-      img: venueImage4,
-    },
-  ];
   //Owl Carousel Settings
   const options = {
     loop: true,
@@ -119,14 +85,14 @@ const Venue = () => {
           className="view-all text-center aos viewall-feature"
           data-aos="fade-up"
         >
-          <a
+          <div
             className="btn btn-secondary d-inline-flex align-items-center"
           >
             {t("viewAll")}
             <span className="lh-1">
               <i className="feather-arrow-right-circle ms-2"></i>
             </span>
-          </a>
+          </div>
         </div>
       </div>
     </section>

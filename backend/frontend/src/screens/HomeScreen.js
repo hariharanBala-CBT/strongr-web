@@ -148,7 +148,7 @@ function HomeScreen(history) {
     } else if (gameError) {
       toast.error(t("errorFetchingGames"));
     }
-  }, [areaError, gameError]);
+  }, [areaError, gameError, t]);
 
   useEffect(() => {
     fixImageUrls();
