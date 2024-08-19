@@ -1276,6 +1276,10 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
         active_days = OrganizationLocationWorkingDays.objects.filter(
             organization_location=location_pk,
             is_active=True)
+        
+        if all(day.work_from_time is None or day.work_to_time is None for day in active_days):
+            messages.error(request, ERROR_MESSAGES.get('default_slot_failure'))
+            return redirect(reverse('slot-location'))
 
         Slot.objects.filter(court__location_id=location_pk).delete()
 

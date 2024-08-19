@@ -328,20 +328,16 @@ def createBooking(request):
     data = request.data
 
     try:
-        court_id = data['courtId']
-        court = Court.objects.get(id=court_id)
+        court = Court.objects.get(id=data['courtId'])
         organization = court.location.organization
+        slot_id = data.get('slotId') or data.get('addSlotId')
 
-        if 'slotId' in data:
-            slot = Slot.objects.get(id=data['slotId'])
-        elif 'addSlotId' in data:
-            slot = AdditionalSlot.objects.get(id=data['addSlotId'])
-        else:
+        if not slot_id:
             return Response({'detail': 'Slot not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-        with transaction.atomic():
-            slot.save()
+        slot = Slot.objects.get(id=slot_id) if 'slotId' in data else AdditionalSlot.objects.get(id=slot_id)
 
+        with transaction.atomic():
             booking = Booking.objects.create(
                 user=user,
                 name=user.first_name,
@@ -356,38 +352,26 @@ def createBooking(request):
                 booking_status=2,
             )
 
-        # Sending the confirmation email to both the user and the organization
-        subject = 'Booking Confirmation'
-        message = render_to_string(
-            'user_booking_email.html', {
-                'user': user,
-                'booking_date': booking.booking_date,
+        # Send confirmation email to user
+        send_mail(
+            'Booking Confirmation',
+            render_to_string('user_booking_email.html', {
+                'user': user, 'booking_date': booking.booking_date,
                 'organization': organization.organization_name,
-                'court': court,
-                'slot': slot,
-                'total_price': booking.total_price
-            }
+                'court': court, 'slot': slot, 'total_price': booking.total_price}),
+            'testgamefront@gmail.com', [data['userInfo']['email']], fail_silently=False
         )
-        from_email = 'testgamefront@gmail.com'
-        recipient_list = [data['userInfo']['email']]
 
-        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-
-        message = render_to_string(
-            'organization_booking_email.html', {
-                'user': user,
-                'booking_date': booking.booking_date,
-                'court': court,
-                'slot': slot,
-                'total_price': booking.total_price
-            }
+        # Send confirmation email to organization
+        send_mail(
+            'Booking Confirmation',
+            render_to_string('organization_booking_email.html', {
+                'user': user, 'booking_date': booking.booking_date,
+                'court': court, 'slot': slot, 'total_price': booking.total_price}),
+            'testgamefront@gmail.com', [organization.user.email], fail_silently=False
         )
-        from_email = 'testgamefront@gmail.com'
-        recipient_list = [organization.user.email]
-        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
 
-        serializer = BookingDetailsSerializer(booking)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(BookingDetailsSerializer(booking).data, status=status.HTTP_201_CREATED)
 
     except Exception as e:
         print(f"Error: {str(e)}")
