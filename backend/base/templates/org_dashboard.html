@@ -147,89 +147,150 @@
             <td>
               <span class="badge
                   {% if booking.booking_status == 4 %}bg-success
-                  {% elif booking.booking_status == 5 %}bg-danger
+                  {% elif booking.booking_status == 3 %}bg-danger
                   {% elif booking.booking_status == 2 %}bg-warning text-dark
                   {% else %}bg-secondary{% endif %}">
-                {{ booking.get_booking_status_display }}</td>
-              </span>
+                {{ booking.get_booking_status_display }}
+            </td>
+            </span>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center mt-4" id="pagination">
+    </ul>
+  </nav>
 </div>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  function removeStartDateMinAttribute() {
-    const startDateInput = document.getElementById('first_date');
-    if (startDateInput) {
-      startDateInput.removeAttribute('min');
-    }
-  }
-
   document.addEventListener('DOMContentLoaded', function () {
     removeStartDateMinAttribute();
 
+    // Pagination variables
+    const itemsPerPage = 10;
+    let currentPage = 1;
+    const rows = Array.from(document.querySelectorAll('#bookingTable tr'));
+    let filteredRows = rows;
+    let totalPages = Math.ceil(rows.length / itemsPerPage);
+
+    function removeStartDateMinAttribute() {
+      const startDateInput = document.getElementById('first_date');
+      if (startDateInput) {
+        startDateInput.removeAttribute('min');
+      }
+    }
+
+    function showPage(page) {
+      const start = (page - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+
+      filteredRows.forEach((row, index) => {
+        if (index >= start && index < end) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function setupPagination() {
+      const paginationElement = document.getElementById('pagination');
+      paginationElement.innerHTML = '';
+
+      totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.classList.add('page-item');
+        const a = document.createElement('a');
+        a.classList.add('page-link');
+        a.href = '#';
+        a.textContent = i;
+
+        if (i === currentPage) {
+          li.classList.add('active');
+        }
+
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          currentPage = i;
+          showPage(currentPage);
+          setupPagination();
+        });
+
+        li.appendChild(a);
+        paginationElement.appendChild(li);
+      }
+    }
+
     window.applyFilters = function () {
-  const game = document.getElementById('game').value;
-  const startDate = document.getElementById('first_date').value;
-  const endDate = document.getElementById('end_date').value;
-  const paymentStatus = document.getElementById('payment_status').value;
+      const game = document.getElementById('game').value;
+      const startDate = document.getElementById('first_date').value;
+      const endDate = document.getElementById('end_date').value;
+      const paymentStatus = document.getElementById('payment_status').value;
 
-  const startDateError = document.getElementById('start-date-error');
-  const endDateError = document.getElementById('end-date-error');
+      const startDateError = document.getElementById('start-date-error');
+      const endDateError = document.getElementById('end-date-error');
 
-  startDateError.textContent = '';
-  endDateError.textContent = '';
+      startDateError.textContent = '';
+      endDateError.textContent = '';
 
-  if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-    startDateError.textContent = "Start Date cannot be later than End Date.";
-    endDateError.textContent = "End Date cannot be earlier than Start Date.";
-    return;
-  }
+      if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+        startDateError.textContent = "Start Date cannot be later than End Date.";
+        endDateError.textContent = "End Date cannot be earlier than Start Date.";
+        return;
+      }
 
-  const rows = document.querySelectorAll('#bookingTable tr');
+      filteredRows = rows.filter(row => {
+        const gameCell = row.cells[3].innerText.trim();
+        const bookingDateStr = row.cells[4].innerText.trim();
+        const paymentStatusCell = row.cells[7].innerText.trim();
 
-  rows.forEach(row => {
-    const gameCell = row.cells[3].innerText.trim();
-    const bookingDateStr = row.cells[4].innerText.trim();
-    const paymentStatusCell = row.cells[7].innerText.trim();
+        // Parse the booking date string to a Date object
+        const bookingDate = new Date(bookingDateStr);
 
-    let showRow = true;
+        // Adjust for timezone offset
+        const bookingDateAdjusted = new Date(bookingDate.getTime() - bookingDate.getTimezoneOffset() * 60000);
 
-    // Parse the booking date string to a Date object
-    const bookingDate = new Date(bookingDateStr);
-    
-    // Adjust for timezone offset
-    const bookingDateAdjusted = new Date(bookingDate.getTime() - bookingDate.getTimezoneOffset() * 60000);
-    
-    // Format the adjusted date as YYYY-MM-DD for comparison
-    const bookingDateFormatted = bookingDateAdjusted.toISOString().split('T')[0];
+        // Format the adjusted date as YYYY-MM-DD for comparison
+        const bookingDateFormatted = bookingDateAdjusted.toISOString().split('T')[0];
 
-    if (game && !gameCell.includes(game)) {
-      showRow = false;
+        if (game && !gameCell.includes(game)) {
+          return false;
+        }
+
+        if (startDate && bookingDateFormatted < startDate) {
+          return false;
+        }
+
+        if (endDate && bookingDateFormatted > endDate) {
+          return false;
+        }
+
+        if (paymentStatus && !paymentStatusCell.includes(paymentStatus)) {
+          return false;
+        }
+
+        return true;
+      });
+
+      // After applying filters, reset pagination
+      currentPage = 1;
+      showPage(currentPage);
+      setupPagination();
+
+      // Hide all rows initially
+      rows.forEach(row => row.style.display = 'none');
+
+      // Show only filtered rows
+      filteredRows.forEach(row => row.style.display = '');
     }
-
-    if (startDate && bookingDateFormatted < startDate) {
-      showRow = false;
-    }
-
-    if (endDate && bookingDateFormatted > endDate) {
-      showRow = false;
-    }
-
-    if (paymentStatus && !paymentStatusCell.includes(paymentStatus)) {
-      showRow = false;
-    }
-
-    row.style.display = showRow ? '' : 'none';
-  });
-
-}
 
     window.clearFilters = function () {
       document.getElementById('game').value = '';
@@ -237,8 +298,18 @@
       document.getElementById('end_date').value = '';
       document.getElementById('payment_status').value = '';
 
-      applyFilters();
+      filteredRows = rows;
+      rows.forEach(row => row.style.display = '');
+
+      // After clearing filters, reset pagination
+      currentPage = 1;
+      showPage(currentPage);
+      setupPagination();
     };
+
+    // Initial setup
+    showPage(currentPage);
+    setupPagination();
   });
 </script>
 
