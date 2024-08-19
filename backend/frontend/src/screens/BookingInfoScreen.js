@@ -342,11 +342,12 @@ function BookingInfoScreen() {
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
-      toast.success(t("loggedInSuccessfully"));
-      setOpenForm(false);
-      setIsLogin(false);
+        toast.success(t("message", { userName: userInfo.first_name }), { duration: 4000 });
+        setOpenForm(false);
+        setIsLogin(false);
     }
-  }, [isLogin, userLoginSuccess]);
+}, [isLogin, userLoginSuccess, userInfo, t]);
+
 
   useEffect(() => {
     const userName = localStorage.getItem("userName");
