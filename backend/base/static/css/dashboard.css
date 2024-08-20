@@ -109,6 +109,33 @@
     border-radius: 5px;
 }
 
+footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    text-align: center;
+    margin-top: auto;
+    width: 106%;
+    margin-left: -26px;
+    margin-bottom: -39px;
+    border-top: 1px solid #e0e0e0;
+
+    a {
+        color: #007bff;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    footer .d-flex {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    footer .d-flex > div:first-child {
+      margin-bottom: 0.5rem;
+    }
+  }
+
 /* Responsive adjustments */
 @media (max-width: 992px) {
     .dashboard-header {
