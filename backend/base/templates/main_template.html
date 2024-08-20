@@ -114,7 +114,7 @@
                                 {% endfor %}
                             </div>
                         {% endif %}
-                        <div class="form-group d-flex justify-content-center align-items-center mb-4">
+                        <div class="d-flex justify-content-center align-items-center mb-4">
                             <h1 class="mt-4 mb-4">Location:</h1>
                             <div class="select-location ms-4">
                                 <select id="locationSelect" class="form-select" onchange="locationChange(this)">
@@ -206,7 +206,7 @@
                             },
                             error: function (xhr, status, error) {
                                 console.error('Error:', error);
-                                showToast('Error submitting form. ' + error);
+                                showToast('Error submitting form. ');
                             }
                         });
                     });

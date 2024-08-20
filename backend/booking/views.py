@@ -11,11 +11,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-
 from dateutil.parser import parse
 from django.utils.dateparse import parse_datetime
 from django.db.models import Q
 from django.db.models import Avg, Count
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
 import datetime
 from datetime import timedelta
 from django.db import transaction
@@ -326,66 +327,57 @@ def createBooking(request):
     user = request.user
     data = request.data
 
-    if 'slotId' in data:
-        try:
-            court_id = data['courtId']
-            court = Court.objects.get(id=court_id)
-            slot_id = data['slotId']
-            slot = Slot.objects.get(id=slot_id)
+    try:
+        court = Court.objects.get(id=data['courtId'])
+        organization = court.location.organization
+        area = court.location.area
+        slot_id = data.get('slotId') or data.get('addSlotId')
 
-            with transaction.atomic():
-                slot.save()
+        if not slot_id:
+            return Response({'detail': 'Slot not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-                booking = Booking.objects.create(
-                    user=user,
-                    name=user.first_name,
-                    email=data['userInfo']['email'],
-                    phone_number=data['phoneNumber'],
-                    booking_date=data['date'],
-                    court=court,
-                    slot=slot,
-                    tax_price=data['taxPrice'],
-                    total_price=data['totalPrice'],
-                    booking_status=2,
-                )
+        slot = Slot.objects.get(id=slot_id) if 'slotId' in data else AdditionalSlot.objects.get(id=slot_id)
 
-            serializer = BookingDetailsSerializer(booking)
+        with transaction.atomic():
+            booking = Booking.objects.create(
+                user=user,
+                name=user.first_name,
+                email=data['userInfo']['email'],
+                phone_number=data['phoneNumber'],
+                booking_date=data['date'],
+                court=court,
+                slot=slot if 'slotId' in data else None,
+                additional_slot=slot if 'addSlotId' in data else None,
+                tax_price=data['taxPrice'],
+                total_price=data['totalPrice'],
+                booking_status=2,
+            )
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # Send confirmation email to user
+        send_mail(
+            'Booking Confirmation',
+            render_to_string('user_booking_email.html', {
+                'user': user, 'booking_date': booking.booking_date,
+                'organization': organization.organization_name,
+                'area':area, 'court': court, 'slot': slot, 'total_price': booking.total_price}),
+            'testgamefront@gmail.com', [data['userInfo']['email']], fail_silently=False
+        )
 
-        except Exception:
-            return Response({'detail': 'Booking not created'},
-                            status=status.HTTP_400_BAD_REQUEST)
+        # Send confirmation email to organization
+        send_mail(
+            'Booking Confirmation',
+            render_to_string('organization_booking_email.html', {
+                'organization': organization.organization_name,
+                'user': user, 'booking_date': booking.booking_date, 'area':area, 
+                'court': court, 'slot': slot, 'total_price': booking.total_price}),
+            'testgamefront@gmail.com', [organization.user.email], fail_silently=False
+        )
 
-    elif 'addSlotId' in data:
-        try:
-            court_id = data['courtId']
-            court = Court.objects.get(id=court_id)
-            add_slot = data['addSlotId']
-            slot = AdditionalSlot.objects.get(id=add_slot)
+        return Response(BookingDetailsSerializer(booking).data, status=status.HTTP_201_CREATED)
 
-            with transaction.atomic():
-                slot.save()
-
-                booking = Booking.objects.create(
-                    user=user,
-                    name=user.first_name,
-                    email=data['userInfo']['email'],
-                    phone_number=data['phoneNumber'],
-                    booking_date=data['date'],
-                    court=court,
-                    additional_slot=slot,
-                    tax_price=data['taxPrice'],
-                    total_price=data['totalPrice'],
-                    booking_status=2,
-                )
-
-            serializer = BookingDetailsSerializer(booking)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        except Exception:
-            return Response({'detail': 'Booking not created'},
-                            status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return Response({'detail': 'Booking not created'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])

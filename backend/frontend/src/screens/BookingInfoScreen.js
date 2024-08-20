@@ -335,11 +335,20 @@ function BookingInfoScreen() {
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
-      toast.success(t("loggedInSuccessfully"));
-      setOpenForm(false);
-      setIsLogin(false);
+        toast.success(t("message", { userName: userInfo.first_name }), { duration: 4000 });
+        setOpenForm(false);
+        setIsLogin(false);
     }
-  }, [isLogin, t, userLoginSuccess]);
+}, [isLogin, userLoginSuccess, userInfo, t]);
+
+
+  useEffect(() => {
+    const userName = localStorage.getItem("userName");
+    if (userName) {
+      toast.success(t("message",{userName}), { duration: 4000 });
+      localStorage.removeItem("userName");
+    }
+  }, [t]);
 
   useEffect(() => {
     const theCourt = courts?.find((court) => court.name === courtName);

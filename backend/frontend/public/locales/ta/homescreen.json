@@ -28,5 +28,6 @@
     "guide":"வழிகாட்டி",
     "success": "{{brandName}} அமைப்புக்கு வரவேற்கிறோம்",
     "guideLink": "Booking step by step in STRONGR(tamil).pdf",
-    "iconAlt": "ஐகான்"
+    "iconAlt": "ஐகான்",
+    "message": "உள்நுழைவு வெற்றிகரமாக முடிந்தது. திரும்ப வந்ததற்கு நன்றி, {{userName}}!"
 }

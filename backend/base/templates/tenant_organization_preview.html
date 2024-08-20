@@ -1,61 +1,70 @@
-{%  extends 'base_tenant.html' %} {% block content %}    
-{% load static %}{% load url_filters %}
+{% extends 'base_tenant.html' %}
+
+{% block content %}
+{% load static %}
+{% load url_filters %}
+
 <link href="{% static 'styles.css' %}" rel="stylesheet" />
 <link href="{% static './css/tenant_orgprev.css' %}" rel="stylesheet" />
+
 {% if messages %}
-		<div class="alert alert-success" role="alert" id="successAlert">
-			{% for message in messages %}
-				<p>{{ message }}</p>
-			{% endfor %}
-		</div>
+<div class="alert alert-success" role="alert" id="successAlert">
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+</div>
 {% endif %}
-<h1 class="mt-1 mb-4 organization-details-title">Organization Details</h1>
+
+<h1 class="text-center mb-4">Organization Details</h1>
+
 <!-- Organization Card -->
 <div class="card mb-4">
-	<div class="card-header bg-primary text-white">
-		<h2 class="m-0">{{ organization.organization_name }}</h2>
-	</div>
-	<div class="card-body">
-		<!-- Organization Details -->
-		<div class="row">
-		<div class="card mb-4">
-			<div class="card-body">
-				<h5 class="card-title"><strong>Organization Details</strong></h5>
-				<ul>
-					<li><div class="label">Name</div>:&nbsp; {{ organization.organization_name }}</li>
-					<li><div class="label">Email</div>:&nbsp; {{ organization.user.email }}</li>
-					<li><div class="label">Phone</div>:&nbsp; {{ organization.phone_number }}</li>
-					<li><div class="label">Alternate Phone</div>:  {{ organization.alt_number }}</li>
-					<li><div class="label">Description</div>:&nbsp; {{ organization.description }}</li>
-					<li><div class="label">Status</div>:&nbsp; 
-						{% if organization.status == 1 %}
-							<span class="status-approved" >Approved</span>
-						{% elif organization.status == 2 %}
-							<span class="status-pending">Pending</span>
-						{% elif organization.status == 3 %}
-							<span class="status-in-progress">In Progress</span>
-						{% elif organization.status == 4 %}
-							<span class="status-cancelled">Cancelled</span>
-						{% else %}
-							<span class="status-unknown">Unknown</span>
-							<p>Please Contact the Service Provider.</p>
-						{% endif %}
-					</li>
-				</ul>
-				{% if organization.status == 3 %}
-					<div class="btn-group" role="group">
-						<form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
-							{% csrf_token %}
-							<button type="submit" class="btn btn-success me-2">Approve</button>
-						</form>
-						{% if organization.status != 1 and organization.status != 4 %}
-							<button class="btn btn-danger cancel-button" id="cancelBtn">Cancel</button>
-						{% endif %}
-					</div>
-					{% endif %}
-			</div>
-		</div>
-		<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="card-header bg-primary text-white">
+        <h2 class="m-0">{{ organization.organization_name }}</h2>
+    </div>
+    <div class="card-body">
+        <!-- Organization Details -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><strong>Organization Details</strong></h5>
+                <ul>
+                    <li><div class="label">Name</div>:&nbsp; {{ organization.organization_name }}</li>
+                    <li><div class="label">Email</div>:&nbsp; {{ organization.user.email }}</li>
+                    <li><div class="label">Phone</div>:&nbsp; {{ organization.phone_number }}</li>
+                    <li><div class="label">Alternate Phone</div>:&nbsp; {{ organization.alt_number }}</li>
+                    <li><div class="label">Description</div>:&nbsp; {{ organization.description }}</li>
+                    <li><div class="label">Status</div>:&nbsp; 
+                        {% if organization.status == 1 %}
+                        <span class="status-approved">Approved</span>
+                        {% elif organization.status == 2 %}
+                        <span class="status-pending">Pending</span>
+                        {% elif organization.status == 3 %}
+                        <span class="status-in-progress">In Progress</span>
+                        {% elif organization.status == 4 %}
+                        <span class="status-cancelled">Cancelled</span>
+                        {% else %}
+                        <span class="status-unknown">Unknown</span>
+                        <p>Please Contact the Service Provider.</p>
+                        {% endif %}
+                    </li>
+                </ul>
+
+                {% if organization.status == 3 %}
+                <div class="btn-group" role="group">
+                    <form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success me-2">Approve</button>
+                    </form>
+                    {% if organization.status != 1 and organization.status != 4 %}
+                    <button class="btn btn-danger" id="cancelBtn">Cancel</button>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Cancel Modal -->
+        <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -67,7 +76,7 @@
 							{% csrf_token %}
 							<div class="mb-3">
 								<label for="reason" class="form-label">Please provide a reason for cancellation:</label>
-								<textarea class="form-control" id="reason" name="reason_for_cancellation" rows="3" required aria-describedby="cancelForm"></textarea>
+								<textarea class="form-control" id="reason" name="reason_for_cancellation" rows="3" required></textarea>
 							</div>
 							<button type="submit" class="btn btn-danger">Confirm Cancellation</button>
 						</form>
@@ -75,42 +84,43 @@
 				</div>
 			</div>
 		</div>
-		{% if organization.status == 1 %}
-			<h3 class="mb-4">Locations</h3>
-			<!-- Tab Navigation -->
-			<ul class="nav nav-tabs" id="locationTabs" role="tablist">
-				{% for location_item in all_locations %}
-					{% if location_item.location.status != 2 %}
-						<li class="nav-item" role="presentation">
-							<button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" type="button" role="tab" aria-controls="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">{{ location_item.location.address_line_1 }}</button>
-						</li>
-					{% endif %}
-				{% endfor %}
-			</ul>
-			<!-- Tab Content -->
-			<div class="tab-content" id="locationTabsContent">
-				{% for location_item in all_locations %}
-					{% if location_item.location.status != 2 %}
-						<div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="{{ location_item.location.address_line_1|slugify }}-{{ location_item.location.id }}-tab">
-							<div class="row">
-								<div class="card mb-4">
-									<div class="card-body">
-										<li style="list-style: none;">
-											<div class="label">Status</div>:&nbsp; 
-											{% if location_item.location.status == 1 %}
-												<span class="status-approved">Approved</span>
-											{% elif location_item.location.status == 2 %}
-												<span class="status-pending">Pending</span>
-											{% elif location_item.location.status == 3 %}
-												<span class="status-in-progress">In Progress</span>
-											{% elif location_item.location.status == 4 %}
-												<span class="status-cancelled">Cancelled</span>
-											{% else %}
-												<span class="status-unknown">Unknown</span>
-												<p>Please Contact the Service Provider.</p>
-											{% endif %}
-										</li>
-										<ul><strong>Address:</strong><br>
+
+        {% if organization.status == 1 %}
+            <h3 class="mb-4">Locations</h3>
+            <!-- Tab Navigation -->
+            <ul class="nav nav-tabs" id="locationTabs" role="tablist">
+                {% for location_item in all_locations %}
+                    {% if location_item.location.status != 2 %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link {% if forloop.first %}active{% endif %}" id="loc-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#loc-{{ location_item.location.id }}" type="button" role="tab" aria-controls="loc-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">{{ location_item.location.address_line_1 }}</button>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <!-- Tab Content -->
+            <div class="tab-content" id="locationTabsContent">
+                {% for location_item in all_locations %}
+                    {% if location_item.location.status != 2 %}
+                        <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="loc-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="loc-{{ location_item.location.id }}-tab">
+                            <div class="row">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <ul>
+                                            <div class="label">Status</div>:&nbsp; 
+                                            {% if location_item.location.status == 1 %}
+                                                <span class="status-approved">Approved</span>
+                                            {% elif location_item.location.status == 2 %}
+                                                <span class="status-pending">Pending</span>
+                                            {% elif location_item.location.status == 3 %}
+                                                <span class="status-in-progress">In Progress</span>
+                                            {% elif location_item.location.status == 4 %}
+                                                <span class="status-cancelled">Cancelled</span>
+                                            {% else %}
+                                                <span class="status-unknown">Unknown</span>
+                                                <p>Please Contact the Service Provider.</p>
+                                            {% endif %}
+                                        </ul>
+                                        <ul><strong>Address:</strong><br>
 											{{ location_item.location.address_line_1 }}<br>
 											{{ location_item.location.address_line_2 }}<br>
 											{{ location_item.location.area }}-{{ location_item.location.pincode }}
@@ -197,22 +207,22 @@
 													<button type="submit" class="btn btn-success me-2">Approve</button>
 												</form>
 												{% if location_item.location.status != 4 %}
-													<button class="btn btn-danger cancel-button" data-bs-toggle="modal" data-bs-target="#cancelModal2">Cancel</button>
+													<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ location_item.location.id }}">Cancel</button>
 												{% endif %}
 													<!-- Modal -->
-													<div class="modal fade" id="cancelModal2" tabindex="-1" aria-labelledby="cancelModalLabel2" aria-hidden="true">
+													<div class="modal fade" id="cancelModal{{ location_item.location.id }}" tabindex="-1" aria-labelledby="cancelModalLabel{{ location_item.location.id }}" aria-hidden="true">
 														<div class="modal-dialog">
 															<div class="modal-content">
 																<div class="modal-header">
-																	<h5 class="modal-title" id="cancelModalLabel2">Reason for Cancellation</h5>
+																	<h5 class="modal-title" id="cancelModalLabel{{ location_item.location.id }}">Reason for Cancellation</h5>
 																	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 																</div>
 																<div class="modal-body">
-																	<form id="cancelForm2" method="post" action="{% url 'change_location_status' location_item.location.id '4' %}">
+																	<form method="post" action="{% url 'change_location_status' location_item.location.id '4' %}">
 																		{% csrf_token %}
 																		<div class="mb-3">
-																			<label for="reason" class="form-label">Please provide a reason for cancellation:</label>
-																			<textarea class="form-control" id="reason" name="reason_for_cancellation" rows="3" required aria-describedby="cancelForm2"></textarea>
+																			<label for="reason{{ location_item.location.id }}" class="form-label">Please provide a reason for cancellation:</label>
+																			<textarea class="form-control" id="reason{{ location_item.location.id }}" name="reason_for_cancellation" rows="3" required></textarea>
 																		</div>
 																		<button type="submit" class="btn btn-danger">Confirm Cancellation</button>
 																	</form>
@@ -231,7 +241,7 @@
 				{% endfor %}
 			</div>
 		{% elif organization.status != 1 %}
-			<p class="message">Locations data appear only if the organization submission and tenant is approved !!!</p>
+			<p class="message-margin">Locations data appear only if the organization submission and tenant is approved !!!</p>
 		{% endif %}
 	</div>
 </div>
@@ -239,18 +249,57 @@
 	<button class="btn btn-secondary" data-toggle="tooltip"
 	title="go back" onclick="history.back();"><i class="fa-solid fa-arrow-left-long"></i></button>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const tabId = urlParams.get('tab');
-        
-        if (tabId) {
-            const tabTrigger = document.querySelector(`#${tabId}`);
-            if (tabTrigger) {
-                const tab = new bootstrap.Tab(tabTrigger);
-                tab.show();
-            }
+document.addEventListener('DOMContentLoaded', function () {
+    var hash = window.location.hash;
+
+    if (hash) {
+        var tabElement = document.querySelector(hash.replace('#', '#loc-'));
+        if (tabElement) {
+            var tab = new bootstrap.Tab(tabElement);
+            tab.show();
         }
+    } else {
+        // Show the first tab by default
+        var firstTab = document.querySelector('#locationTabs .nav-link');
+        if (firstTab) {
+            var tab = new bootstrap.Tab(firstTab);
+            tab.show();
+        }
+    }
+
+    // Organization Cancel Button
+    const orgCancelBtn = document.getElementById('cancelBtn');
+    if (orgCancelBtn) {
+        orgCancelBtn.addEventListener('click', function () {
+            const orgCancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
+            orgCancelModal.show();
+        });
+    }
+
+    // Location-Specific Cancel Buttons
+    document.querySelectorAll('[id^="cancelBtn"]').forEach(button => {
+        button.addEventListener('click', function () {
+            const locationId = button.getAttribute('data-location-id');
+            const locationCancelModal = new bootstrap.Modal(document.getElementById(`cancelModal${locationId}`));
+            locationCancelModal.show();
+        });
     });
+
+    // Cancel Form Validation
+    document.querySelectorAll('form[id^="cancelForm"]').forEach(form => {
+        form.addEventListener('submit', function (event) {
+            const reasonInput = form.querySelector('textarea[name="reason_for_cancellation"]');
+            if (!reasonInput.value.trim()) {
+                event.preventDefault(); // Prevent form submission if the reason is empty
+                alert('Please provide a reason for cancellation.');
+            }
+        });
+    });
+});
+
 </script>
+
 {% endblock %}

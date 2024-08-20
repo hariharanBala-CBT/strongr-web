@@ -159,6 +159,14 @@ function ClubListScreen() {
     }
   }, [clubFilterLoading, loadingSuggestedClub, loadingSuggestedClubGame]);
 
+  useEffect(() => {
+    const userName = localStorage.getItem("userName");
+    if (userName) {
+      toast.success(t("message",{userName}), { duration: 4000 });
+      localStorage.removeItem("userName");
+    }
+  }, [t]);
+
   return (
     <div className="header-breadcrumb clublist-wrapper">
       <Header location="nav-all" />

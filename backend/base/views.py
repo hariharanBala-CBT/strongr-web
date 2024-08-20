@@ -12,6 +12,7 @@ from base.serializers import UserSerializerWithToken, UserSerializerWithTokenAnd
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
 import os
 from django.http import JsonResponse
@@ -89,13 +90,33 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         try:
             data = super().validate(attrs)
-            serializer = UserSerializerWithTokenAndCustomer(self.user).data
-            for k, v in serializer.items():
-                data[k] = v
-            return data
+
+            # Check if the user is in the 'Customer' group
+            if self.user.groups.filter(name='Customer').exists():
+                serializer = UserSerializerWithTokenAndCustomer(self.user).data
+                for k, v in serializer.items():
+                    data[k] = v
+                return data
+
+            # If the user belongs to 'Organization' group, redirect or return a response
+            elif self.user.groups.filter(name='Organization').exists():
+                return Response(
+                    {'detail': 'Organization users should log in here.'},
+                    status=status.HTTP_302_FOUND
+                )
+
+            # Handle other groups if necessary
+            else:
+                return Response(
+                    {'detail': 'User belongs to an unsupported group.'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
         except Exception:
-            return Response({'detail': 'User does not exist'},
-                            status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {'detail': 'User does not exist'},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -310,13 +331,24 @@ class LogoutView(View):
         return redirect('login')
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationHomeView(GroupAccessMixin,TemplateView):
-    template_name = 'org_dashboard.html'
+class OrganizationBookingView(GroupAccessMixin, TemplateView):
     group_required = ['Organization']
+
+    # Define a dictionary to map view names to templates
+    template_map = {
+        'org_dashboard': 'org_dashboard.html',
+        'confirmed_bookings': 'confirmed_bookings.html',
+        'completed_bookings': 'completed_bookings.html',
+        'pending_bookings': 'pending_bookings.html',
+        'cancelled_bookings': 'cancelled_bookings.html',
+    }
+
+    def get_template_names(self):
+        # Return the template based on the view name
+        return [self.template_map[self.template_name]]
 
     def get_context_data(self, **kwargs):
         organization = Organization.objects.get(user=self.request.user)
-
         courts = Court.objects.filter(location__organization=organization)
 
         # Initialize an empty list to store all bookings
@@ -329,73 +361,10 @@ class OrganizationHomeView(GroupAccessMixin,TemplateView):
             # Extend the all_bookings list with the current court's bookings
             all_bookings.extend(court_bookings)
 
-        context = {'organization': organization, 'bookings': all_bookings}
+        games = GameType.objects.all()
+        payment_status_choices = Booking.payment_status_choices
 
-        return context
-
-@method_decorator(login_required, name='dispatch')
-class ListofConfirmBookingView(GroupAccessMixin, TemplateView):
-    template_name = 'confirmed_bookings.html'
-    group_required = ['Organization']
-
-    def get_context_data(self, **kwargs):
-        organization = Organization.objects.get(user=self.request.user)
-
-        courts = Court.objects.filter(location__organization=organization)
-
-        # Initialize an empty list to store all bookings
-        all_bookings = []
-
-        for court in courts:
-            court_bookings = Booking.objects.filter(
-                Q(court=court) & Q(booking_status=Booking.CONFIRMED))
-            all_bookings.extend(court_bookings)
-
-        context = {'organization': organization, 'bookings': all_bookings}
-
-        return context
-
-@method_decorator(login_required, name='dispatch')
-class ListofPendingBookingView(GroupAccessMixin, TemplateView):
-    template_name = 'pending_bookings.html'
-    group_required = ['Organization']
-
-    def get_context_data(self, **kwargs):
-        organization = Organization.objects.get(user=self.request.user)
-
-        courts = Court.objects.filter(location__organization=organization)
-
-        # Initialize an empty list to store all bookings
-        all_bookings = []
-
-        for court in courts:
-            court_bookings = Booking.objects.filter(
-                Q(court=court) & Q(booking_status=Booking.PENDING))
-            all_bookings.extend(court_bookings)
-
-        context = {'organization': organization, 'bookings': all_bookings}
-
-        return context
-
-@method_decorator(login_required, name='dispatch')
-class ListofCancelledBookingView(GroupAccessMixin, TemplateView):
-    template_name = 'cancelled_bookings.html'
-    group_required = ['Organization']
-
-    def get_context_data(self, **kwargs):
-        organization = Organization.objects.get(user=self.request.user)
-
-        courts = Court.objects.filter(location__organization=organization)
-
-        # Initialize an empty list to store all bookings
-        all_bookings = []
-
-        for court in courts:
-            court_bookings = Booking.objects.filter(
-                Q(court=court) & Q(booking_status=Booking.CANCELLED))
-            all_bookings.extend(court_bookings)
-
-        context = {'organization': organization, 'bookings': all_bookings}
+        context = {'organization': organization, 'bookings': all_bookings, 'games': games, 'payment_status_choices': payment_status_choices,}
 
         return context
 
@@ -1275,6 +1244,10 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
         active_days = OrganizationLocationWorkingDays.objects.filter(
             organization_location=location_pk,
             is_active=True)
+        
+        if all(day.work_from_time is None or day.work_to_time is None for day in active_days):
+            messages.error(request, ERROR_MESSAGES.get('default_slot_failure'))
+            return redirect(reverse('slot-location'))
 
         Slot.objects.filter(court__location_id=location_pk).delete()
 
@@ -1332,7 +1305,6 @@ class OrganizationListView(GroupAccessMixin, ListView):
 
     def get_queryset(self):
         objects =  Organization.objects.filter(tenant__user = self.request.user.id)
-        print(objects, 'user id', self.request.user.id)
         return objects
 @method_decorator(login_required, name='dispatch')
 class LocationListView(GroupAccessMixin, ListView):
@@ -1343,7 +1315,6 @@ class LocationListView(GroupAccessMixin, ListView):
 
     def get_queryset(self):
         objects =  OrganizationLocation.objects.filter(organization__tenant__user = self.request.user.id)
-        print(objects, 'user id', self.request.user.id)
         return objects
 
 @method_decorator(login_required, name='dispatch')
@@ -1451,7 +1422,6 @@ class TenantsCustomerlist(GroupAccessMixin, LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         origin = self.request.META.get("HTTP_ORIGIN")
-        print(origin)
         user_object = User.objects.get(id = self.request.user.id)
         tenant_object = Tenant.objects.get(user = user_object)
         customers = Customer.objects.filter(
@@ -1664,17 +1634,17 @@ def main_view(request, location_pk=None):
 
 @login_required
 @group_required('Organization')
+@require_http_methods(["GET", "POST"])
 def update_working_days(request, location_pk):
     queryset = OrganizationLocationWorkingDays.objects.filter(organization_location_id=location_pk)
 
-    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if request.method == 'POST':
         formset = OrganizationLocationWorkingDaysFormSet(request.POST, queryset=queryset)
-
         if formset.is_valid():
             instances = formset.save(commit=False)
-
+            
+            errors = []
             has_active = False
-            times_empty = False
 
             for form in formset:
                 is_active = form.cleaned_data.get('is_active')
@@ -1684,36 +1654,30 @@ def update_working_days(request, location_pk):
                 if is_active:
                     has_active = True
                     if not work_from_time or not work_to_time:
-                        times_empty = True
-                        break
+                        errors.append(ERROR_MESSAGES.get('working_days_time_failure'))
+                    elif work_from_time == work_to_time:
+                        errors.append(ERROR_MESSAGES.get('working_days_start_time_failure'))
+                    elif work_to_time < work_from_time:
+                        errors.append(ERROR_MESSAGES.get('working_days_failure'))
 
-            # Check for specific validation conditions
             if not has_active:
-                return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_is_active_failure')})
+                errors.append(ERROR_MESSAGES.get('working_days_is_active_failure'))
 
-            if times_empty:
-                return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_time_failure')})
+            if errors:
+                return JsonResponse({'status': 'error', 'errors': errors}, status=400)
 
-            if any(form.cleaned_data.get('work_from_time') == form.cleaned_data.get('work_to_time') for form in formset):
-                return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_start_time_failure')})
-
-            if any(form.cleaned_data.get('work_to_time') < form.cleaned_data.get('work_from_time') for form in formset):
-                return JsonResponse({'status': 'error', 'message': ERROR_MESSAGES.get('working_days_failure')})
-
-            # Save instances if validation is successful
             for instance in instances:
                 instance.save()
-
             formset.save()
             return JsonResponse({'status': 'success', 'message': SUCCESS_MESSAGES.get('update_workingdays')})
         else:
             errors = {}
             for i, form in enumerate(formset):
                 if form.errors:
-                    errors.update({f'{form.prefix}-{field}': error for field, error in form.errors.items()})
+                    for field, error_list in form.errors.items():
+                        errors[f'{form.prefix}-{field}'] = error_list
 
-            error_messages = ''.join([f'{error}' for error in formset.errors])
-            return JsonResponse({'status': 'error', 'message': format_html(ERROR_MESSAGES('form_validation_failed'), error_messages), 'errors': errors}, status=400)
+            return JsonResponse({'status': 'error', 'errors': errors}, status=400)
     else:
         formset = OrganizationLocationWorkingDaysFormSet(queryset=queryset)
 

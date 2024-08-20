@@ -189,7 +189,14 @@ function ClubDetailScreen() {
   useEffect(() => {
     fixImageUrls();
   }, [clubImage]);
-  
+
+  useEffect(() => {
+    const userName = localStorage.getItem("userName");
+    if (userName) {
+      toast.success(t("message",{userName}), { duration: 4000 });
+      localStorage.removeItem("userName");
+    }
+  }, [t]);
   return (
     <div className="venue-club-details">
       <Header location="nav-all" />

@@ -7,5 +7,7 @@
     "suggestedClubsIn": "Suggested Clubs in {{areaName}}",
     "suggestedClubsFor": "Suggested Clubs for {{gameName}}",
     "fetchingAreas": "Error in fetching areas",
-    "fetchingGames": "Error in fetching games"
+    "fetchingGames": "Error in fetching games",
+    "message": "Login successful. Welcome back, {{userName}}!"
+
 }
