@@ -10,6 +10,7 @@
 {% endif %}
 <div class="container-fluid px-4">
 	<h1 class="mt-4 mb-4 organization-list-title">Organization List</h1>
+	<p class="message">Note: Pending organization can be found in <a href="{% url 'tenantuser_page' %}">Dashboard</a></p>
 	<div class="card mb-4">
 		<div class="card-header">
 			<i class="fas fa-table me-1"></i>
@@ -40,7 +41,8 @@
 								<td><a href="{% url 'organization_preview' organization.pk %}">{{ organization.organization_name }}</a></td>
 								<td>{{ organization.phone_number }}</td>
 								<td>{{ organization.get_status_display }}</td>
-								<td> <div>
+								<td> 
+									<div>
 										{% if organization.status != 1 and organization.status != 4 %}
 											<div class="btn-group" role="group">
 												<form method="post" action="{% url 'change_organization_status' organization.pk '1' %}">
@@ -53,7 +55,7 @@
 												</form>
 											</div>
 										{% endif %}
-										</div>
+									</div>
 								</td>
 							</tr>
 						{% endif %}
