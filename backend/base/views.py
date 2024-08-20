@@ -90,13 +90,33 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         try:
             data = super().validate(attrs)
-            serializer = UserSerializerWithTokenAndCustomer(self.user).data
-            for k, v in serializer.items():
-                data[k] = v
-            return data
+
+            # Check if the user is in the 'Customer' group
+            if self.user.groups.filter(name='Customer').exists():
+                serializer = UserSerializerWithTokenAndCustomer(self.user).data
+                for k, v in serializer.items():
+                    data[k] = v
+                return data
+
+            # If the user belongs to 'Organization' group, redirect or return a response
+            elif self.user.groups.filter(name='Organization').exists():
+                return Response(
+                    {'detail': 'Organization users should log in here.'},
+                    status=status.HTTP_302_FOUND
+                )
+
+            # Handle other groups if necessary
+            else:
+                return Response(
+                    {'detail': 'User belongs to an unsupported group.'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
         except Exception:
-            return Response({'detail': 'User does not exist'},
-                            status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {'detail': 'User does not exist'},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -311,13 +331,24 @@ class LogoutView(View):
         return redirect('login')
 
 @method_decorator(login_required, name='dispatch')
-class OrganizationHomeView(GroupAccessMixin,TemplateView):
-    template_name = 'org_dashboard.html'
+class OrganizationBookingView(GroupAccessMixin, TemplateView):
     group_required = ['Organization']
+
+    # Define a dictionary to map view names to templates
+    template_map = {
+        'org_dashboard': 'org_dashboard.html',
+        'confirmed_bookings': 'confirmed_bookings.html',
+        'completed_bookings': 'completed_bookings.html',
+        'pending_bookings': 'pending_bookings.html',
+        'cancelled_bookings': 'cancelled_bookings.html',
+    }
+
+    def get_template_names(self):
+        # Return the template based on the view name
+        return [self.template_map[self.template_name]]
 
     def get_context_data(self, **kwargs):
         organization = Organization.objects.get(user=self.request.user)
-
         courts = Court.objects.filter(location__organization=organization)
 
         # Initialize an empty list to store all bookings
@@ -330,73 +361,10 @@ class OrganizationHomeView(GroupAccessMixin,TemplateView):
             # Extend the all_bookings list with the current court's bookings
             all_bookings.extend(court_bookings)
 
-        context = {'organization': organization, 'bookings': all_bookings}
+        games = GameType.objects.all()
+        payment_status_choices = Booking.payment_status_choices
 
-        return context
-
-@method_decorator(login_required, name='dispatch')
-class ListofConfirmBookingView(GroupAccessMixin, TemplateView):
-    template_name = 'confirmed_bookings.html'
-    group_required = ['Organization']
-
-    def get_context_data(self, **kwargs):
-        organization = Organization.objects.get(user=self.request.user)
-
-        courts = Court.objects.filter(location__organization=organization)
-
-        # Initialize an empty list to store all bookings
-        all_bookings = []
-
-        for court in courts:
-            court_bookings = Booking.objects.filter(
-                Q(court=court) & Q(booking_status=Booking.CONFIRMED))
-            all_bookings.extend(court_bookings)
-
-        context = {'organization': organization, 'bookings': all_bookings}
-
-        return context
-
-@method_decorator(login_required, name='dispatch')
-class ListofPendingBookingView(GroupAccessMixin, TemplateView):
-    template_name = 'pending_bookings.html'
-    group_required = ['Organization']
-
-    def get_context_data(self, **kwargs):
-        organization = Organization.objects.get(user=self.request.user)
-
-        courts = Court.objects.filter(location__organization=organization)
-
-        # Initialize an empty list to store all bookings
-        all_bookings = []
-
-        for court in courts:
-            court_bookings = Booking.objects.filter(
-                Q(court=court) & Q(booking_status=Booking.PENDING))
-            all_bookings.extend(court_bookings)
-
-        context = {'organization': organization, 'bookings': all_bookings}
-
-        return context
-
-@method_decorator(login_required, name='dispatch')
-class ListofCancelledBookingView(GroupAccessMixin, TemplateView):
-    template_name = 'cancelled_bookings.html'
-    group_required = ['Organization']
-
-    def get_context_data(self, **kwargs):
-        organization = Organization.objects.get(user=self.request.user)
-
-        courts = Court.objects.filter(location__organization=organization)
-
-        # Initialize an empty list to store all bookings
-        all_bookings = []
-
-        for court in courts:
-            court_bookings = Booking.objects.filter(
-                Q(court=court) & Q(booking_status=Booking.CANCELLED))
-            all_bookings.extend(court_bookings)
-
-        context = {'organization': organization, 'bookings': all_bookings}
+        context = {'organization': organization, 'bookings': all_bookings, 'games': games, 'payment_status_choices': payment_status_choices,}
 
         return context
 
