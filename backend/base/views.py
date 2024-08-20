@@ -1276,6 +1276,10 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
         active_days = OrganizationLocationWorkingDays.objects.filter(
             organization_location=location_pk,
             is_active=True)
+        
+        if all(day.work_from_time is None or day.work_to_time is None for day in active_days):
+            messages.error(request, ERROR_MESSAGES.get('default_slot_failure'))
+            return redirect(reverse('slot-location'))
 
         Slot.objects.filter(court__location_id=location_pk).delete()
 
@@ -1333,7 +1337,6 @@ class OrganizationListView(GroupAccessMixin, ListView):
 
     def get_queryset(self):
         objects =  Organization.objects.filter(tenant__user = self.request.user.id)
-        print(objects, 'user id', self.request.user.id)
         return objects
 @method_decorator(login_required, name='dispatch')
 class LocationListView(GroupAccessMixin, ListView):
@@ -1344,7 +1347,6 @@ class LocationListView(GroupAccessMixin, ListView):
 
     def get_queryset(self):
         objects =  OrganizationLocation.objects.filter(organization__tenant__user = self.request.user.id)
-        print(objects, 'user id', self.request.user.id)
         return objects
 
 @method_decorator(login_required, name='dispatch')
@@ -1452,7 +1454,6 @@ class TenantsCustomerlist(GroupAccessMixin, LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         origin = self.request.META.get("HTTP_ORIGIN")
-        print(origin)
         user_object = User.objects.get(id = self.request.user.id)
         tenant_object = Tenant.objects.get(user = user_object)
         customers = Customer.objects.filter(

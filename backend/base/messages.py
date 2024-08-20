@@ -62,4 +62,5 @@ ERROR_MESSAGES = {
     'working_days_time_failure': 'Active days must have both start and end times.',
     'working_days_start_time_failure': 'Opening time and closing time cannot be same',
     'working_days_failure': 'Closing time cannot be before opening time',
+    'default_slot_failure':'Without opening/closing time slots can not be created'
 }
