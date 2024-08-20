@@ -330,6 +330,7 @@ def createBooking(request):
     try:
         court = Court.objects.get(id=data['courtId'])
         organization = court.location.organization
+        area = court.location.area
         slot_id = data.get('slotId') or data.get('addSlotId')
 
         if not slot_id:
@@ -358,7 +359,7 @@ def createBooking(request):
             render_to_string('user_booking_email.html', {
                 'user': user, 'booking_date': booking.booking_date,
                 'organization': organization.organization_name,
-                'court': court, 'slot': slot, 'total_price': booking.total_price}),
+                'area':area, 'court': court, 'slot': slot, 'total_price': booking.total_price}),
             'testgamefront@gmail.com', [data['userInfo']['email']], fail_silently=False
         )
 
@@ -366,7 +367,8 @@ def createBooking(request):
         send_mail(
             'Booking Confirmation',
             render_to_string('organization_booking_email.html', {
-                'user': user, 'booking_date': booking.booking_date,
+                'organization': organization.organization_name,
+                'user': user, 'booking_date': booking.booking_date, 'area':area, 
                 'court': court, 'slot': slot, 'total_price': booking.total_price}),
             'testgamefront@gmail.com', [organization.user.email], fail_silently=False
         )
