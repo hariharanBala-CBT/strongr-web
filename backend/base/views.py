@@ -215,6 +215,9 @@ def registerUser(request):
             user=user,
             phone_number=data.get('phone'),
         )
+        
+        customer_group = Group.objects.get(name='Customer')
+        user.groups.add(customer_group)
 
         serializer = UserSerializerWithTokenAndCustomer(user, many=False)
         return Response(serializer.data)
