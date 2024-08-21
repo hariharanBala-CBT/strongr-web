@@ -79,6 +79,7 @@
 
 .suggested-clubs {
   padding: 2rem;
+  margin-top: 1rem;
 }
 
 .suggested-clubs .title-suggested {
@@ -228,4 +229,14 @@ header.header-sticky {
 .breadcrumb a {
   color: #fff !important;
   text-decoration: none;
+}
+
+.select-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.select-label {
+  margin-bottom: 1.5rem;
 }

@@ -246,6 +246,7 @@ def filterClubs(request):
     selected_area = request.query_params.get('area')
     selected_game = request.query_params.get('game')
     date = request.query_params.get('date')
+    amenities = request.query_params.getlist('amenities[]')
 
     try:
         selected_area_obj = Area.objects.get(area_name=selected_area)
@@ -274,6 +275,24 @@ def filterClubs(request):
     organizationlocations = [
         org_game_name.organization_location for org_game_name in game_names
     ]
+
+    if amenities:
+        amenities_filter = Q()
+        for amenity in amenities:
+            amenity_field = f'is_{amenity.lower()}'
+            if hasattr(OrganizationLocationAmenities, amenity_field):
+                amenities_filter &= Q(**{amenity_field: True})
+            else:
+                return Response({'error': f'Invalid amenity: {amenity}'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Filter organization locations by amenities
+        amenity_filtered_locations = OrganizationLocationAmenities.objects.filter(
+            amenities_filter
+        ).values_list('organization_location_id', flat=True)
+
+        organizationlocations = [
+            loc for loc in organizationlocations if loc.id in amenity_filtered_locations
+        ]
 
     serializer = ClubLocationSerializerWithImages(organizationlocations, many=True)
 
