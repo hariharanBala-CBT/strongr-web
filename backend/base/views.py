@@ -90,34 +90,14 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         try:
             data = super().validate(attrs)
-
-            # Check if the user is in the 'Customer' group
-            if self.user.groups.filter(name='Customer').exists():
-                serializer = UserSerializerWithTokenAndCustomer(self.user).data
-                for k, v in serializer.items():
-                    data[k] = v
-                return data
-
-            # If the user belongs to 'Organization' group, redirect or return a response
-            elif self.user.groups.filter(name='Organization').exists():
-                return Response(
-                    {'detail': 'Organization users should log in here.'},
-                    status=status.HTTP_302_FOUND
-                )
-
-            # Handle other groups if necessary
-            else:
-                return Response(
-                    {'detail': 'User belongs to an unsupported group.'},
-                    status=status.HTTP_403_FORBIDDEN
-                )
-
+            serializer = UserSerializerWithTokenAndCustomer(self.user).data
+            for k, v in serializer.items():
+                data[k] = v
+            return data
         except Exception:
-            return Response(
-                {'detail': 'User does not exist'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
+            return Response({'detail': 'User does not exist'},
+                            status=status.HTTP_404_NOT_FOUND)
+                            
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
