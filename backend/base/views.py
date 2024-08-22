@@ -1232,10 +1232,19 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
         pk = request.session.get('location_pk')
         courts = Court.objects.filter(location_id=pk)
         form = SlotForm()
+
+        # Check if all working days' times are None
+        active_days = OrganizationLocationWorkingDays.objects.filter(
+            organization_location=pk,
+            is_active=True
+        )
+        show_warning = all(day.work_from_time is None or day.work_to_time is None for day in active_days)
+
         context = {
             'courts': courts,
             'form': form,
             'locationpk': pk,
+            'show_warning': show_warning,
         }
         return render(request, 'ml.html', context)
 
@@ -1247,11 +1256,13 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
         active_days = OrganizationLocationWorkingDays.objects.filter(
             organization_location=location_pk,
             is_active=True)
-        
+
+        # Check for the condition to show error message
         if all(day.work_from_time is None or day.work_to_time is None for day in active_days):
             messages.error(request, ERROR_MESSAGES.get('default_slot_failure'))
             return redirect(reverse('slot-location'))
 
+        # Slot creation logic
         Slot.objects.filter(court__location_id=location_pk).delete()
 
         for court in courts:
@@ -1274,6 +1285,7 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
 
         messages.success(request, SUCCESS_MESSAGES.get('create_multipleslot'))
         return redirect(reverse('slot-location'))
+
 
 @method_decorator(login_required, name='dispatch')
 class TenantEmployeeHomeView(GroupAccessMixin, ListView):
