@@ -15,7 +15,7 @@
           <i class="fas fa-exclamation-triangle me-2"></i>
           <div>
             <strong>Warning:</strong> All 'Opening Time' and 'Closing Time' are not set for this location. 
-            Please <a href="{% url 'mainview' locationpk %}#workingDaysTab" class="alert-link">update them here</a>.
+            Please <a href="{% url 'mainview' request.resolver_match.kwargs.location_pk %}#workingDaysTab" class="alert-link">update them here</a>.
           </div>
           <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -25,7 +25,7 @@
         {% csrf_token %}
         <h5 class="mb-4 text-center">Are you sure you want to create the default set of slots?</h5>
         <div class="d-flex justify-content-center">
-          <button type="submit" class="btn btn-primary me-2">
+          <button type="submit" class="btn btn-primary me-2" {% if show_warning %}disabled{% endif %}>
             <i class="fas fa-check me-2"></i>Create Slots
           </button>
           <button type="button" class="btn btn-outline-secondary" onclick="goBack()">

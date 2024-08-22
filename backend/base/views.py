@@ -1229,7 +1229,7 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
     group_required = ['Organization']
 
     def get(self, request, *args, **kwargs):
-        pk = request.session.get('location_pk')
+        pk = kwargs.get('location_pk')
         courts = Court.objects.filter(location_id=pk)
         form = SlotForm()
 
@@ -1238,6 +1238,7 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
             organization_location=pk,
             is_active=True
         )
+        
         show_warning = all(day.work_from_time is None or day.work_to_time is None for day in active_days)
 
         context = {
