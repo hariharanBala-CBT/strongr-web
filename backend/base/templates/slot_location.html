@@ -4,62 +4,70 @@
 
 <ol class="breadcrumb mb-4">
   <li class="breadcrumb-item">
-    <a href="{% url 'organization_page' %}"
-      ><i class="fa fa-home" aria-hidden="true"></i
-    ></a>
+    <a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a>
   </li>
   <li class="breadcrumb-item">Slot List Location</li>
 </ol>
 
-    <div class="container-fluid px-4 mt-4">
-        <h1 class="header mt-4 mb-4">Slot location list</h1>
-        <div class="card mb-4">
-            <div class="location-card card-header">
-                <div><i class="fas fa-map-marker-alt"></i>  Locations</div>
-            </div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    <table id="datatablesSimple">
-                        <thead>
-                            <tr>
-                                <th>Address</th>
-                                <th>Area</th>
-                                <th>City</th>
-                                <th>Action</th>
-                                <th>Create      <a onclick="toggleNote()"><i class="fa-solid fa-circle-info"></i></a>
-                                    <div id="note" class="note">Default slots for working days will be created.</div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Address</th>
-                                <th>Area</th>
-                                <th>City</th>
-                                <th>Action</th>
-                                <th>Create</th>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            {% for location in locations %}
-                            <tr>
-                                <td>{{location.address_line_1}}</td>
-                                <td>{{location.area}}</td>
-                                <td>{{location.area.city}}</td>
-                                <td><a href="{% url 'slot-list' location.pk %}" class="btn btn-success align-self-end"data-toggle="tooltip">List</a></td>
-                                <td>
-                                    <a href="{% url 'multiple-slot' location.pk %}" class="btn btn-success custom-tooltip">Create slot</a>
-                                </td>
-                            </tr>
-                            {% endfor%}
-                        </tbody>
-                    </table>
-                </form>
-            </div>
+<div class="container-fluid px-4 mt-4">
+    <h1 class="header mt-4 mb-4">Slot location list</h1>
+    <div class="card mb-4">
+        <div class="location-card card-header">
+            <div><i class="fas fa-map-marker-alt"></i> Locations</div>
         </div>
-        <div class="text-end mt-3 mb-3 preview">
-            <a href="{% url 'preview' %}" class="btn btn-primary">Proceed to Preview &ensp; <i class="fa-solid fa-angles-right"></i></a>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Address</th>
+                            <th>Area</th>
+                            <th>City</th>
+                            <th>Action</th>
+                            <th>Create <a onclick="toggleNote()"><i class="fa-solid fa-circle-info"></i></a>
+                                <div id="note" class="note">Default slots for working days will be created.</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Address</th>
+                            <th>Area</th>
+                            <th>City</th>
+                            <th>Action</th>
+                            <th>Create</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for location in locations %}
+                        <tr>
+                            <td>{{location.address_line_1}}</td>
+                            <td>{{location.area}}</td>
+                            <td>{{location.area.city}}</td>
+                            <td><a href="{% url 'slot-list' location.pk %}" class="btn btn-success align-self-end" data-toggle="tooltip">List</a></td>
+                            <td><a href="{% url 'multiple-slot' location.pk %}" class="btn btn-success custom-tooltip">Create slot</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
         </div>
     </div>
+    <div class="text-end mt-3 mb-3 preview">
+        <a href="{% url 'preview' %}" class="btn btn-primary">Proceed to Preview &ensp; <i class="fa-solid fa-angles-right"></i></a>
+    </div>
+</div>
+
+<script>
+    function toggleNote() {
+        var note = document.getElementById("note");
+        if (note.style.display === "none" || note.style.display === "") {
+            note.style.display = "block";
+        } else {
+            note.style.display = "none";
+        }
+    }
+</script>
+
 {% endblock %}

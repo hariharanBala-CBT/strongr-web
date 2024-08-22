@@ -167,6 +167,7 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
     next_availabilty = serializers.SerializerMethodField(read_only=True)
     numRatings = serializers.IntegerField(read_only=True)
     reviews = serializers.SerializerMethodField(read_only=True)
+    amenities = serializers.SerializerMethodField(read_only=True)
 
     def get_organization_images(self, obj):
         try:
@@ -182,6 +183,14 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
     def get_address_line_1(self, obj):
         location = obj
         return location.address_line_1 if location else None
+    
+    def get_amenities(self, obj):
+        try:
+            amenities = OrganizationLocationAmenities.objects.get(organization_location=obj)
+            return OrganizationLocationAmenitiesSerializer(amenities).data
+        except OrganizationLocationAmenities.DoesNotExist:
+            return None
+
 
     def get_reviews(self, obj):
         reviews = obj.review_set.all()
@@ -229,5 +238,5 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
         fields = [
             'id', 'organization', 'area', 'organization_images',
             'address_line_1', 'rating', 'next_availabilty', 'numRatings',
-            'reviews'
+            'reviews', 'amenities'
         ]

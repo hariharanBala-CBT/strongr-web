@@ -16,6 +16,7 @@ import Footer from "../components/Footer";
 import NoDataAnimation from "../components/NoDataAnimation";
 
 import { CircularProgress } from "@mui/material";
+import Select from 'react-select';
 
 import {
   listAreas,
@@ -47,6 +48,7 @@ function ClubListScreen() {
   const [gameName, setGameName] = useState(selectedGame);
   const [areaName, setAreaName] = useState(selectedArea);
   const [date, setDate] = useState(selectedDate);
+  const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const { areaError, areaLoading, areas } = useSelector(
@@ -67,10 +69,23 @@ function ClubListScreen() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    dispatch(filterLocation(areaName, gameName, date));
+    const amenities = selectedAmenities.map(amenity => amenity.value);
+    dispatch(filterLocation(areaName, gameName, date, amenities));
     navigate("/clubs");
   };
+
+  const handleAmenityChange = (value) => {
+    setSelectedAmenities(value);
+  };
+
+  const amenityOptions = [
+    { value: 'parking', label: t("parking") },
+    { value: 'restrooms', label: t("restrooms") },
+    { value: 'changerooms', label: t("changeRooms") },
+    { value: 'powerbackup', label: t("powerBackup") },
+    { value: 'beveragesfacility', label: t("beveragesFacility") },
+    { value: 'coachingfacilities', label: t("coachingFacility") },
+  ];
 
   useEffect(() => {
     fixImageUrls();
@@ -119,7 +134,7 @@ function ClubListScreen() {
     setSelectedArea(areaName);
     setSelectedGame(gameName);
     setSelectedDate(date);
-    dispatch(filterLocation(areaName, gameName, date));
+    dispatch(filterLocation(areaName, gameName, date, selectedAmenities));
   }, [
     areaName,
     date,
@@ -128,6 +143,7 @@ function ClubListScreen() {
     setSelectedArea,
     setSelectedGame,
     setSelectedDate,
+    selectedAmenities
   ]);
 
   useEffect(() => {
@@ -235,6 +251,24 @@ function ClubListScreen() {
                 setDate(value);
               }}
             />
+
+            <div className="select-container">
+              <label htmlFor="amenities" className="select-label">
+                {t("Amenities")}
+              </label>
+              <Select
+                id="amenities"
+                isMulti
+                name="amenities"
+                options={amenityOptions}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                value={selectedAmenities}
+                onChange={handleAmenityChange}
+                placeholder={t("selectAmenities")}
+              />
+            </div>
+
           </div>
         </form>
       </div>

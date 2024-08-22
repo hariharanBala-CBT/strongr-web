@@ -117,33 +117,36 @@ import {
 } from "../constants/constants";
 import axios from "axios";
 
-export const filterLocation =
-  (areaName, gameName, date) => async (dispatch) => {
-    try {
+export const filterLocation = (areaName, gameName, date, amenities) => async (dispatch) => {
+  try {
       dispatch({ type: FILTER_CLUB_REQUEST });
 
+      const amenitiesArray = amenities.map(amenity => amenity.value);
+
       const { data } = await axios.get("/api/filterclubs/", {
-        params: {
-          area: areaName,
-          game: gameName,
-          date: date,
-        },
+          params: {
+              area: areaName,
+              game: gameName,
+              date: date,
+              amenities: amenitiesArray,
+          },
       });
 
       dispatch({
-        type: FILTER_CLUB_SUCCESS,
-        payload: data,
+          type: FILTER_CLUB_SUCCESS,
+          payload: data,
       });
-    } catch (error) {
+  } catch (error) {
       dispatch({
-        type: FILTER_CLUB_FAIL,
-        payload:
-          error.response && error.response.data.detail
-            ? error.response.data.detail
-            : error.message,
+          type: FILTER_CLUB_FAIL,
+          payload:
+              error.response && error.response.data.detail
+                  ? error.response.data.detail
+                  : error.message,
       });
-    }
-  };
+  }
+};
+
 
 export const listClubs = () => async (dispatch) => {
   try {
