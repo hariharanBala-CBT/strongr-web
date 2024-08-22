@@ -414,7 +414,7 @@ function RegisterScreen() {
                                   for="policy"
                                 >
                                   {t("agreeTerms")}{" "}
-                                  <a href="javascript:void(0);">
+                                  <a>
                                     {t("termsOfUse")}</a>
                                 </label>
                               </div>

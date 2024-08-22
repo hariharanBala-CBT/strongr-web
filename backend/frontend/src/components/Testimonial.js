@@ -5,7 +5,6 @@ import "owl.carousel/dist/assets/owl.theme.default.css";
 import "../css/testimonial.css";
 import TestimonialDetails from "./TestimonialDetails";
 import testimonialProfile from "../images/profile.jpg";
-import LanguageSelector from "./LanguageSelector"; 
 import { useTranslation } from "react-i18next";
 
 const Testimonial = () => {
@@ -105,19 +104,18 @@ const Testimonial = () => {
                       </p>
                     </div>
                     <div className="listing-venue-owner">
-                      <a className="navigation">
+                      <span className="navigation">
                         <img src={testimonialProfile} alt="User" />
-                      </a>
+                      </span>
                       <div className="testimonial-content">
                         <h5>
-                          <a href="javascript:;">Ariyan Rusov</a>
+                          <>Ariyan Rusov</>
                         </h5>
-                        <a
-                          href="javascript:void(0);"
+                        <span
                           className="btn btn-primary "
                         >
                           Badminton
-                        </a>
+                        </span>
                       </div>
                     </div>
                   </div>

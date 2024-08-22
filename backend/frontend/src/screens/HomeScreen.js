@@ -54,6 +54,7 @@ function HomeScreen(history) {
     (state) => state.topRatedClubs
   );
 
+  const currentUrl = window.location.origin;
   const handleSubmit = (event) => {
     // event.preventDefault();
     dispatch(filterLocation(areaName, gameName, date));
@@ -147,7 +148,7 @@ function HomeScreen(history) {
     } else if (gameError) {
       toast.error(t("errorFetchingGames"));
     }
-  }, [areaError, gameError]);
+  }, [areaError, gameError, t]);
 
   useEffect(() => {
     fixImageUrls();
@@ -216,12 +217,12 @@ function HomeScreen(history) {
                 </div>
                 <div className="work-content">
                   <h5>
-                    <a href="javascript:void(0);">{t("joinUs")}</a>
+                    <a href={`${currentUrl}/orglogin/`}>{t("joinUs")}</a>
                   </h5>
                   <p>
                     {t("joinUsDescription")}
                   </p>
-                  <a className="btn" href="javascript:void(0);">
+                  <a className="btn" href={`${currentUrl}/orglogin/`}>
                   {t("registerNow")}{" "}
                     <span>
                       <ArrowRight />
