@@ -168,8 +168,6 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
     numRatings = serializers.IntegerField(read_only=True)
     reviews = serializers.SerializerMethodField(read_only=True)
     amenities = serializers.SerializerMethodField(read_only=True)
-    games = serializers.SerializerMethodField(read_only=True)
-    courts = serializers.SerializerMethodField(read_only=True)
 
     def get_organization_images(self, obj):
         try:
@@ -193,16 +191,6 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
         except OrganizationLocationAmenities.DoesNotExist:
             return None
 
-    def get_games(self, obj):
-        games = OrganizationLocationGameType.objects.filter(organization_location=obj)
-        serializer = OrganizationLocationGameTypeSerializer(games, many=True)
-        return serializer.data
-
-    def get_courts(self, obj):
-        courts = Court.objects.filter(location=obj)
-        serializer = CourtSerializer(courts, many=True)
-        return serializer.data
-
     def get_reviews(self, obj):
         reviews = obj.review_set.all()
         serializer = ReviewSerializer(reviews, many=True)
@@ -213,41 +201,53 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
         now += datetime.timedelta(hours=1)
         selected_date = now.date()
 
+        all_next_availabilities = []
+
         try:
-            court = Court.objects.filter(location=obj).first()
-            if not court:
-                return None
-        except Court.DoesNotExist:
+            # Fetch all game types associated with the location
+            games = OrganizationLocationGameType.objects.filter(organization_location=obj)
+
+            for game in games:
+                # Fetch all courts associated with the game
+                courts = Court.objects.filter(game=game)
+
+                for court in courts:
+                    nearest_slot = get_nearest_available_slot(court, now, selected_date)
+
+                    if nearest_slot:
+                        if nearest_slot['source'] == 'slot':
+                            slot = Slot.objects.get(
+                                court=court,
+                                start_time=nearest_slot['start_time'],
+                                end_time=nearest_slot['end_time'],
+                                days=nearest_slot['date'].strftime('%A')
+                            )
+                            serializer = SlotSerializer(slot)
+                        else:
+                            slot = AdditionalSlot.objects.get(
+                                court=court,
+                                start_time=nearest_slot['start_time'],
+                                end_time=nearest_slot['end_time'],
+                                date=nearest_slot['date']
+                            )
+                            serializer = AdditionalSlotSerializer(slot)
+
+                        all_next_availabilities.append({
+                            'game': game.game_type.game_name,
+                            'court': court.name,
+                            'next_availabilty': serializer.data
+                        })
+
+        except Exception as e:
             return None
 
-        nearest_slot = get_nearest_available_slot(court, now, selected_date)
+        return all_next_availabilities if all_next_availabilities else None
 
-        if not nearest_slot:
-            return None
-
-        if nearest_slot['source'] == 'slot':
-            slot = Slot.objects.get(
-                court=court,
-                start_time=nearest_slot['start_time'],
-                end_time=nearest_slot['end_time'],
-                days=nearest_slot['date'].strftime('%A')
-            )
-            serializer = SlotSerializer(slot)
-        else:
-            slot = AdditionalSlot.objects.get(
-                court=court,
-                start_time=nearest_slot['start_time'],
-                end_time=nearest_slot['end_time'],
-                date=nearest_slot['date']
-            )
-            serializer = AdditionalSlotSerializer(slot)
-
-        return serializer.data
 
     class Meta:
         model = Organization
         fields = [
             'id', 'organization', 'area', 'organization_images',
             'address_line_1', 'rating', 'next_availabilty', 'numRatings',
-            'reviews', 'amenities', 'games', 'courts'
+            'reviews', 'amenities'
         ]

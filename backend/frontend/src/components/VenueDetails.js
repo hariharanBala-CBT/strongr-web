@@ -74,29 +74,20 @@ const VenueDetails = ({ club }) => {
                   {address_line_1.replace(/,\s*$/, '')}
                 </span>
               </li>
-              {games && games.length > 0 ? (
-                <li>
-                  <span>{t("gamesAvailable")}:</span>
-                  <ul>
-                    {games.map((game, index) => (
-                      <li key={index}>
-                        {game.game_type?.game_name}
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ) : (
-                <li>
-                  <span>{t("noGamesFound")}</span>
-                </li>
-              )}
-              {club?.next_availabilty && (
+              {club?.next_availabilty && club.next_availabilty.length > 0 && (
                 <li>
                   <span>
                     <i className="fa-solid fa-calendar-days"> </i>
                     <span className="primary-text">
-                     {t("nextAvailability")}: {club?.next_availabilty?.days ? club?.next_availabilty?.days : formatDate(club?.next_availabilty?.date)} - {club?.next_availabilty?.start_time}
+                      {t("nextAvailability")}:
                     </span>
+                    <ul>
+                      {club.next_availabilty.map((availability, index) => (
+                        <li key={index}>
+                          {availability.game}: {availability.court} - {availability.next_availabilty.days ? availability.next_availabilty.days : formatDate(availability.next_availabilty.date)} {availability.next_availabilty.start_time}
+                        </li>
+                      ))}
+                    </ul>
                   </span>
                 </li>
               )}
