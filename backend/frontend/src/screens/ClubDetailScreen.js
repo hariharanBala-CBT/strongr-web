@@ -347,7 +347,7 @@ function ClubDetailScreen() {
                     >
                       <div className="accordion-body">
                         <ul>
-                          {clubRules?.split('\n').map((rule, index) => (
+                          {typeof clubRules === 'string' && clubRules.split('\n').map((rule, index) => (
                             <div key={index} style={{ marginBottom: '12px' }}>
                               <AlertOctagon style={{ marginRight: '8px' }} />
                               {rule}
