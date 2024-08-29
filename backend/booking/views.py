@@ -191,6 +191,13 @@ def getClubWorkingDays(request, pk):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getClubRules(request, pk):
+    club = OrganizationLocation.objects.get(id=pk)
+    clubRules = club.rules
+    
+    return Response(clubRules)
+
 
 @api_view(['GET'])
 def getClubImages(request, pk):

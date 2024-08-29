@@ -124,6 +124,9 @@ import {
   NEAREST_SLOT_REQUEST,
   NEAREST_SLOT_SUCCESS,
   NEAREST_SLOT_FAIL,
+  CLUB_RULES_REQUEST,
+  CLUB_RULES_SUCCESS,
+  CLUB_RULES_FAIL,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -242,6 +245,22 @@ export const clubWorkingReducer = (state = { clubWorking: [] }, action) => {
       return { loading: false, clubWorking: action.payload };
 
     case CLUB_WORKING_FAIL:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+export const clubRulesReducer = (state = { clubRules: [] }, action) => {
+  switch (action.type) {
+    case CLUB_RULES_REQUEST:
+      return { loading: true, state };
+
+    case CLUB_RULES_SUCCESS:
+      return { loading: false, clubRules: action.payload };
+
+    case CLUB_RULES_FAIL:
       return { loading: false, error: action.payload };
 
     default:

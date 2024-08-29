@@ -90,6 +90,7 @@ class Organization(models.Model):
     description = models.TextField(default=None,blank=True,null=True)
     status_description = models.TextField(default=None,blank=True,null=True)
     is_terms_and_conditions_agreed = models.BooleanField(default = False)
+    is_gst_applicable  = models.BooleanField(default = False)
     status = models.IntegerField(choices = status_choices, default = PENDING)
     is_active = models.BooleanField(default=True)
 
@@ -115,6 +116,7 @@ class OrganizationLocation(models.Model):
     area = models.ForeignKey(Area,on_delete=models.PROTECT)
     pincode = models.IntegerField()
     phone_number = models.PositiveBigIntegerField()
+    rules = models.TextField(default=None,blank=True,null=True)
     status = models.IntegerField(choices = status_choices, default = PENDING)
     status_description = models.TextField(default=None,blank=True,null=True)
     rating = models.DecimalField(
