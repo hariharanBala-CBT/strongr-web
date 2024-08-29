@@ -85,6 +85,15 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
                             Status
                         </a>
+                        <div class="sb-sidenav-menu-heading">Manage</div>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'organization-bookings' %}active{% endif %}" href="{% url 'organization-bookings' %}">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-book"></i></div>
+                            Bookings
+                        </a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'org-schedule' %}active{% endif %}" href="{% url 'org-schedule' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calendar" aria-hidden="true"></i></div>
+                            Schedule
+                        </a>
                         <div class="sb-sidenav-menu-heading">Customers</div>
                         <a class="nav-link {% if request.resolver_match.url_name == 'org_customers_list' %}active{% endif %}" href="{% url 'org_customers_list'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>

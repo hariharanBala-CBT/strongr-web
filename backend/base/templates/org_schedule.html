@@ -1,0 +1,83 @@
+{% extends 'base_org.html' %}
+{% load static %}
+{% load url_filters %}
+
+{% block content %}
+<link href="{% static './css/schedule.css' %}" rel="stylesheet" />
+
+<div class="container">
+    
+    <form method="GET" action="{% url 'org-schedule' %}">
+        <input type="hidden" name="week_offset" value="{{ week_offset }}">
+        <label for="courtSelect">Select a court:</label>
+        <select id="courtSelect" name="court" onchange="this.form.submit()">
+            {% for court in courts %}
+                <option value="{{ court.id }}" {% if court == selected_court %}selected{% endif %}>{{ court.name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <div class="navigation">
+        <a href="{% url 'org-schedule' %}?week_offset={{ prev_week }}&court={{ selected_court.id }}" class="btn btn-primary">&lt; Previous Week</a>
+        <span>{{ start_of_week|date:"d M Y" }} - {{ end_of_week|date:"d M Y" }}</span>
+        <a href="{% url 'org-schedule' %}?week_offset={{ next_week }}&court={{ selected_court.id }}" class="btn btn-primary">Next Week &gt;</a>
+    </div>
+
+    <table id="bookingTable">
+        <thead>
+            <tr>
+                <th>Slot Timing</th>
+                {% for day in week_dates %}
+                    <th>{{ day|date:"l (d M)" }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for time_slot in time_slots %}
+                <tr>
+                    <td class="time-slot">{{ time_slot }}</td>
+                    {% for day in week_dates %}
+                        <td class="booking-cell" 
+                            data-date="{{ day|date:'Y-m-d' }}" 
+                            data-time-slot="{{ time_slot }}">
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Get the availability data from Django
+    const availability = JSON.parse('{{ availability|escapejs }}');
+
+    // Iterate over each cell in the table and populate it
+    document.querySelectorAll('.booking-cell').forEach(cell => {
+        const date = cell.dataset.date;
+        const timeSlot = cell.dataset.timeSlot;
+
+        if (availability[date] && availability[date][timeSlot]) {
+            const status = availability[date][timeSlot];
+            cell.classList.add(status.toLowerCase());
+            cell.textContent = status;
+        } else {
+            cell.classList.add('not-working');
+            cell.textContent = 'N/A';
+        }
+    });
+
+    // Hide rows where all cells are 'N/A'
+    document.querySelectorAll('#bookingTable tbody tr').forEach(row => {
+        let hideRow = true;
+        row.querySelectorAll('.booking-cell').forEach(cell => {
+            if (cell.textContent.trim() !== 'Not-working') {
+                hideRow = false;
+            }
+        });
+        if (hideRow) {
+            row.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}
