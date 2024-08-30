@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 import os
+import json
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
@@ -1698,271 +1699,6 @@ def update_amenities(request, location_pk):
     return render(request, 'update_amenities.html', {'form': form, 'locationpk': location_pk})
 
 
-# class OrganizationFilterView(LoginRequiredMixin, ListView):
-#     template_name = 'org_schedule.html'
-#     context_object_name = 'calendar_data'
-    
-#     def get_queryset(self):
-#         # Get selected location and court from request
-#         location_id = self.request.GET.get('location')
-#         court_id = self.request.GET.get('court')
-
-#         # Default to first location if none selected
-#         if location_id:
-#             selected_location = get_object_or_404(OrganizationLocation, id=location_id)
-#         else:
-#             selected_location = OrganizationLocation.objects.filter(organization__user=self.request.user).first()
-        
-#         # Default to first court if none selected
-#         if court_id:
-#             selected_court = get_object_or_404(Court, id=court_id)
-#         else:
-#             selected_court = Court.objects.filter(location=selected_location).first()
-
-#         # Handle week navigation
-#         week_offset = int(self.request.GET.get('week', 0))
-
-#         # Use location's join_date
-#         if selected_location.join_date:
-#             start_of_week = selected_location.join_date + timedelta(weeks=week_offset)
-#         else:
-#             start_of_week = datetime.now().date() + timedelta(weeks=week_offset)  # Fallback to current week
-
-#         end_of_week = start_of_week + timedelta(days=6)
-
-#         # Get regular slots
-#         regular_slots = Slot.objects.filter(
-#             court=selected_court,
-#             location=selected_location
-#         )
-
-#         # Print slot start and end times
-#         for slot in regular_slots:
-#             print(f"Slot: {slot.start_time} to {slot.end_time}")
-
-#         # Get additional slots
-#         additional_slots = AdditionalSlot.objects.filter(
-#             court=selected_court,
-#             location=selected_location,
-#             date__range=[start_of_week, end_of_week],
-#             is_active=True
-#         )
-
-#         # Get unavailable slots
-#         unavailable_slots = UnavailableSlot.objects.filter(
-#             court=selected_court,
-#             location=selected_location,
-#             date__range=[start_of_week, end_of_week],
-#             is_active=True
-#         )
-
-#         # Get bookings
-#         bookings = Booking.objects.filter(
-#             court=selected_court,
-#             booking_date__range=[start_of_week, end_of_week]
-#         ).exclude(booking_status=Booking.CANCELLED)
-
-#         calendar_data = {}
-#         for day in range(7):
-#             current_date = start_of_week + timedelta(days=day)
-#             day_name = current_date.strftime('%A')
-            
-#             # Get regular slots for this day
-#             day_slots = regular_slots.filter(days=day_name)
-            
-#             # Add additional slots for this day
-#             day_slots = list(day_slots) + list(additional_slots.filter(date=current_date))
-            
-#             # Remove unavailable slots
-#             unavailable = unavailable_slots.filter(date=current_date)
-#             day_slots = [slot for slot in day_slots if not any(
-#                 unavailable_slot.start_time <= slot.start_time < unavailable_slot.end_time
-#                 for unavailable_slot in unavailable
-#             )]
-            
-#             # Mark booked slots
-#             day_bookings = bookings.filter(booking_date=current_date)
-#             for slot in day_slots:
-#                 slot.is_booked = any(
-#                     booking.slot == slot or booking.additional_slot == slot
-#                     for booking in day_bookings
-#                 )
-            
-#             calendar_data[current_date] = day_slots
-
-#         return calendar_data
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-        
-#         # Get selected location and court from request
-#         location_id = self.request.GET.get('location')
-#         court_id = self.request.GET.get('court')
-        
-#         # Default to first location if none selected
-#         if location_id:
-#             selected_location = get_object_or_404(OrganizationLocation, id=location_id)
-#         else:
-#             selected_location = OrganizationLocation.objects.filter(organization__user=self.request.user).first()
-        
-#         # Default to first court if none selected
-#         if court_id:
-#             selected_court = get_object_or_404(Court, id=court_id)
-#         else:
-#             selected_court = Court.objects.filter(location=selected_location).first()
-
-#         # Handle week navigation
-#         week_offset = int(self.request.GET.get('week', 0))
-
-#         if selected_location.join_date:
-#             start_of_week = selected_location.join_date + timedelta(weeks=week_offset)
-#         else:
-#             start_of_week = datetime.now().date() + timedelta(weeks=week_offset)  # Fallback to current week
-
-#         context['start_of_week'] = start_of_week
-#         context['week_days_range'] = [start_of_week + timedelta(days=i) for i in range(7)]
-#         context['locations'] = OrganizationLocation.objects.filter(organization__user=self.request.user)
-#         context['courts'] = Court.objects.filter(location=selected_location)
-#         context['selected_location'] = selected_location
-#         context['selected_court'] = selected_court
-#         context['week_offset'] = week_offset
-
-#         # Get all unique time slots
-#         all_slots = set()
-#         for day_slots in self.object_list.values():
-#             all_slots.update((slot.start_time, slot.end_time) for slot in day_slots)
-#             context['dayslots'] = day_slots
-#         context['time_slots'] = sorted(all_slots)
-
-#         return context
-
-
-def org_schedule(request):
-    organization = request.user.organization  # Assuming organization is related to the user
-    locations = OrganizationLocation.objects.filter(organization=organization, status=1)
-
-    selected_location = request.GET.get('location')
-    selected_court = request.GET.get('court')
-    
-    if not selected_location:
-        selected_location = locations.first().id
-    
-    courts = Court.objects.filter(location_id=selected_location)
-    if not selected_court:
-        selected_court = courts.first().id
-    
-    # Get the week offset from the query params or default to 0 (current week)
-    week_offset = int(request.GET.get('week', 0))
-    start_of_week = datetime.now().date() + timedelta(weeks=week_offset)
-    
-    week_days_range = [start_of_week + timedelta(days=i) for i in range(7)]
-    
-    # Time slots from 00:00 to 23:00
-    time_slots = [(time(hour=h, minute=0), time(hour=(h + 1) % 24, minute=0)) for h in range(24)]
-    
-    # Fetch slots and bookings based on selected location and court
-    calendar_data = {}
-    for day in week_days_range:
-        calendar_data[day] = {}
-        for start_time, end_time in time_slots:
-            slot = Slot.objects.filter(court_id=selected_court, start_time=start_time, end_time=end_time).first()
-            if slot:
-                booking = Booking.objects.filter(slot=slot, booking_date=day).first()
-                calendar_data[day][(start_time, end_time)] = booking
-            else:
-                calendar_data[day][(start_time, end_time)] = None
-    
-    context = {
-        'locations': locations,
-        'selected_location': get_object_or_404(OrganizationLocation, pk=selected_location),
-        'courts': courts,
-        'selected_court': get_object_or_404(Court, pk=selected_court),
-        'week_days_range': week_days_range,
-        'time_slots': time_slots,
-        'calendar_data': calendar_data,
-        'week_offset': week_offset,
-    }
-    return render(request, 'org_schedule.html', context)
-
-import json
-
-# def booking_schedule(request):
-#     # Get the logged-in user's organization
-#     organization = get_object_or_404(Organization, user=request.user)
-
-#     # Get all courts associated with the organization
-#     courts = Court.objects.filter(location__organization=organization)
-
-#     # Get the selected court from the query parameters or default to the first court
-#     court_id = request.GET.get('court')
-#     if court_id:
-#         selected_court = get_object_or_404(Court, id=court_id, location__organization=organization)
-#     else:
-#         selected_court = courts.first()
-
-#     # Get the current week date range
-#     today = datetime.now().date()
-#     start_of_week = today - timedelta(days=today.weekday())  # Start of the current week (Monday)
-#     end_of_week = start_of_week + timedelta(days=6)  # End of the current week (Sunday)
-
-#     week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
-
-#     slots_by_day = {
-#         'Monday': Slot.objects.filter(court=selected_court, days='Monday'),
-#         'Tuesday': Slot.objects.filter(court=selected_court, days='Tuesday'),
-#         'Wednesday': Slot.objects.filter(court=selected_court, days='Wednesday'),
-#         'Thursday': Slot.objects.filter(court=selected_court, days='Thursday'),
-#         'Friday': Slot.objects.filter(court=selected_court, days='Friday'),
-#         'Saturday': Slot.objects.filter(court=selected_court, days='Saturday'),
-#         'Sunday': Slot.objects.filter(court=selected_court, days='Sunday')
-#     }
-
-#     # Filter bookings for the selected court and the current week
-#     bookings = Booking.objects.filter(court=selected_court, booking_date__range=[start_of_week, end_of_week])
-
-#     # Organize bookings by day and time slot
-#     slots = {}
-#     time_slots = []
-#     for hour in range(24):
-#         start_time = f"{hour:02d}:00"
-#         end_time = f"{hour + 1:02d}:00"
-#         time_slot = f"{start_time} to {end_time}"
-#         time_slots.append(time_slot)
-
-#     for booking in bookings:
-#         day = booking.booking_date.strftime('%Y-%m-%d') 
-#         time_slot = f"{booking.slot.start_time.strftime('%H:%M')} to {booking.slot.end_time.strftime('%H:%M')}"
-#         print("day",day)
-#         print("time_slot",time_slot)
-#         if day not in slots:
-#             slots[day] = {}
-#         slots[day][time_slot] = 'Booked'
-
-#     availability = {}
-#     for day, slots_list in slots_by_day.items():
-#         availability[day] = {}
-#         print("day",day)
-#         for slot in slots_list:
-#             time_slot = f"{slot.start_time.strftime('%H:%M')} to {slot.end_time.strftime('%H:%M')}"
-#             print("time_slot",time_slot)
-#             availability[day][time_slot] = 'Available'
-    
-#     print("slots: ", availability)
-#     slots_json = json.dumps(slots)
-
-#     context = {
-#         'courts': courts,
-#         'selected_court': selected_court,
-#         'slots': json.dumps(slots),
-#         'time_slots': time_slots,
-#         'start_of_week': start_of_week,
-#         'availability': json.dumps(availability),
-#         'days_range': range(7),
-#         'slots_json': slots_json,
-#         'week_dates': week_dates,
-#     }
-#     return render(request, 'org_schedule.html', context)
-
 @login_required
 def booking_schedule(request):
     # Get the logged-in user's organization
@@ -1995,26 +1731,64 @@ def booking_schedule(request):
     # Populate availability based on court slots
     for day in week_dates:
         day_name = day.strftime('%A')
-        day_slots = Slot.objects.filter(court=selected_court, days=day_name)
+        day_slots = Slot.objects.filter(court=selected_court, days=day_name, is_booked=False)
+        day_slotz = Slot.objects.filter(court=selected_court, days=day_name, is_booked=True)
         for slot in day_slots:
             slot_str = f"{slot.start_time.strftime('%H:%M')} to {slot.end_time.strftime('%H:%M')}"
             availability[day.strftime('%Y-%m-%d')][slot_str] = 'Available'
+        for slot in day_slotz:
+            slot_str = f"{slot.start_time.strftime('%H:%M')} to {slot.end_time.strftime('%H:%M')}"
+            availability[day.strftime('%Y-%m-%d')][slot_str] = 'Membership Booking'
+
+    # Add additional slots
+    additional_slots = AdditionalSlot.objects.filter(
+        court=selected_court,
+        date__range=[start_of_week, end_of_week],
+        is_active=True
+    )
+    for add_slot in additional_slots:
+        slot_str = f"{add_slot.start_time.strftime('%H:%M')} to {add_slot.end_time.strftime('%H:%M')}"
+        availability[add_slot.date.strftime('%Y-%m-%d')][slot_str] = 'Available'
+
+    # Mark unavailable slots
+    unavailable_slots = UnavailableSlot.objects.filter(
+        court=selected_court,
+        date__range=[start_of_week, end_of_week],
+        is_active=True
+    )
+    for unavail_slot in unavailable_slots:
+        slot_str = f"{unavail_slot.start_time.strftime('%H:%M')} to {unavail_slot.end_time.strftime('%H:%M')}"
+        availability[unavail_slot.date.strftime('%Y-%m-%d')][slot_str] = 'Not Working'
 
     # Filter bookings for the selected court and the current week
-    bookings = Booking.objects.filter(court=selected_court, booking_date__range=[start_of_week, end_of_week])
+    bookings = Booking.objects.filter(
+        court=selected_court,
+        booking_date__range=[start_of_week, end_of_week],
+        booking_status__in=[Booking.CONFIRMED, Booking.PENDING]
+    )
 
     # Mark booked slots
     for booking in bookings:
         day = booking.booking_date.strftime('%Y-%m-%d')
-        slot_str = f"{booking.slot.start_time.strftime('%H:%M')} to {booking.slot.end_time.strftime('%H:%M')}"
-        availability[day][slot_str] = 'Booked'
+        if booking.slot:
+            slot_str = f"{booking.slot.start_time.strftime('%H:%M')} to {booking.slot.end_time.strftime('%H:%M')}"
+        elif booking.additional_slot:
+            slot_str = f"{booking.additional_slot.start_time.strftime('%H:%M')} to {booking.additional_slot.end_time.strftime('%H:%M')}"
+        else:
+            continue  # Skip if neither slot nor additional_slot is set
+        
+    formatted_availability = {}
+    for date, slots in availability.items():
+        formatted_availability[date] = {}
+        for time_slot, status in slots.items():
+            formatted_availability[date][time_slot] = status
 
     context = {
         'courts': courts,
         'selected_court': selected_court,
         'time_slots': time_slots,
         'week_dates': week_dates,
-        'availability': json.dumps(availability),
+        'availability': formatted_availability,
         'week_offset': week_offset,
         'prev_week': week_offset - 1,
         'next_week': week_offset + 1,
