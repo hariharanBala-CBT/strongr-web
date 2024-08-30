@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 import os
+import json
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
@@ -41,7 +42,7 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.base import TemplateView
 from django.shortcuts import redirect
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
@@ -293,7 +294,7 @@ class LoginView(View):
                 if user.groups.filter(name='Customer').exists():
                     return redirect('access-restricted')
                 elif user.groups.filter(name='Organization').exists():
-                    profile_page_url = reverse('organization_profile')
+                    profile_page_url = reverse('organization_page')
                     return redirect(profile_page_url)
                 elif user.groups.filter(name='Tenant').exists():
                     return redirect('tenantuser_page')
@@ -320,6 +321,7 @@ class OrganizationBookingView(GroupAccessMixin, TemplateView):
     # Define a dictionary to map view names to templates
     template_map = {
         'org_dashboard': 'org_dashboard.html',
+        'org_bookings': 'org_bookings.html',
         'confirmed_bookings': 'confirmed_bookings.html',
         'completed_bookings': 'completed_bookings.html',
         'pending_bookings': 'pending_bookings.html',
@@ -1720,3 +1722,98 @@ class OrganizationLocationRulesView(GroupAccessMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, SUCCESS_MESSAGES.get('update_rules'))
         return super().form_valid(form)
+  
+@login_required
+@group_required('Organization')
+def booking_schedule(request):
+    organization = get_object_or_404(Organization, user=request.user)
+    courts = Court.objects.filter(location__organization=organization)
+
+    court_id = request.GET.get('court')
+    if court_id:
+        selected_court = get_object_or_404(Court, id=court_id, location__organization=organization)
+    else:
+        selected_court = courts.first()
+
+    today = datetime.now().date()
+    week_offset = int(request.GET.get('week_offset', 0))
+    start_of_week = today - timedelta(days=today.weekday()) + timedelta(weeks=week_offset)
+    end_of_week = start_of_week + timedelta(days=6)
+
+    week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
+
+    # Generate 24-hour time slots
+    time_slots = [f"{hour:02d}:00 to {(hour+1)%24:02d}:00" for hour in range(24)]
+
+    # Initialize availability dictionary
+    availability = {day.strftime('%Y-%m-%d'): {slot: 'Not-working' for slot in time_slots} for day in week_dates}
+
+    # Populate availability based on court slots
+    for day in week_dates:
+        day_name = day.strftime('%A')
+        day_slots = Slot.objects.filter(court=selected_court, days=day_name, is_booked=False)
+        day_slotz = Slot.objects.filter(court=selected_court, days=day_name, is_booked=True)
+        for slot in day_slots:
+            slot_str = f"{slot.start_time.strftime('%H:%M')} to {slot.end_time.strftime('%H:%M')}"
+            availability[day.strftime('%Y-%m-%d')][slot_str] = 'Available'
+        for slot in day_slotz:
+            slot_str = f"{slot.start_time.strftime('%H:%M')} to {slot.end_time.strftime('%H:%M')}"
+            availability[day.strftime('%Y-%m-%d')][slot_str] = 'Membership Booking'
+
+    additional_slots = AdditionalSlot.objects.filter(
+        court=selected_court,
+        date__range=[start_of_week, end_of_week],
+        is_active=True
+    )
+    for add_slot in additional_slots:
+        slot_str = f"{add_slot.start_time.strftime('%H:%M')} to {add_slot.end_time.strftime('%H:%M')}"
+        availability[add_slot.date.strftime('%Y-%m-%d')][slot_str] = 'Available'
+
+    unavailable_slots = UnavailableSlot.objects.filter(
+        court=selected_court,
+        date__range=[start_of_week, end_of_week],
+        is_active=True
+    )
+    for unavail_slot in unavailable_slots:
+        slot_str = f"{unavail_slot.start_time.strftime('%H:%M')} to {unavail_slot.end_time.strftime('%H:%M')}"
+        availability[unavail_slot.date.strftime('%Y-%m-%d')][slot_str] = 'Not Working'
+
+    bookings = Booking.objects.filter(
+        court=selected_court,
+        booking_date__range=[start_of_week, end_of_week],
+        booking_status__in=[Booking.CONFIRMED, Booking.PENDING]
+    )
+    
+    print("bookings",bookings)
+
+    for booking in bookings:
+        day = booking.booking_date.strftime('%Y-%m-%d')
+        if booking.slot:
+            slot_str = f"{booking.slot.start_time.strftime('%H:%M')} to {booking.slot.end_time.strftime('%H:%M')}"
+            availability[day][slot_str] = 'Booked'
+        elif booking.additional_slot:
+            slot_str = f"{booking.additional_slot.start_time.strftime('%H:%M')} to {booking.additional_slot.end_time.strftime('%H:%M')}"
+            availability[day][slot_str] = 'Booked'
+        else:
+            continue  # Skip if neither slot nor additional_slot is set
+        
+    formatted_availability = {}
+    for date, slots in availability.items():
+        formatted_availability[date] = {}
+        for time_slot, status in slots.items():
+            formatted_availability[date][time_slot] = status
+            print("status",status)
+
+    context = {
+        'courts': courts,
+        'selected_court': selected_court,
+        'time_slots': time_slots,
+        'week_dates': week_dates,
+        'availability': formatted_availability,
+        'week_offset': week_offset,
+        'prev_week': week_offset - 1,
+        'next_week': week_offset + 1,
+        'start_of_week': start_of_week,
+        'end_of_week': end_of_week,
+    }
+    return render(request, 'org_schedule.html', context)

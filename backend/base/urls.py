@@ -60,6 +60,8 @@ urlpatterns = [
      path('organization_location_list/rules' , OrganizationLocationRulesListView.as_view(), name='organization_location_list'),
      path('organization_location/<int:pk>/rules/', OrganizationLocationRulesView.as_view(), name='organization_location_rules'),
      path('preview/' ,PreviewView.as_view(), name='preview'),
+     path('organization/bookings',OrganizationBookingView.as_view(template_name='org_bookings'), name='organization-bookings'),
+     path('organization/schedule/', booking_schedule, name='org-schedule'),
      path('termsandconditions/' ,TermsandConditionsView.as_view(),name='termsandconditions'),
      path('terms-conditions/' ,TenantTermsandConditionsView.as_view(),name='termsconditions'),
      path('privacy-policy/' ,PrivacyPolicyView.as_view(), name='privacypolicy'),
