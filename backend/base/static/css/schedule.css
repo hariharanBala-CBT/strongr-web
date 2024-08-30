@@ -2,13 +2,6 @@ body {
     line-height: 1.6;
 }
 
-/* Typography */
-/* h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: #2c3e50;
-} */
-
 h1 {
     font-size: 24px;
     font-weight: bold;
@@ -17,7 +10,6 @@ h1 {
     color: #333;
 }
 
-/* Navigation */
 .navigation {
     display: flex;
     justify-content: space-between;
@@ -30,7 +22,6 @@ h1 {
     padding: 0.5rem 1rem;
     text-decoration: none;
     color: white;
-    /* background-color: #3498db; */
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
@@ -44,7 +35,6 @@ h1 {
     color: #2c3e50;
 }
 
-/* Form styles */
 form {
     margin-bottom: 2rem;
 }
@@ -98,7 +88,6 @@ select {
     background-color: #3a7bc8;
 }
 
-/* Table styles */
 #bookingTable {
     width: 100%;
     border-collapse: separate;
@@ -119,6 +108,7 @@ select {
     background-color: #3498db;
     color: white;
     font-weight: bold;
+    text-wrap:pretty;
     text-transform: uppercase;
     font-size: 0.9rem;
 }
@@ -151,7 +141,7 @@ select {
     color: #95a5a6;
 }
 
-.membership-booking { background-color: #e3f2fd; color: #1565c0; }
+.booking-cell.membership.booking { background-color: #a31ad0; color: #030e1b; }
 
 .legend {
     display: flex;
@@ -172,7 +162,24 @@ select {
     border: 1px solid #ccc;
 }
 
-.legend-text {
+.legend-color.available{
+    background-color: #2ecc71;
+    color: white;
+}
+
+.legend-color.booked {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.legend-color.not-working {
+    background-color: #ecf0f1;
+    color: #95a5a6;
+}
+
+.membership.booking { background-color: #a31ad0; color: #030e1b; }
+
+.legend-color.legend-text {
     font-size: 14px;
 }
 

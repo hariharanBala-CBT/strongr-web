@@ -1700,21 +1700,17 @@ def update_amenities(request, location_pk):
 
 
 @login_required
+@group_required('Organization')
 def booking_schedule(request):
-    # Get the logged-in user's organization
     organization = get_object_or_404(Organization, user=request.user)
-
-    # Get all courts associated with the organization
     courts = Court.objects.filter(location__organization=organization)
 
-    # Get the selected court from the query parameters or default to the first court
     court_id = request.GET.get('court')
     if court_id:
         selected_court = get_object_or_404(Court, id=court_id, location__organization=organization)
     else:
         selected_court = courts.first()
 
-    # Get the current date and handle week navigation
     today = datetime.now().date()
     week_offset = int(request.GET.get('week_offset', 0))
     start_of_week = today - timedelta(days=today.weekday()) + timedelta(weeks=week_offset)
@@ -1740,7 +1736,6 @@ def booking_schedule(request):
             slot_str = f"{slot.start_time.strftime('%H:%M')} to {slot.end_time.strftime('%H:%M')}"
             availability[day.strftime('%Y-%m-%d')][slot_str] = 'Membership Booking'
 
-    # Add additional slots
     additional_slots = AdditionalSlot.objects.filter(
         court=selected_court,
         date__range=[start_of_week, end_of_week],
@@ -1750,7 +1745,6 @@ def booking_schedule(request):
         slot_str = f"{add_slot.start_time.strftime('%H:%M')} to {add_slot.end_time.strftime('%H:%M')}"
         availability[add_slot.date.strftime('%Y-%m-%d')][slot_str] = 'Available'
 
-    # Mark unavailable slots
     unavailable_slots = UnavailableSlot.objects.filter(
         court=selected_court,
         date__range=[start_of_week, end_of_week],
@@ -1760,14 +1754,12 @@ def booking_schedule(request):
         slot_str = f"{unavail_slot.start_time.strftime('%H:%M')} to {unavail_slot.end_time.strftime('%H:%M')}"
         availability[unavail_slot.date.strftime('%Y-%m-%d')][slot_str] = 'Not Working'
 
-    # Filter bookings for the selected court and the current week
     bookings = Booking.objects.filter(
         court=selected_court,
         booking_date__range=[start_of_week, end_of_week],
         booking_status__in=[Booking.CONFIRMED, Booking.PENDING]
     )
 
-    # Mark booked slots
     for booking in bookings:
         day = booking.booking_date.strftime('%Y-%m-%d')
         if booking.slot:
