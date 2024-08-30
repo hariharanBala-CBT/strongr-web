@@ -294,7 +294,7 @@ class LoginView(View):
                 if user.groups.filter(name='Customer').exists():
                     return redirect('access-restricted')
                 elif user.groups.filter(name='Organization').exists():
-                    profile_page_url = reverse('organization_profile')
+                    profile_page_url = reverse('organization_page')
                     return redirect(profile_page_url)
                 elif user.groups.filter(name='Tenant').exists():
                     return redirect('tenantuser_page')
