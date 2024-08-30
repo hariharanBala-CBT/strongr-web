@@ -114,6 +114,9 @@ import {
   NEAREST_SLOT_REQUEST,
   NEAREST_SLOT_SUCCESS,
   NEAREST_SLOT_FAIL,
+  CLUB_RULES_REQUEST,
+  CLUB_RULES_SUCCESS,
+  CLUB_RULES_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -266,6 +269,27 @@ export const listclubWorking = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: CLUB_WORKING_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const listclubRules = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: CLUB_RULES_REQUEST });
+
+    const { data } = await axios.get(`/api/clubrules/${id}`);
+
+    dispatch({
+      type: CLUB_RULES_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CLUB_RULES_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

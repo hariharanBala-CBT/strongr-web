@@ -21,6 +21,7 @@ SUCCESS_MESSAGES = {
     'update_slot': 'Slot updated successfully',
     'update_workingdays': 'Working days updated successfully',
     'update_amenities': 'Amenities updated successfully',
+    'update_rules': 'Rules updated successfully',
 
     #delete
     'delete_image': 'Image deleted successfully',

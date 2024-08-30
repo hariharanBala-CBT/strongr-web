@@ -1698,7 +1698,31 @@ def update_amenities(request, location_pk):
         form = OrganizationLocationAmenitiesForm(instance=amenities)
     return render(request, 'update_amenities.html', {'form': form, 'locationpk': location_pk})
 
+@method_decorator(login_required, name='dispatch')
+class OrganizationLocationRulesListView(GroupAccessMixin, ListView):
+    model = OrganizationLocation
+    template_name = 'org_location_rules_list.html'
+    context_object_name = 'locations'
+    group_required = ['Organization']
 
+    def get_queryset(self):
+        organization = get_object_or_404(Organization, user=self.request.user)
+        return OrganizationLocation.objects.filter(organization=organization)
+
+class OrganizationLocationRulesView(GroupAccessMixin, UpdateView):
+    model = OrganizationLocation
+    fields = ['rules']
+    template_name = 'org_rules.html'
+    context_object_name = 'location'
+    group_required = ['Organization']
+
+    def get_success_url(self):
+        return reverse_lazy('organization_location_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, SUCCESS_MESSAGES.get('update_rules'))
+        return super().form_valid(form)
+  
 @login_required
 @group_required('Organization')
 def booking_schedule(request):
