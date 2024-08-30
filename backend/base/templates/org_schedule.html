@@ -6,6 +6,11 @@
 <link href="{% static './css/schedule.css' %}" rel="stylesheet" />
 
 <div class="container">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i>
+        </a></li>
+        <li class="breadcrumb-item">Schedule</li>
+    </ol>
     <h1>Court Booking Schedule</h1>
     
     <form method="GET" action="{% url 'org-schedule' %}" class="court-select">
@@ -20,7 +25,7 @@
 
     <div class="week-navigation">
         <a href="{% url 'org-schedule' %}?week_offset={{ prev_week }}&court={{ selected_court.id }}" class="btn btn-primary">&lt; Previous Week</a>
-        <span>{{ start_of_week|date:"d M Y" }} - {{ end_of_week|date:"d M Y" }}</span>
+        <span class="week-dates"><strong>{{ start_of_week|date:"d M Y" }} - {{ end_of_week|date:"d M Y" }}</strong></span>
         <a href="{% url 'org-schedule' %}?week_offset={{ next_week }}&court={{ selected_court.id }}" class="btn btn-primary">Next Week &gt;</a>
     </div>
 
@@ -30,7 +35,10 @@
                 <tr>
                     <th>Slot Timing</th>
                     {% for day in week_dates %}
-                        <th>{{ day|date:"l (d M)" }}</th>
+                        <th>
+                            {{ day|date:"l" }}<br>
+                            {{ day|date:"d M Y" }}
+                        </th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -43,7 +51,6 @@
                                     {% with status=availability|get_item:date_str|get_item:time_slot %}
                                         <td class="booking-cell {{ status|lower }}"
                                             data-date="{{ date_str }}" data-time="{{ time_slot }}">
-                                            {{ status }}
                                         </td>
                                     {% endwith %}
                                 {% endwith %}
@@ -70,7 +77,7 @@
         </div>
         <div class="legend-item">
             <div class="legend-color not-working"></div>
-            <span class="legend-text">Not Working</span>
+            <span class="legend-text">N/A</span>
         </div>
     </div>
 </div>
@@ -80,35 +87,26 @@
     // Hide rows where all cells are 'N/A'
     document.querySelectorAll('#bookingTable tbody tr').forEach(row => {
         let hideRow = true;
+        let allRowsHidden = true;
+
         row.querySelectorAll('.booking-cell').forEach(cell => {
-            if (cell.textContent.trim() !== 'Not-working') {
+            if (!cell.classList.contains('not-working')) {
                 hideRow = false;
             }
         });
         if (hideRow) {
             row.style.display = 'none';
+        } else {
+            allRowsHidden = false;
         }
     });
 
-</script>
-<script>
-    document.getElementById('court-select').addEventListener('change', function() {
-        window.location.href = `?court=${this.value}`;
-    });
+    if (allRowsHidden) {
+        const noSlotsMessage = document.createElement('tr');
+        noSlotsMessage.innerHTML = `<td colspan="${rows[0].querySelectorAll('td').length}">Slot is not available</td>`;
+        document.querySelector('#bookingTable tbody').appendChild(noSlotsMessage);
+    }
 
-    document.querySelectorAll('.booking-cell').forEach(cell => {
-        cell.addEventListener('click', function() {
-            const date = this.dataset.date;
-            const time = this.dataset.time;
-            const status = this.textContent.trim();
-            
-            if (status === 'Available') {
-                alert(`You can book this slot: ${date} ${time}`);
-                // Here you would typically open a booking modal or redirect to a booking page
-            } else {
-                alert(`This slot is ${status.toLowerCase()}: ${date} ${time}`);
-            }
-        });
-    });
 </script>
+
 {% endblock %}

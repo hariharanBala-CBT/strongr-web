@@ -101,7 +101,7 @@ select {
 #bookingTable th, #bookingTable td {
     padding: 1rem;
     text-align: center;
-    border-bottom: 1px solid #ecf0f1;
+    border: 1px solid #ecf0f1;
 }
 
 #bookingTable th {
@@ -120,6 +120,7 @@ select {
 .time-slot {
     font-weight: bold;
     color: #2c3e50;
+    text-wrap:nowrap;
 }
 
 .booking-cell {
@@ -137,8 +138,8 @@ select {
 }
 
 .booking-cell.not-working {
-    background-color: #ecf0f1;
-    color: #95a5a6;
+    background-color:#6b6262;
+    color: #6b6262;
 }
 
 .booking-cell.membership.booking { background-color: #a31ad0; color: #030e1b; }
@@ -173,7 +174,7 @@ select {
 }
 
 .legend-color.not-working {
-    background-color: #ecf0f1;
+    background-color:#6b6262;
     color: #95a5a6;
 }
 

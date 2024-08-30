@@ -1759,13 +1759,17 @@ def booking_schedule(request):
         booking_date__range=[start_of_week, end_of_week],
         booking_status__in=[Booking.CONFIRMED, Booking.PENDING]
     )
+    
+    print("bookings",bookings)
 
     for booking in bookings:
         day = booking.booking_date.strftime('%Y-%m-%d')
         if booking.slot:
             slot_str = f"{booking.slot.start_time.strftime('%H:%M')} to {booking.slot.end_time.strftime('%H:%M')}"
+            availability[day][slot_str] = 'Booked'
         elif booking.additional_slot:
             slot_str = f"{booking.additional_slot.start_time.strftime('%H:%M')} to {booking.additional_slot.end_time.strftime('%H:%M')}"
+            availability[day][slot_str] = 'Booked'
         else:
             continue  # Skip if neither slot nor additional_slot is set
         
@@ -1774,6 +1778,7 @@ def booking_schedule(request):
         formatted_availability[date] = {}
         for time_slot, status in slots.items():
             formatted_availability[date][time_slot] = status
+            print("status",status)
 
     context = {
         'courts': courts,
