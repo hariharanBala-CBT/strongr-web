@@ -9,6 +9,8 @@ import Button from "../components/Button";
 import Footer from "../components/Footer";
 
 import { CircularProgress } from "@mui/material";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { createBooking, listcustomerDetails, validateCoupon } from "../actions/actions";
 
@@ -325,7 +327,7 @@ function CheckoutScreen() {
                 <div className="col-12 col-sm-12">
                   <aside className="checkout-card booking-details">
                       <label htmlFor="couponCode" className="form-label">
-                        {t("couponCode")}
+                      <FontAwesomeIcon icon={faTicketAlt} /> {t("couponCode")}
                       </label>
                       <input
                         type="text"
