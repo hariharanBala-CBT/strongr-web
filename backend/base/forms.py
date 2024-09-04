@@ -316,9 +316,24 @@ class TempSlotForm(forms.ModelForm):
         end_time = cleaned_data.get("end_time")
         court = cleaned_data.get("court")
         date = cleaned_data.get("date")
+        
+        weekday_map = {
+            0: "Monday",
+            1: "Tuesday",
+            2: "Wednesday",
+            3: "Thursday",
+            4: "Friday",
+            5: "Saturday",
+            6: "Sunday"
+        }
+        
+        weekday_name = weekday_map[date.weekday()]
 
         if AdditionalSlot.objects.filter(start_time=start_time, end_time=end_time, court=court, date=date).exists():
-            raise forms.ValidationError("A slot with the same details already exists.")
+            raise forms.ValidationError("An Additional slot with the same details already exists.")
+        
+        if Slot.objects.filter(start_time=start_time, end_time=end_time, court=court, days=weekday_name).exists():
+            raise forms.ValidationError(f"A Slot with the same details already exists on {weekday_name}.")
         
         if start_time and start_time.minute != 0:
             self.add_error('start_time', "Start time must be on the hour (minutes should be 00).")
@@ -371,7 +386,10 @@ class unavailableSlotForm(forms.ModelForm):
         date = cleaned_data.get("date")
 
         if UnavailableSlot.objects.filter(start_time=start_time, end_time=end_time, court=court, date=date).exists():
-            raise forms.ValidationError("A slot with the same details already exists.", code='duplicate')
+            raise forms.ValidationError("An Unavailable slot with the same details already exists.", code='duplicate')
+
+        if AdditionalSlot.objects.filter(start_time=start_time, end_time=end_time, court=court, date=date).exists():
+            raise forms.ValidationError("An Additional slot with the same details exists.")
         
         if start_time and start_time.minute != 0:
             self.add_error('start_time', "Start time must be on the hour (minutes should be 00).")
