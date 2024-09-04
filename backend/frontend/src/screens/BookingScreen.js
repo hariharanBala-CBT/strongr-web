@@ -253,6 +253,18 @@ function BookingScreen() {
                 </p>
               </li>
               <li>
+              <h6>{t("coupon")}</h6>
+              <p className="primary-text">
+                {bookingDetails?.coupon_code ? (
+                  <>
+                    {bookingDetails.coupon_code} - {bookingDetails.coupon_discount}% discount
+                  </>
+                ) : (
+                  t("noCouponApplied")
+                )}
+              </p>
+            </li>
+              <li>
                 <h6>{t("paymentStatus")}</h6>
                 <p
                   className={

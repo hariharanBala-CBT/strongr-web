@@ -358,3 +358,9 @@ class CustomPasswordResetForm(PasswordResetForm):
         if not User.objects.filter(email=email).exists():
             raise forms.ValidationError("There is no user registered with the specified email address!")
         return email
+
+class CouponForm(forms.ModelForm):
+    expires_at = forms.DateField(label='Select date', widget=forms.DateInput(attrs={'type': 'date'}))
+    class Meta:
+        model = Coupon
+        fields = ['discount_percentage', 'expires_at']

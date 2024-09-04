@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { LinkContainer } from "react-router-bootstrap";
 import Header from "../components/Header";
@@ -9,8 +9,10 @@ import Button from "../components/Button";
 import Footer from "../components/Footer";
 
 import { CircularProgress } from "@mui/material";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 
-import { createBooking, listcustomerDetails } from "../actions/actions";
+import { createBooking, listcustomerDetails, validateCoupon } from "../actions/actions";
 
 import "../css/checkoutscreen.css";
 import dayjs from 'dayjs';
@@ -22,39 +24,15 @@ function CheckoutScreen() {
 
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
-  const formatDate = (date) => {
-    return dayjs(date).format('DD-MM-YYYY');
-  };
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheckboxChange = (e) => {
-    setIsChecked(e.target.checked);
-  };
+  const [couponCode, setCouponCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponError, setCouponError] = useState("");
 
   const { createBookingError, createBookingLoading, success, booking } =
     useSelector((state) => state.bookingCreate);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const placeOrder = () => {
-      dispatch(
-        createBooking({
-          id: bookingData.id,
-          userInfo: userInfo,
-          phoneNumber: phoneNumber,
-          date: bookingData.date,
-          slotId: bookingData?.slotId,
-          addSlotId: bookingData?.addSlotId,
-          courtId: bookingData.courtId,
-          taxPrice: bookingData.taxPrice,
-          totalPrice: bookingData.totalPrice,
-        })
-      );
-    };
-    placeOrder();
-  };
-
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
   const { bookingDetailsSuccess } = useSelector(
@@ -63,6 +41,10 @@ function CheckoutScreen() {
 
   const bookingDataJSON = localStorage.getItem("Bookingdata");
   const bookingData = JSON.parse(bookingDataJSON);
+
+  const formatDate = (date) => {
+    return dayjs(date).format('DD-MM-YYYY');
+  };
 
   useEffect(() => {
     if (bookingDetailsSuccess) {
@@ -93,15 +75,86 @@ function CheckoutScreen() {
 
   useEffect(() => {
     if (success && booking) {
+      
       navigate(`/booking/${booking.id}`);
     } else if (createBookingError) {
       toast.error(t("somethingWentWrong"))
     }
   }, [booking, createBookingError, navigate, success, t])
 
+  useEffect(() => {
+    const savedCoupon = JSON.parse(localStorage.getItem("appliedCoupon"));
+    if (savedCoupon) {
+        setCouponCode(savedCoupon.code);
+        setDiscount(savedCoupon.discount);
+        setCouponApplied(true);
+    }
+}, []);
+
+
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
+  const handleApplyCoupon = async () => {
+    const organizationId = bookingData.clubLocation?.id;
+
+    try {
+      const response = await dispatch(validateCoupon(organizationId, couponCode));
+
+      if (response.success) {
+        setDiscount(response.data.discount_percentage);
+        setCouponCode(couponCode)
+        setCouponApplied(true);
+        setCouponError("");
+        localStorage.setItem("appliedCoupon", JSON.stringify({
+          code: couponCode,
+          discount: response.data.discount_percentage
+      }));
+        toast.success(t("couponApplied"));
+      } else {
+        setCouponError(response.error || 'Error applying coupon');
+        toast.error(response.error || 'Error applying coupon');
+      }
+    } catch (error) {
+      console.error("Error applying coupon:", error);
+      toast.error('Failed to apply coupon.');
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setDiscount(0);
+    setCouponCode("");
+    setCouponApplied(false);
+    localStorage.removeItem("appliedCoupon");
+    toast.success(t("couponRemoved"));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const placeOrder = () => {
+      dispatch(
+        createBooking({
+          id: bookingData.id,
+          userInfo: userInfo,
+          phoneNumber: phoneNumber,
+          date: bookingData.date,
+          slotId: bookingData?.slotId,
+          addSlotId: bookingData?.addSlotId,
+          courtId: bookingData.courtId,
+          taxPrice: bookingData.taxPrice,
+          coupon: couponCode,
+          totalPrice: bookingData.totalPrice - (bookingData.totalPrice * discount / 100),
+        })
+      );
+    };
+    placeOrder();
+  };
+
   return (
     <div className="checkout-page">
       <Header location="nav-all" />
+      <Toaster />
       <section className="breadcrumb breadcrumb-list mb-0">
         <span className="primary-right-round"></span>
         <div className="container">
@@ -252,13 +305,46 @@ function CheckoutScreen() {
                       </li>
                       <p>{t("onlineBookingFee")}</p>
                     </div>
+                  {discount > 0 && (
+                    <div className="orderset1">
+                      <li>
+                        <h3>{t("discount")}</h3>
+                        <h6>
+                          -{"\u20B9"} {(bookingData.totalPrice * discount / 100).toFixed(0)}
+                        </h6>
+                      </li>
+                      <p>{t("discountApplied")}: {discount}% ({t("youSave")}: {"\u20B9"} {(bookingData.totalPrice * discount / 100).toFixed(0)})</p>
+                    </div>
+                  )}
                   </ul>
                   <div className="order-total d-flex justify-content-between align-items-center">
                     <h5>{t("total")}</h5>
                     <h5>
-                      {"\u20B9"} {bookingData.totalPrice}
+                      {"\u20B9"} {(bookingData.totalPrice - (bookingData.totalPrice * discount / 100)).toFixed(0)}
                     </h5>
                   </div>
+                </div>
+                <div className="col-12 col-sm-12">
+                  <aside className="checkout-card booking-details">
+                      <label htmlFor="couponCode" className="form-label">
+                      <FontAwesomeIcon icon={faTicketAlt} /> {t("couponCode")}
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="couponCode"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                        placeholder={t("enterCoupon")}
+                        disabled={couponApplied}
+                      />
+                      <Button
+                        className={couponApplied ? "remove-button" : "coupon-button"}
+                        text={couponApplied ? t("removeCoupon") : t("applyCoupon")}
+                        onClick={couponApplied ? handleRemoveCoupon : handleApplyCoupon}
+                        type="button"
+                      />
+                  </aside>
                 </div>
               </aside>
             </div>

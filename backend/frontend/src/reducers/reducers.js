@@ -127,6 +127,9 @@ import {
   CLUB_RULES_REQUEST,
   CLUB_RULES_SUCCESS,
   CLUB_RULES_FAIL,
+  VALIDATE_COUPON_REQUEST,
+  VALIDATE_COUPON_SUCCESS,
+  VALIDATE_COUPON_FAILURE,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -265,6 +268,40 @@ export const clubRulesReducer = (state = { clubRules: [] }, action) => {
 
     default:
       return state;
+  }
+};
+
+ const initialState = {
+  isLoading: false,
+  coupon: null,
+  error: null
+};
+
+
+export const couponReducer = (state = initialState, action) => {
+  switch (action.type) {
+      case VALIDATE_COUPON_REQUEST:
+          return {
+              ...state,
+              isLoading: true,
+              error: null
+          };
+      case VALIDATE_COUPON_SUCCESS:
+          return {
+              ...state,
+              isLoading: false,
+              coupon: action.payload,
+              error: null
+          };
+      case VALIDATE_COUPON_FAILURE:
+          return {
+              ...state,
+              isLoading: false,
+              coupon: null,
+              error: action.payload.error || action.payload
+          };
+      default:
+          return state;
   }
 };
 

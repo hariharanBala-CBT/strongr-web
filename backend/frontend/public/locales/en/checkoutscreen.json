@@ -16,5 +16,14 @@
   "somethingWentWrong": "Something went wrong..",
   "venueList": "Venue List",
   "venueDetails": "Venue Details",
+  "discount":"Discount",
+  "youSave":"You Save",
+  "discountApplied": "Discount Applied",
+  "couponApplied":"Coupon Applied Successfully!",
+  "couponRemoved":"Coupon Removed",
+  "enterCoupon": "Enter coupon code",
+  "couponCode": " Coupon code",
+  "applyCoupon": "Apply Coupon",
+  "removeCoupon": "Remove Coupon",
   "bookACourt": "Book a court"
 }

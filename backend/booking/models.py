@@ -95,7 +95,7 @@ class Booking(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     tax_price = models.PositiveBigIntegerField(null=True, blank=True)
     total_price = models.PositiveBigIntegerField(null=True, blank=True)
-
+    code = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True, blank=True)
     booking_status = models.IntegerField(choices=booking_status_choices,
                                          default=PENDING)
 

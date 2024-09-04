@@ -1,0 +1,67 @@
+/* Custom styles for the Coupon List page */
+.header {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #007bff; /* Primary color */
+    color: #fff;
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.card-header i {
+    font-size: 1.2rem;
+}
+
+.btn-success {
+    background-color: #28a745; /* Success green color */
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table th, .table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+}
+
+.thead-dark th {
+    background-color: #343a40;
+    color: #fff;
+    text-align: center;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.text-center {
+    text-align: center;
+}
