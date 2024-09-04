@@ -176,7 +176,7 @@ def getClubAmenities(request, pk):
 def getClubWorkingDays(request, pk):
     days = OrganizationLocationWorkingDays.objects.filter(
         organization_location_id=pk, is_active=True)
-    
+
     day_order = {
         'Sunday': 0,
         'Monday': 1,
@@ -196,7 +196,7 @@ def getClubWorkingDays(request, pk):
 def getClubRules(request, pk):
     club = OrganizationLocation.objects.get(id=pk)
     clubRules = club.rules
-    
+
     return Response(clubRules)
 
 
@@ -359,13 +359,24 @@ def createBooking(request):
         organization = court.location.organization
         area = court.location.area
         slot_id = data.get('slotId') or data.get('addSlotId')
-        coupon = data.get('coupon')
-        code = Coupon.objects.get(code=coupon)
-        
+        coupon_code = data.get('coupon')
+
+        # Check if slot_id is provided
         if not slot_id:
             return Response({'detail': 'Slot not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Get the correct slot based on slotId or addSlotId
         slot = Slot.objects.get(id=slot_id) if 'slotId' in data else AdditionalSlot.objects.get(id=slot_id)
+
+        # Initialize coupon as None by default
+        coupon = None
+
+        # If a coupon code is provided, check if it exists
+        if coupon_code:
+            try:
+                coupon = Coupon.objects.get(code=coupon_code)
+            except Coupon.DoesNotExist:
+                return Response({'detail': 'Invalid coupon code'}, status=status.HTTP_400_BAD_REQUEST)
 
         with transaction.atomic():
             booking = Booking.objects.create(
@@ -378,13 +389,15 @@ def createBooking(request):
                 slot=slot if 'slotId' in data else None,
                 additional_slot=slot if 'addSlotId' in data else None,
                 tax_price=data['taxPrice'],
-                code = code if 'coupon' in data else None,
+                code=coupon,
                 total_price=data['totalPrice'],
                 booking_status=2,
             )
-        
-        code.is_redeemed = True
-        code.save()
+
+            # Mark the coupon as redeemed if it was used
+            if coupon:
+                coupon.is_redeemed = True
+                coupon.save()
 
         # Send confirmation email to user
         send_mail(
@@ -392,7 +405,7 @@ def createBooking(request):
             render_to_string('user_booking_email.html', {
                 'user': user, 'booking_date': booking.booking_date,
                 'organization': organization.organization_name,
-                'area':area, 'court': court, 'slot': slot, 'total_price': booking.total_price}),
+                'area': area, 'court': court, 'slot': slot, 'total_price': booking.total_price}),
             'testgamefront@gmail.com', [data['userInfo']['email']], fail_silently=False
         )
 
@@ -401,7 +414,7 @@ def createBooking(request):
             'Booking Confirmation',
             render_to_string('organization_booking_email.html', {
                 'organization': organization.organization_name,
-                'user': user, 'booking_date': booking.booking_date, 'area':area, 
+                'user': user, 'booking_date': booking.booking_date, 'area': area,
                 'court': court, 'slot': slot, 'total_price': booking.total_price}),
             'testgamefront@gmail.com', [organization.user.email], fail_silently=False
         )
@@ -483,19 +496,19 @@ def getUnavailableSlots(request):
     serializer = UnAvailableSlotSerializer(slots, many=True)
 
     return Response(serializer.data)
-    
+
 @api_view(['GET'])
 def validateCoupon(request, pk):
     code = request.query_params.get('code')
-    
+
     try:
         # Get the organization location and its associated organization
         organization_location = OrganizationLocation.objects.get(id=pk)
         organization_id = organization_location.organization.id
-        
+
         # Check if the coupon exists and matches the organization
         coupon = Coupon.objects.filter(code=code, organization_id=organization_id).first()
-        
+
         if not coupon:
             try:
                 # Check if the coupon exists but does not match the organization
@@ -514,10 +527,10 @@ def validateCoupon(request, pk):
 
         # Return the coupon data if all checks pass
         return Response(CouponSerializer(coupon).data, status=status.HTTP_200_OK)
-    
+
     except OrganizationLocation.DoesNotExist:
         return Response({'error': 'Organization location not found'}, status=status.HTTP_404_NOT_FOUND)
-    
+
     except Exception as e:
         print("Exception occurred:", e)
         return Response({'error': 'An error occurred: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
