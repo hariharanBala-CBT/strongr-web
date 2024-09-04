@@ -98,7 +98,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         except Exception:
             return Response({'detail': 'User does not exist'},
                             status=status.HTTP_404_NOT_FOUND)
-                            
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
@@ -196,7 +196,7 @@ def registerUser(request):
             user=user,
             phone_number=data.get('phone'),
         )
-        
+
         customer_group = Group.objects.get(name='Customer')
         user.groups.add(customer_group)
 
@@ -1220,7 +1220,7 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
             organization_location=pk,
             is_active=True
         )
-        
+
         show_warning = all(day.work_from_time is None or day.work_to_time is None for day in active_days)
 
         context = {
@@ -1640,7 +1640,7 @@ def update_working_days(request, location_pk):
         formset = OrganizationLocationWorkingDaysFormSet(request.POST, queryset=queryset)
         if formset.is_valid():
             instances = formset.save(commit=False)
-            
+
             errors = []
             has_active = False
 
@@ -1722,7 +1722,7 @@ class OrganizationLocationRulesView(GroupAccessMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, SUCCESS_MESSAGES.get('update_rules'))
         return super().form_valid(form)
-  
+
 @login_required
 @group_required('Organization')
 def booking_schedule(request):
@@ -1783,7 +1783,7 @@ def booking_schedule(request):
         booking_date__range=[start_of_week, end_of_week],
         booking_status__in=[Booking.CONFIRMED, Booking.PENDING]
     )
-    
+
     print("bookings",bookings)
 
     for booking in bookings:
@@ -1796,7 +1796,7 @@ def booking_schedule(request):
             availability[day][slot_str] = 'Booked'
         else:
             continue  # Skip if neither slot nor additional_slot is set
-        
+
     formatted_availability = {}
     for date, slots in availability.items():
         formatted_availability[date] = {}
@@ -1817,3 +1817,21 @@ def booking_schedule(request):
         'end_of_week': end_of_week,
     }
     return render(request, 'org_schedule.html', context)
+
+class CouponCreateView(CreateView):
+    model = Coupon
+    form_class = CouponForm
+    template_name = 'coupon_form.html'
+    success_url = reverse_lazy('coupon-list')
+
+    def form_valid(self, form):
+        form.instance.organization = self.request.user.organization
+        return super().form_valid(form)
+
+class CouponListView(ListView):
+    model = Coupon
+    template_name = 'coupon_list.html'
+    context_object_name = 'coupons'
+
+    def get_queryset(self):
+        return Coupon.objects.filter(organization=self.request.user.organization)

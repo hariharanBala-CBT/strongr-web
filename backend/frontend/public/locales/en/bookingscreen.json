@@ -24,6 +24,8 @@
     "paymentInfo": "Payment Information",
     "gst": "GST",
     "total": "Total (INR)",
+    "coupon": "Coupon Applied",
+    "noCouponApplied": "None",
     "paymentStatus": "Payment status",
     "pending": "Pending",
     "initiated": "Initiated",

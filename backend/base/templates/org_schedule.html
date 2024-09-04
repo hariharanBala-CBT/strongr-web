@@ -83,17 +83,18 @@
 </div>
 
 <script>
+    const rows = document.querySelectorAll('#bookingTable tbody tr');
+    let allRowsHidden = true;
 
-    // Hide rows where all cells are 'N/A'
-    document.querySelectorAll('#bookingTable tbody tr').forEach(row => {
+    rows.forEach(row => {
         let hideRow = true;
-        let allRowsHidden = true;
 
         row.querySelectorAll('.booking-cell').forEach(cell => {
             if (!cell.classList.contains('not-working')) {
                 hideRow = false;
             }
         });
+
         if (hideRow) {
             row.style.display = 'none';
         } else {
@@ -101,12 +102,14 @@
         }
     });
 
-    if (allRowsHidden) {
+    // Check if all rows are hidden
+    if (Array.from(rows).every(row => row.style.display === 'none')) {
         const noSlotsMessage = document.createElement('tr');
         noSlotsMessage.innerHTML = `<td colspan="${rows[0].querySelectorAll('td').length}">Slot is not available</td>`;
         document.querySelector('#bookingTable tbody').appendChild(noSlotsMessage);
     }
 
 </script>
+
 
 {% endblock %}

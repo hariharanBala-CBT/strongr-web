@@ -24,6 +24,8 @@
     "paymentInfo": "கட்டண தகவல்",
     "gst": "ஜிஎஸ்டி",
     "total": "மொத்தம் (INR)",
+    "coupon": "கூப்பன்",
+    "noCouponApplied":"கூப்பன் பயன்படுத்தப்படவில்லை",
     "paymentStatus": "கட்டண நிலை",
     "pending": "நிலுவையில் உள்ளது",
     "initiated": "தொடங்கப்பட்டது",

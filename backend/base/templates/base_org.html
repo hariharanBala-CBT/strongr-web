@@ -101,6 +101,10 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-calendar" aria-hidden="true"></i></div>
                             Schedule
                         </a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'coupon-list' %}active{% endif %}" href="{% url 'coupon-list' %}">
+                            <div class="sb-nav-link-icon"><i class="fa fa-gift" aria-hidden="true"></i></div>
+                            Coupon
+                        </a>
                         <div class="sb-sidenav-menu-heading">Customers</div>
                         <a class="nav-link {% if request.resolver_match.url_name == 'org_customers_list' %}active{% endif %}" href="{% url 'org_customers_list'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>

@@ -117,6 +117,9 @@ import {
   CLUB_RULES_REQUEST,
   CLUB_RULES_SUCCESS,
   CLUB_RULES_FAIL,
+  VALIDATE_COUPON_REQUEST,
+  VALIDATE_COUPON_SUCCESS,
+  VALIDATE_COUPON_FAILURE,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -469,6 +472,7 @@ export const createBooking = (booking) => async (dispatch, getState) => {
       type: BOOKING_CREATE_SUCCESS,
       payload: data,
     });
+    localStorage.removeItem('appliedCoupon');
   } catch (error) {
     dispatch({
       type: BOOKING_CREATE_FAIL,
@@ -1214,5 +1218,35 @@ export const getNearestSlot = (courtId, date) => async (dispatch) => {
           ? error.response.data.detail
           : error.message,
     });
+  }
+};
+
+export const validateCoupon = (organizationId, code) => async (dispatch) => {
+  try {
+    dispatch({ type: VALIDATE_COUPON_REQUEST });
+
+    const { data } = await axios.get(`/api/coupon/${organizationId}/`, {
+      params: { code: code },
+    });
+
+    dispatch({
+      type: VALIDATE_COUPON_SUCCESS,
+      payload: data,
+    });
+
+    return { success: true, data };  // Return success and data
+  } catch (error) {
+    console.error("Error validating coupon:", error);
+
+    const errorMsg = error.response && error.response.data && error.response.data.error
+      ? error.response.data.error
+      : error.message;
+
+    dispatch({
+      type: VALIDATE_COUPON_FAILURE,
+      payload: errorMsg,
+    });
+
+    return { success: false, error: errorMsg };  // Return failure and error
   }
 };

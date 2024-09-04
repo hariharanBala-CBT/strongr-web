@@ -1,0 +1,28 @@
+/* Custom styles for the form */
+.form-select, .form-control {
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+}
+
+.btn-primary, .btn-secondary {
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+
+.card-header {
+    border-bottom: 1px solid #e9ecef;
+    background-color: #007bff; /* Blue background for header */
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}

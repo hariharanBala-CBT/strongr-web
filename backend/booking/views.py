@@ -6,6 +6,7 @@ from base.serializers import *
 from .models import Booking
 from .serializers import *
 from rest_framework import status
+from django.utils import timezone
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -358,7 +359,9 @@ def createBooking(request):
         organization = court.location.organization
         area = court.location.area
         slot_id = data.get('slotId') or data.get('addSlotId')
-
+        coupon = data.get('coupon')
+        code = Coupon.objects.get(code=coupon)
+        
         if not slot_id:
             return Response({'detail': 'Slot not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -375,9 +378,13 @@ def createBooking(request):
                 slot=slot if 'slotId' in data else None,
                 additional_slot=slot if 'addSlotId' in data else None,
                 tax_price=data['taxPrice'],
+                code = code if 'coupon' in data else None,
                 total_price=data['totalPrice'],
                 booking_status=2,
             )
+        
+        code.is_redeemed = True
+        code.save()
 
         # Send confirmation email to user
         send_mail(
@@ -476,7 +483,44 @@ def getUnavailableSlots(request):
     serializer = UnAvailableSlotSerializer(slots, many=True)
 
     return Response(serializer.data)
+    
+@api_view(['GET'])
+def validateCoupon(request, pk):
+    code = request.query_params.get('code')
+    
+    try:
+        # Get the organization location and its associated organization
+        organization_location = OrganizationLocation.objects.get(id=pk)
+        organization_id = organization_location.organization.id
+        
+        # Check if the coupon exists and matches the organization
+        coupon = Coupon.objects.filter(code=code, organization_id=organization_id).first()
+        
+        if not coupon:
+            try:
+                # Check if the coupon exists but does not match the organization
+                couponexist = Coupon.objects.get(code=code)
+                return Response({'error': 'Coupon does not match organization'}, status=status.HTTP_400_BAD_REQUEST)
+            except Coupon.DoesNotExist:
+                # Coupon does not exist at all
+                return Response({'error': 'Invalid coupon code'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Check if the coupon is redeemed or expired
+        current_time = timezone.now()
+        if coupon.is_redeemed:
+            return Response({'error': 'Coupon already redeemed'}, status=status.HTTP_400_BAD_REQUEST)
+        if coupon.expires_at and coupon.expires_at < current_time:
+            return Response({'error': 'Coupon has expired'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Return the coupon data if all checks pass
+        return Response(CouponSerializer(coupon).data, status=status.HTTP_200_OK)
+    
+    except OrganizationLocation.DoesNotExist:
+        return Response({'error': 'Organization location not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    except Exception as e:
+        print("Exception occurred:", e)
+        return Response({'error': 'An error occurred: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
