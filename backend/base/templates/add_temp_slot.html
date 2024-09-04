@@ -1,11 +1,9 @@
-{% extends 'base_org.html' %}{% load static %} {% block content %}
+{% extends 'base_org.html' %} {% load static %} {% block content %}
 <link href="{% static './css/add-temp-slot.css' %}" rel="stylesheet" />
 
 <ol class="breadcrumb mb-4">
   <li class="breadcrumb-item">
-    <a href="{% url 'organization_page' %}"
-      ><i class="fa fa-home" aria-hidden="true"></i
-    ></a>
+    <a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a>
   </li>
   <li class="breadcrumb-item">
     <a href="{% url 'temp-slot-location' %}">Additional Slots</a>
@@ -20,16 +18,14 @@
   <div class="profile-card">
     <h3 class="my-4">Temporary Slot:</h3>
     <h6 class="mb-5">Add Available Temporary Slot to your court</h6>
-    {% if error %}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      {{ error }}
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-      ></button>
-    </div>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {% for error in form.non_field_errors %}
+          {{ error|cut:"* __all__ *"|escape }}
+        {% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
     {% endif %}
 
     <form method="post">
@@ -38,17 +34,33 @@
         <tbody>
           <tr>
             <td>
-              <label
-                >From<span id="starttime" class="text-danger">*</span></label
-              >
+              <label>From<span id="starttime" class="text-danger">*</span></label>
             </td>
-            <td>{{ form.start_time }}</td>
+            <td>
+              {{ form.start_time }}
+              {% if form.start_time.errors %}
+              <div class="text-danger">
+                {% for error in form.start_time.errors %}
+                {{ error|escape }}
+                {% endfor %}
+              </div>
+              {% endif %}
+            </td>
           </tr>
           <tr>
             <td>
               <label>To<span id="endtime" class="text-danger">*</span></label>
             </td>
-            <td>{{ form.end_time }}</td>
+            <td>
+              {{ form.end_time }}
+              {% if form.end_time.errors %}
+              <div class="text-danger">
+                {% for error in form.end_time.errors %}
+                {{ error|escape }}
+                {% endfor %}
+              </div>
+              {% endif %}
+            </td>
           </tr>
           <tr>
             <td>
@@ -66,14 +78,12 @@
       </table>
 
       <div class="buttons px-4 py-4">
-        <a type="button" class="btn btn-secondary" onclick="goBack()"
-          ><i class="fa-solid fa-arrow-left-long"></i
-        ></a>
+        <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
         <button type="submit" class="btn btn-primary">
           <i class="fa-solid fa-arrow-right-long"></i>
         </button>
       </div>
     </form>
   </div>
-  {% endblock %}
 </div>
+{% endblock %}
