@@ -1826,6 +1826,7 @@ class CouponCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.organization = self.request.user.organization
+        messages.success(self.request, SUCCESS_MESSAGES.get('create_coupon'))
         return super().form_valid(form)
 
 class CouponListView(ListView):
