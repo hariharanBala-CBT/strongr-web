@@ -306,7 +306,7 @@ function CheckoutScreen() {
                   {discount > 0 && (
                     <div className="orderset1">
                       <li>
-                        <h3>{t("Discount")}</h3>
+                        <h3>{t("discount")}</h3>
                         <h6>
                           -{"\u20B9"} {(bookingData.totalPrice * discount / 100).toFixed(0)}
                         </h6>
