@@ -113,6 +113,7 @@ function CheckoutScreen() {
       }));
         toast.success(t("couponApplied"));
       } else {
+        setCouponCode("")
         setCouponError(response.error || 'Error applying coupon');
         toast.error(response.error || 'Error applying coupon');
       }
