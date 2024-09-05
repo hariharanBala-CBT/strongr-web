@@ -313,17 +313,17 @@ function CheckoutScreen() {
                       <li>
                         <h3>{t("discount")}</h3>
                         <h6>
-                          -{"\u20B9"} {(bookingData.totalPrice * discount / 100).toFixed(0)}
+                          -{"\u20B9"} {(bookingData.totalPrice * discount / 100)}
                         </h6>
                       </li>
-                      <p>{t("discountApplied")}: {discount}% ({t("youSave")}: {"\u20B9"} {(bookingData.totalPrice * discount / 100).toFixed(0)})</p>
+                      <p>{t("discountApplied")}: {discount}% ({t("youSave")}: {"\u20B9"} {(bookingData.totalPrice * discount / 100)})</p>
                     </div>
                   )}
                   </ul>
                   <div className="order-total d-flex justify-content-between align-items-center">
                     <h5>{t("total")}</h5>
                     <h5>
-                      {"\u20B9"} {(bookingData.totalPrice - (bookingData.totalPrice * discount / 100)).toFixed(0)}
+                      {"\u20B9"} {(bookingData.totalPrice - (bookingData.totalPrice * discount / 100))}
                     </h5>
                   </div>
                 </div>
