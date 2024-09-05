@@ -144,7 +144,7 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
         model = Booking
         fields = [
             'id', 'name', 'phone_number', 'booking_date', 'booking_status',
-            'payment_status', 'tax_price', 'total_price', 'organization_name',
+            'payment_status', 'tax_price', 'total_price', 'organization_name', 'amount', 'discount_amount',
             'court', 'slot', 'additional_slot', 'organization_location', 'game_type', 'area_name', 'image', 'coupon_code', 'coupon_discount'
         ]
 class ReviewSerializer(serializers.ModelSerializer):

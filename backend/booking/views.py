@@ -360,7 +360,9 @@ def createBooking(request):
         area = court.location.area
         slot_id = data.get('slotId') or data.get('addSlotId')
         coupon_code = data.get('coupon')
-
+        amount = data['amount']
+        ac_amount = amount - 10
+    
         # Check if slot_id is provided
         if not slot_id:
             return Response({'detail': 'Slot not provided'}, status=status.HTTP_400_BAD_REQUEST)
@@ -388,6 +390,8 @@ def createBooking(request):
                 court=court,
                 slot=slot if 'slotId' in data else None,
                 additional_slot=slot if 'addSlotId' in data else None,
+                amount = ac_amount,
+                discount_amount = data['discountPrice'],
                 tax_price=data['taxPrice'],
                 code=coupon,
                 total_price=data['totalPrice'],
