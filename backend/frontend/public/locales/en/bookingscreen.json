@@ -22,6 +22,8 @@
     "phoneNumber": "Phone Number",
     "bookingStatus": "Booking status",
     "paymentInfo": "Payment Information",
+    "amount": "Amount",
+    "discountAmount": "Discount Amount",
     "gst": "GST",
     "total": "Total (INR)",
     "coupon": "Coupon Applied",

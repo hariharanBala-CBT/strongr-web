@@ -22,6 +22,8 @@
     "phoneNumber": "தொலைபேசி எண்",
     "bookingStatus": "புக்கிங் நிலை",
     "paymentInfo": "கட்டண தகவல்",
+    "amount": "தொகை",
+    "discountAmount": "தள்ளுபடி தொகை",
     "gst": "ஜிஎஸ்டி",
     "total": "மொத்தம் (INR)",
     "coupon": "கூப்பன்",

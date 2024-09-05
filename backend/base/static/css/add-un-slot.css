@@ -1,5 +1,5 @@
 form {
-    width: 709px;
+    max-width: 500px;
     margin: 0 auto;
     padding: 50px;
     border: 1px solid #ccc;
@@ -16,7 +16,7 @@ form label {
 form input[type="time"],
 input[type="date"],
 form select {
-    width: calc(180% - 120px);
+    width: calc(180% - 200px);
     padding: 5px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -34,5 +34,5 @@ form select {
 }
 
 .buttons {
-    margin-left: 20%
+    margin-left: 10%
 }

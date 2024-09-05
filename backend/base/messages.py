@@ -11,6 +11,7 @@ SUCCESS_MESSAGES = {
     'create_additional_slot' : 'Created Additional slot successfully',
     'create_unavailable_slot' : 'Created Unavailable slot successfully',
     'create_location' : 'Location created successfully',
+    'create_coupon' : 'Coupon created successfully',
 
     #update
     'update_profile' : 'Profile updated successfully',

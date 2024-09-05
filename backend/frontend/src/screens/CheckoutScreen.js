@@ -143,6 +143,8 @@ function CheckoutScreen() {
           slotId: bookingData?.slotId,
           addSlotId: bookingData?.addSlotId,
           courtId: bookingData.courtId,
+          amount: bookingData.totalPrice - (bookingData.taxPrice),
+          discountPrice: (bookingData.totalPrice * discount / 100),
           taxPrice: bookingData.taxPrice,
           coupon: couponCode,
           totalPrice: bookingData.totalPrice - (bookingData.totalPrice * discount / 100),

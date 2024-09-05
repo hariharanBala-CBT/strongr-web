@@ -85,10 +85,21 @@
                 if (isActive) {
                     hasActiveDay = true;
 
+                    const workFromTimeMinutes = workFromTime.split(':')[1];
+                    const workToTimeMinutes = workToTime.split(':')[1];
+
                     if (!workFromTime || !workToTime) {
                         isValid = false;
                         workFromTimeError.text('Work from time and work to time are required.');
                         workToTimeError.text('');  // Clear the workToTime error to avoid redundancy
+                    } else if (workFromTimeMinutes !== '00' || workToTimeMinutes !== '00') {
+                        isValid = false;
+                        if (workFromTimeMinutes !== '00') {
+                            workFromTimeError.text('Work from time must be on the hour (minutes must be 00).');
+                        }
+                        if (workToTimeMinutes !== '00') {
+                            workToTimeError.text('Work to time must be on the hour (minutes must be 00).');
+                        }
                     } else if (workFromTime === workToTime) {
                         isValid = false;
                         workFromTimeError.text('Work from time cannot be the same as work to time.');
