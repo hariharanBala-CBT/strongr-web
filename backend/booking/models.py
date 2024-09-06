@@ -44,6 +44,7 @@ class Slot(models.Model):
     # date = models.DateField(auto_now=True)
     days = models.CharField(max_length=10, choices=day_choices,null=True)
     is_booked = models.BooleanField(default=False)
+    is_happy_hours = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.start_time.strftime('%H:%M')} to {self.end_time.strftime('%H:%M')}"

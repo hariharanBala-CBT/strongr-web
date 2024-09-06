@@ -1,78 +1,106 @@
-{% extends 'base_org.html' %}{% load static %} {% block content %}
+{% extends 'base_org.html' %}
+{% load static %}
+
+{% block content %}
 <link href="{% static './css/add-game.css' %}" rel="stylesheet" />
 
-<ol class="breadcrumb mb-4">
-  <li class="breadcrumb-item">
-    <a href="{% url 'organization_page' %}"
-      ><i class="fa fa-home" aria-hidden="true"></i
-    ></a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{% url 'organization_locationlist'%}">Location List</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{% url 'mainview' locationpk %}">Location</a>
-  </li>
-  <li class="breadcrumb-item">Add-Game</li>
-</ol>
+<div class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'organization_page' %}">
+          <i class="fa fa-home" aria-hidden="true"></i>
+        </a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'organization_locationlist' %}">Location List</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'mainview' locationpk %}">Location</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Add Game</li>
+    </ol>
+  </nav>
 
-<div class="container-fluid px-4 m">
-  <div class="profile-card">
-    <h1 class="my-4">Add Game</h1>
-    <h6 class="mb-5">Add Available Games to your Location</h6>
-    <div>
-      <form method="post">
+  <div class="card main-card">
+    <div class="card-body">
+      <h1 class="card-title">Add Game</h1>
+      <h6 class="card-subtitle mb-4">Add Available Games to your Location</h6>
+
+      <form method="post" id="add-game-form">
         {% csrf_token %}
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <label for="id_game"
-                  >Game<span class="text-danger">*</span></label
-                >
-              </td>
-              <td>{{ form.game_type }}</td>
-            </tr>
-            <tr>
-              <td>
-                <label for="id_pricing"
-                  >Pricing<span class="text-danger">*</span></label
-                >
-              </td>
-              <td>{{ form.pricing }}</td>
-            </tr>
-            <tr>
-              <td>
-                <label for="id_number_of_courts"
-                  >Number of Courts<span class="text-danger">*</span></label
-                >
-              </td>
-              <td>{{ form.number_of_courts }}</td>
-            </tr>
-            <tr>
-              <td>
-                <label for="id_description">Description</label>
-              </td>
-              <td>{{ form.description }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="card2">
+          <div class="form-group row ms-4 me-4">
+            <label for="id_game" class="col-sm-3 col-form-label">Game<span class="text-danger">*</span></label>
+            <div class="col-sm-9">
+              {{ form.game_type }}
+            </div>
+          </div>
+          <div class="form-group row ms-4 me-4">
+            <label for="id_pricing" class="col-sm-3 col-form-label">Pricing<span class="text-danger">*</span></label>
+            <div class="col-sm-9">
+              {{ form.pricing }}
+            </div>
+          </div>
+          <div class="form-group row ms-4 me-4">
+            <label for="id_number_of_courts" class="col-sm-3 col-form-label">Number of Courts<span class="text-danger">*</span></label>
+            <div class="col-sm-9">
+              {{ form.number_of_courts }}
+            </div>
+          </div>
+          <div class="form-group row ms-4 me-4">
+            <label for="id_description" class="col-sm-3 col-form-label">Description</label>
+            <div class="col-sm-9">
+              {{ form.description }}
+            </div>
+          </div>
+        </div>
 
-        <div class="buttons px-4 py-4">
-          <a type="button" class="btn btn-secondary" onclick="goBack()"
-            ><i class="fa-solid fa-arrow-left-long"></i
-          ></a>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            data-toggle="tooltip"
-            title="submit"
-          >
-            <i class="fa-solid fa-arrow-right-long"></i>
-          </button>
+        <h3 class="mt-5 mb-3">Happy Hour Pricing</h3>
+        <div id="happy-hour-formset" class="profile-card">
+          {{ happyhour_formset.management_form }}
+          <table id="happy-hour-table" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Day of the Week</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for form in happyhour_formset %}
+                <tr class="happy-hour-row">
+                  <td>{{ form.day_of_week }}</td>
+                  <td>{{ form.start_time }}</td>
+                  <td>{{ form.end_time }}</td>
+                  <td>{{ form.price }}</td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary edit-row"><i class="far fa-edit"></i></button>
+                    <button type="button" class="btn btn-sm btn-danger delete-row"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <button type="button" class="btn btn-success mt-3" id="add-happy-hour">Add Happy Hour</button>
+
+        <div class="form-group row mt-4">
+          <div class="col-sm-12">
+            <button type="button" class="btn btn-secondary" onclick="goBack()">
+              <i class="fa-solid fa-arrow-left-long"></i> Back
+            </button>
+            <button type="submit" class="btn btn-primary" data-toggle="tooltip" title="Submit">
+              Submit <i class="fa-solid fa-arrow-right-long"></i>
+            </button>
+          </div>
         </div>
       </form>
     </div>
   </div>
 </div>
+
+<script src="{% static 'js/add-game.js' %}"></script>
 {% endblock %}

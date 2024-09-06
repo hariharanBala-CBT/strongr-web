@@ -516,7 +516,7 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
 
     def get_success_url(self):
         locationpk = self.request.session.get('location_pk')
-        return reverse('mainview' , kwargs={'location_pk': locationpk})
+        return reverse('mainview', kwargs={'location_pk': locationpk})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -528,6 +528,10 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['happyhour_formset'] = HappyHourPricingFormSet(self.request.POST)
+        else:
+            context['happyhour_formset'] = HappyHourPricingFormSet()
         context['locationpk'] = self.kwargs.get('locationpk')
         return context
 
@@ -540,9 +544,16 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
         form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
         form.save()
 
+        happyhour_formset = HappyHourPricingFormSet(self.request.POST, instance=form.instance)
+        if happyhour_formset.is_valid():
+            happyhour_instances = happyhour_formset.save(commit=False)
+            for happyhour in happyhour_instances:
+                happyhour.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
+                happyhour.save()
+
+        # Create courts logic
         number_of_courts = form.instance.number_of_courts
         game_type = form.instance
-
         for i in range(number_of_courts):
             Court.objects.create(
                 name=f"Court {i+1} of {game_type.game_type}",
@@ -554,6 +565,11 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
 
         messages.success(self.request, SUCCESS_MESSAGES.get('create_game'))
         return redirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        happyhour_formset = HappyHourPricingFormSet(self.request.POST)
+        return self.render_to_response(self.get_context_data(form=form, happyhour_formset=happyhour_formset))
+
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationGameTypeView(GroupAccessMixin, UpdateView):
