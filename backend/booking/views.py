@@ -361,7 +361,8 @@ def createBooking(request):
         slot_id = data.get('slotId') or data.get('addSlotId')
         coupon_code = data.get('coupon')
         amount = data['amount']
-        ac_amount = amount - 10
+        ac_amount = amount
+        # ac_amount = amount - 10
     
         # Check if slot_id is provided
         if not slot_id:

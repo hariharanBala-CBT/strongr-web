@@ -113,8 +113,8 @@ function BookingInfoScreen() {
   const bookingFee = 10;
   const totalPrice = (
     Number(clubPrice) +
-    Number(taxPrice) +
-    Number(bookingFee)
+    Number(taxPrice)
+    // Number(bookingFee)
   ).toFixed(0);
 
   const handleAreaChange = (value) => {
@@ -570,7 +570,7 @@ function BookingInfoScreen() {
                       </li>
                       <p>{t("stateAndCentralTax")}</p>
                     </div>
-                    <div className="orderset3">
+                    {/* <div className="orderset3">
                       <li>
                         <h3>{t("convenienceFee")}</h3>
                         <h6>
@@ -578,7 +578,7 @@ function BookingInfoScreen() {
                         </h6>
                       </li>
                       <p>{t("onlineBookingFee")}</p>
-                    </div>
+                    </div> */}
                   </ul>
                   <div className="order-total d-flex justify-content-between align-items-center">
                     <h5>{t("orderTotal")}</h5>

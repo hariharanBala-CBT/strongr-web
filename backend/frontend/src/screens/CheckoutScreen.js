@@ -299,7 +299,7 @@ function CheckoutScreen() {
                       </li>
                       <p>{t("stateAndCentralTax")}</p>
                     </div>
-                    <div className="orderset3">
+                    {/* <div className="orderset3">
                       <li>
                         <h3>{t("convenienceFee")}</h3>
                         <h6>
@@ -307,7 +307,7 @@ function CheckoutScreen() {
                         </h6>
                       </li>
                       <p>{t("onlineBookingFee")}</p>
-                    </div>
+                    </div> */}
                   {discount > 0 && (
                     <div className="orderset1">
                       <li>
