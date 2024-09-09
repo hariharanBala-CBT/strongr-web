@@ -1263,7 +1263,10 @@ export const checkHappyHoursSlot = (slotId) => async (dispatch) => {
 
     dispatch({
       type: CHECK_HAPPY_HOURS_SLOT_SUCCESS,
-      payload: data,
+      payload: {
+        isHappyHours: data.isHappyHours,
+        price: data.price,  // Ensure price is returned in the response
+      },
     });
   } catch (error) {
     dispatch({

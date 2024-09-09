@@ -7,6 +7,7 @@ from .models import Booking
 from .serializers import *
 from rest_framework import status
 from django.utils import timezone
+from django.http import JsonResponse
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -741,3 +742,45 @@ def getNearestSlot(request):
         serializer = AdditionalSlotSerializer(slot)
 
     return Response(serializer.data)
+
+@api_view(['GET'])
+def checkSlot(request, slotId):
+    DAY_OF_WEEK_MAPPING = {
+    'Monday': 0,
+    'Tuesday': 1,
+    'Wednesday': 2,
+    'Thursday': 3,
+    'Friday': 4,
+    'Saturday': 5,
+    'Sunday': 6
+    }
+    try:
+        # Retrieve the slot by ID
+        slot = Slot.objects.get(id=slotId)
+
+        # Check if the slot is happy hours
+        is_happy_hours = slot.is_happy_hours
+        slot_start_time = slot.start_time
+        slot_end_time = slot.end_time
+        slot_day_of_week = DAY_OF_WEEK_MAPPING.get(slot.days)
+        
+        # Retrieve happy hour pricing for the given day of the week
+        happy_hours = HappyHourPricing.objects.filter(
+            organization_location=slot.location,
+            game_type=slot.court.game,
+            day_of_week=slot_day_of_week
+        )
+
+        # Check if the slot times fall within any happy hour period
+        for happy_hour in happy_hours:
+            if (slot_start_time >= happy_hour.start_time and slot_end_time <= happy_hour.end_time):
+                return JsonResponse({
+                    'isHappyHours': True,
+                    'price': str(happy_hour.price)
+                }, status=200)
+
+        # If no happy hour period matched
+        return JsonResponse({'isHappyHours': False}, status=200)
+        
+    except Slot.DoesNotExist:
+        return JsonResponse({'error': 'Slot not found'}, status=404)

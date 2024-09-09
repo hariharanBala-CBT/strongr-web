@@ -101,8 +101,41 @@ function BookingInfoScreen() {
   const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  
+  const { isHappyHours, price } = useSelector((state) => {
+    return state.happyHours;
+  });
 
+  const handleSlotChange = (value) => {
+
+    setSlot(value);
+    const [startTime, endTime] = value.split("-");
+
+    const selectedSlot = slots.find(
+      (slot) => slot.start_time === startTime && slot.end_time === endTime
+    );
+
+    const slotId = selectedSlot?.id;
+
+    let addSlotId = null;
+    if (!slotId) {
+      const additionalSlot = additionalSlots.find(
+        (slot) => slot.start_time === startTime && slot.end_time === endTime
+      );
+      addSlotId = additionalSlot?.id;
+    }
+
+    if (slotId || addSlotId) {
+      const idToCheck = slotId || addSlotId;
+      dispatch(checkHappyHoursSlot(idToCheck))
+    }
+  };
+  
   const getSelectedGamePricing = () => {
+    if (isHappyHours && price !== undefined && price !== null) {
+      return price;  // Use happy hours price if available
+    }
+  
     const selectedGame = clubGame?.find(
       (game) => game.game_type.game_name === gameName
     );
@@ -130,33 +163,7 @@ function BookingInfoScreen() {
   //   setSlot(value);
   // };
 
-  const handleSlotChange = (value) => {
-
-    setSlot(value);
-    const [startTime, endTime] = value.split("-");
-
-    const selectedSlot = slots.find(
-      (slot) => slot.start_time === startTime && slot.end_time === endTime
-    );
-
-    const slotId = selectedSlot?.id;
-
-    let addSlotId = null;
-    if (!slotId) {
-      const additionalSlot = additionalSlots.find(
-        (slot) => slot.start_time === startTime && slot.end_time === endTime
-      );
-      addSlotId = additionalSlot?.id;
-    }
-
-  // Dispatch the action with either slotId or addSlotId
-    if (slotId) {
-      dispatch(checkHappyHoursSlot(slotId));
-    } else if (addSlotId) {
-      dispatch(checkHappyHoursSlot(addSlotId));
-    }
-  };
-
+  
   const handleCourtChange = (value) => {
     setCourtName(value);
   };
@@ -586,7 +593,7 @@ function BookingInfoScreen() {
                       <p>
                         {gameName} &nbsp;({"\u20B9"}
                         {getSelectedGamePricing()}
-                        /hr)
+                        /hr){isHappyHours && <span className="happy-hours-tag">{t("happyHours")}</span>}
                       </p>
                     </div>
                     <div className="orderset2">

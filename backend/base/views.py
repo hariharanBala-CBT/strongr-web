@@ -585,7 +585,14 @@ class OrganizationUpdateLocationGameTypeView(GroupAccessMixin, UpdateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
+        location_pk = self.kwargs.get('locationpk')
         happyhour_formset = context['happyhour_formset']
+
+        if happyhour_formset.is_valid():
+            happyhour_instances = happyhour_formset.save(commit=False)
+            for happyhour in happyhour_instances:
+                happyhour.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
+                happyhour.save()
         
         if form.is_valid() and happyhour_formset.is_valid():
             self.object = form.save()

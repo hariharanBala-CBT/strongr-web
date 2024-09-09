@@ -889,14 +889,19 @@ export const nearestSlotReducer = (state = { nearestSlot: [] }, action) => {
   }
 };
 
-export const happyHoursReducer = (state = { isHappyHours: false }, action) => {
+export const happyHoursReducer = (state = { isHappyHours: false, price: 0 }, action) => {
   switch (action.type) {
     case CHECK_HAPPY_HOURS_SLOT_REQUEST:
-      return { loading: true };
+      return { ...state, loading: true };
     case CHECK_HAPPY_HOURS_SLOT_SUCCESS:
-      return { loading: false, isHappyHours: action.payload.isHappyHours };
+      return {
+        ...state,
+        loading: false,
+        isHappyHours: action.payload.isHappyHours,
+        price: action.payload.price || 0,
+      };
     case CHECK_HAPPY_HOURS_SLOT_FAIL:
-      return { loading: false, error: action.payload };
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
