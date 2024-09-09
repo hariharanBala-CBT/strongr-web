@@ -66,7 +66,8 @@
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Price</th>
-                <th>Actions</th>
+                <th>Edit</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -76,10 +77,8 @@
                   <td>{{ form.start_time }}</td>
                   <td>{{ form.end_time }}</td>
                   <td>{{ form.price }}</td>
-                  <td>
-                    <button type="button" class="btn btn-sm btn-primary edit-row"><i class="far fa-edit"></i></button>
-                    <button type="button" class="btn btn-sm btn-danger delete-row"><i class="fa-solid fa-trash"></i></button>
-                  </td>
+                  <td class="align-middle"><button type="button" class="btn btn btn-primary edit-row"><i class="fas fa-edit"></i></button></td>
+                  <td class="align-middle"><button type="button" class="btn btn btn-danger delete-row"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
               {% endfor %}
             </tbody>

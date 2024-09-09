@@ -120,6 +120,9 @@ import {
   VALIDATE_COUPON_REQUEST,
   VALIDATE_COUPON_SUCCESS,
   VALIDATE_COUPON_FAILURE,
+  CHECK_HAPPY_HOURS_SLOT_REQUEST,
+  CHECK_HAPPY_HOURS_SLOT_SUCCESS,
+  CHECK_HAPPY_HOURS_SLOT_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -1248,5 +1251,26 @@ export const validateCoupon = (organizationId, code) => async (dispatch) => {
     });
 
     return { success: false, error: errorMsg };  // Return failure and error
+  }
+};
+
+export const checkHappyHoursSlot = (slotId) => async (dispatch) => {
+  try {
+    dispatch({ type: CHECK_HAPPY_HOURS_SLOT_REQUEST });
+
+    // const { data } = await axios.get(`/api/check-happy-hour/`, { params: { slotId }, });
+    const { data } = await axios.get(`/api/check-happy-hour/${slotId}/`);
+
+    dispatch({
+      type: CHECK_HAPPY_HOURS_SLOT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CHECK_HAPPY_HOURS_SLOT_FAIL,
+      payload: error.response && error.response.data.detail
+        ? error.response.data.detail
+        : error.message,
+    });
   }
 };

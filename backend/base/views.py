@@ -584,19 +584,41 @@ class OrganizationUpdateLocationGameTypeView(GroupAccessMixin, UpdateView):
         return get_object_or_404(OrganizationLocationGameType, organization_location__pk=locationpk, pk=gamepk)
 
     def form_valid(self, form):
-        form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=self.kwargs.get('locationpk'))
-        form.save()
-        messages.success(self.request, SUCCESS_MESSAGES.get('update_game'))
-        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
+        context = self.get_context_data()
+        happyhour_formset = context['happyhour_formset']
+        
+        if form.is_valid() and happyhour_formset.is_valid():
+            self.object = form.save()
+            happyhour_formset.instance = self.object
+            happyhour_formset.save()
+            
+            messages.success(self.request, SUCCESS_MESSAGES.get('update_game'))
+            return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
+        else:
+            return self.form_invalid(form)
 
     def form_invalid(self, form):
-        error_messages = ''.join([f'{error}' for error in form.errors.values()])
-        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
-        return self.render_to_response(self.get_context_data(form=form))
+        context = self.get_context_data()
+        happyhour_formset = context['happyhour_formset']
+        
+        error_messages = []
+        if form.errors:
+            error_messages.extend([f'{error}' for error in form.errors.values()])
+        if happyhour_formset.errors:
+            error_messages.extend([f'{error}' for formset_errors in happyhour_formset.errors for error in formset_errors.values()])
+        
+        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', ' '.join(error_messages)))
+        return self.render_to_response(self.get_context_data(form=form, happyhour_formset=happyhour_formset))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.kwargs.get('locationpk')
+        
+        if self.request.POST:
+            context['happyhour_formset'] = HappyHourPricingFormSet(self.request.POST, instance=self.object)
+        else:
+            context['happyhour_formset'] = HappyHourPricingFormSet(instance=self.object)
+        
         return context
 
 @method_decorator(login_required, name='dispatch')

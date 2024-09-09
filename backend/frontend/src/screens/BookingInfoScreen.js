@@ -25,6 +25,7 @@ import {
   listCourts,
   listclubWorking,
   login,
+  checkHappyHoursSlot,
   getNearestSlot,
 } from "../actions/actions";
 import dayjs from "dayjs";
@@ -125,8 +126,35 @@ function BookingInfoScreen() {
     setGameName(value);
   };
 
+  // const handleSlotChange = (value) => {
+  //   setSlot(value);
+  // };
+
   const handleSlotChange = (value) => {
+
     setSlot(value);
+    const [startTime, endTime] = value.split("-");
+
+    const selectedSlot = slots.find(
+      (slot) => slot.start_time === startTime && slot.end_time === endTime
+    );
+
+    const slotId = selectedSlot?.id;
+
+    let addSlotId = null;
+    if (!slotId) {
+      const additionalSlot = additionalSlots.find(
+        (slot) => slot.start_time === startTime && slot.end_time === endTime
+      );
+      addSlotId = additionalSlot?.id;
+    }
+
+  // Dispatch the action with either slotId or addSlotId
+    if (slotId) {
+      dispatch(checkHappyHoursSlot(slotId));
+    } else if (addSlotId) {
+      dispatch(checkHappyHoursSlot(addSlotId));
+    }
   };
 
   const handleCourtChange = (value) => {

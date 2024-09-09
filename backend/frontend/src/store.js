@@ -1,5 +1,6 @@
 import { legacy_createStore as createStore, combineReducers, applyMiddleware } from "redux";
 import { thunk } from "redux-thunk";
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import {
   clubListReducer,
@@ -43,6 +44,7 @@ import {
   topRatedClubsReducer,
   nearestSlotReducer,
   couponReducer,
+  happyHoursReducer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -86,6 +88,7 @@ const reducer = combineReducers({
   userDetailsValidator : validateUserDetailsReducer,
   phoneValidator : validatePhoneReducer,
   topRatedClubs: topRatedClubsReducer,
+  happyHours: happyHoursReducer,
   nearestSlot: nearestSlotReducer
 });
 
@@ -101,8 +104,8 @@ const middleware = [thunk];
 
 const store = createStore(
   reducer,
-  initialState,
-  (applyMiddleware(...middleware)),
+  initialState,composeWithDevTools(
+  (applyMiddleware(...middleware))),
 );
 
 export default store;
