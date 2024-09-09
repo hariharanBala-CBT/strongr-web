@@ -93,10 +93,10 @@ class Booking(models.Model):
                              null=True,
                              blank=True)
     created_at = models.DateTimeField(auto_now=True)
-    amount = models.PositiveBigIntegerField(null=True, blank=True)
-    discount_amount = models.PositiveBigIntegerField(null=True, blank=True)
-    tax_price = models.PositiveBigIntegerField(null=True, blank=True)
-    total_price = models.PositiveBigIntegerField(null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    tax_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     code = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True, blank=True)
     booking_status = models.IntegerField(choices=booking_status_choices,
                                          default=PENDING)
