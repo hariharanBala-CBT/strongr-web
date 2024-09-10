@@ -36,6 +36,7 @@ import {
   listCourts,
   createClubReview,
   listClubReviews,
+  getHappyHoursTable,
   login,
 } from "../actions/actions";
 import { fixImageUrls } from "../utils/imageUtils";
@@ -86,6 +87,7 @@ function ClubDetailScreen() {
   const clubReviewCreate = useSelector((state) => state.clubReviewCreate);
   const { clubReviews } = useSelector((state) => state.clubReviews);
   const { clubRules } = useSelector((state) => state.clubRules);
+  const { happyHoursTable } = useSelector((state) => state.happyHoursTable);
 
   const { loading: loadingclubReview, success: successclubReview } =
     clubReviewCreate;
@@ -112,6 +114,7 @@ function ClubDetailScreen() {
       dispatch(listclubRules(id));
       dispatch(listClubImages(id));
       dispatch(listCourts(id, gameName));
+      dispatch(getHappyHoursTable(id));
     }
   }, [dispatch, gameName, id, successclubReview]);
 
@@ -661,16 +664,28 @@ function ClubDetailScreen() {
                 <p className="d-inline-block"> {t("availableNow")}</p>
                 <ul className="d-sm-flex align-items-center justify-content-evenly">
                   <li>
-                    <div className="games-container">
-                      {clubGame?.map((game) => (
-                        <div key={game.id} className="game-item">
-                          <h3 className="primary-text">
-                            {game.game_type.game_name}
-                          </h3>
-                          <p>₹{game.pricing}</p>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="games-container">
+                  {clubGame?.map((game) => {
+
+                    const happyHour = happyHoursTable.find(
+                      (hh) => hh.game_type === game.id
+                    );
+
+                    return (
+                      <div key={game.id} className="game-item">
+                        <h3 className="primary-text">{game.game_type.game_name}</h3>
+                        <p>
+                          Regular Price: ₹{game.pricing}
+                        </p>
+                        {happyHour && (
+                          <p>
+                            Happy Hours Price: ₹{happyHour.price} (From {happyHour.start_time} to {happyHour.end_time})
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
                   </li>
                 </ul>
                 <div className="d-grid btn-block mt-3">

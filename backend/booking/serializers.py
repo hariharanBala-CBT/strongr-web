@@ -26,6 +26,11 @@ class OrganizationLocationGameTypeSerializer(serializers.ModelSerializer):
         model = OrganizationLocationGameType
         fields = '__all__'
 
+class HappyHourPricingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HappyHourPricing
+        fields = '__all__'
+
 class OrganizationGameImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationGameImages
@@ -174,7 +179,7 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
     numRatings = serializers.IntegerField(read_only=True)
     reviews = serializers.SerializerMethodField(read_only=True)
     amenities = serializers.SerializerMethodField(read_only=True)
-
+    
     def get_organization_images(self, obj):
         try:
             organization_location = obj
@@ -196,7 +201,6 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
             return OrganizationLocationAmenitiesSerializer(amenities).data
         except OrganizationLocationAmenities.DoesNotExist:
             return None
-
 
     def get_reviews(self, obj):
         reviews = obj.review_set.all()

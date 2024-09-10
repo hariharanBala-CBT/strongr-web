@@ -163,6 +163,13 @@ def getClubGame(request, pk):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getHappyHours(request, pk):
+    happy = HappyHourPricing.objects.filter(organization_location_id=pk)
+    serializer = HappyHourPricingSerializer(happy, many=True)
+
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getClubAmenities(request, pk):

@@ -123,6 +123,9 @@ import {
   CHECK_HAPPY_HOURS_SLOT_REQUEST,
   CHECK_HAPPY_HOURS_SLOT_SUCCESS,
   CHECK_HAPPY_HOURS_SLOT_FAIL,
+  HAPPY_HOURS_TABLE_REQUEST,
+  HAPPY_HOURS_TABLE_SUCCESS,
+  HAPPY_HOURS_TABLE_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -1274,6 +1277,27 @@ export const checkHappyHoursSlot = (slotId) => async (dispatch) => {
       payload: error.response && error.response.data.detail
         ? error.response.data.detail
         : error.message,
+    });
+  }
+};
+
+export const getHappyHoursTable = (organizationLocationId) => async (dispatch) => {
+  try {
+    dispatch({ type: HAPPY_HOURS_TABLE_REQUEST });
+
+    const { data } = await axios.get(`/api/clubhappyhours/${organizationLocationId}/`);
+
+    dispatch({
+      type: HAPPY_HOURS_TABLE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: HAPPY_HOURS_TABLE_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
     });
   }
 };

@@ -45,6 +45,7 @@ import {
   nearestSlotReducer,
   couponReducer,
   happyHoursReducer,
+  happyHoursTableReducer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -89,6 +90,7 @@ const reducer = combineReducers({
   phoneValidator : validatePhoneReducer,
   topRatedClubs: topRatedClubsReducer,
   happyHours: happyHoursReducer,
+  happyHoursTable: happyHoursTableReducer,
   nearestSlot: nearestSlotReducer
 });
 
