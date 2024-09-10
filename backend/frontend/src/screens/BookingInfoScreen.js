@@ -102,9 +102,7 @@ function BookingInfoScreen() {
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   
-  const { isHappyHours, price } = useSelector((state) => {
-    return state.happyHours;
-  });
+  const { isHappyHours, price } = useSelector((state) => state.happyHours);
 
   const handleSlotChange = (value) => {
 
@@ -331,9 +329,10 @@ function BookingInfoScreen() {
     if (slots?.length > 0) {
       setSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
       setSelectedSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
+      dispatch(checkHappyHoursSlot(`${slots[0]?.id}`))
       setLoading(false);
     }
-  }, [courts, slots, setSelectedSlot]);
+  }, [courts, slots, setSelectedSlot, dispatch]);
 
   useEffect(() => {
     if (additionalSlots?.length > 0 && slots?.length === 0) {
