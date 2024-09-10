@@ -59,7 +59,6 @@
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Price</th>
-                <th>Edit</th>
                 <th>Delete</th>
               </tr>
             </thead>
@@ -70,8 +69,10 @@
                   <td>{{ happy_hour_form.start_time }}</td>
                   <td>{{ happy_hour_form.end_time }}</td>
                   <td>{{ happy_hour_form.price }}</td>
-                  <td><button type="button" class="btn btn-primary align-middle mt-3"><i class="far fa-edit"></i></button></td>
-                  <td><button type="button" class="btn btn-danger align-middle mt-3"><i class="fa-solid fa-trash"></i></button></td>
+                  <td>
+                    <button type="button" class="btn btn-danger delete-row align-middle mt-3"><i class="fa-solid fa-trash"></i></button>
+                    {{ happy_hour_form.DELETE.as_hidden }}
+                  </td>
                 </tr>
                 {% for hidden in happy_hour_form.hidden_fields %}
                   {{ hidden }}

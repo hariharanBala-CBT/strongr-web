@@ -664,28 +664,31 @@ function ClubDetailScreen() {
                 <p className="d-inline-block"> {t("availableNow")}</p>
                 <ul className="d-sm-flex align-items-center justify-content-evenly">
                   <li>
-                  <div className="games-container">
-                  {clubGame?.map((game) => {
+                    <div className="games-container">
+                      {clubGame?.map((game) => {
+                        const happyHoursForGame = happyHoursTable.filter(
+                          (hh) => hh.game_type === game.id
+                        );
+                        return (
+                          <div key={game.id} className="game-item">
+                            <h3 className="primary-text">{game.game_type.game_name}</h3>
+                            <p>Regular Price: ₹{game.pricing}</p>
 
-                    const happyHour = happyHoursTable.find(
-                      (hh) => hh.game_type === game.id
-                    );
+                            {happyHoursForGame.length > 0 && (
+                              <div>
+                                <h5>Happy Hours Pricing:</h5>
+                                {happyHoursForGame.map((happyHour, index) => (
+                                  <p key={index}>
+                                    ₹{happyHour.price} (From {happyHour.start_time.slice(0, 5)} to {happyHour.end_time.slice(0, 5)})
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
 
-                    return (
-                      <div key={game.id} className="game-item">
-                        <h3 className="primary-text">{game.game_type.game_name}</h3>
-                        <p>
-                          Regular Price: ₹{game.pricing}
-                        </p>
-                        {happyHour && (
-                          <p>
-                            Happy Hours Price: ₹{happyHour.price} (From {happyHour.start_time} to {happyHour.end_time})
-                          </p>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
                   </li>
                 </ul>
                 <div className="d-grid btn-block mt-3">

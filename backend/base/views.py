@@ -593,6 +593,10 @@ class OrganizationUpdateLocationGameTypeView(GroupAccessMixin, UpdateView):
             for happyhour in happyhour_instances:
                 happyhour.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
                 happyhour.save()
+
+            # Handle deletions
+            for obj in happyhour_formset.deleted_objects:
+                obj.delete()  # Delete the object from the database
         
         if form.is_valid() and happyhour_formset.is_valid():
             self.object = form.save()
