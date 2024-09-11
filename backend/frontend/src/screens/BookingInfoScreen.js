@@ -528,9 +528,9 @@ function BookingInfoScreen() {
                       <Alert severity="info">
                         {t("currentlyNoSlotsAvailable", {
                           courtName: courtName,
-                          date: nearestSlot.days
-                            ? nearestSlot.days
-                            : formatDate(nearestSlot.date),
+                          date: nearestSlot.date
+                            ? formatDate(nearestSlot.date)
+                            : nearestSlot.days,
                           time: nearestSlot?.start_time?.slice(0, 5),
                         })}
                       </Alert>
