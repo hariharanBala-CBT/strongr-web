@@ -183,17 +183,20 @@ class OrganizationLocationWorkingDaysForm(ModelForm):
             'work_to_time': forms.TimeInput(attrs={'type': 'time'}),
         }
 
-    def clean_work_from_time(self):
-        work_from_time = self.cleaned_data.get('work_from_time')
-        if work_from_time and work_from_time.minute != 0:
-            raise ValidationError('Work from time must be on the hour (minutes must be 00).')
-        return work_from_time
+    def clean(self):
+        cleaned_data = super().clean()
+        is_active = cleaned_data.get('is_active')
+        work_from_time = cleaned_data.get('work_from_time')
+        work_to_time = cleaned_data.get('work_to_time')
 
-    def clean_work_to_time(self):
-        work_to_time = self.cleaned_data.get('work_to_time')
-        if work_to_time and work_to_time.minute != 0:
-            raise ValidationError('Work to time must be on the hour (minutes must be 00).')
-        return work_to_time
+        # Only apply time checks if the day is active
+        if is_active:
+            if work_from_time and work_from_time.minute != 0:
+                self.add_error('work_from_time', 'Work from time must be on the hour (minutes must be 00).')
+            if work_to_time and work_to_time.minute != 0:
+                self.add_error('work_to_time', 'Work to time must be on the hour (minutes must be 00).')
+
+        return cleaned_data
 
 OrganizationLocationWorkingDaysFormSet = modelformset_factory(OrganizationLocationWorkingDays, form=OrganizationLocationWorkingDaysForm, extra=0)
 
