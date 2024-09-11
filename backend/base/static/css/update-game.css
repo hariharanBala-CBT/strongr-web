@@ -1,43 +1,15 @@
-/* General styles */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    color: #333;
-}
-
 .buttons {
     width: 300px;
     margin-left: 20%;
 }
 
 .main-card {
-    /* background: linear-gradient(to bottom, #ffffff, #f8f9fa); */
     border-radius: 12px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
     overflow: hidden;
     position: relative;
 }
-
-.main-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #3498db, #2ecc71, #e74c3c);
-}
-
-/* .card-title {
-    color: #2c3e50;
-    font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.card-subtitle {
-    color: #7f8c8d;
-} */
 
 .card {
     /* border: none; */
@@ -56,7 +28,6 @@ body {
     margin-left: 120px;
     padding: 20px 20px 10px;
     justify-content: center;
-    /* border: none; */
     border-radius: 0.5rem;
     background-color: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
@@ -91,29 +62,6 @@ h6.card-subtitle {
     margin-left: 30%;
 }
 
-
-/* Breadcrumb styles */
-.breadcrumb {
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 20px;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    backdrop-filter: blur(5px);
-}
-
-.breadcrumb-item a {
-    color: #3498db;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.breadcrumb-item a:hover {
-    color: #2980b9;
-    text-decoration: none;
-}
-
-/* Form styles */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -135,7 +83,6 @@ h6.card-subtitle {
     box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25), inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Input styles */
 input[type="text"],
 input[type="number"],
 input[type="time"],
@@ -203,13 +150,11 @@ textarea {
     resize: vertical;
 }
 
-/* Placeholder styling */
 ::placeholder {
     color: #95a5a6;
     opacity: 1;
 }
 
-/* Card styles */
 .card2 {
     background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
     border-radius: 8px;
@@ -219,7 +164,6 @@ textarea {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* Table styles */
 .table {
     background-color: #ffffff;
     border-radius: 8px;
@@ -241,7 +185,6 @@ textarea {
     border-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Button styles */
 .btn {
     border-radius: 6px;
     font-weight: 500;
@@ -291,7 +234,6 @@ textarea {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .col-form-label {
         text-align: left;
@@ -308,7 +250,6 @@ textarea {
     }
 }
 
-/* Custom styles for specific elements */
 #happy-hour-formset {
     margin-bottom: 1rem;
 }

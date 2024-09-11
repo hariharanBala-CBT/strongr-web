@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const addButton = document.getElementById('add-happy-hour');
     const totalForms = document.getElementById('id_happyhourpricing_set-TOTAL_FORMS');
     const table = document.getElementById('happy-hour-table');
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+    let rowToDelete = null;
 
     addButton.addEventListener('click', function() {
         const formCount = table.querySelectorAll('tbody tr').length;
@@ -23,53 +25,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
     table.querySelectorAll('tbody tr').forEach(addEventListenersToRow);
 
+    // Function to add event listeners for editing and deleting
     function addEventListenersToRow(row) {
-        const editBtn = row.querySelector('.edit-row');
         const deleteBtn = row.querySelector('.delete-row');
 
-        editBtn.addEventListener('click', function() {
-            row.querySelectorAll('input, select').forEach(input => {
-                input.removeAttribute('readonly');
-                input.classList.add('editing');
-            });
-            editBtn.textContent = 'Save';
-            editBtn.classList.remove('btn-primary');
-            editBtn.classList.add('btn-success');
-            editBtn.removeEventListener('click', arguments.callee);
-            editBtn.addEventListener('click', saveRow);
-        });
-
+        // Delete button functionality
         deleteBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete this happy hour?')) {
-                row.remove();
-                updateFormIndexes();
+            rowToDelete = row;
+            deleteModal.show();
+        });
+    }
+
+    // Confirm delete button in modal
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+        if (rowToDelete) {
+            const deleteInput = rowToDelete.querySelector('input[name$="DELETE"]');
+            if (deleteInput) {
+                deleteInput.checked = true;  // Mark the hidden delete input as checked
+                rowToDelete.style.display = 'none';  // Hide the row visually
             }
-        });
-    }
+            rowToDelete.remove();
+            updateFormIndexes();  // Update form indexes after deletion
+            deleteModal.hide();
+            rowToDelete = null;
+        }
+    });
 
-    function saveRow() {
-        const row = this.closest('tr');
-        row.querySelectorAll('input, select').forEach(input => {
-            input.setAttribute('readonly', true);
-            input.classList.remove('editing');
-        });
-        this.textContent = 'Edit';
-        this.classList.remove('btn-success');
-        this.classList.add('btn-primary');
-        this.removeEventListener('click', saveRow);
-        this.addEventListener('click', function() {
-            row.querySelectorAll('input, select').forEach(input => {
-                input.removeAttribute('readonly');
-                input.classList.add('editing');
-            });
-            this.textContent = 'Save';
-            this.classList.remove('btn-primary');
-            this.classList.add('btn-success');
-            this.removeEventListener('click', arguments.callee);
-            this.addEventListener('click', saveRow);
-        });
-    }
-
+    // Update form indexes after adding or deleting rows
     function updateFormIndexes() {
         const rows = table.querySelectorAll('tbody tr');
         rows.forEach((row, index) => {
