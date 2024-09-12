@@ -1,5 +1,6 @@
 import { legacy_createStore as createStore, combineReducers, applyMiddleware } from "redux";
 import { thunk } from "redux-thunk";
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import {
   clubListReducer,
@@ -13,6 +14,7 @@ import {
   clubGameReducer,
   clubAmenityReducer,
   clubWorkingReducer,
+  clubRulesReducer,
   clubImageReducer,
   bookingCreateReducer,
   bookingDetailsReducer,
@@ -41,6 +43,9 @@ import {
   validateUserDetailsReducer,
   topRatedClubsReducer,
   nearestSlotReducer,
+  couponReducer,
+  happyHoursReducer,
+  happyHoursTableReducer,
 } from "./reducers/reducers";
 
 const reducer = combineReducers({
@@ -52,6 +57,7 @@ const reducer = combineReducers({
   clubGame: clubGameReducer,
   clubAmenities: clubAmenityReducer,
   clubWorking: clubWorkingReducer,
+  clubRules: clubRulesReducer,
   clubImages: clubImageReducer,
   areaList: areaListReducer,
   gameList: gameListReducer,
@@ -65,6 +71,7 @@ const reducer = combineReducers({
   slot: availableslotsReducer,
   additionalSlot: additionalslotsReducer,
   unavailableSlot: unavailableslotsReducer,
+  coupon:couponReducer,
   slotDetails: slotReducer,
   customerDetails: customerDetailsReducer,
   userUpdate: userUpdateProfileReducer,
@@ -82,6 +89,8 @@ const reducer = combineReducers({
   userDetailsValidator : validateUserDetailsReducer,
   phoneValidator : validatePhoneReducer,
   topRatedClubs: topRatedClubsReducer,
+  happyHours: happyHoursReducer,
+  happyHoursTable: happyHoursTableReducer,
   nearestSlot: nearestSlotReducer
 });
 

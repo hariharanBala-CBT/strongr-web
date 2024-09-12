@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 import os
 import re
+import random
+import string
 
 DEBUG = os.environ.get('DJANGO_DEBUG')
 class Tenant(models.Model):
@@ -90,6 +92,7 @@ class Organization(models.Model):
     description = models.TextField(default=None,blank=True,null=True)
     status_description = models.TextField(default=None,blank=True,null=True)
     is_terms_and_conditions_agreed = models.BooleanField(default = False)
+    is_gst_applicable  = models.BooleanField(default = False)
     status = models.IntegerField(choices = status_choices, default = PENDING)
     is_active = models.BooleanField(default=True)
 
@@ -115,6 +118,7 @@ class OrganizationLocation(models.Model):
     area = models.ForeignKey(Area,on_delete=models.PROTECT)
     pincode = models.IntegerField()
     phone_number = models.PositiveBigIntegerField()
+    rules = models.TextField(default=None,blank=True,null=True)
     status = models.IntegerField(choices = status_choices, default = PENDING)
     status_description = models.TextField(default=None,blank=True,null=True)
     rating = models.DecimalField(
@@ -189,7 +193,28 @@ class OrganizationLocationGameType(models.Model):
     number_of_courts = models.IntegerField(choices = court_number_choices, default = one)
 
     def __str__(self):
-        return f"{self.game_type}"
+        return f"{self.game_type} at {self.organization_location}"
+
+
+class HappyHourPricing(models.Model):
+    game_type = models.ForeignKey(OrganizationLocationGameType, on_delete=models.CASCADE)
+    organization_location = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)
+    day_of_week_choices = (
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday'),
+    )
+    day_of_week = models.IntegerField(choices=day_of_week_choices)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.game_type} on {self.get_day_of_week_display()} from {self.start_time} to {self.end_time}"
 
 
 class OrganizationLocationWorkingDays(models.Model):
@@ -253,3 +278,32 @@ class Message(models.Model):
 
     def __str__(self):
         return f"From: {self.sender}, To: {self.recipient}, Subject: {self.subject}"
+
+class Coupon(models.Model):
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    code = models.CharField(max_length=12, unique=True)
+    discount_percentage = models.IntegerField(choices=[
+        (10, '10%'),
+        (15, '15%'),
+        (20, '20%'),
+        (25, '25%'),
+        (30, '30%'),
+        (40, '40%'),
+        (50, '50%'),
+    ])
+    is_redeemed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = self.generate_coupon_code()
+        super().save(*args, **kwargs)
+
+    def generate_coupon_code(self):
+        random_part = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+        return f"{random_part}{self.discount_percentage:02}"
+
+    def __str__(self):
+        return f"{self.code} - {self.discount_percentage}%"
+

@@ -12,6 +12,7 @@ import {
   MapPin,
   Phone,
   Mail,
+  AlertOctagon,
 } from "react-feather";
 import profileImage from "../images/profile.jpg";
 import noImage2 from "../images/venue3.jpg";
@@ -30,10 +31,12 @@ import {
   listclubGame,
   listclubAmenities,
   listclubWorking,
+  listclubRules,
   listClubImages,
   listCourts,
   createClubReview,
   listClubReviews,
+  getHappyHoursTable,
   login,
 } from "../actions/actions";
 import { fixImageUrls } from "../utils/imageUtils";
@@ -83,6 +86,8 @@ function ClubDetailScreen() {
   );
   const clubReviewCreate = useSelector((state) => state.clubReviewCreate);
   const { clubReviews } = useSelector((state) => state.clubReviews);
+  const { clubRules } = useSelector((state) => state.clubRules);
+  const { happyHoursTable } = useSelector((state) => state.happyHoursTable);
 
   const { loading: loadingclubReview, success: successclubReview } =
     clubReviewCreate;
@@ -106,8 +111,10 @@ function ClubDetailScreen() {
       dispatch(listclubGame(id));
       dispatch(listclubAmenities(id));
       dispatch(listclubWorking(id));
+      dispatch(listclubRules(id));
       dispatch(listClubImages(id));
       dispatch(listCourts(id, gameName));
+      dispatch(getHappyHoursTable(id));
     }
   }, [dispatch, gameName, id, successclubReview]);
 
@@ -193,7 +200,7 @@ function ClubDetailScreen() {
   useEffect(() => {
     const userName = localStorage.getItem("userName");
     if (userName) {
-      toast.success(t("message",{userName}), { duration: 4000 });
+      toast.success(t("message", { userName }), { duration: 4000 });
       localStorage.removeItem("userName");
     }
   }, [t]);
@@ -233,10 +240,10 @@ function ClubDetailScreen() {
                   <i className="feather-map-pin">
                     <MapPin />
                   </i>
-                    {formatAddress(clubLocation?.address_line_1)}
-                    {formatAddress(clubLocation?.address_line_2)}
-                    {(clubLocation?.pincode)}                
-                  </li>
+                  {formatAddress(clubLocation?.address_line_1)}
+                  {formatAddress(clubLocation?.address_line_2)}
+                  {(clubLocation?.pincode)}
+                </li>
                 <li>
                   <i className="feather-phone-call">
                     <Phone />
@@ -275,7 +282,7 @@ function ClubDetailScreen() {
                     </div>
                     <p className="mb-0">
                       <a href="javascript:;">
-                      {t("reviews", { count: clubLocation?.numRatings })}
+                        {t("reviews", { count: clubLocation?.numRatings })}
                       </a>
                     </p>
                   </div>
@@ -286,48 +293,6 @@ function ClubDetailScreen() {
           </div>
           <hr />
           <div className="row bottom-row d-flex align-items-center">
-            {/* <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-              <ul className="d-sm-flex details">
-                <li>
-                  <div className="profile-pic">
-                    <a href="javascript:void(0);" className="venue-type">
-                      <img
-                        className="img-fluid"
-                        src={venueTypeImage}
-                        alt="Icon"
-                      />
-                    </a>
-                  </div>
-                  <div className="ms-2 venuetype-container">
-                    <p>{t("venueType")}</p>
-                    <h6 className="mb-0">{t("indoor")}</h6>
-                  </div>
-                </li>
-                <li>
-                  <div className="profile-pic">
-                    <a href="javascript:void(0);">
-                      <img
-                        className="img-fluid"
-                        src={profileImage}
-                        alt="Icon"
-                      />
-                    </a>
-                  </div>
-                  <div className="ms-2 addedtype-container">
-                    <p>{t("addedBy")}</p>
-                    <h6 className="mb-0">Hendry Williams</h6>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div className="col-12 col-sm-12 col-md-6 col-lg-6">
-              <div className="d-flex float-sm-end align-items-center">
-                <p className="d-inline-block me-2 mb-0">{t("startsFrom")}:</p>
-                <h3 className="primary-text mb-0 d-inline-block">
-                  ₹150<span>/ hr</span>
-                </h3>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>
@@ -358,129 +323,44 @@ function ClubDetailScreen() {
                     <div className="accordion-body">
                       <div className="text show-more-height">
                         <p>
-                        {clubLocation?.organization?.description}
+                          {clubLocation?.organization?.description}
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
-                {/* <div className="accordion-item mb-4" id="includes">
-                  <h4 className="accordion-header" id="panelsStayOpen-includes">
-                    <button
-                      className="accordion-button"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#panelsStayOpen-collapseTwo"
-                      aria-expanded="false"
-                      aria-controls="panelsStayOpen-collapseTwo"
+                {
+                  <div className="accordion-item mb-4" id="rules">
+                    <h4 className="accordion-header" id="panelsStayOpen-rules">
+                      <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseThree"
+                        aria-expanded="false"
+                        aria-controls="panelsStayOpen-collapseThree"
+                      >
+                        {t("rules")}
+                      </button>
+                    </h4>
+                    <div
+                      id="panelsStayOpen-collapseThree"
+                      className="accordion-collapse collapse show"
+                      aria-labelledby="panelsStayOpen-rules"
                     >
-                      {t("includes")}
-                    </button>
-                  </h4>
-                  <div
-                    id="panelsStayOpen-collapseTwo"
-                    className="accordion-collapse collapse show"
-                    aria-labelledby="panelsStayOpen-includes"
-                  >
-                    <div className="accordion-body">
-                      <ul className="clearfix">
-                        <li>
-                          <i className="feather-check-square">
-                            <CheckSquare />
-                          </i>
-                          Badminton Racket Unlimited
-                        </li>
-                        <li>
-                          <i className="feather-check-square">
-                            <CheckSquare />
-                          </i>
-                          Bats
-                        </li>
-                        <li>
-                          <i className="feather-check-square">
-                            <CheckSquare />
-                          </i>
-                          Hitting Machines
-                        </li>
-                        <li>
-                          <i className="feather-check-square">
-                            <CheckSquare />
-                          </i>
-                          Multiple Courts
-                        </li>
-                        <li>
-                          <i className="feather-check-square">
-                            <CheckSquare />
-                          </i>
-                          Spare Players
-                        </li>
-                        <li>
-                          <i className="feather-check-square">
-                            <CheckSquare />
-                          </i>
-                          Instant Racket
-                        </li>
-                        <li>
-                          <i className="feather-check-square">
-                            <CheckSquare />
-                          </i>
-                          Green Turfs
-                        </li>
-                      </ul>
+                      <div className="accordion-body">
+                        <ul>
+                          {typeof clubRules === 'string' && clubRules.split('\n').map((rule, index) => (
+                            <div key={index} style={{ marginBottom: '12px' }}>
+                              <AlertOctagon style={{ marginRight: '8px' }} />
+                              {rule}
+                            </div>
+                          ))}
+
+                        </ul>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div className="accordion-item mb-4" id="rules">
-                  <h4 className="accordion-header" id="panelsStayOpen-rules">
-                    <button
-                      className="accordion-button"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#panelsStayOpen-collapseThree"
-                      aria-expanded="false"
-                      aria-controls="panelsStayOpen-collapseThree"
-                    >
-                      {t("rules")}
-                    </button>
-                  </h4>
-                  <div
-                    id="panelsStayOpen-collapseThree"
-                    className="accordion-collapse collapse show"
-                    aria-labelledby="panelsStayOpen-rules"
-                  >
-                    <div className="accordion-body">
-                      <ul>
-                        <li>
-                          <p>
-                            <i className="feather-alert-octagon">
-                              <AlertOctagon />
-                            </i>
-                            Non Marking Shoes are recommended not mandatory for
-                            Badminton.
-                          </p>
-                        </li>
-                        <li>
-                          <p>
-                            <i className="feather-alert-octagon">
-                              <AlertOctagon />
-                            </i>
-                            A maximum number of members per booking per
-                            badminton court is admissible fixed by Venue Vendors
-                          </p>
-                        </li>
-                        <li>
-                          <p>
-                            <i className="feather-alert-octagon">
-                              <AlertOctagon />
-                            </i>
-                            No pets, no seeds, no gum, no glass, no hitting or
-                            swinging outside of the cage
-                          </p>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div> */}
+                  </div>}
                 <div className="accordion-item mb-4" id="amenities">
                   <h4
                     className="accordion-header"
@@ -648,143 +528,6 @@ function ClubDetailScreen() {
                     aria-labelledby="panelsStayOpen-reviews"
                   >
                     <div className="accordion-body">
-                       {/* <div className="row review-wrapper">
-                        <div className="col-lg-3">
-                          <div className="ratings-info corner-radius-10 text-center">
-                            <h3>4.8</h3>
-                            <span>out of 5.0</span>
-                            <div className="rating">
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star filled"></i>
-                              <i className="fas fa-star filled"></i>
-                            </div>
-                          </div>
-                        </div>
-                       <div className="col-lg-9">
-                          <div className="recommended">
-                            <h5>Recommended by 97% of Players</h5>
-                            <div className="row">
-                              <div className="col-12 col-sm-12 col-md-4 col-lg-4 mb-3">
-                                <p className="mb-0">{t("qualityOfService")}</p>
-                                <ul>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <span>5.0</span>
-                                  </li>
-                                </ul>
-                              </div>
-                              <div className="col-12 col-sm-12 col-md-4 col-lg-4 mb-3">
-                                <p className="mb-0">{t("qualityOfService")}</p>
-                                <ul>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <span>5.0</span>
-                                  </li>
-                                </ul>
-                              </div>
-                              <div className="col-12 col-sm-12 col-md-4 col-lg-4 mb-3">
-                                <p className="mb-0">{t("qualityOfService")}</p>
-                                <ul>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <span>5.0</span>
-                                  </li>
-                                </ul>
-                              </div>
-                              <div className="col-12 col-sm-12 col-md-4 col-lg-4">
-                                <p className="mb-0">{t("qualityOfService")}</p>
-                                <ul>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <span>5.0</span>
-                                  </li>
-                                </ul>
-                              </div>
-                              <div className="col-12 col-sm-12 col-md-4 col-lg-4">
-                                <p className="mb-0">{t("qualityOfService")}</p>
-                                <ul>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <i></i>
-                                  </li>
-                                  <li>
-                                    <span>5.0</span>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                        </div> 
-                      </div>*/}
                       <div className="row review-wrapper review-form-wrapper">
                         {loadingclubReview && <Loader />}
 
@@ -851,7 +594,7 @@ function ClubDetailScreen() {
                       {clubReviews?.map((review) => (
                         <div className="review-box d-md-flex">
                           <div className="review-profile">
-                            <img src={profileImage} alt={t("userAlt")}/>
+                            <img src={profileImage} alt={t("userAlt")} />
                           </div>
                           <div className="review-info">
                             <h6 className="mb-2 tittle">{review.name}</h6>
@@ -914,48 +657,39 @@ function ClubDetailScreen() {
                   </div>
                 )}
               </div>
-              {/*  <div className="white-bg d-flex justify-content-start align-items-center availability">
-               <div className="gamesList">
-                  <h4>{t("games")}</h4>
-                  {clubGame?.map((game) => (
-                    <span key={game.id}>
-                      {game.game_type.game_name}: ₹{game.pricing}
-                      <br />
-                    </span>
-                  ))}
-                </div>
-              </div> */}
               <div className="white-bg book-court">
                 <h4 className="border-bottom">{t("bookACourt")}</h4>
                 <h5 className="d-inline-block">{t("games")} </h5>
-                <br/>
+                <br />
                 <p className="d-inline-block"> {t("availableNow")}</p>
                 <ul className="d-sm-flex align-items-center justify-content-evenly">
                   <li>
                     <div className="games-container">
-                      {clubGame?.map((game) => (
-                        <div key={game.id} className="game-item">
-                          <h3 className="primary-text">
-                            {game.game_type.game_name}
-                          </h3>
-                          <p>₹{game.pricing}</p>
-                        </div>
-                      ))}
+                      {clubGame?.map((game) => {
+                        const happyHoursForGame = happyHoursTable.filter(
+                          (hh) => hh.game_type === game.id
+                        );
+                        return (
+                          <div key={game.id} className="game-item">
+                            <h3 className="primary-text">{game.game_type.game_name}</h3>
+                            <p>Regular Price: ₹{game.pricing}</p>
+
+                            {happyHoursForGame.length > 0 && (
+                              <div>
+                                <h5>Happy Hours Pricing:</h5>
+                                {happyHoursForGame.map((happyHour, index) => (
+                                  <p key={index}>
+                                    ₹{happyHour.price} (From {happyHour.start_time.slice(0, 5)} to {happyHour.end_time.slice(0, 5)})
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
+
                   </li>
-                  {/* <li>
-                    <span>
-                      <i className="feather-plus"></i>
-                    </span>
-                  </li> */}
-                  {/* <li>
-                    <h4 className="d-inline-block primary-text">₹500</h4>
-                    <span>/hr</span>
-                    <p>
-                    {t("eachAdditionalGuest")} <br />
-                    {t("maxGuests")}
-                    </p>
-                  </li> */}
                 </ul>
                 <div className="d-grid btn-block mt-3">
                   <a
@@ -969,51 +703,7 @@ function ClubDetailScreen() {
                   </a>
                 </div>
               </div>
-              {/* <div className="white-bg listing-owner">
-                <h4 className="border-bottom">{("listingByOwner")}</h4>
-                <ul>
-                  <li className="d-flex justify-content-start align-items-center">
-                    <div className>
-                      <a href="blog-details.html">
-                        <img
-                          className="img-fluid"
-                          alt="Venue"
-                          src={venueImage}
-                        />
-                      </a>
-                    </div>
-                    <div className="owner-info">
-                      <h5>
-                        <a href="blog-details.html">Manchester Academy</a>
-                      </h5>
-                      <p>
-                        <i className="feather-map-pin"></i>
-                        <span>Sacramento, CA</span>
-                      </p>
-                    </div>
-                  </li>
-                  <li className="d-flex justify-content-start align-items-center">
-                    <div className>
-                      <a href="blog-details.html">
-                        <img
-                          className="img-fluid"
-                          alt="Venue"
-                          src={venueImage2}
-                        />
-                      </a>
-                    </div>
-                    <div className="owner-info">
-                      <h5>
-                        <a href="blog-details.html">Sarah Sports Academy</a>
-                      </h5>
-                      <p>
-                        <i className="feather-map-pin"></i>
-                        <span>Sacramento, CA</span>
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </div> */}
+
             </aside>
           </div>
         </div>

@@ -9,6 +9,7 @@
     "proceedToPay": "பணம் செலுத்த தொடங்குங்கள்",
     "yourOrder": "உங்கள் ஆர்டர்",
     "gst": "ஜிஎஸ்டி",
+    "happyHours": "மகிழ்ச்சியான நேரம்",
     "stateAndCentralTax": "மாநில வரி மற்றும் மத்திய வரி",
     "convenienceFee": "வசதி கட்டணம்",
     "onlineBookingFee": "நிகநிலை முன்பதிவு கட்டணம்",
@@ -16,5 +17,14 @@
     "somethingWentWrong": "ஏதோ தவறு ஏற்பட்டது..",
     "venueList": "இடம் பட்டியல்",
     "venueDetails": "இடம் விவரங்கள்",
+    "discount":"தள்ளுபடி",
+    "youSave":"நீங்கள் சேமிக்கும் தொகை",
+    "discountApplied": "தள்ளுபடி பயன்படுத்தப்பட்டது",
+    "couponApplied":"கூப்பன் பயன்படுத்தப்பட்டது!",
+    "couponRemoved":"கூப்பன் அகற்றப்பட்டது",
+    "couponCode": " கூப்பன் குறியீடு",
+    "enterCoupon": "கூப்பனை உள்ளிடவும்",
+    "applyCoupon": "கூப்பனைப் பயன்படுத்தவும்",
+    "removeCoupon": "கூப்பனை அகற்று",
     "bookACourt": "ஒரு கோர்ட்டை பதிவு செய்யுங்கள்"
 }

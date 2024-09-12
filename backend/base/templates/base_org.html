@@ -38,6 +38,8 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
+                    <li><a class="dropdown-item" href="{% url 'status' %}">Status</a></li>
+                    <li><a class="dropdown-item" href="{% url 'organization_profile' %}">Profile</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                 </ul>
@@ -57,14 +59,15 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-                        <a class="nav-link {% if request.resolver_match.url_name == 'organization_profile' %}active{% endif %}" href="{% url 'organization_profile' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
-                            Profile
-                        </a>
                         <a class="nav-link {% if request.resolver_match.url_name == 'organization_locationlist' %}active{% endif %}" href="{% url 'organization_locationlist'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                             Locations
                         </a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'organization_location_list' %}active{% endif %}" href="{% url 'organization_location_list' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-gavel"></i></div>
+                            Rules
+                        </a>
+
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             Slots
@@ -81,9 +84,18 @@
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                             Preview
                         </a>
-                        <a class="nav-link {% if request.resolver_match.url_name == 'status' %}active{% endif %}" href="{% url 'status' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
-                            Status
+                        <div class="sb-sidenav-menu-heading">Manage</div>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'organization-bookings' %}active{% endif %}" href="{% url 'organization-bookings' %}">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-book"></i></div>
+                            Bookings
+                        </a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'org-schedule' %}active{% endif %}" href="{% url 'org-schedule' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calendar" aria-hidden="true"></i></div>
+                            Schedule
+                        </a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'coupon-list' %}active{% endif %}" href="{% url 'coupon-list' %}">
+                            <div class="sb-nav-link-icon"><i class="fa fa-gift" aria-hidden="true"></i></div>
+                            Coupon
                         </a>
                         <div class="sb-sidenav-menu-heading">Customers</div>
                         <a class="nav-link {% if request.resolver_match.url_name == 'org_customers_list' %}active{% endif %}" href="{% url 'org_customers_list'%}">
@@ -91,11 +103,6 @@
                             List
                         </a>
                     </div>
-                </div>
-                <!-- Logged in User -->
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    <div class="user-email">{{ request.user.email }}</div>
                 </div>
             </nav>
         </div>

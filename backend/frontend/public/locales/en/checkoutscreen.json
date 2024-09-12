@@ -9,6 +9,7 @@
   "proceedToPay": "Proceed to Pay",
   "yourOrder": "Your Order",
   "gst": "GST",
+  "happyHours": "Happy Hours",
   "stateAndCentralTax": "State tax and Central tax",
   "convenienceFee": "Convenience Fee",
   "onlineBookingFee": "Online booking fee",
@@ -16,5 +17,14 @@
   "somethingWentWrong": "Something went wrong..",
   "venueList": "Venue List",
   "venueDetails": "Venue Details",
+  "discount":"Discount",
+  "youSave":"You Save",
+  "discountApplied": "Discount Applied",
+  "couponApplied":"Coupon Applied Successfully!",
+  "couponRemoved":"Coupon Removed",
+  "enterCoupon": "Enter coupon code",
+  "couponCode": " Coupon code",
+  "applyCoupon": "Apply Coupon",
+  "removeCoupon": "Remove Coupon",
   "bookACourt": "Book a court"
 }

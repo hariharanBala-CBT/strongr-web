@@ -3,7 +3,7 @@ from .utils import sanitize_string
 from django.utils import timezone
 from django import forms
 from django.db.models.base import Model
-from django.forms import ClearableFileInput, DateInput, ValidationError, ModelForm, modelformset_factory
+from django.forms import ClearableFileInput, DateInput, ValidationError, ModelForm, modelformset_factory, inlineformset_factory
 from .models import *
 from booking.models import *
 from django.contrib.auth.models import User
@@ -24,18 +24,18 @@ class OrganizationSignupForm(forms.Form):
             raise ValidationError("User Already Exist")
         return username
 
-    def clean_email(self):     
-        email = self.cleaned_data['email'].lower()     
-        if User.objects.filter(email=email).exists():    
-            raise ValidationError(" Email Already Exist")     
-        return email   
-    
-    def save(self, pwd, commit = True):     
-        user = User.objects.create_user(       
-            username = self.cleaned_data['email'],       
-            email=self.cleaned_data['email'],       
-            password = pwd,      
-            first_name=self.cleaned_data['first_name'],      
+    def clean_email(self):
+        email = self.cleaned_data['email'].lower()
+        if User.objects.filter(email=email).exists():
+            raise ValidationError(" Email Already Exist")
+        return email
+
+    def save(self, pwd, commit = True):
+        user = User.objects.create_user(
+            username = self.cleaned_data['email'],
+            email=self.cleaned_data['email'],
+            password = pwd,
+            first_name=self.cleaned_data['first_name'],
             last_name=self.cleaned_data['last_name']
         )
         return user
@@ -67,7 +67,7 @@ class OrganizationProfileForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 2, 'cols': 25})
         }
-        
+
 class OrganizationLocationForm(ModelForm):
     class Meta:
         model = OrganizationLocation
@@ -137,6 +137,25 @@ class OrganizationLocationGameTypeCreateForm(ModelForm):
             ).values_list('game_type', flat=True)
             self.fields['game_type'].queryset = GameType.objects.exclude(pk__in=existing_game_types)
 
+
+class HappyHourPricingForm(ModelForm):
+    class Meta:
+        model = HappyHourPricing
+        fields = ['day_of_week', 'start_time', 'end_time', 'price']
+        widgets = {
+            'start_time': forms.TimeInput(attrs={'type': 'time'}),
+            'end_time': forms.TimeInput(attrs={'type': 'time'}),
+        }
+
+HappyHourPricingFormSet = inlineformset_factory(
+    OrganizationLocationGameType,  # Parent model
+    HappyHourPricing,  # Child model
+    form=HappyHourPricingForm,
+    extra=1,  # Number of extra forms to display
+    can_delete=True
+)
+
+
 class OrganizationGameImagesForm(forms.ModelForm):
     clear_image = forms.BooleanField(required=False)
     class Meta:
@@ -163,6 +182,21 @@ class OrganizationLocationWorkingDaysForm(ModelForm):
             'work_from_time': forms.TimeInput(attrs={'type': 'time'}),
             'work_to_time': forms.TimeInput(attrs={'type': 'time'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        is_active = cleaned_data.get('is_active')
+        work_from_time = cleaned_data.get('work_from_time')
+        work_to_time = cleaned_data.get('work_to_time')
+
+        # Only apply time checks if the day is active
+        if is_active:
+            if work_from_time and work_from_time.minute != 0:
+                self.add_error('work_from_time', 'Work from time must be on the hour (minutes must be 00).')
+            if work_to_time and work_to_time.minute != 0:
+                self.add_error('work_to_time', 'Work to time must be on the hour (minutes must be 00).')
+
+        return cleaned_data
 
 OrganizationLocationWorkingDaysFormSet = modelformset_factory(OrganizationLocationWorkingDays, form=OrganizationLocationWorkingDaysForm, extra=0)
 
@@ -223,6 +257,12 @@ class SlotForm(forms.ModelForm):
         if Slot.objects.filter(start_time=start_time, end_time=end_time, court=court, days=days).exists():
             raise forms.ValidationError("A slot with the same details already exists.")
 
+        if start_time and start_time.minute != 0:
+            self.add_error('start_time', "Start time must be on the hour (minutes should be 00).")
+
+        if end_time and end_time.minute != 0:
+            self.add_error('end_time', "End time must be on the hour (minutes should be 00).")
+
         time_diff_seconds = (end_time.hour * 3600 + end_time.minute * 60 + end_time.second) - \
                             (start_time.hour * 3600 + start_time.minute * 60 + start_time.second)
         time_diff_minutes = time_diff_seconds / 60
@@ -259,6 +299,13 @@ class SlotUpdateForm(forms.ModelForm):
         if existing_entries.exists():
             raise forms.ValidationError("A slot with the same details already exists.")
 
+        if start_time and start_time.minute != 0:
+            self.add_error('start_time', "Start time must be on the hour (minutes should be 00).")
+
+        if end_time and end_time.minute != 0:
+            self.add_error('end_time', "End time must be on the hour (minutes should be 00).")
+
+
         time_diff_seconds = (end_time.hour * 3600 + end_time.minute * 60 + end_time.second) - \
                             (start_time.hour * 3600 + start_time.minute * 60 + start_time.second)
         time_diff_minutes = time_diff_seconds / 60
@@ -291,9 +338,30 @@ class TempSlotForm(forms.ModelForm):
         end_time = cleaned_data.get("end_time")
         court = cleaned_data.get("court")
         date = cleaned_data.get("date")
+        
+        weekday_map = {
+            0: "Monday",
+            1: "Tuesday",
+            2: "Wednesday",
+            3: "Thursday",
+            4: "Friday",
+            5: "Saturday",
+            6: "Sunday"
+        }
+        
+        weekday_name = weekday_map[date.weekday()]
 
         if AdditionalSlot.objects.filter(start_time=start_time, end_time=end_time, court=court, date=date).exists():
-            raise forms.ValidationError("A slot with the same details already exists.")
+            raise forms.ValidationError("An Additional slot with the same details already exists.")
+        
+        if Slot.objects.filter(start_time=start_time, end_time=end_time, court=court, days=weekday_name).exists():
+            raise forms.ValidationError(f"A Slot with the same details already exists on {weekday_name}.")
+        
+        if start_time and start_time.minute != 0:
+            self.add_error('start_time', "Start time must be on the hour (minutes should be 00).")
+
+        if end_time and end_time.minute != 0:
+            self.add_error('end_time', "End time must be on the hour (minutes should be 00).")
 
         time_diff_seconds = (end_time.hour * 3600 + end_time.minute * 60 + end_time.second) - \
                             (start_time.hour * 3600 + start_time.minute * 60 + start_time.second)
@@ -340,7 +408,16 @@ class unavailableSlotForm(forms.ModelForm):
         date = cleaned_data.get("date")
 
         if UnavailableSlot.objects.filter(start_time=start_time, end_time=end_time, court=court, date=date).exists():
-            raise forms.ValidationError("A slot with the same details already exists.", code='duplicate')
+            raise forms.ValidationError("An Unavailable slot with the same details already exists.", code='duplicate')
+
+        if AdditionalSlot.objects.filter(start_time=start_time, end_time=end_time, court=court, date=date).exists():
+            raise forms.ValidationError("An Additional slot with the same details exists.")
+        
+        if start_time and start_time.minute != 0:
+            self.add_error('start_time', "Start time must be on the hour (minutes should be 00).")
+
+        if end_time and end_time.minute != 0:
+            self.add_error('end_time', "End time must be on the hour (minutes should be 00).")
 
         time_diff_seconds = (end_time.hour * 3600 + end_time.minute * 60 + end_time.second) - \
                             (start_time.hour * 3600 + start_time.minute * 60 + start_time.second)
@@ -358,3 +435,9 @@ class CustomPasswordResetForm(PasswordResetForm):
         if not User.objects.filter(email=email).exists():
             raise forms.ValidationError("There is no user registered with the specified email address!")
         return email
+
+class CouponForm(forms.ModelForm):
+    expires_at = forms.DateField(label='Select date', widget=forms.DateInput(attrs={'type': 'date'}))
+    class Meta:
+        model = Coupon
+        fields = ['discount_percentage', 'expires_at']

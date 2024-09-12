@@ -1,0 +1,69 @@
+{% extends 'base_org.html' %}{% load static %} 
+{% block content %}
+    <link href="{% static './css/coupon-list.css' %}" rel="stylesheet" />    
+    
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item">
+            <a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a>
+        </li>
+        <li class="breadcrumb-item active">Coupon List</li>
+    </ol>
+    
+    <div class="container-fluid px-4">
+
+        
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+                <span><i class="fas fa-ticket-alt me-2"></i>Coupon List</span>
+                <a class="btn btn-success" href="{% url 'coupon-create' %}">
+                    <i class="fas fa-plus-circle"></i> Create New Coupon
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="datatablesSimple" class="table table-hover table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Code</th>
+                                <th>Discount Percentage</th>
+                                <th>Redeemed</th>
+                                <th>Created At</th>
+                                <th>Expires At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for coupon in coupons %}
+                            <tr>
+                                <td>{{ coupon.code }}</td>
+                                <td>{{ coupon.discount_percentage }}%</td>
+                                <td>
+                                    {% if coupon.is_redeemed|default_if_none:"false" %}
+                                        Yes
+                                    {% else %}
+                                        No
+                                    {% endif %}
+                                </td>
+                                <td>{{ coupon.created_at }}</td>
+                                <td>{{ coupon.expires_at }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No coupons found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Code</th>
+                                <th>Discount Percentage</th>
+                                <th>Redeemed</th>
+                                <th>Created At</th>
+                                <th>Expires At</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

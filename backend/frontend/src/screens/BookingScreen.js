@@ -240,6 +240,18 @@ function BookingScreen() {
             </ul>
             <h5 className="mb-3">{t("paymentInfo")}</h5>
             <ul className="payment-info d-lg-flex justify-content-start align-items-center">
+            <li>
+                <h6>{t("amount")}</h6>
+                <p className="primary-text">
+                  {"\u20B9"} {bookingDetails?.amount}
+                </p>
+              </li>
+              <li>
+                <h6>{t("discountAmount")}</h6>
+                <p className="primary-text">
+                  {"\u20B9"} {bookingDetails?.discount_amount}
+                </p>
+              </li>
               <li>
                 <h6>{t("gst")}</h6>
                 <p className="primary-text">
@@ -252,6 +264,18 @@ function BookingScreen() {
                   {"\u20B9"} {bookingDetails?.total_price}
                 </p>
               </li>
+              <li>
+              <h6>{t("coupon")}</h6>
+              <p className="primary-text">
+                {bookingDetails?.coupon_code ? (
+                  <>
+                    {bookingDetails.coupon_code} - {bookingDetails.coupon_discount}% discount
+                  </>
+                ) : (
+                  t("noCouponApplied")
+                )}
+              </p>
+            </li>
               <li>
                 <h6>{t("paymentStatus")}</h6>
                 <p

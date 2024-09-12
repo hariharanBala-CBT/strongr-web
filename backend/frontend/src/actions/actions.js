@@ -114,6 +114,18 @@ import {
   NEAREST_SLOT_REQUEST,
   NEAREST_SLOT_SUCCESS,
   NEAREST_SLOT_FAIL,
+  CLUB_RULES_REQUEST,
+  CLUB_RULES_SUCCESS,
+  CLUB_RULES_FAIL,
+  VALIDATE_COUPON_REQUEST,
+  VALIDATE_COUPON_SUCCESS,
+  VALIDATE_COUPON_FAILURE,
+  CHECK_HAPPY_HOURS_SLOT_REQUEST,
+  CHECK_HAPPY_HOURS_SLOT_SUCCESS,
+  CHECK_HAPPY_HOURS_SLOT_FAIL,
+  HAPPY_HOURS_TABLE_REQUEST,
+  HAPPY_HOURS_TABLE_SUCCESS,
+  HAPPY_HOURS_TABLE_FAIL,
 } from "../constants/constants";
 import axios from "axios";
 
@@ -266,6 +278,27 @@ export const listclubWorking = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: CLUB_WORKING_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const listclubRules = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: CLUB_RULES_REQUEST });
+
+    const { data } = await axios.get(`/api/clubrules/${id}`);
+
+    dispatch({
+      type: CLUB_RULES_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CLUB_RULES_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail
@@ -445,6 +478,7 @@ export const createBooking = (booking) => async (dispatch, getState) => {
       type: BOOKING_CREATE_SUCCESS,
       payload: data,
     });
+    localStorage.removeItem('appliedCoupon');
   } catch (error) {
     dispatch({
       type: BOOKING_CREATE_FAIL,
@@ -1185,6 +1219,81 @@ export const getNearestSlot = (courtId, date) => async (dispatch) => {
 
     dispatch({
       type: NEAREST_SLOT_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+export const validateCoupon = (organizationId, code) => async (dispatch) => {
+  try {
+    dispatch({ type: VALIDATE_COUPON_REQUEST });
+
+    const { data } = await axios.get(`/api/coupon/${organizationId}/`, {
+      params: { code: code },
+    });
+
+    dispatch({
+      type: VALIDATE_COUPON_SUCCESS,
+      payload: data,
+    });
+
+    return { success: true, data };  // Return success and data
+  } catch (error) {
+    console.error("Error validating coupon:", error);
+
+    const errorMsg = error.response && error.response.data && error.response.data.error
+      ? error.response.data.error
+      : error.message;
+
+    dispatch({
+      type: VALIDATE_COUPON_FAILURE,
+      payload: errorMsg,
+    });
+
+    return { success: false, error: errorMsg };  // Return failure and error
+  }
+};
+
+export const checkHappyHoursSlot = (slotId) => async (dispatch) => {
+  try {
+    dispatch({ type: CHECK_HAPPY_HOURS_SLOT_REQUEST });
+
+    // const { data } = await axios.get(`/api/check-happy-hour/`, { params: { slotId }, });
+    const { data } = await axios.get(`/api/check-happy-hour/${slotId}/`);
+
+    dispatch({
+      type: CHECK_HAPPY_HOURS_SLOT_SUCCESS,
+      payload: {
+        isHappyHours: data.isHappyHours,
+        price: data.price,  // Ensure price is returned in the response
+      },
+    });
+  } catch (error) {
+    dispatch({
+      type: CHECK_HAPPY_HOURS_SLOT_FAIL,
+      payload: error.response && error.response.data.detail
+        ? error.response.data.detail
+        : error.message,
+    });
+  }
+};
+
+export const getHappyHoursTable = (organizationLocationId) => async (dispatch) => {
+  try {
+    dispatch({ type: HAPPY_HOURS_TABLE_REQUEST });
+
+    const { data } = await axios.get(`/api/clubhappyhours/${organizationLocationId}/`);
+
+    dispatch({
+      type: HAPPY_HOURS_TABLE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: HAPPY_HOURS_TABLE_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

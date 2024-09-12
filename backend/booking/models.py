@@ -44,6 +44,7 @@ class Slot(models.Model):
     # date = models.DateField(auto_now=True)
     days = models.CharField(max_length=10, choices=day_choices,null=True)
     is_booked = models.BooleanField(default=False)
+    is_happy_hours = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.start_time.strftime('%H:%M')} to {self.end_time.strftime('%H:%M')}"
@@ -93,9 +94,11 @@ class Booking(models.Model):
                              null=True,
                              blank=True)
     created_at = models.DateTimeField(auto_now=True)
-    tax_price = models.PositiveBigIntegerField(null=True, blank=True)
-    total_price = models.PositiveBigIntegerField(null=True, blank=True)
-
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    tax_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    code = models.ForeignKey(Coupon, on_delete=models.CASCADE, null=True, blank=True)
     booking_status = models.IntegerField(choices=booking_status_choices,
                                          default=PENDING)
 
