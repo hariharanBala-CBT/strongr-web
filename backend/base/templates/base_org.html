@@ -59,10 +59,6 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-                        <a class="nav-link {% if request.resolver_match.url_name == 'organization_profile' %}active{% endif %}" href="{% url 'organization_profile' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
-                            Profile
-                        </a>
                         <a class="nav-link {% if request.resolver_match.url_name == 'organization_locationlist' %}active{% endif %}" href="{% url 'organization_locationlist'  %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                             Locations
@@ -87,10 +83,6 @@
                         <a class="nav-link {% if request.resolver_match.url_name == 'preview' %}active{% endif %}" href="{% url 'preview' %}">
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                             Preview
-                        </a>
-                        <a class="nav-link {% if request.resolver_match.url_name == 'status' %}active{% endif %}" href="{% url 'status' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
-                            Status
                         </a>
                         <div class="sb-sidenav-menu-heading">Manage</div>
                         <a class="nav-link {% if request.resolver_match.url_name == 'organization-bookings' %}active{% endif %}" href="{% url 'organization-bookings' %}">

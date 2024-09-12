@@ -3,7 +3,7 @@ from .utils import sanitize_string
 from django.utils import timezone
 from django import forms
 from django.db.models.base import Model
-from django.forms import ClearableFileInput, DateInput, ValidationError, ModelForm, modelformset_factory
+from django.forms import ClearableFileInput, DateInput, ValidationError, ModelForm, modelformset_factory, inlineformset_factory
 from .models import *
 from booking.models import *
 from django.contrib.auth.models import User
@@ -136,6 +136,25 @@ class OrganizationLocationGameTypeCreateForm(ModelForm):
                 organization_location=organization_location
             ).values_list('game_type', flat=True)
             self.fields['game_type'].queryset = GameType.objects.exclude(pk__in=existing_game_types)
+
+
+class HappyHourPricingForm(ModelForm):
+    class Meta:
+        model = HappyHourPricing
+        fields = ['day_of_week', 'start_time', 'end_time', 'price']
+        widgets = {
+            'start_time': forms.TimeInput(attrs={'type': 'time'}),
+            'end_time': forms.TimeInput(attrs={'type': 'time'}),
+        }
+
+HappyHourPricingFormSet = inlineformset_factory(
+    OrganizationLocationGameType,  # Parent model
+    HappyHourPricing,  # Child model
+    form=HappyHourPricingForm,
+    extra=1,  # Number of extra forms to display
+    can_delete=True
+)
+
 
 class OrganizationGameImagesForm(forms.ModelForm):
     clear_image = forms.BooleanField(required=False)

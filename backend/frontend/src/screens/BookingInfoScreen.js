@@ -25,6 +25,7 @@ import {
   listCourts,
   listclubWorking,
   login,
+  checkHappyHoursSlot,
   getNearestSlot,
 } from "../actions/actions";
 import dayjs from "dayjs";
@@ -100,8 +101,39 @@ function BookingInfoScreen() {
   const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  
+  const { isHappyHours, price } = useSelector((state) => state.happyHours);
 
+  const handleSlotChange = (value) => {
+
+    setSlot(value);
+    const [startTime, endTime] = value.split("-");
+
+    const selectedSlot = slots.find(
+      (slot) => slot.start_time === startTime && slot.end_time === endTime
+    );
+
+    const slotId = selectedSlot?.id;
+
+    let addSlotId = null;
+    if (!slotId) {
+      const additionalSlot = additionalSlots.find(
+        (slot) => slot.start_time === startTime && slot.end_time === endTime
+      );
+      addSlotId = additionalSlot?.id;
+    }
+
+    if (slotId || addSlotId) {
+      const idToCheck = slotId || addSlotId;
+      dispatch(checkHappyHoursSlot(idToCheck))
+    }
+  };
+  
   const getSelectedGamePricing = () => {
+    if (isHappyHours && price !== undefined && price !== null) {
+      return price;  // Use happy hours price if available
+    }
+  
     const selectedGame = clubGame?.find(
       (game) => game.game_type.game_name === gameName
     );
@@ -125,10 +157,11 @@ function BookingInfoScreen() {
     setGameName(value);
   };
 
-  const handleSlotChange = (value) => {
-    setSlot(value);
-  };
+  // const handleSlotChange = (value) => {
+  //   setSlot(value);
+  // };
 
+  
   const handleCourtChange = (value) => {
     setCourtName(value);
   };
@@ -296,9 +329,10 @@ function BookingInfoScreen() {
     if (slots?.length > 0) {
       setSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
       setSelectedSlot(`${slots[0]?.start_time}-${slots[0]?.end_time}`);
+      dispatch(checkHappyHoursSlot(`${slots[0]?.id}`))
       setLoading(false);
     }
-  }, [courts, slots, setSelectedSlot]);
+  }, [courts, slots, setSelectedSlot, dispatch]);
 
   useEffect(() => {
     if (additionalSlots?.length > 0 && slots?.length === 0) {
@@ -558,7 +592,7 @@ function BookingInfoScreen() {
                       <p>
                         {gameName} &nbsp;({"\u20B9"}
                         {getSelectedGamePricing()}
-                        /hr)
+                        /hr){isHappyHours && <span className="happy-hours-tag">{t("happyHours")}</span>}
                       </p>
                     </div>
                     <div className="orderset2">

@@ -30,11 +30,12 @@ function CheckoutScreen() {
   const [discount, setDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState("");
-
+  
   const { createBookingError, createBookingLoading, success, booking } =
-    useSelector((state) => state.bookingCreate);
+  useSelector((state) => state.bookingCreate);
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
+  const { isHappyHours, price } = useSelector((state) => state.happyHours);
   const { bookingDetailsSuccess } = useSelector(
     (state) => state.bookingDetails
   );
@@ -283,11 +284,11 @@ function CheckoutScreen() {
                           }
                         </h3>
                         <h6>
-                          {"\u20B9"} {bookingData.clubPrice}
+                          {"\u20B9"} {bookingData.clubPrice} 
                         </h6>
                       </li>
                       <p>
-                        {bookingData.gameName}-{bookingData.selectedSlot} ({formatDate(bookingData.date)})
+                        {bookingData.gameName}-{bookingData.selectedSlot} ({formatDate(bookingData.date)}) {isHappyHours && <span className="happy-hours-tag">{t("happyHours")}</span>}
                       </p>
                     </div>
                     <div className="orderset2">

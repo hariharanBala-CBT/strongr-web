@@ -193,7 +193,28 @@ class OrganizationLocationGameType(models.Model):
     number_of_courts = models.IntegerField(choices = court_number_choices, default = one)
 
     def __str__(self):
-        return f"{self.game_type}"
+        return f"{self.game_type} at {self.organization_location}"
+
+
+class HappyHourPricing(models.Model):
+    game_type = models.ForeignKey(OrganizationLocationGameType, on_delete=models.CASCADE)
+    organization_location = models.ForeignKey(OrganizationLocation, on_delete=models.CASCADE)
+    day_of_week_choices = (
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday'),
+    )
+    day_of_week = models.IntegerField(choices=day_of_week_choices)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.game_type} on {self.get_day_of_week_display()} from {self.start_time} to {self.end_time}"
 
 
 class OrganizationLocationWorkingDays(models.Model):

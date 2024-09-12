@@ -130,6 +130,12 @@ import {
   VALIDATE_COUPON_REQUEST,
   VALIDATE_COUPON_SUCCESS,
   VALIDATE_COUPON_FAILURE,
+  CHECK_HAPPY_HOURS_SLOT_REQUEST,
+  CHECK_HAPPY_HOURS_SLOT_SUCCESS,
+  CHECK_HAPPY_HOURS_SLOT_FAIL,
+  HAPPY_HOURS_TABLE_REQUEST,
+  HAPPY_HOURS_TABLE_SUCCESS,
+  HAPPY_HOURS_TABLE_FAIL,
 } from "../constants/constants";
 
 export const filterclubReducer = (
@@ -880,6 +886,37 @@ export const nearestSlotReducer = (state = { nearestSlot: [] }, action) => {
     case NEAREST_SLOT_SUCCESS:
       return { loading: false, nearestSlot: action.payload };
     case NEAREST_SLOT_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const happyHoursReducer = (state = { isHappyHours: false, price: 0 }, action) => {
+  switch (action.type) {
+    case CHECK_HAPPY_HOURS_SLOT_REQUEST:
+      return { ...state, loading: true };
+    case CHECK_HAPPY_HOURS_SLOT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isHappyHours: action.payload.isHappyHours,
+        price: action.payload.price || 0,
+      };
+    case CHECK_HAPPY_HOURS_SLOT_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const happyHoursTableReducer = (state = { happyHoursTable: [] }, action) => {
+  switch (action.type) {
+    case HAPPY_HOURS_TABLE_REQUEST:
+      return { loading: true };
+    case HAPPY_HOURS_TABLE_SUCCESS:
+      return { loading: false, happyHoursTable: action.payload };
+    case HAPPY_HOURS_TABLE_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
