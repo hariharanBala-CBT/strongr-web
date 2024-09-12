@@ -3,10 +3,25 @@ import { Calendar, MapPin } from "react-feather";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTableTennis } from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
 
+import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import SportsTennisIcon from '@mui/icons-material/SportsTennis';
+import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
+import SportsCricketIcon from '@mui/icons-material/SportsCricket';
+
+const gameIcons = {
+  'Soccer': <SportsSoccerIcon />,
+  'Badminton': <SportsTennisIcon />,
+  'Basketball': <SportsBasketballIcon />,
+  'Cricket': <SportsCricketIcon />
+};
+
+
 const formatDate = (date) => {
-  return dayjs(date).format('DD-MM-YYYY');
+  return dayjs(date).format('DD/MM/YYYY');
 };
 
 const VenueDetails = ({ club }) => {
@@ -84,9 +99,19 @@ const VenueDetails = ({ club }) => {
                     <ul>
                       {club.next_availabilty.map((availability, index) => (
                         <li key={index}>
-                          {availability.game}: {availability.court} - {availability.next_availabilty.days ? availability.next_availabilty.days : formatDate(availability.next_availabilty.date)} {availability.next_availabilty.start_time}
+                          {availability.game === 'Table Tennis' ? (
+                            <FontAwesomeIcon icon={faTableTennis} />
+                          ) : (
+                            gameIcons[availability.game]
+                          )}
+                          : {availability.court} -
+                          {availability.next_availabilty.date
+                            ? formatDate(availability.next_availabilty.date)
+                            : availability.next_availabilty.days}
+                          at {availability.next_availabilty.start_time.slice(0, 5)}
                         </li>
                       ))}
+
                     </ul>
                   </span>
                 </li>

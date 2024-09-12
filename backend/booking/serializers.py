@@ -235,7 +235,10 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
                         all_next_availabilities.append({
                             'game': game.game_type.game_name,
                             'court': court.name,
-                            'next_availabilty': serializer.data
+                            'next_availabilty': {
+                                **serializer.data,
+                                'date': nearest_slot['date']
+                            }
                         })
 
         except Exception as e:
