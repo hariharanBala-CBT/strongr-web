@@ -189,12 +189,10 @@ class OrganizationLocationWorkingDaysForm(ModelForm):
         work_from_time = cleaned_data.get('work_from_time')
         work_to_time = cleaned_data.get('work_to_time')
 
-        # Only apply time checks if the day is active
-        if is_active:
-            if work_from_time and work_from_time.minute != 0:
-                self.add_error('work_from_time', 'Work from time must be on the hour (minutes must be 00).')
-            if work_to_time and work_to_time.minute != 0:
-                self.add_error('work_to_time', 'Work to time must be on the hour (minutes must be 00).')
+        if work_from_time and work_from_time.minute != 0:
+            self.add_error('work_from_time', 'Work from time must be on the hour (minutes must be 00).')
+        if work_to_time and work_to_time.minute != 0:
+            self.add_error('work_to_time', 'Work to time must be on the hour (minutes must be 00).')
 
         return cleaned_data
 
