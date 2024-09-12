@@ -54,61 +54,77 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/tab.js' %}"></script>
 <script>
-    $(document).ready(function() {
-        $('#working-days-form').on('submit', function(event) {
-            if (!validateForm()) {
-                event.preventDefault(); // Prevent form submission
-                return false;
+   $(document).ready(function() {
+    $('#working-days-form').on('submit', function(event) {
+        if (!validateForm()) {
+            event.preventDefault(); // Prevent form submission
+            return false;
+        }
+    });
+
+    function validateForm() {
+        let isValid = true;
+        let formsetErrorMessages = [];
+        let hasActiveDay = false;
+
+        // Clear all previous errors
+        $('.form-error').empty();
+        $('#formset-errors').hide().empty();
+
+        $('tr.form-group').each(function(index) {
+            const workFromTimeInput = $(this).find(`input[name^="form-${index}-work_from_time"]`);
+            const workToTimeInput = $(this).find(`input[name^="form-${index}-work_to_time"]`);
+            const isActiveInput = $(this).find(`input[name^="form-${index}-is_active"]`);
+            const workFromTimeError = $(`#form-${index}-work_from_time-error`);
+            const workToTimeError = $(`#form-${index}-work_to_time-error`);
+
+            const isActive = isActiveInput.is(':checked');
+            const workFromTime = workFromTimeInput.val();
+            const workToTime = workToTimeInput.val();
+
+            if (isActive) {
+                hasActiveDay = true;
+            }
+
+            // Check minute conditions even if is_active is false
+            if (workFromTime && workToTime) {
+                const workFromTimeMinutes = workFromTime.split(':')[1];
+                const workToTimeMinutes = workToTime.split(':')[1];
+
+                if (workFromTimeMinutes !== '00' || workToTimeMinutes !== '00') {
+                    isValid = false;
+                    if (workFromTimeMinutes !== '00') {
+                        workFromTimeError.text('Work from time must be on the hour (minutes must be 00).');
+                    }
+                    if (workToTimeMinutes !== '00') {
+                        workToTimeError.text('Work to time must be on the hour (minutes must be 00).');
+                    }
+                } else if (workFromTime === workToTime) {
+                    isValid = false;
+                    workFromTimeError.text('Work from time cannot be the same as work to time.');
+                } else if (workToTime < workFromTime) {
+                    isValid = false;
+                    workToTimeError.text('Work to time cannot be earlier than work from time.');
+                }
+            } else {
+                isValid = false;
+                workFromTimeError.text('Work from time and work to time are required.');
+                workToTimeError.text('');  // Clear the workToTime error to avoid redundancy
             }
         });
 
-        function validateForm() {
-            let isValid = true;
-            let formsetErrorMessages = [];
-            let hasActiveDay = false;
-
-            // Clear all previous errors
-            $('.form-error').empty();
-            $('#formset-errors').hide().empty();
-
-            $('tr.form-group').each(function(index) {
-                const workFromTimeInput = $(this).find(`input[name^="form-${index}-work_from_time"]`);
-                const workToTimeInput = $(this).find(`input[name^="form-${index}-work_to_time"]`);
-                const isActiveInput = $(this).find(`input[name^="form-${index}-is_active"]`);
-                const workFromTimeError = $(`#form-${index}-work_from_time-error`);
-                const workToTimeError = $(`#form-${index}-work_to_time-error`);
-
-                const isActive = isActiveInput.is(':checked');
-                const workFromTime = workFromTimeInput.val();
-                const workToTime = workToTimeInput.val();
-
-                if (isActive) {
-                    hasActiveDay = true;
-
-                    if (!workFromTime || !workToTime) {
-                        isValid = false;
-                        workFromTimeError.text('Work from time and work to time are required.');
-                        workToTimeError.text('');  // Clear the workToTime error to avoid redundancy
-                    } else if (workFromTime === workToTime) {
-                        isValid = false;
-                        workFromTimeError.text('Work from time cannot be the same as work to time.');
-                    } else if (workToTime < workFromTime) {
-                        isValid = false;
-                        workToTimeError.text('Work to time cannot be earlier than work from time.');
-                    }
-                }
-            });
-
-            if (!hasActiveDay) {
-                isValid = false;
-                formsetErrorMessages.push('At least one day must be active.');
-            }
-
-            if (formsetErrorMessages.length > 0) {
-                $('#formset-errors').html(formsetErrorMessages.join('<br>')).show();
-            }
-
-            return isValid;
+        if (!hasActiveDay) {
+            isValid = false;
+            formsetErrorMessages.push('At least one day must be active.');
         }
-    });
+
+        if (formsetErrorMessages.length > 0) {
+            $('#formset-errors').html(formsetErrorMessages.join('<br>')).show();
+        }
+
+        return isValid;
+    }
+});
+
+
 </script>

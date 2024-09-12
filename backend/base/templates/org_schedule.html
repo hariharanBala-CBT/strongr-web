@@ -1,0 +1,115 @@
+{% extends 'base_org.html' %}
+{% load static %}
+{% load url_filters %}
+
+{% block content %}
+<link href="{% static './css/schedule.css' %}" rel="stylesheet" />
+
+<div class="container">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i>
+        </a></li>
+        <li class="breadcrumb-item">Schedule</li>
+    </ol>
+    <h1>Court Booking Schedule</h1>
+    
+    <form method="GET" action="{% url 'org-schedule' %}" class="court-select">
+        <input type="hidden" name="week_offset" value="{{ week_offset }}">
+        <label for="courtSelect">Select a court:</label>
+        <select id="courtSelect" name="court" onchange="this.form.submit()">
+            {% for court in courts %}
+                <option value="{{ court.id }}" {% if court == selected_court %}selected{% endif %}>{{ court.name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <div class="week-navigation">
+        <a href="{% url 'org-schedule' %}?week_offset={{ prev_week }}&court={{ selected_court.id }}" class="btn btn-primary">&lt; Previous Week</a>
+        <span class="week-dates"><strong>{{ start_of_week|date:"d M Y" }} - {{ end_of_week|date:"d M Y" }}</strong></span>
+        <a href="{% url 'org-schedule' %}?week_offset={{ next_week }}&court={{ selected_court.id }}" class="btn btn-primary">Next Week &gt;</a>
+    </div>
+
+    <div class="table-container">
+        <table id="bookingTable" class="booking-table">
+            <thead>
+                <tr>
+                    <th>Slot Timing</th>
+                    {% for day in week_dates %}
+                        <th>
+                            {{ day|date:"l" }}<br>
+                            {{ day|date:"d M Y" }}
+                        </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for time_slot in time_slots %}
+                    <tr>
+                        <td class="time-slot">{{ time_slot }}</td>
+                        {% for date in week_dates %}
+                                {% with date_str=date|date:"Y-m-d" %}
+                                    {% with status=availability|get_item:date_str|get_item:time_slot %}
+                                        <td class="booking-cell {{ status|lower }}"
+                                            data-date="{{ date_str }}" data-time="{{ time_slot }}">
+                                        </td>
+                                    {% endwith %}
+                                {% endwith %}
+                            {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color available"></div>
+            <span class="legend-text">Available</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color booked"></div>
+            <span class="legend-text">Booked</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color membership booking"></div>
+            <span class="legend-text">Membership Booking</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color not-working"></div>
+            <span class="legend-text">N/A</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const rows = document.querySelectorAll('#bookingTable tbody tr');
+    let allRowsHidden = true;
+
+    rows.forEach(row => {
+        let hideRow = true;
+
+        row.querySelectorAll('.booking-cell').forEach(cell => {
+            if (!cell.classList.contains('not-working')) {
+                hideRow = false;
+            }
+        });
+
+        if (hideRow) {
+            row.style.display = 'none';
+        } else {
+            allRowsHidden = false;
+        }
+    });
+
+    // Check if all rows are hidden
+    if (Array.from(rows).every(row => row.style.display === 'none')) {
+        const noSlotsMessage = document.createElement('tr');
+        noSlotsMessage.innerHTML = `<td colspan="${rows[0].querySelectorAll('td').length}">Slot is not available</td>`;
+        document.querySelector('#bookingTable tbody').appendChild(noSlotsMessage);
+    }
+
+</script>
+
+
+{% endblock %}

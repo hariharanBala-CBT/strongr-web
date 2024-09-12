@@ -6,6 +6,8 @@ from base.serializers import *
 from .models import Booking
 from .serializers import *
 from rest_framework import status
+from django.utils import timezone
+from django.http import JsonResponse
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -161,6 +163,13 @@ def getClubGame(request, pk):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getHappyHours(request, pk):
+    happy = HappyHourPricing.objects.filter(organization_location_id=pk)
+    serializer = HappyHourPricingSerializer(happy, many=True)
+
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def getClubAmenities(request, pk):
@@ -175,7 +184,7 @@ def getClubAmenities(request, pk):
 def getClubWorkingDays(request, pk):
     days = OrganizationLocationWorkingDays.objects.filter(
         organization_location_id=pk, is_active=True)
-    
+
     day_order = {
         'Sunday': 0,
         'Monday': 1,
@@ -190,6 +199,13 @@ def getClubWorkingDays(request, pk):
     serializer = OrganizationLocationWorkingDaysSerializer(sorted_days, many=True)
 
     return Response(serializer.data)
+
+@api_view(['GET'])
+def getClubRules(request, pk):
+    club = OrganizationLocation.objects.get(id=pk)
+    clubRules = club.rules
+
+    return Response(clubRules)
 
 
 @api_view(['GET'])
@@ -351,11 +367,27 @@ def createBooking(request):
         organization = court.location.organization
         area = court.location.area
         slot_id = data.get('slotId') or data.get('addSlotId')
-
+        coupon_code = data.get('coupon')
+        amount = data['amount']
+        ac_amount = amount
+        # ac_amount = amount - 10
+    
+        # Check if slot_id is provided
         if not slot_id:
             return Response({'detail': 'Slot not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Get the correct slot based on slotId or addSlotId
         slot = Slot.objects.get(id=slot_id) if 'slotId' in data else AdditionalSlot.objects.get(id=slot_id)
+
+        # Initialize coupon as None by default
+        coupon = None
+
+        # If a coupon code is provided, check if it exists
+        if coupon_code:
+            try:
+                coupon = Coupon.objects.get(code=coupon_code)
+            except Coupon.DoesNotExist:
+                return Response({'detail': 'Invalid coupon code'}, status=status.HTTP_400_BAD_REQUEST)
 
         with transaction.atomic():
             booking = Booking.objects.create(
@@ -367,10 +399,18 @@ def createBooking(request):
                 court=court,
                 slot=slot if 'slotId' in data else None,
                 additional_slot=slot if 'addSlotId' in data else None,
+                amount = ac_amount,
+                discount_amount = data['discountPrice'],
                 tax_price=data['taxPrice'],
+                code=coupon,
                 total_price=data['totalPrice'],
                 booking_status=2,
             )
+
+            # Mark the coupon as redeemed if it was used
+            if coupon:
+                coupon.is_redeemed = True
+                coupon.save()
 
         # Send confirmation email to user
         send_mail(
@@ -378,7 +418,7 @@ def createBooking(request):
             render_to_string('user_booking_email.html', {
                 'user': user, 'booking_date': booking.booking_date,
                 'organization': organization.organization_name,
-                'area':area, 'court': court, 'slot': slot, 'total_price': booking.total_price}),
+                'area': area, 'court': court, 'slot': slot, 'total_price': booking.total_price}),
             'testgamefront@gmail.com', [data['userInfo']['email']], fail_silently=False
         )
 
@@ -387,7 +427,7 @@ def createBooking(request):
             'Booking Confirmation',
             render_to_string('organization_booking_email.html', {
                 'organization': organization.organization_name,
-                'user': user, 'booking_date': booking.booking_date, 'area':area, 
+                'user': user, 'booking_date': booking.booking_date, 'area': area,
                 'court': court, 'slot': slot, 'total_price': booking.total_price}),
             'testgamefront@gmail.com', [organization.user.email], fail_silently=False
         )
@@ -470,6 +510,43 @@ def getUnavailableSlots(request):
 
     return Response(serializer.data)
 
+@api_view(['GET'])
+def validateCoupon(request, pk):
+    code = request.query_params.get('code')
+
+    try:
+        # Get the organization location and its associated organization
+        organization_location = OrganizationLocation.objects.get(id=pk)
+        organization_id = organization_location.organization.id
+
+        # Check if the coupon exists and matches the organization
+        coupon = Coupon.objects.filter(code=code, organization_id=organization_id).first()
+
+        if not coupon:
+            try:
+                # Check if the coupon exists but does not match the organization
+                couponexist = Coupon.objects.get(code=code)
+                return Response({'error': 'Coupon does not match organization'}, status=status.HTTP_400_BAD_REQUEST)
+            except Coupon.DoesNotExist:
+                # Coupon does not exist at all
+                return Response({'error': 'Invalid coupon code'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if the coupon is redeemed or expired
+        current_time = timezone.now()
+        if coupon.is_redeemed:
+            return Response({'error': 'Coupon already redeemed'}, status=status.HTTP_400_BAD_REQUEST)
+        if coupon.expires_at and coupon.expires_at < current_time:
+            return Response({'error': 'Coupon has expired'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Return the coupon data if all checks pass
+        return Response(CouponSerializer(coupon).data, status=status.HTTP_200_OK)
+
+    except OrganizationLocation.DoesNotExist:
+        return Response({'error': 'Organization location not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        print("Exception occurred:", e)
+        return Response({'error': 'An error occurred: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -675,3 +752,45 @@ def getNearestSlot(request):
     response_data['date'] = nearest_slot['date']
 
     return Response(response_data)
+
+@api_view(['GET'])
+def checkSlot(request, slotId):
+    DAY_OF_WEEK_MAPPING = {
+    'Monday': 0,
+    'Tuesday': 1,
+    'Wednesday': 2,
+    'Thursday': 3,
+    'Friday': 4,
+    'Saturday': 5,
+    'Sunday': 6
+    }
+    try:
+        # Retrieve the slot by ID
+        slot = Slot.objects.get(id=slotId)
+
+        # Check if the slot is happy hours
+        is_happy_hours = slot.is_happy_hours
+        slot_start_time = slot.start_time
+        slot_end_time = slot.end_time
+        slot_day_of_week = DAY_OF_WEEK_MAPPING.get(slot.days)
+        
+        # Retrieve happy hour pricing for the given day of the week
+        happy_hours = HappyHourPricing.objects.filter(
+            organization_location=slot.location,
+            game_type=slot.court.game,
+            day_of_week=slot_day_of_week
+        )
+
+        # Check if the slot times fall within any happy hour period
+        for happy_hour in happy_hours:
+            if (slot_start_time >= happy_hour.start_time and slot_end_time <= happy_hour.end_time):
+                return JsonResponse({
+                    'isHappyHours': True,
+                    'price': str(happy_hour.price)
+                }, status=200)
+
+        # If no happy hour period matched
+        return JsonResponse({'isHappyHours': False}, status=200)
+        
+    except Slot.DoesNotExist:
+        return JsonResponse({'error': 'Slot not found'}, status=404)

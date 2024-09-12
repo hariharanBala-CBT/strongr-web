@@ -1,0 +1,41 @@
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    color: #343a40;
+}
+
+.rule {
+    background-color: #e9ecef;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.rule-number {
+    font-weight: bold;
+    color: #495057;
+    font-size: 1.25rem;
+}
+
+.rule-text {
+    font-size: 1rem;
+    color: #212529;
+}
+
+.add-rule-btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.add-rule-btn:hover {
+    background-color: #0056b3;
+}
+
+#rules {
+    min-height: 200px;
+    margin-bottom: 1rem;
+}

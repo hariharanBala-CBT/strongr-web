@@ -37,6 +37,10 @@
                         {{ user.username }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a></li>
+                        <li><a class="dropdown-item" href="{% url 'status' %}">Status</a></li>
+                        <li><a class="dropdown-item" href="{% url 'organization_profile' %}">Profile</a></li>
+                        <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>
@@ -63,6 +67,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
                             </a>
+                            <a class="nav-link"  href="{% url 'organization_location_list' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-gavel"></i></div>
+                                Rules
+                            </a>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 Slots
@@ -83,17 +91,21 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></i></div>
                                 Status
                             </a>
+                            <div class="sb-sidenav-menu-heading">Manage</div>
+                            <a class="nav-link" href="{% url 'organization-bookings' %}">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-book"></i></div>
+                                Bookings
+                            </a>
+                            <a class="nav-link" href="{% url 'org-schedule' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-calendar" aria-hidden="true"></i></div>
+                                Schedule
+                            </a>
                             <div class="sb-sidenav-menu-heading">Customers</div>
                             <a class="nav-link" href="{% url 'org_customers_list'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                 List
                             </a>
                         </div>
-                    </div>
-                    <!-- Logged in User -->
-                    <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-                        <div class="user-email">{{ request.user.email }}</div>
                     </div>
                 </nav>
             </div>

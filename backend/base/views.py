@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 import os
+import json
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
@@ -41,7 +42,7 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.base import TemplateView
 from django.shortcuts import redirect
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
@@ -97,7 +98,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         except Exception:
             return Response({'detail': 'User does not exist'},
                             status=status.HTTP_404_NOT_FOUND)
-                            
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
@@ -195,7 +196,7 @@ def registerUser(request):
             user=user,
             phone_number=data.get('phone'),
         )
-        
+
         customer_group = Group.objects.get(name='Customer')
         user.groups.add(customer_group)
 
@@ -293,7 +294,7 @@ class LoginView(View):
                 if user.groups.filter(name='Customer').exists():
                     return redirect('access-restricted')
                 elif user.groups.filter(name='Organization').exists():
-                    profile_page_url = reverse('organization_profile')
+                    profile_page_url = reverse('organization_page')
                     return redirect(profile_page_url)
                 elif user.groups.filter(name='Tenant').exists():
                     return redirect('tenantuser_page')
@@ -320,6 +321,7 @@ class OrganizationBookingView(GroupAccessMixin, TemplateView):
     # Define a dictionary to map view names to templates
     template_map = {
         'org_dashboard': 'org_dashboard.html',
+        'org_bookings': 'org_bookings.html',
         'confirmed_bookings': 'confirmed_bookings.html',
         'completed_bookings': 'completed_bookings.html',
         'pending_bookings': 'pending_bookings.html',
@@ -514,7 +516,7 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
 
     def get_success_url(self):
         locationpk = self.request.session.get('location_pk')
-        return reverse('mainview' , kwargs={'location_pk': locationpk})
+        return reverse('mainview', kwargs={'location_pk': locationpk})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -526,6 +528,10 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['happyhour_formset'] = HappyHourPricingFormSet(self.request.POST)
+        else:
+            context['happyhour_formset'] = HappyHourPricingFormSet()
         context['locationpk'] = self.kwargs.get('locationpk')
         return context
 
@@ -538,9 +544,16 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
         form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
         form.save()
 
+        happyhour_formset = HappyHourPricingFormSet(self.request.POST, instance=form.instance)
+        if happyhour_formset.is_valid():
+            happyhour_instances = happyhour_formset.save(commit=False)
+            for happyhour in happyhour_instances:
+                happyhour.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
+                happyhour.save()
+
+        # Create courts logic
         number_of_courts = form.instance.number_of_courts
         game_type = form.instance
-
         for i in range(number_of_courts):
             Court.objects.create(
                 name=f"Court {i+1} of {game_type.game_type}",
@@ -552,6 +565,11 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
 
         messages.success(self.request, SUCCESS_MESSAGES.get('create_game'))
         return redirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        happyhour_formset = HappyHourPricingFormSet(self.request.POST)
+        return self.render_to_response(self.get_context_data(form=form, happyhour_formset=happyhour_formset))
+
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationGameTypeView(GroupAccessMixin, UpdateView):
@@ -566,19 +584,52 @@ class OrganizationUpdateLocationGameTypeView(GroupAccessMixin, UpdateView):
         return get_object_or_404(OrganizationLocationGameType, organization_location__pk=locationpk, pk=gamepk)
 
     def form_valid(self, form):
-        form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=self.kwargs.get('locationpk'))
-        form.save()
-        messages.success(self.request, SUCCESS_MESSAGES.get('update_game'))
-        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
+        context = self.get_context_data()
+        location_pk = self.kwargs.get('locationpk')
+        happyhour_formset = context['happyhour_formset']
+
+        if happyhour_formset.is_valid():
+            happyhour_instances = happyhour_formset.save(commit=False)
+            for happyhour in happyhour_instances:
+                happyhour.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
+                happyhour.save()
+
+            # Handle deletions
+            for obj in happyhour_formset.deleted_objects:
+                obj.delete()  # Delete the object from the database
+        
+        if form.is_valid() and happyhour_formset.is_valid():
+            self.object = form.save()
+            happyhour_formset.instance = self.object
+            happyhour_formset.save()
+            
+            messages.success(self.request, SUCCESS_MESSAGES.get('update_game'))
+            return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
+        else:
+            return self.form_invalid(form)
 
     def form_invalid(self, form):
-        error_messages = ''.join([f'{error}' for error in form.errors.values()])
-        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
-        return self.render_to_response(self.get_context_data(form=form))
+        context = self.get_context_data()
+        happyhour_formset = context['happyhour_formset']
+        
+        error_messages = []
+        if form.errors:
+            error_messages.extend([f'{error}' for error in form.errors.values()])
+        if happyhour_formset.errors:
+            error_messages.extend([f'{error}' for formset_errors in happyhour_formset.errors for error in formset_errors.values()])
+        
+        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', ' '.join(error_messages)))
+        return self.render_to_response(self.get_context_data(form=form, happyhour_formset=happyhour_formset))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.kwargs.get('locationpk')
+        
+        if self.request.POST:
+            context['happyhour_formset'] = HappyHourPricingFormSet(self.request.POST, instance=self.object)
+        else:
+            context['happyhour_formset'] = HappyHourPricingFormSet(instance=self.object)
+        
         return context
 
 @method_decorator(login_required, name='dispatch')
@@ -1218,7 +1269,7 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
             organization_location=pk,
             is_active=True
         )
-        
+
         show_warning = all(day.work_from_time is None or day.work_to_time is None for day in active_days)
 
         if show_warning:
@@ -1641,7 +1692,7 @@ def update_working_days(request, location_pk):
         formset = OrganizationLocationWorkingDaysFormSet(request.POST, queryset=queryset)
         if formset.is_valid():
             instances = formset.save(commit=False)
-            
+
             errors = []
             has_active = False
 
@@ -1698,3 +1749,142 @@ def update_amenities(request, location_pk):
     else:
         form = OrganizationLocationAmenitiesForm(instance=amenities)
     return render(request, 'update_amenities.html', {'form': form, 'locationpk': location_pk})
+
+@method_decorator(login_required, name='dispatch')
+class OrganizationLocationRulesListView(GroupAccessMixin, ListView):
+    model = OrganizationLocation
+    template_name = 'org_location_rules_list.html'
+    context_object_name = 'locations'
+    group_required = ['Organization']
+
+    def get_queryset(self):
+        organization = get_object_or_404(Organization, user=self.request.user)
+        return OrganizationLocation.objects.filter(organization=organization)
+
+class OrganizationLocationRulesView(GroupAccessMixin, UpdateView):
+    model = OrganizationLocation
+    fields = ['rules']
+    template_name = 'org_rules.html'
+    context_object_name = 'location'
+    group_required = ['Organization']
+
+    def get_success_url(self):
+        return reverse_lazy('organization_location_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, SUCCESS_MESSAGES.get('update_rules'))
+        return super().form_valid(form)
+
+@login_required
+@group_required('Organization')
+def booking_schedule(request):
+    organization = get_object_or_404(Organization, user=request.user)
+    courts = Court.objects.filter(location__organization=organization)
+
+    court_id = request.GET.get('court')
+    if court_id:
+        selected_court = get_object_or_404(Court, id=court_id, location__organization=organization)
+    else:
+        selected_court = courts.first()
+
+    today = datetime.now().date()
+    week_offset = int(request.GET.get('week_offset', 0))
+    start_of_week = today - timedelta(days=today.weekday()) + timedelta(weeks=week_offset)
+    end_of_week = start_of_week + timedelta(days=6)
+
+    week_dates = [start_of_week + timedelta(days=i) for i in range(7)]
+
+    # Generate 24-hour time slots
+    time_slots = [f"{hour:02d}:00 to {(hour+1)%24:02d}:00" for hour in range(24)]
+
+    # Initialize availability dictionary
+    availability = {day.strftime('%Y-%m-%d'): {slot: 'Not-working' for slot in time_slots} for day in week_dates}
+
+    # Populate availability based on court slots
+    for day in week_dates:
+        day_name = day.strftime('%A')
+        day_slots = Slot.objects.filter(court=selected_court, days=day_name, is_booked=False)
+        day_slotz = Slot.objects.filter(court=selected_court, days=day_name, is_booked=True)
+        for slot in day_slots:
+            slot_str = f"{slot.start_time.strftime('%H:%M')} to {slot.end_time.strftime('%H:%M')}"
+            availability[day.strftime('%Y-%m-%d')][slot_str] = 'Available'
+        for slot in day_slotz:
+            slot_str = f"{slot.start_time.strftime('%H:%M')} to {slot.end_time.strftime('%H:%M')}"
+            availability[day.strftime('%Y-%m-%d')][slot_str] = 'Membership Booking'
+
+    additional_slots = AdditionalSlot.objects.filter(
+        court=selected_court,
+        date__range=[start_of_week, end_of_week],
+        is_active=True
+    )
+    for add_slot in additional_slots:
+        slot_str = f"{add_slot.start_time.strftime('%H:%M')} to {add_slot.end_time.strftime('%H:%M')}"
+        availability[add_slot.date.strftime('%Y-%m-%d')][slot_str] = 'Available'
+
+    unavailable_slots = UnavailableSlot.objects.filter(
+        court=selected_court,
+        date__range=[start_of_week, end_of_week],
+        is_active=True
+    )
+    for unavail_slot in unavailable_slots:
+        slot_str = f"{unavail_slot.start_time.strftime('%H:%M')} to {unavail_slot.end_time.strftime('%H:%M')}"
+        availability[unavail_slot.date.strftime('%Y-%m-%d')][slot_str] = 'Not Working'
+
+    bookings = Booking.objects.filter(
+        court=selected_court,
+        booking_date__range=[start_of_week, end_of_week],
+        booking_status__in=[Booking.CONFIRMED, Booking.PENDING]
+    )
+
+    print("bookings",bookings)
+
+    for booking in bookings:
+        day = booking.booking_date.strftime('%Y-%m-%d')
+        if booking.slot:
+            slot_str = f"{booking.slot.start_time.strftime('%H:%M')} to {booking.slot.end_time.strftime('%H:%M')}"
+            availability[day][slot_str] = 'Booked'
+        elif booking.additional_slot:
+            slot_str = f"{booking.additional_slot.start_time.strftime('%H:%M')} to {booking.additional_slot.end_time.strftime('%H:%M')}"
+            availability[day][slot_str] = 'Booked'
+        else:
+            continue  # Skip if neither slot nor additional_slot is set
+
+    formatted_availability = {}
+    for date, slots in availability.items():
+        formatted_availability[date] = {}
+        for time_slot, status in slots.items():
+            formatted_availability[date][time_slot] = status
+            print("status",status)
+
+    context = {
+        'courts': courts,
+        'selected_court': selected_court,
+        'time_slots': time_slots,
+        'week_dates': week_dates,
+        'availability': formatted_availability,
+        'week_offset': week_offset,
+        'prev_week': week_offset - 1,
+        'next_week': week_offset + 1,
+        'start_of_week': start_of_week,
+        'end_of_week': end_of_week,
+    }
+    return render(request, 'org_schedule.html', context)
+
+class CouponCreateView(CreateView):
+    model = Coupon
+    form_class = CouponForm
+    template_name = 'coupon_form.html'
+    success_url = reverse_lazy('coupon-list')
+
+    def form_valid(self, form):
+        form.instance.organization = self.request.user.organization
+        messages.success(self.request, SUCCESS_MESSAGES.get('create_coupon'))
+        return super().form_valid(form)
+
+class CouponListView(ListView):
+    model = Coupon
+    template_name = 'coupon_list.html'
+    context_object_name = 'coupons'
+
+    def get_queryset(self):
+        return Coupon.objects.filter(organization=self.request.user.organization)

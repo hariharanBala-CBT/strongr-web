@@ -26,6 +26,11 @@ class OrganizationLocationGameTypeSerializer(serializers.ModelSerializer):
         model = OrganizationLocationGameType
         fields = '__all__'
 
+class HappyHourPricingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HappyHourPricing
+        fields = '__all__'
+
 class OrganizationGameImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrganizationGameImages
@@ -103,6 +108,8 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
     game_type = serializers.SerializerMethodField()
     area_name = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
+    coupon_code = serializers.CharField(source='code.code', allow_null=True)
+    coupon_discount = serializers.IntegerField(source='code.discount_percentage', allow_null=True)
 
     def get_court(self, obj):
         return CourtSerializer(obj.court).data
@@ -142,8 +149,8 @@ class BookingDetailsSerializer(serializers.ModelSerializer):
         model = Booking
         fields = [
             'id', 'name', 'phone_number', 'booking_date', 'booking_status',
-            'payment_status', 'tax_price', 'total_price', 'organization_name',
-            'court', 'slot', 'additional_slot', 'organization_location', 'game_type', 'area_name', 'image'
+            'payment_status', 'tax_price', 'total_price', 'organization_name', 'amount', 'discount_amount',
+            'court', 'slot', 'additional_slot', 'organization_location', 'game_type', 'area_name', 'image', 'coupon_code', 'coupon_discount'
         ]
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -157,6 +164,10 @@ class ClubSerializerWithLocation(serializers.ModelSerializer):
         model = Organization
         fields = '__all__'
 
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = ['code', 'discount_percentage', 'is_redeemed', 'expires_at']
 
 class ClubLocationSerializerWithImages(serializers.ModelSerializer):
     organization = ClubSerializer()
@@ -168,7 +179,7 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
     numRatings = serializers.IntegerField(read_only=True)
     reviews = serializers.SerializerMethodField(read_only=True)
     amenities = serializers.SerializerMethodField(read_only=True)
-
+    
     def get_organization_images(self, obj):
         try:
             organization_location = obj
