@@ -50,9 +50,11 @@ class ClubSerializer(serializers.ModelSerializer):
 class ClubLocationSerializer(serializers.ModelSerializer):
     organization = ClubSerializer()
     area = AreaSerializer()
+    email = serializers.EmailField(source='organization.user.email', read_only=True)
     class Meta:
         model = OrganizationLocation
         fields = '__all__'
+        extra_fields = ['email']
 
 class ClubLocSerializer(serializers.ModelSerializer):
     class Meta:
@@ -215,24 +217,16 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
         all_next_availabilities = {}
 
         try:
-            # Fetch all game types associated with the location
             games = OrganizationLocationGameType.objects.filter(organization_location=obj)
-
+            
             for game in games:
-                # Fetch all courts associated with the game
                 courts = Court.objects.filter(game=game)
-
                 nearest_slot = None
                 nearest_court = None
 
                 for court in courts:
                     court_slot = get_nearest_available_slot(court, now, selected_date)
-                    print(f"-----------------------------------")
-                    print(f"nearest slot for location : {obj}")
-                    print(f"nearest slot for court : {court.name}")
-                    print(f"nearest slot from utility : {court_slot}")
-                    print(f"-----------------------------------")
-
+                    
                     if court_slot:
                         if nearest_slot is None or court_slot['date'] < nearest_slot['date'] or \
                         (court_slot['date'] == nearest_slot['date'] and 
@@ -266,8 +260,6 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
                             'date': nearest_slot['date']
                         }
                     }
-
-                    print("returning availability :" , all_next_availabilities)
 
         except Exception as e:
             print(f"Exception in get_next_availability: {str(e)}")

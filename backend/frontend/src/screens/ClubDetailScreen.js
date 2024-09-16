@@ -262,7 +262,7 @@ function ClubDetailScreen() {
                       className="__cf_email__"
                       data-cfemail="c6bfa9b3b4aba7afaa86a3bea7abb6aaa3e8a5a9ab"
                     >
-                      strongrtest@gmail.com
+                      {clubLocation?.email}
                     </span>
                   </a>
                 </li>
@@ -331,7 +331,7 @@ function ClubDetailScreen() {
                     </div>
                   </div>
                 </div>
-                {
+                {clubRules && clubRules.trim() && (
                   <div className="accordion-item mb-4" id="rules">
                     <h4 className="accordion-header" id="panelsStayOpen-rules">
                       <button
@@ -358,11 +358,11 @@ function ClubDetailScreen() {
                               {rule}
                             </div>
                           ))}
-
                         </ul>
                       </div>
                     </div>
-                  </div>}
+                  </div>
+                )}
                 <div className="accordion-item mb-4" id="amenities">
                   <h4
                     className="accordion-header"
@@ -679,12 +679,12 @@ function ClubDetailScreen() {
                             {happyHoursForGame.length > 0 && (
                               <div>
                                 <p>Happy Pricing:
-                                {happyHoursForGame.map((happyHour, index) => (
-                                  <p key={index}>
-                                    ₹{happyHour.price}/hr on {daysOfWeek[happyHour.day_of_week]}
-                                    (From {happyHour.start_time.slice(0, 5)} to {happyHour.end_time.slice(0, 5)})
-                                  </p>
-                                ))}</p>
+                                  {happyHoursForGame.map((happyHour, index) => (
+                                    <p key={index}>
+                                      ₹{happyHour.price}/hr on {daysOfWeek[happyHour.day_of_week]}
+                                      (From {happyHour.start_time.slice(0, 5)} to {happyHour.end_time.slice(0, 5)})
+                                    </p>
+                                  ))}</p>
                               </div>
                             )}
                           </div>
