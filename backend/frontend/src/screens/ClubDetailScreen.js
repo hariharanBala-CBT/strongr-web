@@ -64,6 +64,8 @@ const style = {
   p: 4,
 };
 
+const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
 function ClubDetailScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -672,16 +674,17 @@ function ClubDetailScreen() {
                         return (
                           <div key={game.id} className="game-item">
                             <h3 className="primary-text">{game.game_type.game_name}</h3>
-                            <p>Regular Price: ₹{game.pricing}</p>
+                            <p>Regular Price: ₹{game.pricing}/hr</p>
 
                             {happyHoursForGame.length > 0 && (
                               <div>
-                                <h5>Happy Hours Pricing:</h5>
+                                <p>Happy Pricing:
                                 {happyHoursForGame.map((happyHour, index) => (
                                   <p key={index}>
-                                    ₹{happyHour.price} (From {happyHour.start_time.slice(0, 5)} to {happyHour.end_time.slice(0, 5)})
+                                    ₹{happyHour.price}/hr on {daysOfWeek[happyHour.day_of_week]}
+                                    (From {happyHour.start_time.slice(0, 5)} to {happyHour.end_time.slice(0, 5)})
                                   </p>
-                                ))}
+                                ))}</p>
                               </div>
                             )}
                           </div>

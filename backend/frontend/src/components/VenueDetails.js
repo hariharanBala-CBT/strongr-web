@@ -3,29 +3,17 @@ import { Calendar, MapPin } from "react-feather";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTableTennis } from '@fortawesome/free-solid-svg-icons';
-import dayjs from 'dayjs';
-
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
-import SportsTennisIcon from '@mui/icons-material/SportsTennis';
-import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
-import SportsCricketIcon from '@mui/icons-material/SportsCricket';
-
-const gameIcons = {
-  'Soccer': <SportsSoccerIcon />,
-  'Badminton': <SportsTennisIcon />,
-  'Basketball': <SportsBasketballIcon />,
-  'Cricket': <SportsCricketIcon />
-};
-
+import { Tooltip } from "react-tooltip";
+import "../css/venuedetails.css";
+import GameIcon from "./GameIcon";
+import dayjs from "dayjs";
 
 const formatDate = (date) => {
-  return dayjs(date).format('DD/MM/YYYY');
+  return dayjs(date).format("DD/MM/YYYY");
 };
 
 const VenueDetails = ({ club }) => {
-  const { address_line_1, organization, organization_images, games } = club;
+  const { address_line_1, organization, organization_images } = club;
   const navigate = useNavigate();
   const { t } = useTranslation("venuedetails");
 
@@ -33,11 +21,7 @@ const VenueDetails = ({ club }) => {
     <div className="venue-wrapper">
       <div className="listing-item mb-0">
         <div className="listing-img">
-          <a
-            onClick={() => {
-              navigate(`/club/${club.id}`);
-            }}
-          >
+          <a onClick={() => navigate(`/club/${club.id}`)}>
             <>
               {organization_images ? (
                 <img
@@ -70,11 +54,7 @@ const VenueDetails = ({ club }) => {
             </div>
           </div>
           <h3 className="listing-title">
-            <a
-              onClick={() => {
-                navigate(`/club/${club.id}`);
-              }}
-            >
+            <a onClick={() => navigate(`/club/${club.id}`)}>
               {organization.organization_name}
             </a>
           </h3>
@@ -86,32 +66,27 @@ const VenueDetails = ({ club }) => {
                   <i className="feather-map-pin">
                     <MapPin />
                   </i>
-                  {address_line_1.replace(/,\s*$/, '')}
+                  {address_line_1.replace(/,\s*$/, "")}
                 </span>
               </li>
-              {club?.next_availabilty && club.next_availabilty.length > 0 && (
+              {club.next_availabilty && club.next_availabilty.length > 0 && (
                 <li>
                   <span>
-                    <i className="fa-solid fa-calendar-days"> </i>
+                    <i className="fa-solid fa-calendar-days"></i>
                     <span className="primary-text">
                       {t("nextAvailability")}:
                     </span>
                     <ul>
                       {club.next_availabilty.map((availability, index) => (
-                        <li key={index}>
-                          {availability.game === 'Table Tennis' ? (
-                            <FontAwesomeIcon icon={faTableTennis} />
-                          ) : (
-                            gameIcons[availability.game]
-                          )}
-                          : {availability.court} -
-                          {availability.next_availabilty.date
-                            ? formatDate(availability.next_availabilty.date)
-                            : availability.next_availabilty.days}
-                          at {availability.next_availabilty.start_time.slice(0, 5)}
+                        <li
+                          key={index}
+                          data-tooltip-id={`tooltip-${availability.game}-${index}`}
+                          data-tooltip-content={`Court: ${availability.court}, Date: ${formatDate(availability.next_availability.date)}, Time: ${availability.next_availability.start_time.slice(0, 5)} - ${availability.next_availability.end_time.slice(0, 5)}`}
+                        >
+                          <GameIcon game={availability.game} />
+                          <Tooltip id={`tooltip-${availability.game}-${index}`} />
                         </li>
                       ))}
-
                     </ul>
                   </span>
                 </li>

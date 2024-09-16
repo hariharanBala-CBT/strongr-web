@@ -1,0 +1,62 @@
+/* Content area */
+.listing-content {
+  padding: 20px;
+}
+
+/* Details group */
+.listing-details-group p {
+  margin-left: 10px;  
+  margin-bottom: 15px;
+  color: #666;
+}
+
+.listing-details-group ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.listing-details-group li {
+  margin-left: px;  
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.listing-details-group li i {
+  margin-right: 10px;
+  color: #007bff;
+}
+
+/* Next availability */
+.primary-text {
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.listing-details-group li ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.listing-details-group li ul li {
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+/* Responsive design */
+@media (min-width: 768px) {
+  .listing-item {
+    flex-direction: row;
+  }
+
+  .listing-img {
+    width: 35%;
+    height: auto;
+  }
+
+  .listing-content {
+    width: 65%;
+  }
+}
