@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, Toaster } from "react-hot-toast";
 import { LinkContainer } from "react-router-bootstrap";
@@ -205,15 +205,13 @@ function PhoneNumberScreen() {
                   <div className="row no-margin vph-100 d-flex align-items-center justify-content-center phone-login-right-banner">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
                       <header className="text-center">
-                        <LinkContainer to="/">
-                          <a href="#">
+                      <Link to="/">
                             <img
                               src={logoImage}
                               className="img-fluid"
                               alt={t("logoAlt")}
                             />
-                          </a>
-                        </LinkContainer>
+                        </Link>
                       </header>
                       <div className="shadow-card">
                         <div id="recaptcha-container"></div>

@@ -2,6 +2,8 @@
     "featured": "Featured",
     "reviews": "{{count}} Reviews",
     "bookNow": "Book Now",
-    "nextAvailability": "Next Availability",
+    "gamesAvailable": "Games Availabile",
+    "noGamesFound": " No Availabile Games Found",
+    "nextAvailability": "Availability",
     "venueAlt": "Venue"
 }

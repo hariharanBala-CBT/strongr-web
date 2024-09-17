@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Carousel } from "react-responsive-carousel";
 import toast, { Toaster } from "react-hot-toast";
@@ -64,6 +64,8 @@ const style = {
   p: 4,
 };
 
+const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
 function ClubDetailScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -122,7 +124,7 @@ function ClubDetailScreen() {
     if (successclubReview) {
       toast.success(t("reviewSubmitted"));
     }
-  }, [successclubReview]);
+  }, [successclubReview, t]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -183,7 +185,7 @@ function ClubDetailScreen() {
       setLoader(false);
       setIsLogin(false);
     }
-  }, [isLogin, LoginError]);
+  }, [isLogin, LoginError, t]);
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
@@ -191,7 +193,7 @@ function ClubDetailScreen() {
       setOpenForm(false);
       setIsLogin(false);
     }
-  }, [isLogin, userLoginSuccess]);
+  }, [isLogin, t, userLoginSuccess]);
 
   useEffect(() => {
     fixImageUrls();
@@ -217,9 +219,9 @@ function ClubDetailScreen() {
               <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to="/clubs">
-                <a>{t("venueList")}</a>
-              </LinkContainer>
+              <Link to="/clubs">
+                {t("venueList")}
+              </Link>
             </li>
             <li>{t("venueDetails")}</li>
           </ul>
@@ -260,7 +262,7 @@ function ClubDetailScreen() {
                       className="__cf_email__"
                       data-cfemail="c6bfa9b3b4aba7afaa86a3bea7abb6aaa3e8a5a9ab"
                     >
-                      strongrtest@gmail.com
+                      {clubLocation?.email}
                     </span>
                   </a>
                 </li>
@@ -281,7 +283,7 @@ function ClubDetailScreen() {
                       <i className="fas fa-star filled"></i>
                     </div>
                     <p className="mb-0">
-                      <a href="javascript:;">
+                      <a>
                         {t("reviews", { count: clubLocation?.numRatings })}
                       </a>
                     </p>
@@ -302,34 +304,36 @@ function ClubDetailScreen() {
           <div className="row">
             <div className="col-12 col-sm-12 col-md-12 col-lg-8">
               <div className="accordion" id="accordionPanel">
-                <div className="accordion-item mb-4" id="overview">
-                  <h4 className="accordion-header" id="panelsStayOpen-overview">
-                    <button
-                      className="accordion-button"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#panelsStayOpen-collapseOne"
-                      aria-expanded="true"
-                      aria-controls="panelsStayOpen-collapseOne"
+              {clubLocation?.organization?.description && (
+                  <div className="accordion-item mb-4" id="overview">
+                    <h4 className="accordion-header" id="panelsStayOpen-overview">
+                      <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseOne"
+                        aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseOne"
+                      >
+                        {t("overview")}
+                      </button>
+                    </h4>
+                    <div
+                      id="panelsStayOpen-collapseOne"
+                      className="accordion-collapse collapse show"
+                      aria-labelledby="panelsStayOpen-overview"
                     >
-                      {t("overview")}
-                    </button>
-                  </h4>
-                  <div
-                    id="panelsStayOpen-collapseOne"
-                    className="accordion-collapse collapse show"
-                    aria-labelledby="panelsStayOpen-overview"
-                  >
-                    <div className="accordion-body">
-                      <div className="text show-more-height">
-                        <p>
-                          {clubLocation?.organization?.description}
-                        </p>
+                      <div className="accordion-body">
+                        <div className="text show-more-height">
+                          <p>
+                            {clubLocation?.organization?.description}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                {
+                )}
+                {typeof clubRules === 'string' && clubRules.trim() && (
                   <div className="accordion-item mb-4" id="rules">
                     <h4 className="accordion-header" id="panelsStayOpen-rules">
                       <button
@@ -356,11 +360,11 @@ function ClubDetailScreen() {
                               {rule}
                             </div>
                           ))}
-
                         </ul>
                       </div>
                     </div>
-                  </div>}
+                  </div>
+                )}
                 <div className="accordion-item mb-4" id="amenities">
                   <h4
                     className="accordion-header"
@@ -470,7 +474,7 @@ function ClubDetailScreen() {
                           // width={500}
                           showThumbs={false}
                         >
-                          {clubImage ? (
+                          {clubImage && clubImage.length > 0 ? (
                             clubImage?.map((image) => (
                               <div key={image.id}>
                                 <img
@@ -622,7 +626,7 @@ function ClubDetailScreen() {
                     </div>
                     <div className="club-timings">
                       <h4>
-                        <a onClick={handleOverlayClick}>{t("viewTimings")}</a>
+                        <Link onClick={handleOverlayClick}>{t("viewTimings")}</Link>
                       </h4>
                     </div>
                   </>
@@ -672,16 +676,17 @@ function ClubDetailScreen() {
                         return (
                           <div key={game.id} className="game-item">
                             <h3 className="primary-text">{game.game_type.game_name}</h3>
-                            <p>Regular Price: ₹{game.pricing}</p>
+                            <p>Regular Price: ₹{game.pricing}/hr</p>
 
                             {happyHoursForGame.length > 0 && (
                               <div>
-                                <h5>Happy Hours Pricing:</h5>
-                                {happyHoursForGame.map((happyHour, index) => (
-                                  <p key={index}>
-                                    ₹{happyHour.price} (From {happyHour.start_time.slice(0, 5)} to {happyHour.end_time.slice(0, 5)})
-                                  </p>
-                                ))}
+                                <p>Happy Pricing:
+                                  {happyHoursForGame.map((happyHour, index) => (
+                                    <p key={index}>
+                                      ₹{happyHour.price}/hr on {daysOfWeek[happyHour.day_of_week]}
+                                      (From {happyHour.start_time.slice(0, 5)} to {happyHour.end_time.slice(0, 5)})
+                                    </p>
+                                  ))}</p>
                               </div>
                             )}
                           </div>
@@ -692,7 +697,7 @@ function ClubDetailScreen() {
                   </li>
                 </ul>
                 <div className="d-grid btn-block mt-3">
-                  <a
+                  <div
                     className="btn btn-secondary d-inline-flex justify-content-center align-items-center booknow-wrapper"
                     onClick={handleClick}
                   >
@@ -700,7 +705,7 @@ function ClubDetailScreen() {
                       <Calendar />
                     </i>
                     {t("book")}
-                  </a>
+                  </div>
                 </div>
               </div>
 

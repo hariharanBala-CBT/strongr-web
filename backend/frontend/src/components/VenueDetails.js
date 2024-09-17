@@ -3,10 +3,13 @@ import { Calendar, MapPin } from "react-feather";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import dayjs from 'dayjs';
+import { Tooltip } from "react-tooltip";
+import "../css/venuedetails.css";
+import GameIcon from "./GameIcon";
+import dayjs from "dayjs";
 
 const formatDate = (date) => {
-  return dayjs(date).format('DD-MM-YYYY');
+  return dayjs(date).format("DD/MM/YYYY");
 };
 
 const VenueDetails = ({ club }) => {
@@ -18,11 +21,7 @@ const VenueDetails = ({ club }) => {
     <div className="venue-wrapper">
       <div className="listing-item mb-0">
         <div className="listing-img">
-          <a
-            onClick={() => {
-              navigate(`/club/${club.id}`);
-            }}
-          >
+          <div onClick={() => navigate(`/club/${club.id}`)}>
             <>
               {organization_images ? (
                 <img
@@ -38,7 +37,7 @@ const VenueDetails = ({ club }) => {
                 />
               )}
             </>
-          </a>
+          </div>
           <div className="fav-item-venues">
             <span className="tag tag-blue">{t("featured")}</span>
           </div>
@@ -55,13 +54,9 @@ const VenueDetails = ({ club }) => {
             </div>
           </div>
           <h3 className="listing-title">
-            <a
-              onClick={() => {
-                navigate(`/club/${club.id}`);
-              }}
-            >
+            <div onClick={() => navigate(`/club/${club.id}`)}>
               {organization.organization_name}
-            </a>
+            </div>
           </h3>
           <div className="listing-details-group">
             <p>{organization.description}</p>
@@ -71,16 +66,28 @@ const VenueDetails = ({ club }) => {
                   <i className="feather-map-pin">
                     <MapPin />
                   </i>
-                  {address_line_1.replace(/,\s*$/, '')}
+                  {address_line_1.replace(/,\s*$/, "")}
                 </span>
               </li>
-              {club?.next_availabilty && (
+              {club.next_availabilty && club.next_availabilty.length > 0 && (
                 <li>
                   <span>
-                    <i className="fa-solid fa-calendar-days"> </i>
+                    <i className="fa-solid fa-calendar-days"></i>
                     <span className="primary-text">
-                      {t("nextAvailability")}: {club?.next_availabilty?.days ? club?.next_availabilty?.days : formatDate(club?.next_availabilty?.date)} - {club?.next_availabilty?.start_time}
+                      {t("nextAvailability")}:
                     </span>
+                    <ul>
+                      {club.next_availabilty.map((availability, index) => (
+                        <li
+                          key={index}
+                          data-tooltip-id={`tooltip-${availability.game}-${index}`}
+                          data-tooltip-content={`Court: ${availability.court}, Date: ${formatDate(availability.next_availability.date)}, Time: ${availability.next_availability.start_time.slice(0, 5)} - ${availability.next_availability.end_time.slice(0, 5)}`}
+                        >
+                          <GameIcon game={availability.game} />
+                          <Tooltip id={`tooltip-${availability.game}-${index}`} />
+                        </li>
+                      ))}
+                    </ul>
                   </span>
                 </li>
               )}
@@ -88,7 +95,7 @@ const VenueDetails = ({ club }) => {
           </div>
           <div className="listing-button">
             <div className="listing-venue-owner">
-              <a
+              <div
                 className="navigation"
                 onClick={() => {
                   navigate(`/club/${club.id}`);
@@ -105,7 +112,7 @@ const VenueDetails = ({ club }) => {
                   )}
                   {organization.organization_name}
                 </>
-              </a>
+              </div>
             </div>
             <LinkContainer to={`/club/${club.id}`} className="user-book-now">
               <i className="feather-calendar me-2">

@@ -46,6 +46,7 @@
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
+    "react-tooltip": "^5.28.0",
     "react-whatsapp": "^0.3.0",
     "redux": "^5.0.1",
     "redux-devtools-extension": "^2.13.9",

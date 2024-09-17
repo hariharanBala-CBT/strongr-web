@@ -90,7 +90,7 @@
             <div class="col-md-3">
               <label for="payment_status" class="form-label">Payment Status:</label>
               <select id="payment_status" class="form-select">
-                <option value="">All Statuses</option>
+                <option value="">All Status</option>
                 {% for value, label in payment_status_choices %}
                 <option value="{{ value }}">{{ label }}</option>
                 {% endfor %}
@@ -163,7 +163,7 @@
     <ul class="pagination justify-content-center mt-4" id="pagination">
     </ul>
   </nav>
-  
+
   <footer class="py-4 bg-light mt-auto">
     <div class="container-fluid px-4">
       <div class="d-flex align-items-center justify-content-between small">
@@ -183,7 +183,7 @@
 
 <script>
   document.getElementById('current-year').textContent = new Date().getFullYear();
-  
+
   document.addEventListener('DOMContentLoaded', function () {
     removeStartDateMinAttribute();
 
@@ -258,7 +258,7 @@
 
       if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
         startDateError.textContent = "Start Date cannot be later than End Date.";
-        endDateError.textContent = "End Date cannot be earlier than Start Date.";
+        endDateError.textContent = "Please ensure that the End Date is not earlier than the Start Date.";
         return;
       }
 

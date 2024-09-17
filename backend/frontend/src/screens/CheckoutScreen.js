@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import { LinkContainer } from "react-router-bootstrap";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
@@ -29,13 +28,12 @@ function CheckoutScreen() {
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(false);
-  const [couponError, setCouponError] = useState("");
-  
+
   const { createBookingError, createBookingLoading, success, booking } =
-  useSelector((state) => state.bookingCreate);
+    useSelector((state) => state.bookingCreate);
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
-  const { isHappyHours, price } = useSelector((state) => state.happyHours);
+  const { isHappyHours } = useSelector((state) => state.happyHours);
   const { bookingDetailsSuccess } = useSelector(
     (state) => state.bookingDetails
   );
@@ -76,7 +74,7 @@ function CheckoutScreen() {
 
   useEffect(() => {
     if (success && booking) {
-      
+
       navigate(`/booking/${booking.id}`);
     } else if (createBookingError) {
       toast.error(t("somethingWentWrong"))
@@ -86,11 +84,11 @@ function CheckoutScreen() {
   useEffect(() => {
     const savedCoupon = JSON.parse(localStorage.getItem("appliedCoupon"));
     if (savedCoupon) {
-        setCouponCode(savedCoupon.code);
-        setDiscount(savedCoupon.discount);
-        setCouponApplied(true);
+      setCouponCode(savedCoupon.code);
+      setDiscount(savedCoupon.discount);
+      setCouponApplied(true);
     }
-}, []);
+  }, []);
 
 
   const handleCheckboxChange = (e) => {
@@ -107,15 +105,13 @@ function CheckoutScreen() {
         setDiscount(response.data.discount_percentage);
         setCouponCode(couponCode)
         setCouponApplied(true);
-        setCouponError("");
         localStorage.setItem("appliedCoupon", JSON.stringify({
           code: couponCode,
           discount: response.data.discount_percentage
-      }));
+        }));
         toast.success(t("couponApplied"));
       } else {
         setCouponCode("")
-        setCouponError(response.error || 'Error applying coupon');
         toast.error(response.error || 'Error applying coupon');
       }
     } catch (error) {
@@ -168,19 +164,19 @@ function CheckoutScreen() {
               <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to="/clubs">
-                <a>{t("venueList")}</a>
-              </LinkContainer>
+              <Link to="/clubs">
+                {t("venueList")}
+              </Link>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to={`/club/${bookingData.id}`}>
-                <a>{t("venueDetails")}</a>
-              </LinkContainer>
+              <Link to={`/club/${bookingData.id}`}>
+                {t("venueDetails")}
+              </Link>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to={`/bookinginfo/${bookingData.id}`}>
-                <a>{t("bookACourt")}</a>
-              </LinkContainer>
+              <Link to={`/bookinginfo/${bookingData.id}`}>
+                {t("bookACourt")}
+              </Link>
             </li>
             <li>{t("checkout")}</li>
           </ul>
@@ -284,11 +280,15 @@ function CheckoutScreen() {
                           }
                         </h3>
                         <h6>
-                          {"\u20B9"} {bookingData.clubPrice} 
+                          {"\u20B9"} {bookingData.clubPrice}
                         </h6>
                       </li>
                       <p>
-                        {bookingData.gameName}-{bookingData.selectedSlot} ({formatDate(bookingData.date)}) {isHappyHours && <span className="happy-hours-tag">{t("happyHours")}</span>}
+                        {bookingData.gameName}-{bookingData.selectedSlot && (
+                          <span>
+                            {bookingData.selectedSlot.split('-').map((time) => time.slice(0, 5)).join('-')}
+                          </span>
+                        )} ({formatDate(bookingData.date)}) {isHappyHours && <span className="happy-hours-tag">{t("happyHours")}</span>}
                       </p>
                     </div>
                     <div className="orderset2">
@@ -309,17 +309,17 @@ function CheckoutScreen() {
                       </li>
                       <p>{t("onlineBookingFee")}</p>
                     </div> */}
-                  {discount > 0 && (
-                    <div className="orderset1">
-                      <li>
-                        <h3>{t("discount")}</h3>
-                        <h6>
-                          -{"\u20B9"} {(bookingData.totalPrice * discount / 100)}
-                        </h6>
-                      </li>
-                      <p>{t("discountApplied")}: {discount}% ({t("youSave")}: {"\u20B9"} {(bookingData.totalPrice * discount / 100)})</p>
-                    </div>
-                  )}
+                    {discount > 0 && (
+                      <div className="orderset1">
+                        <li>
+                          <h3>{t("discount")}</h3>
+                          <h6>
+                            -{"\u20B9"} {(bookingData.totalPrice * discount / 100)}
+                          </h6>
+                        </li>
+                        <p>{t("discountApplied")}: {discount}% ({t("youSave")}: {"\u20B9"} {(bookingData.totalPrice * discount / 100)})</p>
+                      </div>
+                    )}
                   </ul>
                   <div className="order-total d-flex justify-content-between align-items-center">
                     <h5>{t("total")}</h5>
@@ -330,24 +330,24 @@ function CheckoutScreen() {
                 </div>
                 <div className="col-12 col-sm-12">
                   <aside className="checkout-card booking-details">
-                      <label htmlFor="couponCode" className="form-label">
+                    <label htmlFor="couponCode" className="form-label">
                       <FontAwesomeIcon icon={faTicketAlt} /> {t("couponCode")}
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="couponCode"
-                        value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value)}
-                        placeholder={t("enterCoupon")}
-                        disabled={couponApplied}
-                      />
-                      <Button
-                        className={couponApplied ? "remove-button" : "coupon-button"}
-                        text={couponApplied ? t("removeCoupon") : t("applyCoupon")}
-                        onClick={couponApplied ? handleRemoveCoupon : handleApplyCoupon}
-                        type="button"
-                      />
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="couponCode"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder={t("enterCoupon")}
+                      disabled={couponApplied}
+                    />
+                    <Button
+                      className={couponApplied ? "remove-button" : "coupon-button"}
+                      text={couponApplied ? t("removeCoupon") : t("applyCoupon")}
+                      onClick={couponApplied ? handleRemoveCoupon : handleApplyCoupon}
+                      type="button"
+                    />
                   </aside>
                 </div>
               </aside>

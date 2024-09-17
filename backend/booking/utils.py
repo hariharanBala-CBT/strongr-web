@@ -3,7 +3,6 @@ from django.db.models import Q
 from .models import UnavailableSlot, Booking, Slot, AdditionalSlot
 
 def get_nearest_available_slot(court, current_datetime, selected_date):
-    # Exclude unavailable and booked slots
     unavailable_slots = UnavailableSlot.objects.filter(
         court=court,
         date__gte=selected_date,
@@ -13,7 +12,12 @@ def get_nearest_available_slot(court, current_datetime, selected_date):
     booked_slots = Booking.objects.filter(
         court=court,
         booking_date__gte=selected_date
-    ).values_list('slot__start_time', 'slot__end_time')
+    ).filter(
+        Q(slot__isnull=False) | Q(additional_slot__isnull=False)
+    ).values_list(
+        'slot__start_time', 'slot__end_time',
+        'additional_slot__start_time', 'additional_slot__end_time'
+    )
 
     excluded_times = list(unavailable_slots) + list(booked_slots)
 

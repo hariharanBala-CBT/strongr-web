@@ -50,9 +50,11 @@ class ClubSerializer(serializers.ModelSerializer):
 class ClubLocationSerializer(serializers.ModelSerializer):
     organization = ClubSerializer()
     area = AreaSerializer()
+    email = serializers.EmailField(source='organization.user.email', read_only=True)
     class Meta:
         model = OrganizationLocation
         fields = '__all__'
+        extra_fields = ['email']
 
 class ClubLocSerializer(serializers.ModelSerializer):
     class Meta:
@@ -197,8 +199,8 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
     
     def get_amenities(self, obj):
         try:
-            amenities = OrganizationLocationAmenities.objects.get(organization_location=obj)
-            return OrganizationLocationAmenitiesSerializer(amenities).data
+            amenities = OrganizationLocationAmenities.objects.filter(organization_location=obj)
+            return OrganizationLocationAmenitiesSerializer(amenities, many=True).data
         except OrganizationLocationAmenities.DoesNotExist:
             return None
 
@@ -212,36 +214,58 @@ class ClubLocationSerializerWithImages(serializers.ModelSerializer):
         now += datetime.timedelta(hours=1)
         selected_date = now.date()
 
+        all_next_availabilities = {}
+
         try:
-            court = Court.objects.filter(location=obj).first()
-            if not court:
-                return None
-        except Court.DoesNotExist:
+            games = OrganizationLocationGameType.objects.filter(organization_location=obj)
+            
+            for game in games:
+                courts = Court.objects.filter(game=game)
+                nearest_slot = None
+                nearest_court = None
+
+                for court in courts:
+                    court_slot = get_nearest_available_slot(court, now, selected_date)
+                    
+                    if court_slot:
+                        if nearest_slot is None or court_slot['date'] < nearest_slot['date'] or \
+                        (court_slot['date'] == nearest_slot['date'] and 
+                            court_slot['start_time'] < nearest_slot['start_time']):
+                            nearest_slot = court_slot
+                            nearest_court = court
+
+                if nearest_slot and nearest_court:
+                    if nearest_slot['source'] == 'slot':
+                        slot = Slot.objects.get(
+                            court=nearest_court,
+                            start_time=nearest_slot['start_time'],
+                            end_time=nearest_slot['end_time'],
+                            days=nearest_slot['date'].strftime('%A')
+                        )
+                        serializer = SlotSerializer(slot)
+                    else:
+                        slot = AdditionalSlot.objects.get(
+                            court=nearest_court,
+                            start_time=nearest_slot['start_time'],
+                            end_time=nearest_slot['end_time'],
+                            date=nearest_slot['date']
+                        )
+                        serializer = AdditionalSlotSerializer(slot)
+
+                    all_next_availabilities[game.game_type.game_name] = {
+                        'game': game.game_type.game_name,
+                        'court': nearest_court.name,
+                        'next_availability': {
+                            **serializer.data,
+                            'date': nearest_slot['date']
+                        }
+                    }
+
+        except Exception as e:
+            print(f"Exception in get_next_availability: {str(e)}")
             return None
 
-        nearest_slot = get_nearest_available_slot(court, now, selected_date)
-
-        if not nearest_slot:
-            return None
-
-        if nearest_slot['source'] == 'slot':
-            slot = Slot.objects.get(
-                court=court,
-                start_time=nearest_slot['start_time'],
-                end_time=nearest_slot['end_time'],
-                days=nearest_slot['date'].strftime('%A')
-            )
-            serializer = SlotSerializer(slot)
-        else:
-            slot = AdditionalSlot.objects.get(
-                court=court,
-                start_time=nearest_slot['start_time'],
-                end_time=nearest_slot['end_time'],
-                date=nearest_slot['date']
-            )
-            serializer = AdditionalSlotSerializer(slot)
-
-        return serializer.data
+        return list(all_next_availabilities.values()) if all_next_availabilities else None
 
     class Meta:
         model = Organization

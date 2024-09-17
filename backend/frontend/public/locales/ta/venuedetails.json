@@ -2,6 +2,8 @@
     "featured": "சிறப்பம்சம்",
     "reviews": "{{count}} விமர்சனங்கள்",
     "bookNow": "பதிவு செய்யவும்",
-    "nextAvailability": "அடுத்து கிடைக்கும்",
+    "gamesAvailable": "கிடைக்கும் விளையாட்டுகள்",
+    "noGamesFound": "விளையாட்டுகள் எதுவும் இல்லை",
+    "nextAvailability": "கிடைக்கும்",
     "venueAlt": "இடம்"
 }

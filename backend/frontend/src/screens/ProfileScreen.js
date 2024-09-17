@@ -10,7 +10,6 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -21,7 +20,6 @@ import {
   Tooltip,
   IconButton,
   Paper,
-  Stack,
   styled,
   Table,
   TableBody,
@@ -93,10 +91,6 @@ function ProfileScreen() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
-  };
-
-  const updateUser = () => {
-    navigate(`/profile/${userInfo.id}`);
   };
 
   const redirectBooking = (value) => {

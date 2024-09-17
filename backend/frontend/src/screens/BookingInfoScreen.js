@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { MapPin } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { LinkContainer } from "react-router-bootstrap";
 import venueImage from "../images/owner-venue2.jpg";
 import { useHomeContext } from "../context/HomeContext";
 
@@ -36,12 +35,6 @@ import {
 } from "../constants/constants";
 
 import "../css/bookinginfoscreen.css";
-
-const linkStyle = {
-  textDecoration: "underline",
-  color: "purple",
-  cursor: "pointer",
-};
 
 const boxStyle = {
   position: "absolute",
@@ -101,7 +94,7 @@ function BookingInfoScreen() {
   const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
-  
+
   const { isHappyHours, price } = useSelector((state) => state.happyHours);
 
   const handleSlotChange = (value) => {
@@ -128,12 +121,12 @@ function BookingInfoScreen() {
       dispatch(checkHappyHoursSlot(idToCheck))
     }
   };
-  
+
   const getSelectedGamePricing = () => {
     if (isHappyHours && price !== undefined && price !== null) {
-      return price;  // Use happy hours price if available
+      return price;
     }
-  
+
     const selectedGame = clubGame?.find(
       (game) => game.game_type.game_name === gameName
     );
@@ -161,7 +154,7 @@ function BookingInfoScreen() {
   //   setSlot(value);
   // };
 
-  
+
   const handleCourtChange = (value) => {
     setCourtName(value);
   };
@@ -372,7 +365,7 @@ function BookingInfoScreen() {
       setLoader(false);
       setIsLogin(false);
     }
-  }, [isLogin, LoginError]);
+  }, [isLogin, LoginError, t]);
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
@@ -412,14 +405,14 @@ function BookingInfoScreen() {
               <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to="/clubs">
-                <a>{t("venueList")}</a>
-              </LinkContainer>
+              <Link to="/clubs">
+                {t("venueList")}
+              </Link>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to={`/club/${id}`}>
-                <a>{t("venueDetails")}</a>
-              </LinkContainer>
+              <Link to={`/club/${id}`}>
+                {t("venueDetails")}
+              </Link>
             </li>
             <li>{t("bookACourt")}</li>
           </ul>
@@ -436,13 +429,13 @@ function BookingInfoScreen() {
               <div className="row d-flex align-items-center justify-content-center">
                 <div className="col-12 col-sm-12 col-md-12 col-lg-6">
                   <div className="d-sm-flex justify-content-start align-items-center">
-                    <a href="javascript:void(0);">
+                    <div>
                       <img
                         className="corner-radius-10"
                         src={venueImage}
                         alt="Venue"
                       />
-                    </a>
+                    </div>
                     <div className="info">
                       {clubLocation?.rating ? (
                         <div className="d-flex align-items-center">
@@ -562,9 +555,9 @@ function BookingInfoScreen() {
                       <Alert severity="info">
                         {t("currentlyNoSlotsAvailable", {
                           courtName: courtName,
-                          date: nearestSlot.days
-                            ? nearestSlot.days
-                            : formatDate(nearestSlot.date),
+                          date: nearestSlot.date
+                            ? formatDate(nearestSlot.date)
+                            : nearestSlot.days,
                           time: nearestSlot?.start_time?.slice(0, 5),
                         })}
                       </Alert>

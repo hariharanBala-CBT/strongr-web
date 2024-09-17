@@ -16,15 +16,14 @@ function Header({ location }) {
     dispatch(logout());
   };
 
-  const currentUrl = window.location.origin; //yields: "https://stacksnippets.net/js"
-  // const baseUrl = currentUrl.split('/').slice(0, 3).join('/');
+  const currentUrl = window.location.origin;
 
   return (
     <header className="header header-trans">
       <div className="container-fluid header-wrapper">
         <nav className="navbar navbar-expand-lg header-nav">
           <div className="navbar-header">
-            <a id="mobile_btn" href="javascript:void(0);">
+            <a id="mobile_btn" href="!#">
               <span className="bar-icon">
                 <span></span>
                 <span></span>
@@ -32,25 +31,21 @@ function Header({ location }) {
               </span>
             </a>
             <LinkContainer to="/">
-              <a href="#" className="navbar-brand logo">
+              <a href="#/" className="navbar-brand logo">
                 <img src={Logo} className="img-fluid" alt={t("logoAlt")} />
               </a>
             </LinkContainer>
           </div>
           <div className="main-menu-wrapper">
             <div className="menu-header">
-              <a href="#" className="menu-logo">
+              <a href="!#" className="menu-logo">
                 <img
                   src="assets/img/logo-black.svg"
                   className="img-fluid"
                   alt={t("logoAlt")}
                 />
               </a>
-              <a
-                id="menu_close"
-                className="menu-close"
-                href="javascript:void(0);"
-              >
+              <a id="menu_close" className="menu-close" href="!#">
                 {" "}
                 <i className="fas fa-times"></i>
               </a>
@@ -60,7 +55,15 @@ function Header({ location }) {
                 <a href="#/">{t("home")}</a>
               </li>
               <li>
-                <a href="#">{t("contactUs")}</a>
+              <a
+                  href="#contact-us-footer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById("contact-us-footer").scrollIntoView({ behavior: "smooth" });
+                  }}
+                  >
+                  {t("contactUs")}
+                </a>
               </li>
             </ul>
           </div>

@@ -748,7 +748,10 @@ def getNearestSlot(request):
         )
         serializer = AdditionalSlotSerializer(slot)
 
-    return Response(serializer.data)
+    response_data = serializer.data
+    response_data['date'] = nearest_slot['date']
+
+    return Response(response_data)
 
 @api_view(['GET'])
 def checkSlot(request, slotId):

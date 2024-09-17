@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { GiShuttlecock } from "react-icons/gi";
 import { Calendar, MapPin } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 import { useHomeContext } from "../context/HomeContext";
-import profileImage from "../images/profile.jpg";
 import venueImage from "../images/venue3.jpg";
 import { formatAddress } from "../utils/spacingUtils";
 import { fixImageUrls } from "../utils/imageUtils";
@@ -52,7 +50,7 @@ function Club({ clubs }) {
                   <div className="featured-venues-item venue-list-item">
                     <div className="listing-item listing-item-grid">
                       <div className="listing-img">
-                        <a>
+                        <>
                           {club && club.organization_images ? (
                             <img
                               src={club.organization_images}
@@ -61,7 +59,7 @@ function Club({ clubs }) {
                           ) : (
                             <img src={venueImage} alt={t("organizationAlt")} />
                           )}
-                        </a>
+                        </>
                         <div className="fav-item-venues">
                           <span className="tag tag-blue">{t("featured")}</span>
                         </div>
@@ -78,9 +76,9 @@ function Club({ clubs }) {
                             </div>
                           )}
                         <h3 className="listing-title">
-                          <a onClick={() => handleViewDetails(club)}>
+                          <div onClick={() => handleViewDetails(club)}>
                             {club.organization.organization_name}
-                          </a>
+                          </div>
                         </h3>
                         <div className="listing-details-group">
                           <p>
@@ -99,7 +97,7 @@ function Club({ clubs }) {
                           </ul>
                         </div>
                         <div className="listing-button">
-                          <a
+                          <div
                             onClick={() => handleViewDetails(club)}
                             className="user-book-now"
                           >
@@ -109,7 +107,7 @@ function Club({ clubs }) {
                               </i>
                             </span>
                             {t("bookNow")}
-                          </a>
+                          </div>
                         </div>
                       </div>
                     </div>

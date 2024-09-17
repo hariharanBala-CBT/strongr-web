@@ -1292,6 +1292,9 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
 
         show_warning = all(day.work_from_time is None or day.work_to_time is None for day in active_days)
 
+        if show_warning:
+            messages.error(request, ERROR_MESSAGES.get('default_slot_failure'))
+
         context = {
             'courts': courts,
             'form': form,

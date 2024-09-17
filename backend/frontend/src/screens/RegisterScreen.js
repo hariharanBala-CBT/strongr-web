@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -185,6 +185,7 @@ function RegisterScreen() {
       setOpenForm(false);
       setSubmit(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorDetails, userDetailsValidate, userDetailsValidateError]);
 
   useEffect(() => {
@@ -201,6 +202,7 @@ function RegisterScreen() {
         type: USER_LOGOUT,
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, navigate, registerError, userInfo]);
 
   useEffect(() => {
@@ -274,15 +276,13 @@ function RegisterScreen() {
                   <div className="row no-margin vph-100 d-flex align-items-center justify-content-center signup-right-banner">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
                       <header className="text-center">
-                        <LinkContainer to="/">
-                          <a href="#">
+                        <Link to="/">
                             <img
                               src={logoImage}
                               className="img-fluid"
                               alt={t("logoAlt")}
                             />
-                          </a>
-                        </LinkContainer>
+                        </Link>
                       </header>
                       <div className="shadow-card">
                         <h2>{t("getStarted", {brandName})}</h2>
@@ -414,8 +414,7 @@ function RegisterScreen() {
                                   for="policy"
                                 >
                                   {t("agreeTerms")}{" "}
-                                  <a href="javascript:void(0);">
-                                    {t("termsOfUse")}</a>
+                                  <Link>{t("termsOfUse")}</Link>
                                 </label>
                               </div>
                               <button
