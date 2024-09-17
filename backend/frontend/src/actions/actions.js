@@ -944,7 +944,7 @@ export const createClubReview = (id, review) => async (dispatch, getState) => {
       }
 
       const { data } = await axios.post(
-          `/api/club/reviews//${id}`,
+          `/api/club/reviews/${id}`,
           review,
           config
       )

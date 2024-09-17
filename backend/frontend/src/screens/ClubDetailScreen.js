@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Carousel } from "react-responsive-carousel";
@@ -95,6 +95,13 @@ function ClubDetailScreen() {
     clubReviewCreate;
 
   const gameName = localStorage.getItem("selectedGame");
+
+  const reviewsRef = useRef(null); // Create a reference for the reviews section
+
+  const scrollToReviews = (event) => {
+    event.preventDefault();
+    reviewsRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const loginAndRedirect = (e) => {
     e.preventDefault();
@@ -283,7 +290,7 @@ function ClubDetailScreen() {
                       <i className="fas fa-star filled"></i>
                     </div>
                     <p className="mb-0">
-                      <a>
+                      <a href="#reviews" onClick={scrollToReviews}>
                         {t("reviews", { count: clubLocation?.numRatings })}
                       </a>
                     </p>
@@ -501,7 +508,7 @@ function ClubDetailScreen() {
                   </div>
                 </div>
 
-                <div className="accordion-item mb-4" id="reviews">
+                <div className="accordion-item mb-4" id="reviews" ref={reviewsRef}>
                   <div className="accordion-header" id="panelsStayOpen-reviews">
                     <div className="review-wrapper-new ">
                       <div>
@@ -514,9 +521,9 @@ function ClubDetailScreen() {
                             {!userInfo && (
                               <span className="login-remainder">
                                 {t("please")}{" "}
-                                <a href="#" onClick={handleSubmit}>
+                                <Link onClick={handleSubmit}>
                                   {t("login")}
-                                </a>{" "}
+                                </Link>{" "}
                                 {t("toWriteReview")}
                               </span>
                             )}
