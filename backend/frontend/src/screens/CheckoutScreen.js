@@ -28,9 +28,9 @@ function CheckoutScreen() {
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(false);
-  
+
   const { createBookingError, createBookingLoading, success, booking } =
-  useSelector((state) => state.bookingCreate);
+    useSelector((state) => state.bookingCreate);
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
   const { isHappyHours } = useSelector((state) => state.happyHours);
@@ -74,7 +74,7 @@ function CheckoutScreen() {
 
   useEffect(() => {
     if (success && booking) {
-      
+
       navigate(`/booking/${booking.id}`);
     } else if (createBookingError) {
       toast.error(t("somethingWentWrong"))
@@ -84,11 +84,11 @@ function CheckoutScreen() {
   useEffect(() => {
     const savedCoupon = JSON.parse(localStorage.getItem("appliedCoupon"));
     if (savedCoupon) {
-        setCouponCode(savedCoupon.code);
-        setDiscount(savedCoupon.discount);
-        setCouponApplied(true);
+      setCouponCode(savedCoupon.code);
+      setDiscount(savedCoupon.discount);
+      setCouponApplied(true);
     }
-}, []);
+  }, []);
 
 
   const handleCheckboxChange = (e) => {
@@ -108,7 +108,7 @@ function CheckoutScreen() {
         localStorage.setItem("appliedCoupon", JSON.stringify({
           code: couponCode,
           discount: response.data.discount_percentage
-      }));
+        }));
         toast.success(t("couponApplied"));
       } else {
         setCouponCode("")
@@ -280,11 +280,15 @@ function CheckoutScreen() {
                           }
                         </h3>
                         <h6>
-                          {"\u20B9"} {bookingData.clubPrice} 
+                          {"\u20B9"} {bookingData.clubPrice}
                         </h6>
                       </li>
                       <p>
-                        {bookingData.gameName}-{bookingData.selectedSlot} ({formatDate(bookingData.date)}) {isHappyHours && <span className="happy-hours-tag">{t("happyHours")}</span>}
+                        {bookingData.gameName}-{bookingData.selectedSlot && (
+                          <span>
+                            {bookingData.selectedSlot.split('-').map((time) => time.slice(0, 5)).join('-')}
+                          </span>
+                        )} ({formatDate(bookingData.date)}) {isHappyHours && <span className="happy-hours-tag">{t("happyHours")}</span>}
                       </p>
                     </div>
                     <div className="orderset2">
@@ -305,17 +309,17 @@ function CheckoutScreen() {
                       </li>
                       <p>{t("onlineBookingFee")}</p>
                     </div> */}
-                  {discount > 0 && (
-                    <div className="orderset1">
-                      <li>
-                        <h3>{t("discount")}</h3>
-                        <h6>
-                          -{"\u20B9"} {(bookingData.totalPrice * discount / 100)}
-                        </h6>
-                      </li>
-                      <p>{t("discountApplied")}: {discount}% ({t("youSave")}: {"\u20B9"} {(bookingData.totalPrice * discount / 100)})</p>
-                    </div>
-                  )}
+                    {discount > 0 && (
+                      <div className="orderset1">
+                        <li>
+                          <h3>{t("discount")}</h3>
+                          <h6>
+                            -{"\u20B9"} {(bookingData.totalPrice * discount / 100)}
+                          </h6>
+                        </li>
+                        <p>{t("discountApplied")}: {discount}% ({t("youSave")}: {"\u20B9"} {(bookingData.totalPrice * discount / 100)})</p>
+                      </div>
+                    )}
                   </ul>
                   <div className="order-total d-flex justify-content-between align-items-center">
                     <h5>{t("total")}</h5>
@@ -326,24 +330,24 @@ function CheckoutScreen() {
                 </div>
                 <div className="col-12 col-sm-12">
                   <aside className="checkout-card booking-details">
-                      <label htmlFor="couponCode" className="form-label">
+                    <label htmlFor="couponCode" className="form-label">
                       <FontAwesomeIcon icon={faTicketAlt} /> {t("couponCode")}
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="couponCode"
-                        value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value)}
-                        placeholder={t("enterCoupon")}
-                        disabled={couponApplied}
-                      />
-                      <Button
-                        className={couponApplied ? "remove-button" : "coupon-button"}
-                        text={couponApplied ? t("removeCoupon") : t("applyCoupon")}
-                        onClick={couponApplied ? handleRemoveCoupon : handleApplyCoupon}
-                        type="button"
-                      />
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="couponCode"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder={t("enterCoupon")}
+                      disabled={couponApplied}
+                    />
+                    <Button
+                      className={couponApplied ? "remove-button" : "coupon-button"}
+                      text={couponApplied ? t("removeCoupon") : t("applyCoupon")}
+                      onClick={couponApplied ? handleRemoveCoupon : handleApplyCoupon}
+                      type="button"
+                    />
                   </aside>
                 </div>
               </aside>
