@@ -21,7 +21,7 @@ const VenueDetails = ({ club }) => {
     <div className="venue-wrapper">
       <div className="listing-item mb-0">
         <div className="listing-img">
-          <a onClick={() => navigate(`/club/${club.id}`)}>
+          <div onClick={() => navigate(`/club/${club.id}`)}>
             <>
               {organization_images ? (
                 <img
@@ -37,7 +37,7 @@ const VenueDetails = ({ club }) => {
                 />
               )}
             </>
-          </a>
+          </div>
           <div className="fav-item-venues">
             <span className="tag tag-blue">{t("featured")}</span>
           </div>
@@ -54,9 +54,9 @@ const VenueDetails = ({ club }) => {
             </div>
           </div>
           <h3 className="listing-title">
-            <a onClick={() => navigate(`/club/${club.id}`)}>
+            <div onClick={() => navigate(`/club/${club.id}`)}>
               {organization.organization_name}
-            </a>
+            </div>
           </h3>
           <div className="listing-details-group">
             <p>{organization.description}</p>
@@ -95,7 +95,7 @@ const VenueDetails = ({ club }) => {
           </div>
           <div className="listing-button">
             <div className="listing-venue-owner">
-              <a
+              <div
                 className="navigation"
                 onClick={() => {
                   navigate(`/club/${club.id}`);
@@ -112,7 +112,7 @@ const VenueDetails = ({ club }) => {
                   )}
                   {organization.organization_name}
                 </>
-              </a>
+              </div>
             </div>
             <LinkContainer to={`/club/${club.id}`} className="user-book-now">
               <i className="feather-calendar me-2">

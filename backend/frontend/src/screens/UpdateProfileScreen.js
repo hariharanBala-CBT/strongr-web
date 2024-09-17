@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import OTPInput, { ResendOTP } from "otp-input-react";
@@ -152,7 +152,7 @@ function UpdateprofileScreen() {
     } else if (userUpdateError && submit) {
       setOtp("");
       const attemptsLeft = 3 - otpAttempts;
-      setOtpError(t('attemptRemaining', { current: otpAttempts + 1, remaining: attemptsLeft - 1 }));    
+      setOtpError(t('attemptRemaining', { current: otpAttempts + 1, remaining: attemptsLeft - 1 }));
       setShowOtpError(true);
       setTimeout(() => setShowOtpError(false), 4000);
       setOtpAttempts(otpAttempts + 1);
@@ -168,7 +168,7 @@ function UpdateprofileScreen() {
     dispatch({
       type: USER_UPDATE_PROFILE_RESET,
     });
-  }, [dispatch, navigate, otpAttempts, submit, userUpdateError, userUpdateSuccess]);
+  }, [dispatch, navigate, otpAttempts, submit, t, userUpdateError, userUpdateSuccess]);
 
   useEffect(() => {
     setOpenForm(false);
@@ -196,6 +196,7 @@ function UpdateprofileScreen() {
       otpGenerate();
       setSubmit(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userValidate, userValidateError]);
 
   return (
@@ -211,9 +212,9 @@ function UpdateprofileScreen() {
               <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to="/profile">
-                <a>{t("userProfile")}</a>
-              </LinkContainer>
+              <Link to="/profile">
+                {t("userProfile")}
+              </Link>
             </li>
             <li>{t("updateProfile")}</li>
           </ul>
@@ -224,17 +225,17 @@ function UpdateprofileScreen() {
           <div className="user-profile-list profile-profile-list">
             <ul className="nav">
               <li>
-                <LinkContainer to="/profile">
-                  <a>{t("profile")}</a>
-                </LinkContainer>
+                <Link to="/profile">
+                  {t("profile")}
+                </Link>
               </li>
               <li>
-                <a className="active">{t("updateProfile")}</a>
+                <Link className="active">{t("updateProfile")}</Link>
               </li>
               <li>
-                <LinkContainer to="/updatepassword">
-                  <a>{t("updatePassword")}</a>
-                </LinkContainer>
+                <Link to="/updatepassword">
+                  {t("updatePassword")}
+                </Link>
               </li>
             </ul>
           </div>

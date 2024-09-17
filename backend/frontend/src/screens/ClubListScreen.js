@@ -158,7 +158,7 @@ function ClubListScreen() {
     } else if (gameError) {
       toast.error(t('fetchingGames'));
     }
-  }, [areaError, gameError]);
+  }, [areaError, gameError, t]);
 
   useEffect(() => {
     if (areaName !== undefined && gameName !== undefined) {

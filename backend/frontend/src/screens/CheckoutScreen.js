@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import { LinkContainer } from "react-router-bootstrap";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
@@ -29,13 +28,12 @@ function CheckoutScreen() {
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(false);
-  const [couponError, setCouponError] = useState("");
   
   const { createBookingError, createBookingLoading, success, booking } =
   useSelector((state) => state.bookingCreate);
   const { userInfo } = useSelector((state) => state.userLogin);
   const { customerDetails } = useSelector((state) => state.customerDetails);
-  const { isHappyHours, price } = useSelector((state) => state.happyHours);
+  const { isHappyHours } = useSelector((state) => state.happyHours);
   const { bookingDetailsSuccess } = useSelector(
     (state) => state.bookingDetails
   );
@@ -107,7 +105,6 @@ function CheckoutScreen() {
         setDiscount(response.data.discount_percentage);
         setCouponCode(couponCode)
         setCouponApplied(true);
-        setCouponError("");
         localStorage.setItem("appliedCoupon", JSON.stringify({
           code: couponCode,
           discount: response.data.discount_percentage
@@ -115,7 +112,6 @@ function CheckoutScreen() {
         toast.success(t("couponApplied"));
       } else {
         setCouponCode("")
-        setCouponError(response.error || 'Error applying coupon');
         toast.error(response.error || 'Error applying coupon');
       }
     } catch (error) {
@@ -168,19 +164,19 @@ function CheckoutScreen() {
               <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to="/clubs">
-                <a>{t("venueList")}</a>
-              </LinkContainer>
+              <Link to="/clubs">
+                {t("venueList")}
+              </Link>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to={`/club/${bookingData.id}`}>
-                <a>{t("venueDetails")}</a>
-              </LinkContainer>
+              <Link to={`/club/${bookingData.id}`}>
+                {t("venueDetails")}
+              </Link>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to={`/bookinginfo/${bookingData.id}`}>
-                <a>{t("bookACourt")}</a>
-              </LinkContainer>
+              <Link to={`/bookinginfo/${bookingData.id}`}>
+                {t("bookACourt")}
+              </Link>
             </li>
             <li>{t("checkout")}</li>
           </ul>

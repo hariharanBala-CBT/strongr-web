@@ -20,13 +20,14 @@ import {
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import SportsTennisIcon from '@mui/icons-material/SportsTennis';
 import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
-import SportsCricketIcon from '@mui/icons-material/SportsCricket';
+// import SportsCricketIcon from '@mui/icons-material/SportsCricket';
+import SportsCricketTwoToneIcon from '@mui/icons-material/SportsCricketTwoTone';
 import SportsHandballIcon from '@mui/icons-material/SportsHandball';
 import SportsRugbyIcon from '@mui/icons-material/SportsRugby';
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import SportsMmaIcon from '@mui/icons-material/SportsMma';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import TrackChangesIcon from '@mui/icons-material/TrackChanges';
+// import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 
 const gameIcons = {
   'Soccer': <SportsSoccerIcon />,
@@ -35,7 +36,7 @@ const gameIcons = {
   'Tennis': <SportsTennisIcon />,
   'Table Tennis': <FontAwesomeIcon icon={faTableTennis} />,
   'Badminton': <SportsTennisIcon />,
-  'Cricket': <SportsCricketIcon />,
+  'Cricket': <SportsCricketTwoToneIcon />,
   'Volleyball': <FontAwesomeIcon icon={faVolleyball} />,
   'Baseball': <FontAwesomeIcon icon={faBaseballBall} />,
   'Hockey': <FontAwesomeIcon icon={faHockeyPuck} />,

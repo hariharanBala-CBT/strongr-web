@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Carousel } from "react-responsive-carousel";
 import toast, { Toaster } from "react-hot-toast";
@@ -124,7 +124,7 @@ function ClubDetailScreen() {
     if (successclubReview) {
       toast.success(t("reviewSubmitted"));
     }
-  }, [successclubReview]);
+  }, [successclubReview, t]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -185,7 +185,7 @@ function ClubDetailScreen() {
       setLoader(false);
       setIsLogin(false);
     }
-  }, [isLogin, LoginError]);
+  }, [isLogin, LoginError, t]);
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
@@ -193,7 +193,7 @@ function ClubDetailScreen() {
       setOpenForm(false);
       setIsLogin(false);
     }
-  }, [isLogin, userLoginSuccess]);
+  }, [isLogin, t, userLoginSuccess]);
 
   useEffect(() => {
     fixImageUrls();
@@ -219,9 +219,9 @@ function ClubDetailScreen() {
               <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to="/clubs">
-                <a>{t("venueList")}</a>
-              </LinkContainer>
+              <Link to="/clubs">
+                {t("venueList")}
+              </Link>
             </li>
             <li>{t("venueDetails")}</li>
           </ul>
@@ -283,7 +283,7 @@ function ClubDetailScreen() {
                       <i className="fas fa-star filled"></i>
                     </div>
                     <p className="mb-0">
-                      <a href="javascript:;">
+                      <a>
                         {t("reviews", { count: clubLocation?.numRatings })}
                       </a>
                     </p>
@@ -304,34 +304,36 @@ function ClubDetailScreen() {
           <div className="row">
             <div className="col-12 col-sm-12 col-md-12 col-lg-8">
               <div className="accordion" id="accordionPanel">
-                <div className="accordion-item mb-4" id="overview">
-                  <h4 className="accordion-header" id="panelsStayOpen-overview">
-                    <button
-                      className="accordion-button"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#panelsStayOpen-collapseOne"
-                      aria-expanded="true"
-                      aria-controls="panelsStayOpen-collapseOne"
+              {clubLocation?.organization?.description && (
+                  <div className="accordion-item mb-4" id="overview">
+                    <h4 className="accordion-header" id="panelsStayOpen-overview">
+                      <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseOne"
+                        aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseOne"
+                      >
+                        {t("overview")}
+                      </button>
+                    </h4>
+                    <div
+                      id="panelsStayOpen-collapseOne"
+                      className="accordion-collapse collapse show"
+                      aria-labelledby="panelsStayOpen-overview"
                     >
-                      {t("overview")}
-                    </button>
-                  </h4>
-                  <div
-                    id="panelsStayOpen-collapseOne"
-                    className="accordion-collapse collapse show"
-                    aria-labelledby="panelsStayOpen-overview"
-                  >
-                    <div className="accordion-body">
-                      <div className="text show-more-height">
-                        <p>
-                          {clubLocation?.organization?.description}
-                        </p>
+                      <div className="accordion-body">
+                        <div className="text show-more-height">
+                          <p>
+                            {clubLocation?.organization?.description}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                {clubRules && clubRules.trim() && (
+                )}
+                {typeof clubRules === 'string' && clubRules.trim() && (
                   <div className="accordion-item mb-4" id="rules">
                     <h4 className="accordion-header" id="panelsStayOpen-rules">
                       <button
@@ -472,7 +474,7 @@ function ClubDetailScreen() {
                           // width={500}
                           showThumbs={false}
                         >
-                          {clubImage ? (
+                          {clubImage && clubImage.length > 0 ? (
                             clubImage?.map((image) => (
                               <div key={image.id}>
                                 <img
@@ -624,7 +626,7 @@ function ClubDetailScreen() {
                     </div>
                     <div className="club-timings">
                       <h4>
-                        <a onClick={handleOverlayClick}>{t("viewTimings")}</a>
+                        <Link onClick={handleOverlayClick}>{t("viewTimings")}</Link>
                       </h4>
                     </div>
                   </>
@@ -695,7 +697,7 @@ function ClubDetailScreen() {
                   </li>
                 </ul>
                 <div className="d-grid btn-block mt-3">
-                  <a
+                  <div
                     className="btn btn-secondary d-inline-flex justify-content-center align-items-center booknow-wrapper"
                     onClick={handleClick}
                   >
@@ -703,7 +705,7 @@ function ClubDetailScreen() {
                       <Calendar />
                     </i>
                     {t("book")}
-                  </a>
+                  </div>
                 </div>
               </div>
 

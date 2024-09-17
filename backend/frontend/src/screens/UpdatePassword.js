@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
 import { ArrowRightCircle, Eye, EyeOff } from "react-feather";
 import Header from "../components/Header";
-import Button from "../components/Button";
 import Footer from "../components/Footer";
 import "../css/updatepassword.css";
 import { resetUserPassword } from "../actions/actions";
@@ -42,7 +40,7 @@ function ResetPassword() {
         navigate(-1);
       }, 1000);
     }
-  }, [navigate, resetPsuccess]);
+  }, [navigate, resetPsuccess, t]);
 
   useEffect(() => {
     if (!userInfo) {
@@ -88,9 +86,9 @@ function ResetPassword() {
               <a href="/">{t("home")}</a>
             </li>
             <li className="breadcrumb-icons">
-              <LinkContainer to="/profile">
-                <a>{t("userProfile")}</a>
-              </LinkContainer>
+              <Link to="/profile">
+                {t("userProfile")}
+              </Link>
             </li>
             <li>{t("updatePassword")}</li>
           </ul>
@@ -101,12 +99,12 @@ function ResetPassword() {
           <div className="user-profile-list profile-profile-list">
             <ul className="nav">
               <li>
-                <LinkContainer to="/profile">
-                  <a>{t("profile")}</a>
-                </LinkContainer>
+                <Link to="/profile">
+                  {t("profile")}
+                </Link>
               </li>
               <li>
-                <a
+              <a
                   onClick={() => {
                     navigate(`/profile/${userInfo.id}`);
                   }}
@@ -115,7 +113,7 @@ function ResetPassword() {
                 </a>
               </li>
               <li>
-                <a className="active">{t("updatePassword")}</a>
+                <Link className="active">{t("updatePassword")}</Link>
               </li>
             </ul>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { User, Eye, EyeOff, ArrowRightCircle } from "react-feather";
 import { CircularProgress, TextField } from "@mui/material";
@@ -106,15 +106,13 @@ function LoginScreen() {
                   <div className="row no-margin vph-100 d-flex align-items-center justify-content-center login-right-banner">
                     <div className="col-sm-10 col-md-10 col-lg-10 mx-auto">
                       <header className="text-center">
-                        <LinkContainer to="/">
-                          <a href="#">
-                            <img
-                              src={logoImage}
-                              className="img-fluid"
-                              alt={t("logoAlt")}
-                            />
-                          </a>
-                        </LinkContainer>
+                        <Link to="/">
+                          <img
+                            src={logoImage}
+                            className="img-fluid"
+                            alt={t("logoAlt")}
+                          />
+                        </Link>
                       </header>
                       <div className="shadow-card">
                         <h2>{t("welcomeBack")}</h2>
