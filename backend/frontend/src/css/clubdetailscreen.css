@@ -574,7 +574,8 @@ ul {
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  margin-left: 10px;
+  justify-content:space-between;
 }
 .accordion-body .amenity{
   flex-wrap: wrap;

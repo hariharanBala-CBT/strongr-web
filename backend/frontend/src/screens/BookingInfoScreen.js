@@ -93,6 +93,7 @@ function BookingInfoScreen() {
   const [openForm, setOpenForm] = useState(false);
   const [loader, setLoader] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [nearestSlotLoading, setNearestSlotLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
 
   const { isHappyHours, price } = useSelector((state) => state.happyHours);
@@ -179,9 +180,8 @@ function BookingInfoScreen() {
     const month = dtToday.getMonth() + 1;
     const day = dtToday.getDate();
     const year = dtToday.getFullYear();
-    const minDate = `${year}-${month < 10 ? "0" + month : month}-${
-      day < 10 ? "0" + day : day
-    }`;
+    const minDate = `${year}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day
+      }`;
 
     const dtMax = new Date(
       dtToday.getFullYear(),
@@ -191,9 +191,8 @@ function BookingInfoScreen() {
     const maxYear = dtMax.getFullYear();
     const maxMonth = dtMax.getMonth() + 1;
     const maxDay = dtMax.getDate();
-    const maxDate = `${maxYear}-${maxMonth < 10 ? "0" + maxMonth : maxMonth}-${
-      maxDay < 10 ? "0" + maxDay : maxDay
-    }`;
+    const maxDate = `${maxYear}-${maxMonth < 10 ? "0" + maxMonth : maxMonth}-${maxDay < 10 ? "0" + maxDay : maxDay
+      }`;
 
     const dateInput = document.getElementById("date");
     if (dateInput) {
@@ -369,17 +368,17 @@ function BookingInfoScreen() {
 
   useEffect(() => {
     if (userLoginSuccess && isLogin) {
-        toast.success(t("message", { userName: userInfo.first_name }), { duration: 4000 });
-        setOpenForm(false);
-        setIsLogin(false);
+      toast.success(t("message", { userName: userInfo.first_name }), { duration: 4000 });
+      setOpenForm(false);
+      setIsLogin(false);
     }
-}, [isLogin, userLoginSuccess, userInfo, t]);
+  }, [isLogin, userLoginSuccess, userInfo, t]);
 
 
   useEffect(() => {
     const userName = localStorage.getItem("userName");
     if (userName) {
-      toast.success(t("message",{userName}), { duration: 4000 });
+      toast.success(t("message", { userName }), { duration: 4000 });
       localStorage.removeItem("userName");
     }
   }, [t]);
@@ -388,7 +387,8 @@ function BookingInfoScreen() {
     const theCourt = courts?.find((court) => court.name === courtName);
     const courtId = theCourt?.id;
     if (slots?.length !== 0 && additionalSlots?.length !== 0 && courtId) {
-      dispatch(getNearestSlot(courtId, date));
+      setNearestSlotLoading(true);
+      dispatch(getNearestSlot(courtId, date)).finally(() => setNearestSlotLoading(false));
     }
   }, [additionalSlots, courts, courtName, date, dispatch, slots]);
 
@@ -526,7 +526,7 @@ function BookingInfoScreen() {
                     {loading ? (
                       <div>{t("loadingSlots")}</div>
                     ) : (slots?.length !== 0 ||
-                        additionalSlots?.length !== 0) &&
+                      additionalSlots?.length !== 0) &&
                       courts?.length !== 0 ? (
                       <SelectInput
                         useRadioButtons
@@ -551,6 +551,8 @@ function BookingInfoScreen() {
                       <Alert severity="warning">
                         {t("noCourtsAvailable")}
                       </Alert>
+                    ) : nearestSlotLoading ? (
+                      <CircularProgress />
                     ) : nearestSlot ? (
                       <Alert severity="info">
                         {t("currentlyNoSlotsAvailable", {
