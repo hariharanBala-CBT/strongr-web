@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addHappyHourButton = document.getElementById('add-happy-hour');
     const happyHourTable = document.getElementById('happy-hour-table');
     const totalForms = document.getElementById('id_happyhourpricing_set-TOTAL_FORMS');
+    const validationWarningModal = new bootstrap.Modal(document.getElementById('validationWarningModal'));
     const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
     const alertPlaceholder = document.getElementById('alert-placeholder');
     let rowToDelete = null;
@@ -18,7 +19,25 @@ document.addEventListener('DOMContentLoaded', function() {
         addNewHappyHourRow();
     });
 
+    function hasEmptyRow() {
+        const rows = happyHourTable.querySelectorAll('tbody tr:not(.d-none)');
+        return Array.from(rows).some(row => {
+            const inputs = row.querySelectorAll('input:not([type="hidden"]), select');
+            return Array.from(inputs).some(input => !input.value.trim());
+        });
+    }
+
+    function showValidationModal(message) {
+        const validationMessage = document.getElementById('validationMessage');
+        validationMessage.textContent = message;
+        validationWarningModal.show();
+    }
+
     function addNewHappyHourRow() {
+        if (hasEmptyRow()) {
+            showValidationModal('Please fill all fields in the existing rows before adding a new one.');
+            return;
+        }
         const formIdx = parseInt(totalForms.value);
         const newRow = document.querySelector('.happy-hour-row').cloneNode(true);
 
