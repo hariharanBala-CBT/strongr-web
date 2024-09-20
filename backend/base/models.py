@@ -125,6 +125,7 @@ class OrganizationLocation(models.Model):
         max_digits=7, decimal_places=2, null=True, blank=True)
     numRatings = models.IntegerField(null=True, blank=True, default=0)
     join_date = models.DateField(null=True,blank=True)
+    location_description = models.TextField(default=None,blank=True,null=True)
     created_date_time = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 

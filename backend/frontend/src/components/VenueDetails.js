@@ -13,7 +13,7 @@ const formatDate = (date) => {
 };
 
 const VenueDetails = ({ club }) => {
-  const { address_line_1, organization, organization_images } = club;
+  const { address_line_1, location_description, organization, organization_images } = club;
   const navigate = useNavigate();
   const { t } = useTranslation("venuedetails");
 
@@ -59,7 +59,7 @@ const VenueDetails = ({ club }) => {
             </div>
           </h3>
           <div className="listing-details-group">
-            <p>{organization.description}</p>
+            <p>{location_description}</p>
             <ul>
               <li>
                 <span>

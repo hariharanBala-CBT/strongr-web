@@ -71,10 +71,11 @@ class OrganizationProfileForm(forms.ModelForm):
 class OrganizationLocationForm(ModelForm):
     class Meta:
         model = OrganizationLocation
-        fields = ['address_line_1', 'address_line_2', 'area', 'pincode', 'phone_number']
+        fields = ['address_line_1', 'address_line_2', 'area', 'pincode', 'phone_number', 'location_description']
         widgets = {
             'address_line_1': forms.Textarea(attrs={'rows': 2, 'cols': 20}),
-            'address_line_2': forms.Textarea(attrs={'rows': 2, 'cols': 20})
+            'address_line_2': forms.Textarea(attrs={'rows': 2, 'cols': 20}),
+            'location_description': forms.Textarea(attrs={'rows': 2, 'cols': 20})
         }
 
     def clean_pincode(self):

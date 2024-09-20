@@ -8,8 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
     const alertPlaceholder = document.getElementById('alert-placeholder');
     let rowToDelete = null;
-    let lastValidatedRow = null;
-
+    
     addHappyButton.addEventListener('click', function() {
         happyHourFormSection.classList.remove('d-none');
         addHappyButton.classList.add('d-none');
@@ -45,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
             input.value = '';
             input.name = input.name.replace(/-\d+-/, `-${formIdx}-`);
             input.id = input.id.replace(/-\d+-/, `-${formIdx}-`);
+            input.required = true; // Add required attribute to all inputs and selects
         });
 
         happyHourTable.querySelector('tbody').appendChild(newRow);
@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const dayOfWeek = row.querySelector('select[name$="-day_of_week"]').value;
             const startTime = row.querySelector('input[name$="-start_time"]').value;
             const endTime = row.querySelector('input[name$="-end_time"]').value;
-            const price = row.querySelector('input[name$="-price"]').value;
 
             row.classList.remove('table-danger');
 
@@ -129,31 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return isValid;
     }
 
-    function validateRequiredFields() {
-        let isValid = true;
-        const rows = happyHourTable.querySelectorAll('tbody tr:not(.d-none)');
-        let validationMessages = [];
-
-        rows.forEach((row, index) => {
-            const dayOfWeek = row.querySelector('select[name$="-day_of_week"]').value;
-            const startTime = row.querySelector('input[name$="-start_time"]').value;
-            const endTime = row.querySelector('input[name$="-end_time"]').value;
-            const price = row.querySelector('input[name$="-price"]').value;
-
-            if (!dayOfWeek || !startTime || !endTime || !price) {
-                isValid = false;
-                validationMessages.push(`Happy Hour ${index + 1}: All fields are required.`);
-                row.classList.add('table-danger');
-            }
-        });
-
-        if (!isValid) {
-            showAlert(validationMessages.join('<br>'));
-        }
-
-        return isValid;
-    }
-
     function updateFormIndexes() {
         const rows = happyHourTable.querySelectorAll('tbody tr:not(.d-none)');
         rows.forEach((row, index) => {
@@ -172,9 +146,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('add-game-form').addEventListener('submit', function(e) {
         updateFormIndexes();
         const isFormValid = validateForm();
-        const areFieldsValid = validateRequiredFields();
 
-        if (!isFormValid || !areFieldsValid) {
+        if (!isFormValid) {
             e.preventDefault();
         }
     });
@@ -185,5 +158,10 @@ document.addEventListener('DOMContentLoaded', function() {
             hideAlert();
             validateForm();
         }
+    });
+
+    // Add required attribute to existing fields
+    happyHourTable.querySelectorAll('input:not([type="hidden"]), select').forEach(input => {
+        input.required = true;
     });
 });

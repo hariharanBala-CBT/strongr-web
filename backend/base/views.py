@@ -451,6 +451,7 @@ def update_location(request, pk):
                 formatted_message = ERROR_MESSAGES.get('form_validation_failed_location', 'Form validation failed.').format(error_messages=error_messages)
                 messages.error(request, formatted_message)
             return render(request, 'main_template.html', {'form': form, 'locationpk': pk})
+            # return render(request, 'update_location.html', {'form': form, 'pk': form.instance.pk})
     else:
         form = OrganizationLocationForm(instance=location)
 
