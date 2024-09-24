@@ -340,6 +340,35 @@ function ClubDetailScreen() {
                     </div>
                   </div>
                 )}
+                {clubLocation?.location_description && (
+                  <div className="accordion-item mb-4" id="locationdesc">
+                    <h4 className="accordion-header" id="panelsStayOpen-locationdesc">
+                      <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseOne"
+                        aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseOne"
+                      >
+                        {t("locationDetails")}
+                      </button>
+                    </h4>
+                    <div
+                      id="panelsStayOpen-collapseOne"
+                      className="accordion-collapse collapse show"
+                      aria-labelledby="panelsStayOpen-locationdesc"
+                    >
+                      <div className="accordion-body">
+                        <div className="text show-more-height">
+                          <p>
+                            {clubLocation?.location_description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {typeof clubRules === 'string' && clubRules.trim() && (
                   <div className="accordion-item mb-4" id="rules">
                     <h4 className="accordion-header" id="panelsStayOpen-rules">

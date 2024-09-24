@@ -8,10 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
     const alertPlaceholder = document.getElementById('alert-placeholder');
     let rowToDelete = null;
+    let happyHourAdded = false;
     
     addHappyButton.addEventListener('click', function() {
         happyHourFormSection.classList.remove('d-none');
         addHappyButton.classList.add('d-none');
+        happyHourAdded = true;
     });
 
     addHappyHourButton.addEventListener('click', function() {
@@ -38,20 +40,42 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         const formIdx = parseInt(totalForms.value);
-        const newRow = document.querySelector('.happy-hour-row').cloneNode(true);
-
-        newRow.querySelectorAll('input, select').forEach(input => {
-            input.value = '';
-            input.name = input.name.replace(/-\d+-/, `-${formIdx}-`);
-            input.id = input.id.replace(/-\d+-/, `-${formIdx}-`);
-            input.required = true; // Add required attribute to all inputs and selects
-        });
+        const newRow = createHappyHourRow(formIdx);
 
         happyHourTable.querySelector('tbody').appendChild(newRow);
         totalForms.value = formIdx + 1;
 
         bindDeleteRowEvent(newRow.querySelector('.delete-row'));
     }
+
+    function createHappyHourRow(formIdx) {
+        const newRow = document.createElement('tr');
+        newRow.classList.add('happy-hour-row');
+        newRow.innerHTML = `
+            <td>${createSelect('day_of_week', formIdx)}</td>
+            <td><input type="time" name="happyhourpricing_set-${formIdx}-start_time" required></td>
+            <td><input type="time" name="happyhourpricing_set-${formIdx}-end_time" required></td>
+            <td><input type="number" step="0.01" name="happyhourpricing_set-${formIdx}-price" required></td>
+            <td class="align-middle"><button type="button" class="btn btn-danger delete-row"><i class="fa-solid fa-trash"></i></button></td>
+        `;
+        return newRow;
+    }
+
+    // Helper function to create the day of week select
+    function createSelect(name, formIdx) {
+        const select = document.createElement('select');
+        select.name = `happyhourpricing_set-${formIdx}-${name}`;
+        select.required = true;
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        days.forEach((day, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = day;
+            select.appendChild(option);
+        });
+        return select.outerHTML;
+    }
+
 
     function bindDeleteRowEvent(deleteButton) {
         deleteButton.addEventListener('click', function() {
@@ -144,11 +168,15 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.delete-row').forEach(bindDeleteRowEvent);
 
     document.getElementById('add-game-form').addEventListener('submit', function(e) {
-        updateFormIndexes();
-        const isFormValid = validateForm();
-
-        if (!isFormValid) {
-            e.preventDefault();
+        if (happyHourAdded) {
+            updateFormIndexes();
+            const isFormValid = validateForm();
+            if (!isFormValid) {
+                e.preventDefault(); // Prevent form submission if validation fails
+            }
+        } else {
+            // If happy hours weren't added, set TOTAL_FORMS to 0
+            totalForms.value = '0';
         }
     });
 

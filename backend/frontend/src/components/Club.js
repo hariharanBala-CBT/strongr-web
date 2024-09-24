@@ -82,7 +82,7 @@ function Club({ clubs }) {
                         </h3>
                         <div className="listing-details-group">
                           <p>
-                            {club.organization.description}
+                            {club?.location_description}
                           </p>
                           <ul className="listing-details-info">
                             <li>

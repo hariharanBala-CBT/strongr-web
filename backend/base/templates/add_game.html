@@ -64,9 +64,13 @@
           <h3 class="mt-5 mb-3">Happy Hour Pricing
             <button type="button" class="btn btn-success mt-3 align-self-end" id="add-happy-hour">Add New Happy Hour</button>
           </h3>
-  
+
           <div id="happy-hour-formset" class="profile-card">
-            {{ happyhour_formset.management_form }}
+            <input type="hidden" name="happyhourpricing_set-TOTAL_FORMS" value="0" id="id_happyhourpricing_set-TOTAL_FORMS">
+            <input type="hidden" name="happyhourpricing_set-INITIAL_FORMS" value="0" id="id_happyhourpricing_set-INITIAL_FORMS">
+            <input type="hidden" name="happyhourpricing_set-MIN_NUM_FORMS" value="0" id="id_happyhourpricing_set-MIN_NUM_FORMS">
+            <input type="hidden" name="happyhourpricing_set-MAX_NUM_FORMS" value="1000" id="id_happyhourpricing_set-MAX_NUM_FORMS">
+            <!-- {{ happyhour_formset.management_form }} -->
             <table id="happy-hour-table" class="table table-striped">
               <thead>
                 <tr>
@@ -78,15 +82,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for form in happyhour_formset %}
-                  <tr class="happy-hour-row">
-                    <td>{{ form.day_of_week }}</td>
-                    <td>{{ form.start_time }}</td>
-                    <td>{{ form.end_time }}</td>
-                    <td>{{ form.price }}</td>
-                    <td class="align-middle"><button type="button" class="btn btn btn-danger delete-row"><i class="fa-solid fa-trash"></i></button></td>
-                  </tr>
-                {% endfor %}
+                <!-- Happy hour rows will be added here dynamically -->
               </tbody>
             </table>
           </div>
