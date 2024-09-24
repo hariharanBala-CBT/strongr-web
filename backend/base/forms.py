@@ -142,17 +142,17 @@ class OrganizationLocationGameTypeCreateForm(ModelForm):
 class HappyHourPricingForm(ModelForm):
     class Meta:
         model = HappyHourPricing
-        fields = ['day_of_week', 'start_time', 'end_time', 'price']
+        fields = ['game_type','day_of_week', 'start_time', 'end_time', 'price']
         widgets = {
             'start_time': forms.TimeInput(attrs={'type': 'time'}),
             'end_time': forms.TimeInput(attrs={'type': 'time'}),
         }
 
 HappyHourPricingFormSet = inlineformset_factory(
-    OrganizationLocationGameType,  # Parent model
-    HappyHourPricing,  # Child model
+    OrganizationLocation,
+    HappyHourPricing,
     form=HappyHourPricingForm,
-    extra=1,  # Number of extra forms to display
+    extra=1,
     can_delete=True
 )
 
