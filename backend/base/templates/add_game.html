@@ -56,40 +56,8 @@
           </div>
         </div>
 
-        <div id="alert-placeholder"></div>
-
-        <button type="button" class="btn btn-success mt-3" id="add-happy">Add Happy Hour</button>
-
-        <div id="hhf" class="d-none">
-          <h3 class="mt-5 mb-3">Happy Hour Pricing
-            <button type="button" class="btn btn-success mt-3 align-self-end" id="add-happy-hour">Add New Happy Hour</button>
-          </h3>
-
-          <div id="happy-hour-formset" class="profile-card">
-            <input type="hidden" name="happyhourpricing_set-TOTAL_FORMS" value="0" id="id_happyhourpricing_set-TOTAL_FORMS">
-            <input type="hidden" name="happyhourpricing_set-INITIAL_FORMS" value="0" id="id_happyhourpricing_set-INITIAL_FORMS">
-            <input type="hidden" name="happyhourpricing_set-MIN_NUM_FORMS" value="0" id="id_happyhourpricing_set-MIN_NUM_FORMS">
-            <input type="hidden" name="happyhourpricing_set-MAX_NUM_FORMS" value="1000" id="id_happyhourpricing_set-MAX_NUM_FORMS">
-            <!-- {{ happyhour_formset.management_form }} -->
-            <table id="happy-hour-table" class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Day of the Week</th>
-                  <th>Start Time</th>
-                  <th>End Time</th>
-                  <th>Price</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Happy hour rows will be added here dynamically -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
         <div class="form-group row mt-4">
-          <div class="col-sm-12">
+          <div class="col-md-6 offset-md-4">
             <button type="button" class="btn btn-secondary" onclick="goBack()">
               <i class="fa-solid fa-arrow-left-long"></i> Back
             </button>
@@ -102,46 +70,5 @@
     </div>
   </div>
 </div>
-
-<!-- Bootstrap Modal for Delete Confirmation -->
-<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Deletion</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete this happy hour?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Warning Modal for Validation -->
-<div class="modal fade" id="validationWarningModal" tabindex="-1" aria-labelledby="validationWarningModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="validationWarningModalLabel">Validation Warning</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="validationMessage">
-        <!-- Dynamic validation message will be inserted here -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-<script src="{% static 'js/add-game.js' %}"></script>
 
 {% endblock %}

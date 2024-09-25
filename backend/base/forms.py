@@ -63,7 +63,7 @@ class OrganizationProfileForm(forms.ModelForm):
     organization_name = forms.CharField(max_length=50, disabled=True)
     class Meta:
         model = Organization
-        fields = ['organization_name', 'phone_number', 'alt_number', 'description']
+        fields = ['organization_name', 'phone_number', 'alt_number', 'description', 'is_gst_applicable', 'gst_percentage']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 2, 'cols': 25})
         }
@@ -142,17 +142,32 @@ class OrganizationLocationGameTypeCreateForm(ModelForm):
 class HappyHourPricingForm(ModelForm):
     class Meta:
         model = HappyHourPricing
-        fields = ['day_of_week', 'start_time', 'end_time', 'price']
+        fields = ['game_type','day_of_week', 'start_time', 'end_time', 'price']
         widgets = {
             'start_time': forms.TimeInput(attrs={'type': 'time'}),
             'end_time': forms.TimeInput(attrs={'type': 'time'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        pk = kwargs.pop('org_loc', None)
+        super().__init__(*args, **kwargs)
+        if pk:
+            self.fields['game_type'].queryset = OrganizationLocationGameType.objects.filter(organization_location=pk)
+            working_days = OrganizationLocationWorkingDays.objects.filter(
+                organization_location=pk, 
+                is_active=True
+            ).values_list('days', flat=True)
+            day_choices = [
+                (day[0], day[1]) for day in HappyHourPricing.day_of_week_choices 
+                if day[1] in working_days
+            ]
+            self.fields['day_of_week'].choices = day_choices
 
 HappyHourPricingFormSet = inlineformset_factory(
-    OrganizationLocationGameType,  # Parent model
-    HappyHourPricing,  # Child model
+    OrganizationLocation,
+    HappyHourPricing,
     form=HappyHourPricingForm,
-    extra=1,  # Number of extra forms to display
+    extra=1,
     can_delete=True
 )
 

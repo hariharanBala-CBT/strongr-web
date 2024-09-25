@@ -184,6 +184,20 @@
                                                                                     <li>Pricing: {{ game.pricing }}</li>
                                                                                     <li>Description: {% if game.description %}{{ game.description }}{% else %}None{% endif %}</li>
                                                                                 </ul>
+                                                                                {% if game.happyhourpricing_set.exists %}
+                                                                                <ul class="list-unstyled">
+                                                                                    <li><strong>Happy Hours Pricing:</strong></li>
+                                                                                    {% for happy_hour in game.happyhourpricing_set.all %}
+                                                                                        <li>
+                                                                                            Day: {{ happy_hour.get_day_of_week_display }}<br>
+                                                                                            Time: {{ happy_hour.start_time|time:"H:i" }} - {{ happy_hour.end_time|time:"H:i" }}<br>
+                                                                                            Price: {{ happy_hour.price }}
+                                                                                        </li>
+                                                                                    {% endfor %}
+                                                                                </ul>
+                                                                                {% else %}
+                                                                                    <p>No Happy Hours Pricing available for this game.</p>
+                                                                                {% endif %}
                                                                             </div>
                                                                         </div>
                                                                     </div>

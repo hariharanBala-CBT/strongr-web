@@ -77,11 +77,19 @@ class Organization(models.Model):
     PENDING = 2
     IN_PROGRESS = 3
     CANCELLED = 4
+    
     status_choices =(
      (APPROVED, 'Approved'),
      (PENDING, 'Pending'),
      (IN_PROGRESS, 'In Progress'),
      (CANCELLED, 'Cancelled'),
+    )
+    
+    GST_CHOICES = (
+        (5, '5% GST'),
+        (12, '12% GST'),
+        (18, '18% GST'),
+        (28, '28% GST'),
     )
 
     user = models.OneToOneField(User,on_delete=models.CASCADE)
@@ -93,6 +101,7 @@ class Organization(models.Model):
     status_description = models.TextField(default=None,blank=True,null=True)
     is_terms_and_conditions_agreed = models.BooleanField(default = False)
     is_gst_applicable  = models.BooleanField(default = False)
+    gst_percentage = models.IntegerField(choices=GST_CHOICES, blank=True, null=True)
     status = models.IntegerField(choices = status_choices, default = PENDING)
     is_active = models.BooleanField(default=True)
 

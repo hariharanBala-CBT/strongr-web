@@ -59,13 +59,13 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
-                            <a class="nav-link" href="{% url 'organization_profile' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
-                                Profile
-                            </a>
                             <a class="nav-link" href="{% url 'organization_locationlist'  %}"  style="color: white; background-color: rgb(68, 68, 68);">
                                 <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
                                 Locations
+                            </a>
+                            <a class="nav-link href="{% url 'happyhours_location'  %}">
+                                <div class="sb-nav-link-icon"><i class='far fa-grin'></i></div>
+                                Happy Hours
                             </a>
                             <a class="nav-link"  href="{% url 'organization_location_list' %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-gavel"></i></div>
@@ -86,10 +86,6 @@
                             <a class="nav-link" href="{% url 'preview' %}">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                                 Preview
-                            </a>
-                            <a class="nav-link" href="{% url 'status' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></i></div>
-                                Status
                             </a>
                             <div class="sb-sidenav-menu-heading">Manage</div>
                             <a class="nav-link" href="{% url 'organization-bookings' %}">

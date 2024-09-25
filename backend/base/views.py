@@ -516,7 +516,7 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
 
     def get_success_url(self):
         locationpk = self.request.session.get('location_pk')
-        return reverse('mainview', kwargs={'location_pk': locationpk})
+        return reverse('mainview' , kwargs={'location_pk': locationpk})
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -528,10 +528,6 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.POST:
-            context['happyhour_formset'] = HappyHourPricingFormSet(self.request.POST)
-        else:
-            context['happyhour_formset'] = HappyHourPricingFormSet()
         context['locationpk'] = self.kwargs.get('locationpk')
         return context
 
@@ -541,23 +537,12 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
             messages.error(self.request, 'No location found in session.')
             return redirect('organization_addlocation')
 
-        organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
-        form.instance.organization_location = organization_location
-        self.object = form.save()
+        form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
+        form.save()
 
-        happyhour_formset = HappyHourPricingFormSet(self.request.POST, instance=self.object)
-        if happyhour_formset.is_valid():
-            happyhour_instances = happyhour_formset.save(commit=False)
-            for happyhour in happyhour_instances:
-                happyhour.organization_location = organization_location
-                happyhour.save()
-            happyhour_formset.save_m2m()
-        else:
-            return self.form_invalid(form)
-
-        # Create courts logic
         number_of_courts = form.instance.number_of_courts
         game_type = form.instance
+
         for i in range(number_of_courts):
             Court.objects.create(
                 name=f"Court {i+1} of {game_type.game_type}",
@@ -569,11 +554,6 @@ class OrganizationLocationGameTypeView(GroupAccessMixin, CreateView):
 
         messages.success(self.request, SUCCESS_MESSAGES.get('create_game'))
         return redirect(self.get_success_url())
-
-    def form_invalid(self, form):
-        happyhour_formset = HappyHourPricingFormSet(self.request.POST)
-        return self.render_to_response(self.get_context_data(form=form, happyhour_formset=happyhour_formset))
-
 
 @method_decorator(login_required, name='dispatch')
 class OrganizationUpdateLocationGameTypeView(GroupAccessMixin, UpdateView):
@@ -588,67 +568,19 @@ class OrganizationUpdateLocationGameTypeView(GroupAccessMixin, UpdateView):
         return get_object_or_404(OrganizationLocationGameType, organization_location__pk=locationpk, pk=gamepk)
 
     def form_valid(self, form):
-        context = self.get_context_data()
-        location_pk = self.kwargs.get('locationpk')
-        happyhour_formset = context['happyhour_formset']
-
-        if form.is_valid() and happyhour_formset.is_valid():
-            self.object = form.save()
-            happyhour_instances = happyhour_formset.save(commit=False)
-            
-            for happyhour in happyhour_instances:
-                if not happyhour.pk:  # New instance
-                    happyhour.organization_location = get_object_or_404(OrganizationLocation, pk=location_pk)
-                happyhour.save()
-            
-            # Handle deletions
-            for happyhour in happyhour_formset.deleted_objects:
-                happyhour.delete()
-            
-            for form in happyhour_formset.forms:
-                if form.cleaned_data.get('DELETE') and form.instance.pk:
-                    form.instance.delete()
-
-            happyhour_formset.save_m2m()
-
-            messages.success(self.request, SUCCESS_MESSAGES.get('update_game'))
-            return redirect(reverse('mainview', kwargs={'location_pk': location_pk}))
-        else:
-            return self.form_invalid(form)
+        form.instance.organization_location = get_object_or_404(OrganizationLocation, pk=self.kwargs.get('locationpk'))
+        form.save()
+        messages.success(self.request, SUCCESS_MESSAGES.get('update_game'))
+        return redirect(reverse('mainview', kwargs={'location_pk': self.kwargs.get('locationpk')}))
 
     def form_invalid(self, form):
-        context = self.get_context_data()
-        happyhour_formset = context['happyhour_formset']
-
-        error_messages = []
-        if form.errors:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    error_messages.append(f"{form.fields[field].label}: {error}")
-        
-        if happyhour_formset.errors:
-            for form_idx, form_errors in enumerate(happyhour_formset.errors):
-                if not form_errors:
-                    continue
-                for field, errors in form_errors.items():
-                    for error in errors:
-                        error_messages.append(f"Happy Hour {form_idx + 1} - {field}: {error}")
-
-        if error_messages:
-            error_message = "Please correct the following errors:\n" + "\n".join(error_messages)
-            messages.error(self.request, error_message)
-        
-        return self.render_to_response(self.get_context_data(form=form, happyhour_formset=happyhour_formset))
+        error_messages = ''.join([f'{error}' for error in form.errors.values()])
+        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['locationpk'] = self.kwargs.get('locationpk')
-
-        if self.request.POST:
-            context['happyhour_formset'] = HappyHourPricingFormSet(self.request.POST, instance=self.object)
-        else:
-            context['happyhour_formset'] = HappyHourPricingFormSet(instance=self.object)
-
         return context
 
 
@@ -993,6 +925,7 @@ class PreviewView(GroupAccessMixin, FormView):
             context_item = {}
             context_item['location'] = location
             context_item['games'] = OrganizationLocationGameType.objects.filter(organization_location=location)
+            context_item['happy'] = HappyHourPricing.objects.filter(organization_location=location)
             context_item['amenities'] = OrganizationLocationAmenities.objects.filter(organization_location=location)
             workingtimes = OrganizationLocationWorkingDays.objects.filter(organization_location=location)
             context_item['workingtimes'] = workingtimes
@@ -1908,3 +1841,35 @@ class CouponListView(ListView):
 
     def get_queryset(self):
         return Coupon.objects.filter(organization=self.request.user.organization)
+
+@method_decorator(login_required, name='dispatch')
+class HappyhoursLocationListView(GroupAccessMixin, ListView):
+    model = OrganizationLocation
+    template_name = 'happyhours_location.html'
+    context_object_name = 'locations'
+    group_required = ['Organization']
+
+    def get_queryset(self):
+        organization = get_object_or_404(Organization, user=self.request.user)
+        return OrganizationLocation.objects.filter(organization=organization)
+
+
+class HappyHourPricingManageView(View):
+    template_name = 'happyhours_update.html'
+    
+    def get(self, request, pk):
+        org_loc = get_object_or_404(OrganizationLocation, pk=pk)
+        formset = HappyHourPricingFormSet(instance=org_loc, form_kwargs={'org_loc': org_loc})
+        return render(request, self.template_name, {'formset': formset})
+
+    def post(self, request, pk):
+        org_loc = get_object_or_404(OrganizationLocation, pk=pk)
+        formset = HappyHourPricingFormSet(request.POST, instance=org_loc, form_kwargs={'org_loc': org_loc})
+        
+        if formset.is_valid():
+            formset.save()
+            messages.success(self.request, SUCCESS_MESSAGES.get('update_happy'))
+            return redirect('happyhours_location')
+        else:
+            messages.error(request, ERROR_MESSAGES.get('happy_failure'))
+        return render(request, self.template_name, {'formset': formset, 'org_loc': org_loc})
