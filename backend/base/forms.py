@@ -147,6 +147,21 @@ class HappyHourPricingForm(ModelForm):
             'start_time': forms.TimeInput(attrs={'type': 'time'}),
             'end_time': forms.TimeInput(attrs={'type': 'time'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        pk = kwargs.pop('org_loc', None)
+        super().__init__(*args, **kwargs)
+        if pk:
+            self.fields['game_type'].queryset = OrganizationLocationGameType.objects.filter(organization_location=pk)
+            working_days = OrganizationLocationWorkingDays.objects.filter(
+                organization_location=pk, 
+                is_active=True
+            ).values_list('days', flat=True)
+            day_choices = [
+                (day[0], day[1]) for day in HappyHourPricing.day_of_week_choices 
+                if day[1] in working_days
+            ]
+            self.fields['day_of_week'].choices = day_choices
 
 HappyHourPricingFormSet = inlineformset_factory(
     OrganizationLocation,

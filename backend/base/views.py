@@ -1857,56 +1857,17 @@ class HappyHourPricingManageView(View):
     template_name = 'happyhours_update.html'
     
     def get(self, request, pk):
-        organization_location = get_object_or_404(OrganizationLocation, pk=pk)
-        formset = HappyHourPricingFormSet(instance=organization_location)
-        return render(request, self.template_name, {'formset': formset, 'organization_location': organization_location})
+        org_loc = get_object_or_404(OrganizationLocation, pk=pk)
+        formset = HappyHourPricingFormSet(instance=org_loc, form_kwargs={'org_loc': org_loc})
+        return render(request, self.template_name, {'formset': formset})
 
     def post(self, request, pk):
-        organization_location = get_object_or_404(OrganizationLocation, pk=pk)
-        formset = HappyHourPricingFormSet(request.POST, instance=organization_location)
+        org_loc = get_object_or_404(OrganizationLocation, pk=pk)
+        formset = HappyHourPricingFormSet(request.POST, instance=org_loc, form_kwargs={'org_loc': org_loc})
         
         if formset.is_valid():
             formset.save()
             return redirect('happyhours_location')
-        return render(request, self.template_name, {'formset': formset, 'organization_location': organization_location})
-
-
-class HappyHourPricingUpdateView(UpdateView):
-    model = OrganizationLocation
-    template_name = 'happyhours_update.html'
-    form_class = HappyHourPricingForm
-    context_object_name = 'location'
-
-    def get_object(self, queryset=None):
-        location_id = self.kwargs.get('pk')
-        return get_object_or_404(OrganizationLocation, pk=location_id)
-
-    def get_formset(self, *args, **kwargs):
-        HappyHourPricingFormSet = inlineformset_factory(
-            OrganizationLocation,  # Parent model
-            HappyHourPricing,  # Child model
-            form=HappyHourPricingForm,
-            extra=1,
-            can_delete=True
-        )
-        
-        if self.request.method == 'POST':
-            return HappyHourPricingFormSet(self.request.POST, instance=self.get_object())
         else:
-            return HappyHourPricingFormSet(instance=self.get_object())
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['happyhour_formset'] = self.get_formset()
-        return context
-
-    def form_valid(self, form):
-        formset = self.get_formset(self.request.POST)
-        if formset.is_valid():
-            formset.save()
-            return super().form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def get_success_url(self):
-        return reverse('happyhours_location')
+            print("Formset errors:", formset.errors)
+        return render(request, self.template_name, {'formset': formset, 'org_loc': org_loc})

@@ -21,11 +21,20 @@
                 </div>
             {% endif %}
 
+            {% if formset.errors %}
+                <div class="alert alert-danger alert-dismissible fade show">
+                    {% for error in formset.errors %}
+                        {{ error }}
+                    {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+
             <form id="upd-hh-form" method="post">
                 {% csrf_token %}
                 <div class="card">
                     <div id="happy-hour-formset">
-                      {{ happyhour_formset.management_form }}
+                      {{ formset.management_form }}
                       <table id="happy-hour-table" class="table table-bordered">
                         <thead class="bg-dark text-white">
                           <tr>
@@ -38,7 +47,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          {% for happy_hour_form in happyhour_formset %}
+                          {% for happy_hour_form in formset %}
                             <tr class="happy-hour-row {% if not happy_hour_form.instance.pk %}d-none{% endif %}">
                               <td>{{ happy_hour_form.game_type }}</td>
                               <td>{{ happy_hour_form.day_of_week }}</td>
@@ -59,7 +68,6 @@
                     </div>
                     <button type="button" class="btn btn-success mt-3" id="add-happy-hour">Add Happy Hour</button>
                 </div>
-
                 <div class="buttons px-4 py-4">
                     <button type="button" class="btn btn-secondary" onclick="goBack()">
                         <i class="fa-solid fa-arrow-left-long"></i> Back

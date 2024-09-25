@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalForms = document.getElementById('id_happyhourpricing_set-TOTAL_FORMS');
     let rowToDelete = null;
 
+    // Add loading spinner to submit button
+    const submitButton = document.querySelector('button[type="submit"]');
+    const loadingSpinner = document.createElement('span');
+    loadingSpinner.className = 'spinner-border spinner-border-sm ms-2 d-none';
+    submitButton.appendChild(loadingSpinner);
+
     function validateTimes() {
         let isValid = true;
         const rows = happyHourTable.querySelectorAll('tbody tr:not(.d-none)');
@@ -15,12 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const dayTimeRanges = {};
 
         rows.forEach((row, index) => {
+            const gameType = row.querySelector('select[name$="-game_type"]').value;
             const dayOfWeek = row.querySelector('select[name$="-day_of_week"]').value;
             const startTime = row.querySelector('input[name$="-start_time"]').value;
             const endTime = row.querySelector('input[name$="-end_time"]').value;
 
             // Reset row styling
             row.classList.remove('table-danger');
+            clearRowError(row);  // Custom function to clear row error
 
             if (startTime && endTime) {
                 const start = new Date('1970-01-01T' + startTime);
@@ -30,38 +38,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (end <= start) {
                     isValid = false;
                     row.classList.add('table-danger');
-                    const errorMessage = document.createElement('li');
-                    errorMessage.textContent = `Happy Hour ${index + 1}: End time must be after start time.`;
-                    errorList.appendChild(errorMessage);
+                    displayRowError(row, `End time must be after start time.`);  // Custom function to show row error
                 }
 
-                // Check for overlapping times on the same day
-                if (!dayTimeRanges[dayOfWeek]) {
-                    dayTimeRanges[dayOfWeek] = [];
+                // Check for overlapping times on the same day and game type
+                const key = `${gameType}-${dayOfWeek}`;
+                if (!dayTimeRanges[key]) {
+                    dayTimeRanges[key] = [];
                 }
-                dayTimeRanges[dayOfWeek].push({ start, end, row });
+                dayTimeRanges[key].push({ start, end, row });
             }
         });
 
-        // Check for overlapping time ranges within the same day
-        for (const day in dayTimeRanges) {
-            const ranges = dayTimeRanges[day];
+        // Check for overlapping time ranges within the same day and game type
+        for (const key in dayTimeRanges) {
+            const ranges = dayTimeRanges[key];
             ranges.sort((a, b) => a.start - b.start);
             for (let i = 1; i < ranges.length; i++) {
                 if (ranges[i].start < ranges[i - 1].end) {
                     isValid = false;
-                    ranges[i].row.classList.add('table-danger');
-                    ranges[i - 1].row.classList.add('table-danger');
-
-                    const errorMessage = document.createElement('li');
-                    errorMessage.textContent = `Overlapping times found on ${day} between row ${ranges[i - 1].row.rowIndex} and ${ranges[i].row.rowIndex}.`;
-                    errorList.appendChild(errorMessage);
+                    displayRowError(ranges[i].row, `Overlapping with row ${ranges[i - 1].row.rowIndex}.`);
+                    displayRowError(ranges[i - 1].row, `Overlapping with row ${ranges[i].row.rowIndex}.`);
                 }
             }
         }
 
         errorList.closest('.alert').classList.toggle('d-none', isValid);
         return isValid;
+    }
+
+    function clearRowError(row) {
+        const errorMessage = row.querySelector('.row-error');
+        if (errorMessage) {
+            errorMessage.remove();
+        }
+    }
+
+    function displayRowError(row, message) {
+        const errorSpan = document.createElement('span');
+        errorSpan.className = 'text-danger row-error';
+        errorSpan.textContent = message;
+        row.querySelector('td:last-child').appendChild(errorSpan);
     }
 
     function createErrorList() {
@@ -73,27 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
         alertDiv.appendChild(errorList);
         happyHourTable.parentNode.insertBefore(alertDiv, happyHourTable);
         return errorList;
-    }
-
-    function hasEmptyRow() {
-        const rows = happyHourTable.querySelectorAll('tbody tr:not(.d-none)');
-        return Array.from(rows).some(row => {
-            const inputs = row.querySelectorAll('input:not([type="hidden"]), select');
-            return Array.from(inputs).some(input => !input.value.trim());
-        });
-    }
-
-    function updateFormIndexes() {
-        const rows = happyHourTable.querySelectorAll('tbody tr:not(.d-none)');
-        rows.forEach((row, index) => {
-            row.querySelectorAll('input, select').forEach(input => {
-                const oldName = input.name;
-                const newName = oldName.replace(/-\d+-/, `-${index}-`);
-                input.name = newName;
-                input.id = input.id.replace(/-\d+-/, `-${index}-`);
-            });
-        });
-        totalForms.value = rows.length;
     }
 
     function addNewRow() {
@@ -131,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 rowToDelete.style.display = 'none';
                 rowToDelete.classList.add('to-be-deleted');
             } else {
-                // If it's a new row that hasn't been saved yet, just remove it
                 rowToDelete.remove();
             }
             updateFormIndexes();
@@ -146,21 +141,64 @@ document.addEventListener('DOMContentLoaded', function() {
         validationWarningModal.show();
     }
 
+    function updateFormIndexes() {
+        const rows = happyHourTable.querySelectorAll('tbody tr:not(.d-none)');
+        rows.forEach((row, index) => {
+            row.querySelectorAll('input, select').forEach(input => {
+                const oldName = input.name;
+                const newName = oldName.replace(/-\d+-/, `-${index}-`);
+                input.name = newName;
+                input.id = input.id.replace(/-\d+-/, `-${index}-`);
+            });
+        });
+        totalForms.value = rows.length;
+    }
+
+    function hasEmptyRow() {
+        const rows = happyHourTable.querySelectorAll('tbody tr:not(.d-none)');
+        return Array.from(rows).some(row => {
+            const inputs = row.querySelectorAll('input:not([type="hidden"]), select');
+            return Array.from(inputs).some(input => !input.value.trim());
+        });
+    }
+
     addHappyHourButton.addEventListener('click', addNewRow);
 
     document.querySelectorAll('.delete-row').forEach(bindDeleteRowEvent);
 
+    document.querySelector('form').addEventListener('submit', function (e) {
+        let invalidElements = document.querySelectorAll('input:invalid');
+        invalidElements.forEach(function (element) {
+            element.scrollIntoView(); // Scroll to invalid element if needed
+            element.focus();
+        });
+    });
+    
+
     document.getElementById('upd-hh-form').addEventListener('submit', function(e) {
+        e.preventDefault();  // Prevent default form submission
+
         updateFormIndexes();
-        if (!validateTimes()) {
-            e.preventDefault();
+
+        const hiddenRows = happyHourTable.querySelectorAll('tbody tr.d-none');
+        hiddenRows.forEach(row => {
+            row.querySelectorAll('input, select').forEach(input => {
+                input.disabled = true;  // Disable hidden inputs so they are excluded from validation
+            });
+        });
+
+        if (validateTimes()) {
+            loadingSpinner.classList.remove('d-none');  // Show loading spinner
+            submitButton.disabled = true;  // Disable button to prevent multiple clicks
+            this.submit();  // Submit form after validation
         }
     });
 
     happyHourTable.addEventListener('input', function(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
             e.target.closest('tr').classList.remove('table-danger');
-            validateTimes();
+            clearRowError(e.target.closest('tr'));  // Clear the error for the specific row
+            validateTimes();  // Revalidate the form on every input change
         }
     });
 });
