@@ -66,6 +66,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const select = document.createElement('select');
         select.name = `happyhourpricing_set-${formIdx}-${name}`;
         select.required = true;
+
+        // Add the null or default option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "----";  // Display this as the default
+        select.appendChild(defaultOption);
+
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         days.forEach((day, index) => {
             const option = document.createElement('option');
@@ -73,8 +80,10 @@ document.addEventListener('DOMContentLoaded', function() {
             option.textContent = day;
             select.appendChild(option);
         });
+
         return select.outerHTML;
     }
+
 
 
     function bindDeleteRowEvent(deleteButton) {

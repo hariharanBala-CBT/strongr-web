@@ -7,6 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalForms = document.getElementById('id_happyhourpricing_set-TOTAL_FORMS');
     let rowToDelete = null;
 
+    const submitButton = document.querySelector('button[type="submit"]');
+    const loadingSpinner = document.createElement('span');
+    loadingSpinner.className = 'spinner-border spinner-border-sm ms-2 d-none';
+    submitButton.appendChild(loadingSpinner);
+
     function validateTimes() {
         let isValid = true;
         const rows = happyHourTable.querySelectorAll('tbody tr:not(.d-none)');
@@ -107,10 +112,12 @@ document.addEventListener('DOMContentLoaded', function() {
             input.value = '';
             if (input.type !== 'hidden') {
                 input.required = true;
+                input.disabled = false;
             }
         });
         newRow.querySelector('input[name$="-DELETE"]').value = '';
         newRow.classList.remove('d-none');
+        newRow.style.display = '';
         happyHourTable.querySelector('tbody').appendChild(newRow);
         updateFormIndexes();
         bindDeleteRowEvent(newRow.querySelector('.delete-row'));
@@ -125,16 +132,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     confirmDeleteButton.addEventListener('click', function() {
         if (rowToDelete) {
-            const deleteInput = rowToDelete.querySelector('input[name$="-DELETE"]');
-            if (deleteInput) {
-                deleteInput.value = 'on';
-                rowToDelete.style.display = 'none';
-                rowToDelete.classList.add('to-be-deleted');
-            } else {
-                // If it's a new row that hasn't been saved yet, just remove it
-                rowToDelete.remove();
-            }
+            rowToDelete.remove();
             updateFormIndexes();
+            validateTimes();
             deleteConfirmModal.hide();
             rowToDelete = null;
         }
@@ -150,10 +150,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelectorAll('.delete-row').forEach(bindDeleteRowEvent);
 
-    document.getElementById('upd-game-form').addEventListener('submit', function(e) {
-        updateFormIndexes();
-        if (!validateTimes()) {
+    document.querySelector('form').addEventListener('submit', function (e) {
+        let invalidElements = document.querySelectorAll('input:invalid, select:invalid');
+        if (invalidElements.length > 0) {
             e.preventDefault();
+            invalidElements[0].scrollIntoView();
+            invalidElements[0].focus();
+        }
+    });
+
+    document.getElementById('upd-game-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        updateFormIndexes();
+        const allRows = happyHourTable.querySelectorAll('tbody tr');
+        allRows.forEach(row => {
+            const inputs = row.querySelectorAll('input, select');
+            const isHidden = row.classList.contains('d-none') || row.classList.contains('to-be-deleted');
+            inputs.forEach(input => {
+                if (isHidden) {
+                    input.disabled = true;
+                } else {
+                    input.disabled = false;
+                }
+            });
+        });
+
+        if (validateTimes()) {
+            loadingSpinner.classList.remove('d-none');
+            submitButton.disabled = true;
+            this.submit();
         }
     });
 
