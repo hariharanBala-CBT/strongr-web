@@ -1867,7 +1867,8 @@ class HappyHourPricingManageView(View):
         
         if formset.is_valid():
             formset.save()
+            messages.success(self.request, SUCCESS_MESSAGES.get('update_happy'))
             return redirect('happyhours_location')
         else:
-            print("Formset errors:", formset.errors)
+            messages.error(request, ERROR_MESSAGES.get('happy_failure'))
         return render(request, self.template_name, {'formset': formset, 'org_loc': org_loc})

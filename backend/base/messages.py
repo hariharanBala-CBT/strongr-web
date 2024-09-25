@@ -23,6 +23,7 @@ SUCCESS_MESSAGES = {
     'update_workingdays': 'Working days updated successfully',
     'update_amenities': 'Amenities updated successfully',
     'update_rules': 'Rules updated successfully',
+    'update_happy': 'Happy hours updated successfully',
 
     #delete
     'delete_image': 'Image deleted successfully',
@@ -64,5 +65,6 @@ ERROR_MESSAGES = {
     'working_days_time_failure': 'Active days must have both start and end times.',
     'working_days_start_time_failure': 'Opening time and closing time cannot be same',
     'working_days_failure': 'Closing time cannot be before opening time',
+    'happy_failure': 'Happy hours update failed !!!',
     'default_slot_failure':'Without opening/closing time slots can not be created'
 }
