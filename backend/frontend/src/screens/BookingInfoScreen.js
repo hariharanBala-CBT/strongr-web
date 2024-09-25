@@ -97,6 +97,8 @@ function BookingInfoScreen() {
   const [isLogin, setIsLogin] = useState(false);
 
   const { isHappyHours, price } = useSelector((state) => state.happyHours);
+  const isGstApplicable = clubLocation?.organization?.is_gst_applicable;
+  const gstPercentage = clubLocation?.organization?.gst_percentage || 0;
 
   const handleSlotChange = (value) => {
 
@@ -135,7 +137,7 @@ function BookingInfoScreen() {
   };
 
   const clubPrice = Number(getSelectedGamePricing()).toFixed(0);
-  const taxPrice = (Number(clubPrice) * 0.05).toFixed(0);
+  const taxPrice = isGstApplicable ? (Number(clubPrice) * (gstPercentage / 100)).toFixed(0) : 0;
   const bookingFee = 10;
   const totalPrice = (
     Number(clubPrice) +
@@ -591,13 +593,17 @@ function BookingInfoScreen() {
                       </p>
                     </div>
                     <div className="orderset2">
-                      <li>
-                        <h3>{t("gst")}</h3>
-                        <h6>
-                          {"\u20B9"} {taxPrice}
-                        </h6>
-                      </li>
-                      <p>{t("stateAndCentralTax")}</p>
+                    {isGstApplicable && (
+                      <>
+                        <li>
+                          <h3>{t("gst")}</h3>
+                          <h6>
+                            {"\u20B9"} {taxPrice}
+                          </h6>
+                        </li>
+                        <p>{t("stateAndCentralTax")}</p>
+                      </>
+                    )}
                     </div>
                     {/* <div className="orderset3">
                       <li>
