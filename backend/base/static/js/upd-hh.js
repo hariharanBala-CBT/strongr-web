@@ -30,9 +30,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const dayOfWeek = row.querySelector('select[name$="-day_of_week"]').value;
             const startTime = row.querySelector('input[name$="-start_time"]').value;
             const endTime = row.querySelector('input[name$="-end_time"]').value;
+            const priceInput = row.querySelector('input[name$="-price"]');
 
             // Reset row styling
             row.classList.remove('table-danger');
+
+            if (priceInput && parseFloat(priceInput.value) < 0) {
+                isValid = false;
+                row.classList.add('table-danger');
+                addError(`Row ${row.rowIndex}: Price cannot be negative.`);
+            }
 
             if (startTime && endTime) {
                 const start = new Date('1970-01-01T' + startTime);
