@@ -291,15 +291,17 @@ function CheckoutScreen() {
                         )} ({formatDate(bookingData.date)}) {isHappyHours && <span className="happy-hours-tag">{t("happyHours")}</span>}
                       </p>
                     </div>
-                    <div className="orderset2">
-                      <li>
-                        <h3>{t("gst")}</h3>
-                        <h6>
-                          {"\u20B9"} {bookingData.taxPrice}
-                        </h6>
-                      </li>
-                      <p>{t("stateAndCentralTax")}</p>
-                    </div>
+                    {bookingData.taxPrice > 0 && (
+                      <div className="orderset2">
+                        <li>
+                          <h3>{t("gst")}</h3>
+                          <h6>
+                            {"\u20B9"} {bookingData.taxPrice}
+                          </h6>
+                        </li>
+                        <p>{t("stateAndCentralTax")}</p>
+                      </div>
+                    )}
                     {/* <div className="orderset3">
                       <li>
                         <h3>{t("convenienceFee")}</h3>
