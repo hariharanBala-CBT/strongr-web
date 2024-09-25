@@ -925,6 +925,7 @@ class PreviewView(GroupAccessMixin, FormView):
             context_item = {}
             context_item['location'] = location
             context_item['games'] = OrganizationLocationGameType.objects.filter(organization_location=location)
+            context_item['happy'] = HappyHourPricing.objects.filter(organization_location=location)
             context_item['amenities'] = OrganizationLocationAmenities.objects.filter(organization_location=location)
             workingtimes = OrganizationLocationWorkingDays.objects.filter(organization_location=location)
             context_item['workingtimes'] = workingtimes
