@@ -139,10 +139,12 @@ class OrganizationLocationGameTypeCreateForm(ModelForm):
             self.fields['game_type'].queryset = GameType.objects.exclude(pk__in=existing_game_types)
 
 
-class HappyHourPricingForm(ModelForm):
+class HappyHourPricingForm(forms.ModelForm):
+    DELETE = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput())
+
     class Meta:
         model = HappyHourPricing
-        fields = ['game_type','day_of_week', 'start_time', 'end_time', 'price']
+        fields = ['game_type', 'day_of_week', 'start_time', 'end_time', 'price']
         widgets = {
             'start_time': forms.TimeInput(attrs={'type': 'time'}),
             'end_time': forms.TimeInput(attrs={'type': 'time'}),

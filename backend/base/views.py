@@ -27,6 +27,7 @@ from django.urls import reverse
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from base.forms import *
+from django.forms import formset_factory
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
@@ -1860,16 +1861,34 @@ class HappyHourPricingManageView(View):
     def get(self, request, pk):
         org_loc = get_object_or_404(OrganizationLocation, pk=pk)
         formset = HappyHourPricingFormSet(instance=org_loc, form_kwargs={'org_loc': org_loc})
-        return render(request, self.template_name, {'formset': formset})
+        return render(request, self.template_name, {'formset': formset, 'org_loc': org_loc})
 
     def post(self, request, pk):
         org_loc = get_object_or_404(OrganizationLocation, pk=pk)
         formset = HappyHourPricingFormSet(request.POST, instance=org_loc, form_kwargs={'org_loc': org_loc})
         
         if formset.is_valid():
-            formset.save()
-            messages.success(self.request, SUCCESS_MESSAGES.get('update_happy'))
+            instances = formset.save(commit=False)
+            instances_to_keep = set()
+
+            for instance in instances:
+                if not instance.pk:
+                    instance.save()
+                    instances_to_keep.add(instance.pk)
+            
+            # Delete instances that were marked for deletion
+            for form in formset.forms:
+                if form.cleaned_data.get('DELETE') and form.instance.pk:
+                    form.instance.delete()
+                elif form.instance.pk:
+                    instances_to_keep.add(form.instance.pk)
+            
+            # Delete any instances that are not in instances_to_keep
+            HappyHourPricing.objects.filter(organization_location=org_loc).exclude(pk__in=instances_to_keep).delete()
+
+            formset.save_m2m()
+            messages.success(request, "Happy Hour Pricing updated successfully.")
             return redirect('happyhours_location')
         else:
-            messages.error(request, ERROR_MESSAGES.get('happy_failure'))
+            messages.error(request, "There was an error updating the Happy Hour Pricing. Please check the form and try again.")
         return render(request, self.template_name, {'formset': formset, 'org_loc': org_loc})

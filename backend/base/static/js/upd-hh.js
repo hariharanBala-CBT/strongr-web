@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     confirmDeleteButton.addEventListener('click', function() {
         if (rowToDelete) {
-            rowToDelete.remove();  // Completely remove the row from the DOM
+            rowToDelete.remove();
             updateFormIndexes();
             validateTimes();
             deleteConfirmModal.hide();
@@ -170,14 +170,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('form').addEventListener('submit', function (e) {
         let invalidElements = document.querySelectorAll('input:invalid, select:invalid');
         if (invalidElements.length > 0) {
-            e.preventDefault();  // Prevent form submission if there are invalid elements
-            invalidElements[0].scrollIntoView(); // Scroll to first invalid element
+            e.preventDefault();
+            invalidElements[0].scrollIntoView();
             invalidElements[0].focus();
         }
     });
 
     document.getElementById('upd-hh-form').addEventListener('submit', function(e) {
-        e.preventDefault();  // Prevent default form submission
+        e.preventDefault();
 
         updateFormIndexes();
 
@@ -187,23 +187,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const isHidden = row.classList.contains('d-none') || row.classList.contains('to-be-deleted');
             inputs.forEach(input => {
                 if (isHidden) {
-                    input.disabled = true;  // Disable hidden inputs
+                    input.disabled = true;
                 } else {
-                    input.disabled = false;  // Enable visible inputs
+                    input.disabled = false;
                 }
             });
         });
 
         if (validateTimes()) {
-            loadingSpinner.classList.remove('d-none');  // Show loading spinner
-            submitButton.disabled = true;  // Disable button to prevent multiple clicks
-            this.submit();  // Submit form after validation
+            loadingSpinner.classList.remove('d-none');
+            submitButton.disabled = true;
+            this.submit();
         }
     });
 
     happyHourTable.addEventListener('input', function(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
-            validateTimes();  // Revalidate the form on every input change
+            validateTimes();
         }
     });
 });
