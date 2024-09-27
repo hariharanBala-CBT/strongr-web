@@ -1,4 +1,4 @@
-# constant toast messages for success and error.
+from .constants import *
 
 SUCCESS_MESSAGES = {
     #create
@@ -47,7 +47,9 @@ SUCCESS_MESSAGES = {
 }
 
 ERROR_MESSAGES = {
-    'form_validation_failed_profile': 'Profile update failed',
+    'alt_number_invalid': 'Alternate number must be exactly 10 digits',
+    'default_slot_failure':'Without opening/closing time slots can not be created',
+    'form_validation_failed_profile' : 'Profile update failed',
     'form_validation_failed_location': 'Location update failed ',
     'form_validation_failed_game': 'Game update failed ',
     'form_validation_failed_image': 'Image update failed ',
@@ -59,12 +61,27 @@ ERROR_MESSAGES = {
     'form_validation_failed_amenities': 'Amenities update failed ',
     'form_validation_failed_generic': 'Please correct the error below ',
     'form_validation_failed_user_exist_without_group': 'User exist without group ',
-    'phone_number_invalid': 'Phone number must be exactly 10 digits.',
-    'alt_number_invalid': 'Alternate number must be exactly 10 digits.',
-    'working_days_is_active_failure': 'At least one day must be active.',
-    'working_days_time_failure': 'Active days must have both start and end times.',
+    'happy_failure': 'Happy hours update failed !!!',
+    'location_duplicate' : 'Location update failed, This Pincode,Phone Number and Area combination already exists',
+    'no_organization' : 'Organization not found',
+    'no_organization_location' : 'Organization Location not found',
+    'no_pk' : 'PK not found in session',
+    'no_games' : 'No games found for this location',
+    'no_courts' : 'No courts found for this location',
+    'no_images' : 'No images found for this location',
+    'no_working_days' : 'No working days found for this location',
+    'no_amenities' : 'No amenities found for this location',
+    'no_slots' : 'No slots found for this location',
+    'no_slot_id' : 'No slot id found',
+    'past_date' : 'Date can not be in the past',
+    'phone_number_invalid': 'Phone number must be exactly 10 digits',
+    'working_days_is_active_failure': 'At least one day must be active',
+    'working_days_time_failure': 'Active days must have both start and end times',
     'working_days_start_time_failure': 'Opening time and closing time cannot be same',
     'working_days_failure': 'Closing time cannot be before opening time',
-    'happy_failure': 'Happy hours update failed !!!',
-    'default_slot_failure':'Without opening/closing time slots can not be created'
 }
+
+MAIL_MESSAGES = {
+    'welcome': f'Welcome to {brand}'
+}
+
