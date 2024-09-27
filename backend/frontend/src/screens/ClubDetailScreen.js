@@ -716,7 +716,7 @@ function ClubDetailScreen() {
 
                             {happyHoursForGame.length > 0 && (
                               <div>
-                                <p>Happy Pricing:
+                                <p>Happy Hours Pricing:
                                   {happyHoursForGame.map((happyHour, index) => (
                                     <p key={index}>
                                       ₹{happyHour.price}/hr on {daysOfWeek[happyHour.day_of_week]}
