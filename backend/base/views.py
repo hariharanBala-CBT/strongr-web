@@ -1872,9 +1872,8 @@ class HappyHourPricingManageView(View):
             instances_to_keep = set()
 
             for instance in instances:
-                if not instance.pk:
-                    instance.save()
-                    instances_to_keep.add(instance.pk)
+                instance.save()
+                instances_to_keep.add(instance.pk)
             
             # Delete instances that were marked for deletion
             for form in formset.forms:
