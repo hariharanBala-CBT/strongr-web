@@ -1886,8 +1886,8 @@ class HappyHourPricingManageView(View):
             HappyHourPricing.objects.filter(organization_location=org_loc).exclude(pk__in=instances_to_keep).delete()
 
             formset.save_m2m()
-            messages.success(request, "Happy Hour Pricing updated successfully.")
+            messages.success(request, "Happy Hours Pricing updated successfully.")
             return HttpResponseRedirect(reverse('manage_happyhours', kwargs={'pk': pk}))
         else:
-            messages.error(request, "There was an error updating the Happy Hour Pricing. Please check the form and try again.")
+            messages.error(request, "There was an error updating the Happy Hours Pricing. Please check the form and try again.")
         return render(request, self.template_name, {'formset': formset, 'org_loc': org_loc})
