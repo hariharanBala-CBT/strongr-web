@@ -1864,8 +1864,10 @@ class HappyHourPricingManageView(View):
             HappyHourPricing.objects.filter(organization_location=org_loc).exclude(pk__in=instances_to_keep).delete()
 
             formset.save_m2m()
+            
             messages.success(request, SUCCESS_MESSAGES.get('update_happy'))
-            return redirect('happyhours_location')
+            return HttpResponseRedirect(reverse('manage_happyhours', kwargs={'pk': pk}))
+          
         else:
             messages.error(request, ERROR_MESSAGES.get('happy_failure'))
         return render(request, self.template_name, {'formset': formset, 'org_loc': org_loc})
