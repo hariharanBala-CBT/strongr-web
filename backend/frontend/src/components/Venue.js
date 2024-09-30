@@ -9,14 +9,12 @@ import { useTranslation } from "react-i18next";
 
 const Venue = () => {
   const { t } = useTranslation("venue");
-  const { topRatedClubs } = useSelector(
-    (state) => state.topRatedClubs
-  );
+  const { topRatedClubs } = useSelector((state) => state.topRatedClubs);
 
-  //Owl Carousel Settings
+  // Owl Carousel Settings
   const options = {
     loop: true,
-    center: true,
+    center: false,
     items: 3,
     margin: 0,
     autoplay: true,
@@ -44,9 +42,7 @@ const Venue = () => {
           <h2>
             {t("heading")} <span>{t("sub")}</span>
           </h2>
-          <p className="sub-title">
-            {t("subTitle")}
-          </p>
+          <p className="sub-title">{t("subTitle")}</p>
         </div>
         <div className="row">
           <div className="featured-slider-group">
