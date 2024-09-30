@@ -20,6 +20,13 @@ const VenueDetails = ({ club }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  // Close modal when clicking outside of modal content
+  const handleClickOutside = (e) => {
+    if (e.target.classList.contains("modal-overlay")) {
+      closeModal();
+    }
+  };
+
   return (
     <div className="venue-wrapper">
       <div className="listing-item mb-0">
@@ -90,7 +97,7 @@ const VenueDetails = ({ club }) => {
       </div>
 
       {isModalOpen && (
-        <div className="modal-overlay">
+        <div className="modal-overlay" onClick={handleClickOutside}>
           <div className="modal-container">
             <div className="modal-header">
               <h2 className="modal-title">Availability Details</h2>
@@ -99,28 +106,34 @@ const VenueDetails = ({ club }) => {
               </button>
             </div>
             <div className="modal-content">
-              {club.next_availabilty && club.next_availabilty.map((availability, index) => (
-                <div key={index} className="availability-card">
-                  <div className="availability-header">
-                    <GameIcon game={availability.game} />
-                    <span className="availability-game">{availability.game}</span>
+              {club.next_availabilty &&
+                club.next_availabilty.map((availability, index) => (
+                  <div key={index} className="availability-card">
+                    <div className="availability-header">
+                      <GameIcon game={availability.game} />
+                      <span className="availability-game">{availability.game}</span>
+                    </div>
+                    <div className="availability-details">
+                      <p className="availability-info">
+                        <span className="availability-label">Court:</span>
+                        {availability.court}
+                      </p>
+                      <p className="availability-info">
+                        <span className="availability-label">Date:</span>
+                        {formatDate(availability.next_availability.date)}
+                      </p>
+                      <p className="availability-info">
+                        <span className="availability-label">Time:</span>
+                        {availability.next_availability.start_time.slice(0, 5)} - {availability.next_availability.end_time.slice(0, 5)}
+                      </p>
+                    </div>
                   </div>
-                  <div className="availability-details">
-                    <p className="availability-info">
-                      <span className="availability-label">Court:</span>
-                      {availability.court}
-                    </p>
-                    <p className="availability-info">
-                      <span className="availability-label">Date:</span>
-                      {formatDate(availability.next_availability.date)}
-                    </p>
-                    <p className="availability-info">
-                      <span className="availability-label">Time:</span>
-                      {availability.next_availability.start_time.slice(0, 5)} - {availability.next_availability.end_time.slice(0, 5)}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              <div className="modal-footer">
+                <button onClick={closeModal} className="modal-close-btn">
+                  {t("close")}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -130,4 +143,3 @@ const VenueDetails = ({ club }) => {
 };
 
 export default VenueDetails;
-
