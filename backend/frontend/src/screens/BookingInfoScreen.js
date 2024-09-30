@@ -32,6 +32,7 @@ import dayjs from "dayjs";
 import {
   BOOKING_CREATE_RESET,
   BOOKING_DETAILS_RESET,
+  platform_fee,
 } from "../constants/constants";
 
 import "../css/bookinginfoscreen.css";
@@ -138,11 +139,11 @@ function BookingInfoScreen() {
 
   const clubPrice = Number(getSelectedGamePricing()).toFixed(0);
   const taxPrice = isGstApplicable ? (Number(clubPrice) * (gstPercentage / 100)).toFixed(0) : 0;
-  const bookingFee = 10;
+  const bookingFee = platform_fee;
   const totalPrice = (
     Number(clubPrice) +
-    Number(taxPrice)
-    // Number(bookingFee)
+    Number(taxPrice) +
+    Number(bookingFee)
   ).toFixed(0);
 
   const handleAreaChange = (value) => {
@@ -152,11 +153,6 @@ function BookingInfoScreen() {
   const handleGameChange = (value) => {
     setGameName(value);
   };
-
-  // const handleSlotChange = (value) => {
-  //   setSlot(value);
-  // };
-
 
   const handleCourtChange = (value) => {
     setCourtName(value);

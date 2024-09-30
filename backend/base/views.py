@@ -3,7 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.utils.html import format_html
 from .utils import generate_password
-from .messages import SUCCESS_MESSAGES, ERROR_MESSAGES
+from .messages import SUCCESS_MESSAGES, ERROR_MESSAGES, MAIL_MESSAGES
+from .constants import *
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -116,23 +117,22 @@ def PhoneLoginView(request):
 
         serializer = UserSerializerWithToken(user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        # return Response(message)
-
+        
     except Customer.DoesNotExist:
         return Response({'detail': 'User not registered'},
                         status=status.HTTP_404_NOT_FOUND)
 
-    except KeyError:  # Handle specific exception
+    except KeyError:
         message = {
             'detail': 'phone_number is required'
-        }  # Provide an appropriate error message
+        }
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def generateOtp(request):
     email = request.query_params.get('email')
     otp = get_random_string(length=4, allowed_chars='0123456789')
-    subject = 'Welcome to Strongr'
+    subject = MAIL_MESSAGES.get('welcome')
     message = render_to_string('otp.html', {
         'otp': otp,
     })
@@ -150,7 +150,7 @@ def generateUpdateOtp(request):
     user_id = request.query_params.get('id')
     otp = get_random_string(length=4, allowed_chars='0123456789')
     user = User.objects.get(id=user_id)
-    subject = 'Welcome to Strongr'
+    subject = MAIL_MESSAGES.get('welcome')
     message = render_to_string('otp.html', {
         'otp': otp,
         'first_name': user.first_name,
@@ -229,10 +229,10 @@ class OrganizationSignupView(CreateView):
             alt_number = form.cleaned_data.get('alt_number')
 
             if not self.is_valid_number(phone_number):
-                form.add_error('phone_number', 'Phone number must be exactly 10 digits long.')
+                form.add_error('phone_number', ERROR_MESSAGES.get('phone_number_invalid'))
 
             if alt_number and not self.is_valid_number(alt_number):
-                form.add_error('alt_number', 'Alternate number must be exactly 10 digits long.')
+                form.add_error('alt_number', ERROR_MESSAGES.get('alt_number_invalid'))
 
             if form.errors:
                 return render(request, self.template_name, context)
@@ -256,14 +256,14 @@ class OrganizationSignupView(CreateView):
                 request.session['first_login_' + str(user.id)] = True
 
             current_site = get_current_site(request)
-            subject = 'Welcome to Our Website'
+            subject = MAIL_MESSAGES.get('welcome')
             message = render_to_string(
                 'email_generate.html', {
                     'user': user,
                     'domain': current_site.domain,
                     'random_password': random_password
                 })
-            from_email = 'testgamefront@gmail.com'
+            from_email = const_email
             recipient_list = [user.email]
             send_mail(subject, message, from_email, recipient_list, fail_silently=False)
             login(request, user)
@@ -291,7 +291,6 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
 
-                # Redirect users based on their group
                 if user.groups.filter(name='Customer').exists():
                     return redirect('access-restricted')
                 elif user.groups.filter(name='Organization').exists():
@@ -306,7 +305,6 @@ class LoginView(View):
                     messages.error(request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
                     return redirect('login')
         else:
-            # If the form is not valid, re-render the page with existing data and errors
             return render(request, self.template_name, {'form': form})
 
 class LogoutView(View):
@@ -319,7 +317,6 @@ class LogoutView(View):
 class OrganizationBookingView(GroupAccessMixin, TemplateView):
     group_required = ['Organization']
 
-    # Define a dictionary to map view names to templates
     template_map = {
         'org_dashboard': 'org_dashboard.html',
         'org_bookings': 'org_bookings.html',
@@ -330,21 +327,17 @@ class OrganizationBookingView(GroupAccessMixin, TemplateView):
     }
 
     def get_template_names(self):
-        # Return the template based on the view name
         return [self.template_map[self.template_name]]
 
     def get_context_data(self, **kwargs):
         organization = Organization.objects.get(user=self.request.user)
         courts = Court.objects.filter(location__organization=organization)
 
-        # Initialize an empty list to store all bookings
         all_bookings = []
 
         for court in courts:
-            # Filter bookings for the current court
             court_bookings = Booking.objects.filter(court=court)
 
-            # Extend the all_bookings list with the current court's bookings
             all_bookings.extend(court_bookings)
 
         games = GameType.objects.all()
@@ -363,25 +356,20 @@ class OrganizationProfileView(GroupAccessMixin, UpdateView):
 
     def form_valid(self, form):
         form.save()
-        # If all validations pass
         if self.is_ajax_request():
             return JsonResponse({'status': 'success', 'message': SUCCESS_MESSAGES.get('update_profile')}, status=200)
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_invalid(self, form):
-        # Collect all form errors
         errors = {field: [str(e) for e in form.errors[field]] for field in form.errors}
 
         if self.is_ajax_request():
-            # Return JSON response with errors for AJAX requests
             return JsonResponse({'status': 'error', 'errors': errors}, status=400)
         else:
-            # Use Django's messages framework to add error messages for non-AJAX requests
             for field, error_messages in errors.items():
                 for error_message in error_messages:
                     messages.error(self.request, f"{form.fields[field].label}: {error_message}")
 
-            # Return the default form invalid handling which re-renders the form
             return super().form_invalid(form)
 
     def is_valid_number(self, number):
@@ -445,11 +433,11 @@ def update_location(request, pk):
             messages.success(request, SUCCESS_MESSAGES.get('update_location'))
             return redirect('mainview', location_pk=form.instance.pk)
         else:
-            if 'This Pincode,Phone Number and Area combination already exists.' in form.non_field_errors():
-                messages.error(request, "Location update failed. This Pincode, Phone Number and Area combination already exists.")
+            if ERROR_MESSAGES.get('location_duplicate') in form.non_field_errors():
+                messages.error(request, ERROR_MESSAGES.get('location_duplicate'))
             else:
                 error_messages = ', '.join([str(error) for error in form.errors.values()])
-                formatted_message = ERROR_MESSAGES.get('form_validation_failed_location', 'Form validation failed.').format(error_messages=error_messages)
+                formatted_message = ERROR_MESSAGES.get('form_validation_failed_location').format(error_messages=error_messages)
                 messages.error(request, formatted_message)
             return render(request, 'main_template.html', {'form': form, 'locationpk': pk})
     else:
@@ -836,7 +824,6 @@ class SlotUpdateView(GroupAccessMixin, UpdateView):
         custom_error_message_1 = 'A slot with the same details already exists.'
         custom_error_message_2 = 'Time difference between slots must exactly be one hour'
 
-        # Extract error messages
         error_list = [str(error) for error in form.errors.values()]
         flat_error_list = ' '.join(error_list).replace('<ul class="errorlist nonfield"><li>', '').replace('</li></ul>', '').replace('</li><li>', ' ')
 
@@ -852,7 +839,6 @@ class SlotUpdateView(GroupAccessMixin, UpdateView):
 
     def form_valid(self, form):
         pk = self.request.session.get('locationpk')
-        # Save the form and update the slot
         self.object = form.save()
         messages.success(self.request, SUCCESS_MESSAGES.get('update_slot'))
         return HttpResponseRedirect(reverse('slot-list', kwargs={'locationpk': pk}))
@@ -993,13 +979,13 @@ class StatusView(GroupAccessMixin, TemplateView):
         try:
             return Organization.objects.get(user=self.request.user)
         except Organization.DoesNotExist:
-            raise Http404("Organization not found")
+            raise Http404(ERROR_MESSAGES.get('no_organization'))
 
     def get_organization_location(self, organization):
         try:
             return OrganizationLocation.objects.filter(organization=organization)
         except OrganizationLocation.DoesNotExist:
-            raise Http404("Organization Location not found")
+            raise Http404(ERROR_MESSAGES.get('no_organization_location'))
 
     def get_organization_games(self, location):
         return OrganizationLocationGameType.objects.filter(organization_location=location)
@@ -1043,27 +1029,27 @@ class StatusView(GroupAccessMixin, TemplateView):
                 }
 
                 if not self.get_organization_games(location):
-                    location_detail['empty_message']['games'] = "No games found for this location."
+                    location_detail['empty_message']['games'] = ERROR_MESSAGES.get('no_games')
 
                 if not self.get_organization_courts(location):
-                    location_detail['empty_message']['courts'] = "No courts found for this location."
+                    location_detail['empty_message']['courts'] = ERROR_MESSAGES.get('no_courts')
 
                 if not self.get_organization_images(location):
-                    location_detail['empty_message']['images'] = "No images found for this location."
+                    location_detail['empty_message']['images'] = ERROR_MESSAGES.get('no_images')
 
                 working_days = self.get_organization_working_days(location)
                 if not working_days or all(not wd.work_from_time or not wd.work_to_time for wd in working_days):
-                    location_detail['empty_message']['working_days'] = "No working days found for this location."
+                    location_detail['empty_message']['working_days'] = ERROR_MESSAGES.get('no_working_days')
 
                 if not self.get_organization_amenities(location):
-                    location_detail['empty_message']['amenities'] = "No amenities found for this location."
+                    location_detail['empty_message']['amenities'] = ERROR_MESSAGES.get('no_amenities')
 
                 slots = self.get_organization_slots(location)
                 additional_slots = self.get_additional_slots(location)
                 unavailable_slots = self.get_unavailable_slots(location)
 
                 if not slots and not additional_slots and not unavailable_slots:
-                    location_detail['empty_message']['slots'] = "No slots found for this location."
+                    location_detail['empty_message']['slots'] = ERROR_MESSAGES.get('no_slots')
 
                 context['location_details'].append(location_detail)
 
@@ -1103,7 +1089,6 @@ class ApprovalListView(GroupAccessMixin, ListView):
 class ChangeOrganizationStatusView(View):
 
     def post(self, request, organization_id, new_status):
-        # Get the organization object using the organization_id
         organization = get_object_or_404(Organization, id=organization_id)
 
         reason_for_cancellation = request.POST.get('reason_for_cancellation','')
@@ -1115,17 +1100,16 @@ class ChangeOrganizationStatusView(View):
         else:
             status_text = 'Unknown'
 
-    # Update the organization's status and save it
         organization.status = new_status
         organization.save()
 
-        #send mail:
+
         subject = 'Organization status'
         message = render_to_string('status_mail.html', {
             'user': organization.user,
             'status': status_text
         })
-        from_email = 'testgamefront@gmail.com'
+        from_email = const_email
         recipient_list = [organization.user.email]
         send_mail(subject,
                   message,
@@ -1164,15 +1148,15 @@ class ChangeOrganizationLocationStatusView(View):
             messages.success(request, SUCCESS_MESSAGES.get('orglocation_cancel'))
 
         user = request.user
+        org = organizationLocation.organization.user
 
-        #send mail:
         subject = 'Location status'
         message = render_to_string('status_mail.html', {
-            'user': user,
+            'user': org,
             'status': status_text
         })
-        from_email = 'testgamefront@gmail.com'
-        recipient_list = [user.email]
+        from_email = const_email
+        recipient_list = [org.email]
         send_mail(subject,
                   message,
                   from_email,
@@ -1246,12 +1230,10 @@ class CreateMultipleSlotsView(GroupAccessMixin, View):
             organization_location=location_pk,
             is_active=True)
 
-        # Check for the condition to show error message
         if all(day.work_from_time is None or day.work_to_time is None for day in active_days):
             messages.error(request, ERROR_MESSAGES.get('default_slot_failure'))
             return redirect(reverse('slot-location'))
 
-        # Slot creation logic
         Slot.objects.filter(court__location_id=location_pk).delete()
 
         for court in courts:
@@ -1372,11 +1354,9 @@ class TenantOrganizationPreviewView(GroupAccessMixin, DetailView):
         context = super().get_context_data(**kwargs)
         organization = self.object
 
-        # Fetch all locations related to the organization
         locations = OrganizationLocation.objects.filter(
             organization=organization)
 
-        # Create a list to store location details
         locationdetails = []
 
         for location in locations:
@@ -1452,7 +1432,7 @@ class AddMultipleTempSlotsView(GroupAccessMixin, View):
                     form.instance.location = location
                     form.save()
                 else:
-                    messages.error(request, 'Location not found.')
+                    messages.error(request, ERROR_MESSAGES.get('no_organization_location'))
                     return redirect('error')
 
             messages.success(request, SUCCESS_MESSAGES.get('create_tempslot'))
@@ -1488,9 +1468,9 @@ class TempSlotListView(GroupAccessMixin, ListView):
                 messages.success(self.request, SUCCESS_MESSAGES.get('delete_additional_slot'))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             except AdditionalSlot.DoesNotExist:
-                print("Slot does not exist")
+                print(ERROR_MESSAGES.get('no_slots'))
         else:
-            print("Error: No slot ID provided")
+            print(ERROR_MESSAGES.get('no_slot_id'))
 
 @method_decorator(login_required, name='dispatch')
 class TempSlotCreateView(GroupAccessMixin, CreateView):
@@ -1512,7 +1492,7 @@ class TempSlotCreateView(GroupAccessMixin, CreateView):
         try:
             pk = self.request.session.get('location_pk')
             if not pk:
-                raise KeyError('Location PK not found in session')
+                raise KeyError(ERROR_MESSAGES.get('no_pk'))
             location = OrganizationLocation.objects.get(pk=pk)
             form.instance.location = location
             messages.success(self.request, SUCCESS_MESSAGES.get('create_additional_slot'))
@@ -1564,9 +1544,9 @@ class UnavailableSlotListView(GroupAccessMixin, ListView):
                 messages.success(self.request, SUCCESS_MESSAGES.get('delete_unavailable_slot'))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             except UnavailableSlot.DoesNotExist:
-                print("Slot does not exist")
+                print(ERROR_MESSAGES.get('no_slots'))
         else:
-            print("Error: No slot ID provided")
+            print(ERROR_MESSAGES.get('no_slot_id'))
 
 @method_decorator(login_required, name='dispatch')
 class UnavailableSlotCreateView(GroupAccessMixin, CreateView):
@@ -1578,7 +1558,7 @@ class UnavailableSlotCreateView(GroupAccessMixin, CreateView):
         date = self.cleaned_data.get('date')
         today = datetime.now().date()
         if date < today:
-            raise ValidationError("The date cannot be in the past.")
+            raise ValidationError(ERROR_MESSAGES.get('past_date'))
         return date
 
     def get_form_kwargs(self):
@@ -1595,7 +1575,7 @@ class UnavailableSlotCreateView(GroupAccessMixin, CreateView):
         try:
             pk = self.request.session.get('location_pk')
             if not pk:
-                raise KeyError('Location PK not found in session')
+                raise KeyError(ERROR_MESSAGES.get('no_pk'))
             location = OrganizationLocation.objects.get(pk=pk)
             form.instance.location = location
             response = super().form_valid(form)
@@ -1875,19 +1855,19 @@ class HappyHourPricingManageView(View):
                 instance.save()
                 instances_to_keep.add(instance.pk)
             
-            # Delete instances that were marked for deletion
             for form in formset.forms:
                 if form.cleaned_data.get('DELETE') and form.instance.pk:
                     form.instance.delete()
                 elif form.instance.pk:
                     instances_to_keep.add(form.instance.pk)
             
-            # Delete any instances that are not in instances_to_keep
             HappyHourPricing.objects.filter(organization_location=org_loc).exclude(pk__in=instances_to_keep).delete()
 
             formset.save_m2m()
-            messages.success(request, "Happy Hours Pricing updated successfully.")
+
+            messages.success(request, SUCCESS_MESSAGES.get('update_happy'))
             return HttpResponseRedirect(reverse('manage_happyhours', kwargs={'pk': pk}))
+          
         else:
-            messages.error(request, "There was an error updating the Happy Hours Pricing. Please check the form and try again.")
+            messages.error(request, ERROR_MESSAGES.get('happy_failure'))
         return render(request, self.template_name, {'formset': formset, 'org_loc': org_loc})

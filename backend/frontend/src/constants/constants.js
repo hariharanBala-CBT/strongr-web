@@ -184,3 +184,5 @@ export const NEAREST_SLOT_SUCCESS = "NEAREST_SLOT_SUCCESS";
 export const NEAREST_SLOT_FAIL = "NEAREST_SLOT_FAIL";
 
 export const brandName = "Strongr";
+
+export const platform_fee = 0;
