@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, MapPin, X } from "react-feather";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,17 @@ const VenueDetails = ({ club }) => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      const timer = setTimeout(() => {
+        closeModal();
+      }, 7000);
+
+      // Clean up the timeout when modal closes or component unmounts
+      return () => clearTimeout(timer);
+    }
+  }, [isModalOpen]);
 
   // Close modal when clicking outside of modal content
   const handleClickOutside = (e) => {
@@ -67,7 +78,10 @@ const VenueDetails = ({ club }) => {
               </li>
               {club.next_availabilty && club.next_availabilty.length > 0 && (
                 <li>
-                  <span className="cursor-pointer flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200" onClick={openModal}>
+                  <span
+                    className="cursor-pointer flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200 link-style"
+                    onClick={openModal}
+                  >
                     <Calendar className="mr-2" />
                     <span className="font-medium">{t("nextAvailability")}</span>
                   </span>

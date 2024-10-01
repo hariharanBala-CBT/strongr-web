@@ -14,7 +14,7 @@ const Venue = () => {
   // Owl Carousel Settings
   const options = {
     loop: true,
-    center: false,
+    center: true,
     items: 3,
     margin: 0,
     autoplay: true,

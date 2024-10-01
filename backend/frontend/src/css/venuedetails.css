@@ -45,6 +45,22 @@
   cursor: pointer;
 }
 
+/* Link-style for calendar and text */
+.link-style {
+  cursor: pointer; /* Ensure pointer appears on hover */
+  color: #007bff; /* Link color */
+  transition: color 0.3s ease;
+}
+
+.link-style:hover {
+  color: #0056b3; /* Darker color on hover */
+}
+
+/* Optional margin adjustment for the calendar icon */
+.link-style .mr-2 {
+  margin-right: 8px;
+}
+
 /* Modal overlay */
 .modal-overlay {
   position: fixed;
