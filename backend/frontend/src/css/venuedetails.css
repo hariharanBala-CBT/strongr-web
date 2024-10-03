@@ -75,7 +75,7 @@
 }
 
 .modal-container {
-  background-color: rgba(255, 255, 255, 0.9);
+  /* background-color: rgba(255, 255, 255, 0.9); */
   border-radius: 8px;
   max-width: 600px;
   width: 100%;
@@ -119,11 +119,11 @@
   color: #1f2937;
 }
 
-.modal-content {
+/* .modal-content {
   padding: 1.5rem;
   overflow-y: auto;
   flex-grow: 1;
-}
+} */
 
 .modal-footer {
   position: sticky;

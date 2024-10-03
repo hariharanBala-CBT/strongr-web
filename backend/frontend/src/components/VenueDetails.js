@@ -143,9 +143,9 @@ const VenueDetails = ({ club }) => {
                   </div>
                 ))}
               <div className="modal-footer">
-                <button onClick={closeModal} className="modal-close-btn">
+                {/* <button onClick={closeModal} className="modal-close-btn">
                   {t("close")}
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
