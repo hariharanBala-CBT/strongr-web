@@ -31,7 +31,6 @@ const VenueDetails = ({ club }) => {
     }
   }, [isModalOpen]);
 
-  // Close modal when clicking outside of modal content
   const handleClickOutside = (e) => {
     if (e.target.classList.contains("modal-overlay")) {
       closeModal();
