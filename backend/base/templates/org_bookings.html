@@ -4,6 +4,11 @@
 {% block content %}
 <link href="{% static './css/booking.css' %}" rel="stylesheet" />
 
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+  <li class="breadcrumb-item">Bookings List</li>
+</ol>
+
 <div class="container-fluid px-4 py-5">
   <div class="row gx-5 gy-5">
     <div class="col-12">
