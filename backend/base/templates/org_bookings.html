@@ -78,6 +78,19 @@
     </div>
   </div>
 </div>
+  
+  <div class="footer py-4 bg-light mt-auto">
+    <div class="container-fluid px-4">
+      <div class="d-flex align-items-center justify-content-between small">
+        <div class="text-muted">Copyright &copy; <span id="current-year"></span> STRONGR. | All Rights Reserved</div>
+        <div>
+          <a href="{% url 'privacypolicy' %}">Privacy Policy</a>
+          &middot;
+          <a href="{% url 'termsandconditions' %}">Terms &amp; Conditions</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- Floating Filter Button -->
 <button id="filterButton" class="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4 p-3 shadow-lg">
@@ -132,6 +145,20 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+  window.addEventListener('DOMContentLoaded', event => {
+            const $sidebarToggle = document.body.querySelector('#sidebarToggle');
+            if ($sidebarToggle) {
+                if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+                    document.body.classList.toggle('sb-sidenav-toggled');
+                }
+                $sidebarToggle.addEventListener('click', event => {
+                    event.preventDefault();
+                    document.body.classList.toggle('sb-sidenav-toggled');
+                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+                });
+            }
+        });
+
   document.addEventListener('DOMContentLoaded', function () {
     const filterButton = document.getElementById('filterButton');
     const filterModal = new bootstrap.Modal(document.getElementById('filterModal'));
@@ -279,4 +306,4 @@
     setupPagination();
   });
 </script>
-{% endblock %}
+<!-- {% endblock %} -->
