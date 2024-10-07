@@ -54,7 +54,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/tab.js' %}"></script>
 <script>
-   $(document).ready(function() {
+$(document).ready(function() {
     $('#working-days-form').on('submit', function(event) {
         if (!validateForm()) {
             event.preventDefault(); // Prevent form submission
@@ -84,32 +84,42 @@
 
             if (isActive) {
                 hasActiveDay = true;
+
+                // Check if workFromTime and workToTime are filled only if isActive is true
+                if (!workFromTime) {
+                    isValid = false;
+                    workFromTimeError.text('Work from time is required.');
+                }
+                if (!workToTime) {
+                    isValid = false;
+                    workToTimeError.text('Work to time is required.');
+                }
+
+                // Further time validation if both times are provided
+                if (workFromTime && workToTime) {
+                    if (workFromTime === workToTime) {
+                        isValid = false;
+                        workFromTimeError.text('Work from time cannot be the same as work to time.');
+                    } else if (workToTime < workFromTime) {
+                        isValid = false;
+                        workToTimeError.text('Work to time cannot be earlier than work from time.');
+                    }
+                }
             }
 
-            // Check minute conditions even if is_active is false
+            // Validate minutes in both times are "00" regardless of is_active status
             if (workFromTime && workToTime) {
                 const workFromTimeMinutes = workFromTime.split(':')[1];
                 const workToTimeMinutes = workToTime.split(':')[1];
 
-                if (workFromTimeMinutes !== '00' || workToTimeMinutes !== '00') {
+                if (workFromTimeMinutes !== '00') {
                     isValid = false;
-                    if (workFromTimeMinutes !== '00') {
-                        workFromTimeError.text('Work from time must be on the hour (minutes must be 00).');
-                    }
-                    if (workToTimeMinutes !== '00') {
-                        workToTimeError.text('Work to time must be on the hour (minutes must be 00).');
-                    }
-                } else if (workFromTime === workToTime) {
-                    isValid = false;
-                    workFromTimeError.text('Work from time cannot be the same as work to time.');
-                } else if (workToTime < workFromTime) {
-                    isValid = false;
-                    workToTimeError.text('Work to time cannot be earlier than work from time.');
+                    workFromTimeError.text('Work from time must be on the hour (minutes must be 00).');
                 }
-            } else {
-                isValid = false;
-                workFromTimeError.text('Work from time and work to time are required.');
-                workToTimeError.text('');  // Clear the workToTime error to avoid redundancy
+                if (workToTimeMinutes !== '00') {
+                    isValid = false;
+                    workToTimeError.text('Work to time must be on the hour (minutes must be 00).');
+                }
             }
         });
 
@@ -119,12 +129,10 @@
         }
 
         if (formsetErrorMessages.length > 0) {
-            $('#formset-errors').html(formsetErrorMessages.join('<br>')).show();
+            $('#formset-errors').html(formsetErrorMessages.join('<br>')).removeClass('d-none').show();
         }
 
         return isValid;
     }
 });
-
-
 </script>
