@@ -80,7 +80,7 @@
                                                 {% elif key == "courts" %}
                                                     {{ message|safe }},<a href="{% url 'mainview' location_detail.location.pk %}#courtTab"> Add courts</a>
                                                 {% elif key == "images" %}
-                                                    {{ message|safe }},<a href="{% url 'mainview' location_detail.location.pk %}#imageTab"> Add images</a>
+                                                    {{ message|safe }},<a href="{% url 'mainview' location_detail.location.pk %}#imagesTab"> Add images</a>
                                                 {% elif key == "slots" %}
                                                     {{ message|safe }},<a href="{% url 'slot-list' location_detail.location.pk %}#slotsTab"> Add slots</a>
                                                 {% elif key == "amenities" %}
