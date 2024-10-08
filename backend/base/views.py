@@ -1372,6 +1372,7 @@ class TenantOrganizationPreviewView(GroupAccessMixin, DetailView):
                 'workingtimes'] = OrganizationLocationWorkingDays.objects.filter(
                     organization_location=location)
             context_item['courts'] = Court.objects.filter(location=location)
+            context_item['happy'] = HappyHourPricing.objects.filter(organization_location=location)
             context_item['images'] = OrganizationGameImages.objects.filter(
                 organization=location)
             context_item['slots'] = Slot.objects.filter(location_id=location)

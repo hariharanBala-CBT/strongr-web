@@ -1,39 +1,38 @@
 {% extends 'base_tenant.html' %}
-
-{% block content %}
 {% load static %}
 {% load url_filters %}
+{% block content %}
 
-<link href="{% static 'styles.css' %}" rel="stylesheet" />
-<link href="{% static './css/tenant_orgprev.css' %}" rel="stylesheet" />
+	<link href="{% static 'styles.css' %}" rel="stylesheet" />
+	<link href="{% static './css/tenant_orgprev.css' %}" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-{% if messages %}
-<div class="alert alert-success" role="alert" id="successAlert">
-    {% for message in messages %}
-    <p>{{ message }}</p>
-    {% endfor %}
-</div>
-{% endif %}
+	{% if messages %}
+		<div class="alert alert-success" role="alert" id="successAlert">
+			{% for message in messages %}
+			<p>{{ message }}</p>
+			{% endfor %}
+		</div>
+	{% endif %}
 
-<h1 class="text-center mb-4">Organization Details</h1>
+    
+    <div class="container">
+        <h1 class="text-center mb-4">Organization Details</h1>
 
-<!-- Organization Card -->
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white">
-        <h2 class="m-0">{{ organization.organization_name }}</h2>
-    </div>
-    <div class="card-body">
-        <!-- Organization Details -->
-        <div class="card mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h2>{{ organization.organization_name }}</h2>
+            </div>
             <div class="card-body">
-                <h5 class="card-title"><strong>Organization Details</strong></h5>
                 <ul>
-                    <li><div class="label">Name</div>:&nbsp; {{ organization.organization_name }}</li>
-                    <li><div class="label">Email</div>:&nbsp; {{ organization.user.email }}</li>
-                    <li><div class="label">Phone</div>:&nbsp; {{ organization.phone_number }}</li>
-                    <li><div class="label">Alternate Phone</div>:&nbsp; {{ organization.alt_number }}</li>
-                    <li><div class="label">Description</div>:&nbsp; {{ organization.description }}</li>
-                    <li><div class="label">Status</div>:&nbsp; 
+                    <li><span class="label">Name:</span> {{ organization.organization_name }}</li>
+                    <li><span class="label">Email:</span> {{ organization.user.email }}</li>
+                    <li><span class="label">Phone:</span> {{ organization.phone_number }}</li>
+                    <li><span class="label">Alternate Phone:</span> {{ organization.alt_number }}</li>
+                    <li><span class="label">Description:</span> {{ organization.description }}</li>
+                    <li>
+                        <span class="label">Status:</span>
                         {% if organization.status == 1 %}
                         <span class="status-approved">Approved</span>
                         {% elif organization.status == 2 %}
@@ -86,220 +85,304 @@
 		</div>
 
         {% if organization.status == 1 %}
-            <h3 class="mb-4">Locations</h3>
-            <!-- Tab Navigation -->
-            <ul class="nav nav-tabs" id="locationTabs" role="tablist">
-                {% for location_item in all_locations %}
+        <div class="card">
+            <div class="card-header">
+                <h3>Locations</h3>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="locationTabs" role="tablist">
+                    {% for location_item in all_locations %}
                     {% if location_item.location.status != 2 %}
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link {% if forloop.first %}active{% endif %}" id="loc-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#loc-{{ location_item.location.id }}" type="button" role="tab" aria-controls="loc-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">{{ location_item.location.address_line_1 }}</button>
-                        </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link {% if forloop.first %}active{% endif %}" id="loc-{{ location_item.location.id }}-tab" data-bs-toggle="tab" data-bs-target="#loc-{{ location_item.location.id }}" type="button" role="tab" aria-controls="loc-{{ location_item.location.id }}" aria-selected="{{ forloop.first }}">
+                            {{ location_item.location.address_line_1 }}
+                        </button>
+                    </li>
                     {% endif %}
-                {% endfor %}
-            </ul>
-            <!-- Tab Content -->
-            <div class="tab-content" id="locationTabsContent">
-                {% for location_item in all_locations %}
+                    {% endfor %}
+                </ul>
+
+                <div class="tab-content mt-3" id="locationTabsContent">
+                    {% for location_item in all_locations %}
                     {% if location_item.location.status != 2 %}
-                        <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="loc-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="loc-{{ location_item.location.id }}-tab">
-                            <div class="row">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <ul>
-                                            <div class="label">Status</div>:&nbsp; 
-                                            {% if location_item.location.status == 1 %}
-                                                <span class="status-approved">Approved</span>
-                                            {% elif location_item.location.status == 2 %}
-                                                <span class="status-pending">Pending</span>
-                                            {% elif location_item.location.status == 3 %}
-                                                <span class="status-in-progress">In Progress</span>
-                                            {% elif location_item.location.status == 4 %}
-                                                <span class="status-cancelled">Cancelled</span>
-                                            {% else %}
-                                                <span class="status-unknown">Unknown</span>
-                                                <p>Please Contact the Service Provider.</p>
-                                            {% endif %}
-                                        </ul>
-                                        <ul><strong>Address:</strong><br>
-											{{ location_item.location.address_line_1 }}<br>
-											{{ location_item.location.address_line_2 }}<br>
-											{{ location_item.location.area }}-{{ location_item.location.pincode }}
-										</ul>
-										<h5>Games</h5>
-										<ul>
-											{% for game in location_item.games %}
-												<ul>
-													<strong>{{ game.game_type }}</strong>
-													<li><div class="label">Pricing</div>: {{ game.pricing }}</li>
-													<li><div class="label">Description</div>: {{ game.description }}</li>
-												</ul>
-											{% endfor %}
-										</ul>
-										<h5><strong>Amenities</strong></h5>
-										<ul class="checkbox-list">
-											{% for amenity in location_item.amenities %}
-											<li>
-												<label class="checkbox-custom">
-													<input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled>
-													<span></span> Parking
-												</label><br>
-												<label class="checkbox-custom">
-													<input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled>
-													<span></span> Restroom
-												</label><br>
-												<label class="checkbox-custom">
-													<input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled>
-													<span></span> Changeroom
-												</label><br>
-												<label class="checkbox-custom">
-													<input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled>
-													<span></span> Power Backup
-												</label><br>
-												<label class="checkbox-custom">
-													<input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled>
-													<span></span> Beverage
-												</label><br>
-												<label class="checkbox-custom">
-													<input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled>
-													<span></span> Coaching
-												</label><br>
-												<label>
-													Description: {{ amenity.description }}
-												</label>
-											</li>
-											{% endfor %}
-										</ul>
-										<h5><strong>Working Times</strong></h5>
-										<ul>
-											{% for workingtime in location_item.workingtimes %}
-											<li><div class="label">{{ workingtime.get_days_display }}</div>: {{ workingtime.work_from_time }} - {{ workingtime.work_to_time }}</li>
-											{% endfor %}
-										</ul>
-										<h5><strong>Courts</strong></h5>
-										<ul>
-											{% for court in location_item.courts %}
-												<li>{{ court.name }}</li>
-											{% empty %}
-												<li>No Courts Addded</li>
-											{% endfor %}
-										</ul>
-										<h5><strong>Images</strong></h5>
-										<ul class="image-gallery">
-											{% for image in location_item.images %}
-												<img src="{{ image.image.url|fix_https }}" alt="image" width="250" height="250"></img>
-											{% empty %}
-												<li>No images Addded</li>
-											{% endfor %}
-										</ul>
-										<h5><strong>Slots</strong></h5>
-										<ul class="image-gallery">
-											{% if location_item.slots %}
-												<li><a href="{% url 'tenant-slot-list' locationpk=location_item.location.pk %}">Slot list</a></li>
+                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="loc-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="loc-{{ location_item.location.id }}-tab">
+						<ul> 
+							{% if location_item.location.status == 1 %}
+								<span class="label">Status: <span class="status-approved">Approved</span></span>
+							{% elif location_item.location.status == 2 %}
+								<span class="label">Status: <span class="status-pending">Pending</span></span>
+							{% elif location_item.location.status == 3 %}
+								<span class="label">Status: <span class="status-in-progress">In Progress</span></span>
+							{% elif location_item.location.status == 4 %}
+								<span class="label">Status: <span class="status-cancelled">Cancelled</span></span>
+							{% else %}
+								<span class="label">Status: <span class="status-unknown">Unknown</span></span>
+								<p>Please Contact the Service Provider.</p>
+							{% endif %}
+						</ul>
+
+                        <div class="card2 py-2">
+							<h4>Address</h4>
+                        	<strong><p>{{ location_item.location.address_line_1 }}<br>{{ location_item.location.area }}-{{ location_item.location.pincode }}</p></strong>
+						</div>
+
+                        <div class="mt-4">
+							<div id="carouselExampleIndicators-{{ location_item.location.id }}" class="carousel slide" data-bs-ride="carousel">
+								<div class="carousel-indicators">
+									{% for image in location_item.images %}
+									<button type="button" data-bs-target="#carouselExampleIndicators-{{ location_item.location.id }}" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-current="{% if forloop.first %}true{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
+									{% endfor %}
+								</div>
+								<div class="carousel-inner">
+									{% for image in location_item.images %}
+									<div class="carousel-item {% if forloop.first %}active{% endif %}">
+										<img class="d-block w-100" src="{{ image.image.url|fix_https }}"  alt="Image of {{ location_item.location.address_line_1 }}" width="350" height="450">
+									</div>
+									{% empty %}
+									<div class="carousel-item active">
+										<img class="d-block w-100" src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg" alt="No image available">
+									</div>
+									{% endfor %}
+								</div>
+								<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators-{{ location_item.location.id }}" data-bs-slide="prev">
+									<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+									<span class="visually-hidden">Previous</span>
+								</button>
+								<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators-{{ location_item.location.id }}" data-bs-slide="next">
+									<span class="carousel-control-next-icon" aria-hidden="true"></span>
+									<span class="visually-hidden">Next</span>
+								</button>
+							</div>
+						</div>
+
+						<!-- Games Accordion -->
+						<div class="accordion mt-4" id="gamesAccordion-{{ location_item.location.id }}">
+							{% if location_item.games %}
+								{% for game in location_item.games %}
+								<div class="accordion-item">
+									<h2 class="accordion-header" id="heading{{ game.id }}">
+										<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ game.id }}" aria-expanded="{% if forloop.first %}true{% endif %}" aria-controls="collapse{{ game.id }}">
+											{{ game.game_type }}
+										</button>
+									</h2>
+									<div id="collapse{{ game.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ game.id }}" data-bs-parent="#gamesAccordion-{{ location_item.location.id }}">
+										<div class="accordion-body">
+											<ul class="list-unstyled">
+												<li>Pricing: {{ game.pricing }}</li>
+												<li class="desc-games">Description: {% if game.description %}{{ game.description }}{% else %}None{% endif %}</li>
+											</ul>
+											{% if game.happyhourpricing_set.exists %}
+											<ul class="list-unstyled">
+												<li><strong>Happy Hours Pricing:</strong></li>
+												{% for happy_hour in game.happyhourpricing_set.all %}
+													<li>
+														Day: {{ happy_hour.get_day_of_week_display }}<br>
+														Time: {{ happy_hour.start_time|time:"H:i" }} - {{ happy_hour.end_time|time:"H:i" }}<br>
+														Price: {{ happy_hour.price }}
+													</li>
+												{% endfor %}
+											</ul>
 											{% else %}
-												<li>No Slot Added</li>
+												<p>No Happy Hours Pricing available for this game.</p>
 											{% endif %}
-										</ul>
-										<div class="text-center mb-4">
-											{% if location_item.location.status == 3 %}
-											<div class="btn-group" role="group">
-												<form method="post" action="{% url 'change_location_status' location_item.location.id '1' %}">
-													{% csrf_token %}
-													<button type="submit" class="btn btn-success me-2">Approve</button>
-												</form>
-												{% if location_item.location.status != 4 %}
-													<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ location_item.location.id }}">Cancel</button>
-												{% endif %}
-													<!-- Modal -->
-													<div class="modal fade" id="cancelModal{{ location_item.location.id }}" tabindex="-1" aria-labelledby="cancelModalLabel{{ location_item.location.id }}" aria-hidden="true">
-														<div class="modal-dialog">
-															<div class="modal-content">
-																<div class="modal-header">
-																	<h5 class="modal-title" id="cancelModalLabel{{ location_item.location.id }}">Reason for Cancellation</h5>
-																	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-																</div>
-																<div class="modal-body">
-																	<form method="post" action="{% url 'change_location_status' location_item.location.id '4' %}">
-																		{% csrf_token %}
-																		<div class="mb-3">
-																			<label for="reason{{ location_item.location.id }}" class="form-label">Please provide a reason for cancellation:</label>
-																			<textarea class="form-control" id="reason{{ location_item.location.id }}" name="reason_for_cancellation" rows="3" required></textarea>
-																		</div>
-																		<button type="submit" class="btn btn-danger">Confirm Cancellation</button>
-																	</form>
-																</div>
-															</div>
-														</div>
-													</div>
-											</div>
-											{% endif %}
-										</div>   
+										</div>
 									</div>
 								</div>
+								{% endfor %}
+							{% else %}
+								<p>No games available</p>
+							{% endif %}
+						</div>
+						
+
+                        <ul class="nav nav-tabs mt-4" id="detailsTabs-{{ location_item.location.id }}" role="tablist">
+							<li class="nav-item">
+								<button class="nav-link active" id="amenities-tab-{{ location_item.location.id }}" data-bs-toggle="tab" data-bs-target="#amenities-{{ location_item.location.id }}" type="button" role="tab" aria-controls="amenities-{{ location_item.location.id }}" aria-selected="true">Amenities</button>
+							</li>
+							<li class="nav-item">
+								<button class="nav-link" id="workingtimes-tab-{{ location_item.location.id }}" data-bs-toggle="tab" data-bs-target="#workingtimes-{{ location_item.location.id }}" type="button" role="tab" aria-controls="workingtimes-{{ location_item.location.id }}" aria-selected="false">Working Times</button>
+							</li>
+							<li class="nav-item">
+								<button class="nav-link" id="courts-tab-{{ location_item.location.id }}" data-bs-toggle="tab" data-bs-target="#courts-{{ location_item.location.id }}" type="button" role="tab" aria-controls="courts-{{ location_item.location.id }}" aria-selected="false">Courts</button>
+							</li>
+							<li class="nav-item">
+								<button class="nav-link" id="slots-tab-{{ location_item.location.id }}" data-bs-toggle="tab" data-bs-target="#slots-{{ location_item.location.id }}" type="button" role="tab" aria-controls="slots-{{ location_item.location.id }}" aria-selected="false">Slots</button>
+							</li>
+						</ul>
+						
+						<div class="tab-content mt-3" id="detailsTabsContent-{{ location_item.location.id }}">
+							<!-- Amenities Tab -->
+							<div class="tab-pane fade show active" id="amenities-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="amenities-tab-{{ location_item.location.id }}">
+								<h5><strong>Amenities</strong></h5>
+								<ul class="checkbox-list">
+									{% for amenity in location_item.amenities %}
+									<li>
+										<label class="checkbox-custom">
+											<input type="checkbox" {% if amenity.is_parking %}checked{% endif %} disabled>
+											<span></span> Parking
+										</label><br>
+										<label class="checkbox-custom">
+											<input type="checkbox" {% if amenity.is_restrooms %}checked{% endif %} disabled>
+											<span></span> Restroom
+										</label><br>
+										<label class="checkbox-custom">
+											<input type="checkbox" {% if amenity.is_changerooms %}checked{% endif %} disabled>
+											<span></span> Changeroom
+										</label><br>
+										<label class="checkbox-custom">
+											<input type="checkbox" {% if amenity.is_powerbackup %}checked{% endif %} disabled>
+											<span></span> Power Backup
+										</label><br>
+										<label class="checkbox-custom">
+											<input type="checkbox" {% if amenity.is_beverages_facility %}checked{% endif %} disabled>
+											<span></span> Beverage
+										</label><br>
+										<label class="checkbox-custom">
+											<input type="checkbox" {% if amenity.is_coaching_facilities %}checked{% endif %} disabled>
+											<span></span> Coaching
+										</label><br>
+										<label>
+											Description: {{ amenity.description }}
+										</label>
+									</li>
+									{% endfor %}
+								</ul>
 							</div>
-						</div>                                        
-					{% endif %}     
-				{% endfor %}
-			</div>
-		{% elif organization.status != 1 %}
-			<p class="message-margin">Locations data appear only if the organization submission and tenant is approved !!!</p>
-		{% endif %}
-	</div>
-</div>
-<div class="text-center mb-4">
-	<button class="btn btn-secondary" data-toggle="tooltip"
-	title="go back" onclick="history.back();"><i class="fa-solid fa-arrow-left-long"></i></button>
-</div>
+						
+							<!-- Working Times Tab -->
+							<div class="tab-pane fade" id="workingtimes-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="workingtimes-tab-{{ location_item.location.id }}">
+								<h5><strong>Working Times</strong></h5>
+								<ul>
+									{% for workingtime in location_item.workingtimes %}
+									<li>
+										<div class="label">{{ workingtime.get_days_display }}</div>: {{ workingtime.work_from_time }} - {{ workingtime.work_to_time }}
+									</li>
+									{% endfor %}
+								</ul>
+							</div>
+						
+							<!-- Courts Tab -->
+							<div class="tab-pane fade" id="courts-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="courts-tab-{{ location_item.location.id }}">
+								<h5><strong>Courts</strong></h5>
+								<ul>
+									{% for court in location_item.courts %}
+										<li>{{ court.name }}</li>
+									{% empty %}
+										<li>No Courts Added</li>
+									{% endfor %}
+								</ul>
+							</div>
+						
+							<!-- Slots Tab -->
+							<div class="tab-pane fade" id="slots-{{ location_item.location.id }}" role="tabpanel" aria-labelledby="slots-tab-{{ location_item.location.id }}">
+								<h5><strong>Slots</strong></h5>
+								<ul class="image-gallery">
+									{% if location_item.slots %}
+										<li><a href="{% url 'tenant-slot-list' locationpk=location_item.location.pk %}">View Slot List</a></li>
+									{% else %}
+										<li>No Slots Added</li>
+									{% endif %}
+								</ul>
+							</div>
+						</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    var hash = window.location.hash;
+                        <div class="text-center mb-4">
+							{% if location_item.location.status == 3 %}
+							<div class="btn-group" role="group">
+								<form method="post" action="{% url 'change_location_status' location_item.location.id '1' %}">
+									{% csrf_token %}
+									<button type="submit" class="btn btn-success me-2">Approve</button>
+								</form>
+								{% if location_item.location.status != 4 %}
+									<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ location_item.location.id }}">Cancel</button>
+								{% endif %}
+									<!-- Modal -->
+									<div class="modal fade" id="cancelModal{{ location_item.location.id }}" tabindex="-1" aria-labelledby="cancelModalLabel{{ location_item.location.id }}" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="cancelModalLabel{{ location_item.location.id }}">Reason for Cancellation</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<form method="post" action="{% url 'change_location_status' location_item.location.id '4' %}">
+														{% csrf_token %}
+														<div class="mb-3">
+															<label for="reason{{ location_item.location.id }}" class="form-label">Please provide a reason for cancellation:</label>
+															<textarea class="form-control" id="reason{{ location_item.location.id }}" name="reason_for_cancellation" rows="3" required></textarea>
+														</div>
+														<button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+							</div>
+							{% endif %}
+						</div>   
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% elif organization.status != 1 %}
+        <p class="alert alert-info">Locations data appear only if the organization submission and tenant is approved.</p>
+        {% endif %}
 
-    if (hash) {
-        var tabElement = document.querySelector(hash.replace('#', '#loc-'));
-        if (tabElement) {
-            var tab = new bootstrap.Tab(tabElement);
-            tab.show();
-        }
-    } else {
-        // Show the first tab by default
-        var firstTab = document.querySelector('#locationTabs .nav-link');
-        if (firstTab) {
-            var tab = new bootstrap.Tab(firstTab);
-            tab.show();
-        }
-    }
+        <div class="text-center mt-4">
+            <button class="btn btn-secondary" onclick="history.back();"><i class="fas fa-arrow-left"></i> Go Back</button>
+        </div>
+    </div>
+	
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var hash = window.location.hash;
 
-    // Organization Cancel Button
-    const orgCancelBtn = document.getElementById('cancelBtn');
-    if (orgCancelBtn) {
-        orgCancelBtn.addEventListener('click', function () {
-            const orgCancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
-            orgCancelModal.show();
-        });
-    }
+			if (hash) {
+				var tabElement = document.querySelector(hash.replace('#', '#loc-'));
+				if (tabElement) {
+					var tab = new bootstrap.Tab(tabElement);
+					tab.show();
+				}
+			} else {
+				// Show the first tab by default
+				var firstTab = document.querySelector('#locationTabs .nav-link');
+				if (firstTab) {
+					var tab = new bootstrap.Tab(firstTab);
+					tab.show();
+				}
+			}
 
-    // Location-Specific Cancel Buttons
-    document.querySelectorAll('[id^="cancelBtn"]').forEach(button => {
-        button.addEventListener('click', function () {
-            const locationId = button.getAttribute('data-location-id');
-            const locationCancelModal = new bootstrap.Modal(document.getElementById(`cancelModal${locationId}`));
-            locationCancelModal.show();
-        });
-    });
+			// Organization Cancel Button
+			const orgCancelBtn = document.getElementById('cancelBtn');
+			if (orgCancelBtn) {
+				orgCancelBtn.addEventListener('click', function () {
+					const orgCancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
+					orgCancelModal.show();
+				});
+			}
 
-    // Cancel Form Validation
-    document.querySelectorAll('form[id^="cancelForm"]').forEach(form => {
-        form.addEventListener('submit', function (event) {
-            const reasonInput = form.querySelector('textarea[name="reason_for_cancellation"]');
-            if (!reasonInput.value.trim()) {
-                event.preventDefault(); // Prevent form submission if the reason is empty
-                alert('Please provide a reason for cancellation.');
-            }
-        });
-    });
-});
+			// Location-Specific Cancel Buttons
+			document.querySelectorAll('[id^="cancelBtn"]').forEach(button => {
+				button.addEventListener('click', function () {
+					const locationId = button.getAttribute('data-location-id');
+					const locationCancelModal = new bootstrap.Modal(document.getElementById(`cancelModal${locationId}`));
+					locationCancelModal.show();
+				});
+			});
 
-</script>
-
+			// Cancel Form Validation
+			document.querySelectorAll('form[id^="cancelForm"]').forEach(form => {
+				form.addEventListener('submit', function (event) {
+					const reasonInput = form.querySelector('textarea[name="reason_for_cancellation"]');
+					if (!reasonInput.value.trim()) {
+						event.preventDefault(); // Prevent form submission if the reason is empty
+						alert('Please provide a reason for cancellation.');
+					}
+				});
+			});
+		});
+	</script>
 {% endblock %}
