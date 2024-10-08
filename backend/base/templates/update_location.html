@@ -1,77 +1,128 @@
 {% load static %}
-    <link href="{% static './css/update_location.css' %}" rel="stylesheet" />
-    <div class="container-fluid px-4 m">
-        <div class="profile-card">
-            <div>
-                <form id="upd-loc-form" method="post" action="{% url 'organization_updatelocation' pk=pk %}">
-                    {% csrf_token %}
-                    <table>
-                        <tbody>
-                            {% for field in form %}
-                                <tr>
-                                    <td>
-                                        {{ field.label_tag }}{% if field.field.required %}<span class="text-danger">*</span>{% endif %}
-                                    </td>
-                                    <td>
-                                        {{ field }}
-                                        {% if field.errors %}
-                                            <div class="text-danger">
-                                                {{ field.errors|join:", " }}
-                                            </div>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+<link href="{% static './css/update_location.css' %}" rel="stylesheet" />
+<div class="container-fluid px-4 m">
+    <div class="profile-card">
+        <div>
+            <form id="upd-loc-form" method="post" action="{% url 'organization_updatelocation' pk=pk %}">
+                {% csrf_token %}
+                <table>
+                    <tbody>
+                        {% for field in form %}
+                            <tr>
+                                <td>
+                                    {{ field.label_tag }}{% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                </td>
+                                <td>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="text-danger">
+                                            {{ field.errors|join:", " }}
+                                        </div>
+                                    {% endif %}
+                                    <!-- Add error message containers below fields -->
+                                    {% if field.name == "phone_number" %}
+                                        <span class="error-message text-danger" id="phone-number-error"></span>
+                                    {% elif field.name == "pincode" %}
+                                        <span class="error-message text-danger" id="pincode-error"></span>
+                                    {% elif field.name == "address_line_1" %}
+                                        <span class="error-message text-danger" id="address1-error"></span>
+                                    {% elif field.name == "address_line_2" %}
+                                        <span class="error-message text-danger" id="address2-error"></span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
-                    <div class="buttons text-center mt-4 mx-5">
-                        <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2">Update</button>
-                        <button id="nextTabBtn" class="btn btn-primary">Next</button>
-                    </div>
+                <div class="buttons text-center mt-4 mx-5">
+                    <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2">Update</button>
+                    <button id="nextTabBtn" class="btn btn-primary">Next</button>
+                </div>
 
-                    <input type="hidden" name="organization" value="{{ request.user.organization.id }}">
-                </form>
-            </div>
+                <input type="hidden" name="organization" value="{{ request.user.organization.id }}">
+            </form>
         </div>
     </div>
+</div>
 
-    <!-- Popup content -->
-    <div class="popup" id="popup">
-        <div class="popup-content">
-            <h2>Confirm Update</h2>
-            <p>Are you sure you want to continue?</p>
-            <div class="buttons1">
-                <button onclick="handleYes()">Yes</button>
-                <button onclick="handleNo()">No</button>
-            </div>
+<!-- Popup content -->
+<div class="popup" id="popup">
+    <div class="popup-content">
+        <h2>Confirm Update</h2>
+        <p>Are you sure you want to continue?</p>
+        <div class="buttons1">
+            <button onclick="handleYes()">Yes</button>
+            <button onclick="handleNo()">No</button>
         </div>
     </div>
-    
-    <div class="overlay" id="overlay"></div>
+</div>
 
-    <script src="{% static 'js/tab.js' %}"></script>
-    <script>
-        
-        function handleYes(event){
-            form = document.getElementById("upd-loc-form");
-            form.submit()
+<div class="overlay" id="overlay"></div>
+
+<script src="{% static 'js/tab.js' %}"></script>
+<script>
+    function validateForm() {
+        const phoneNumber = document.querySelector('input[name="phone_number"]').value;
+        const pincode = document.querySelector('input[name="pincode"]').value;
+        const addressLine1 = document.querySelector('textarea[name="address_line_1"]').value;
+        const addressLine2 = document.querySelector('textarea[name="address_line_2"]').value;
+
+        const phonePattern = /^\d{10}$/;
+        const pincodePattern = /^\d{6}$/;
+
+        // Clear previous error messages
+        document.getElementById("phone-number-error").innerText = "";
+        document.getElementById("pincode-error").innerText = "";
+        document.getElementById("address1-error").innerText = "";
+        document.getElementById("address2-error").innerText = "";
+
+        let isValid = true;
+
+        if (!phonePattern.test(phoneNumber)) {
+            document.getElementById("phone-number-error").innerText = "Phone number must have at least 10 digits.";
+            isValid = false;
         }
 
-        function handleNo(){
-            closePopup()
+        if (!pincodePattern.test(pincode)) {
+            document.getElementById("pincode-error").innerText = "Pincode must have at least 6 digits.";
+            isValid = false;
         }
 
-        function openPopup(event) {
-            event.preventDefault();
+        if (addressLine1.length < 3) {
+            document.getElementById("address1-error").innerText = "Address Line 1 must have at least 3 characters.";
+            isValid = false;
+        }
+
+        if (addressLine2.length < 3) {
+            document.getElementById("address2-error").innerText = "Address Line 2 must have at least 3 characters.";
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function handleYes(event) {
+        if (validateForm()) {
+            const form = document.getElementById("upd-loc-form");
+            form.submit();
+        }
+    }
+
+    function openPopup(event) {
+        event.preventDefault();
+        if (validateForm()) {
             document.getElementById("popup").style.display = "block";
             document.getElementById("overlay").style.display = "block";
         }
+    }
 
-        function closePopup() {
-            document.getElementById("popup").style.display = "none";
-            document.getElementById("overlay").style.display = "none";
-        }
+    function handleNo() {
+        closePopup();
+    }
 
-        
-    </script>
+    function closePopup() {
+        document.getElementById("popup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+</script>
