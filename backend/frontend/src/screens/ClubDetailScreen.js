@@ -263,15 +263,9 @@ function ClubDetailScreen() {
                   <i className="feather-mail">
                     <Mail />
                   </i>
-                  <a href="/cdn-cgi/l/email-protection#acd5c3d9dec1cdc5c0ecc9d4cdc1dcc0c982cfc3c1">
-                    {" "}
-                    <span
-                      className="__cf_email__"
-                      data-cfemail="c6bfa9b3b4aba7afaa86a3bea7abb6aaa3e8a5a9ab"
-                    >
-                      {clubLocation?.email}
-                    </span>
-                  </a>
+                  <li>
+                    {clubLocation?.email}
+                  </li>
                 </li>
               </ul>
             </div>

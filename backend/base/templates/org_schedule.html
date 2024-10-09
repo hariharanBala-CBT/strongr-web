@@ -18,7 +18,7 @@
         <label for="courtSelect">Select a court:</label>
         <select id="courtSelect" name="court" onchange="this.form.submit()">
             {% for court in courts %}
-                <option value="{{ court.id }}" {% if court == selected_court %}selected{% endif %}>{{ court.name }}</option>
+                <option value="{{ court.id }}" {% if court == selected_court %}selected{% endif %}>{{ court.name }}- {{ court.location.address_line_1 }}</option>
             {% endfor %}
         </select>
     </form>

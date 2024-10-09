@@ -36,7 +36,7 @@
                 </table>
 
                 <div class="buttons text-center mt-4 mx-5">
-                    <button type="button" onclick="openPopup(event)" class="btn btn-primary mx-2">Update</button>
+                    <button type="button" id="updateBtn" onclick="openPopup(event)" class="btn btn-primary mx-2" style="display: none;">Update</button>
                     <button id="nextTabBtn" class="btn btn-primary">Next</button>
                 </div>
 
@@ -62,6 +62,32 @@
 
 <script src="{% static 'js/tab.js' %}"></script>
 <script>
+    const form = document.getElementById("upd-loc-form");
+    const updateBtn = document.getElementById("updateBtn");
+    let initialFormData = new FormData(form);
+
+    // Function to check if form data has changed
+    function hasFormChanged() {
+        const currentFormData = new FormData(form);
+        for (let pair of currentFormData.entries()) {
+            if (initialFormData.get(pair[0]) !== pair[1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Add event listeners to all form inputs
+    form.querySelectorAll('input, textarea, select').forEach(input => {
+        input.addEventListener('input', function() {
+            if (hasFormChanged()) {
+                updateBtn.style.display = 'inline-block';
+            } else {
+                updateBtn.style.display = 'none';
+            }
+        });
+    });
+
     function validateForm() {
         const phoneNumber = document.querySelector('input[name="phone_number"]').value;
         const pincode = document.querySelector('input[name="pincode"]').value;
@@ -104,7 +130,6 @@
 
     function handleYes(event) {
         if (validateForm()) {
-            const form = document.getElementById("upd-loc-form");
             form.submit();
         }
     }
