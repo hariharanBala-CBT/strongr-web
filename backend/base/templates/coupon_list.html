@@ -60,9 +60,8 @@
                             <tr>
                                 <th>Code</th>
                                 <th>Discount Percentage</th>
-                                <th>Status</th>
                                 <th>Created At</th>
-                                <th>Expires At</th>
+                                <th>expired At</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -74,20 +73,13 @@
                                     <td>{{ coupon.discount_percentage }}%</td>
                                     <td>
                                         {% if coupon.is_expired %}
-                                            Expired
-                                        {% elif coupon.is_redeemed %}
-                                            Redeemed
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ coupon.created_at }}</td>
-                                    <td>{{ coupon.expires_at }}</td>
-                                    <td>
-                                        {% if coupon.is_expired %}
                                           <span class="status-label status-expired">Expired</span>
                                         {% elif coupon.is_redeemed %}
                                           <span class="status-label status-redeemed">Redeemed</span>
                                         {% endif %}
-                                      </td>
+                                    </td>
+                                    <td>{{ coupon.created_at }}</td>
+                                    <td>{{ coupon.expires_at }}</td>
                                 </tr>
                                 {% endif %}
                             {% empty %}
