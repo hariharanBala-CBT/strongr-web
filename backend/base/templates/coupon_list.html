@@ -10,57 +10,92 @@
     </ol>
     
     <div class="container-fluid px-4">
-
-        
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
-                <span><i class="fas fa-ticket-alt me-2"></i>Coupon List</span>
+                <span><i class="fas fa-ticket-alt me-2"></i>Available Coupons</span>
                 <a class="btn btn-success" href="{% url 'coupon-create' %}">
                     <i class="fas fa-plus-circle"></i> Create New Coupon
                 </a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="datatablesSimple" class="table table-hover table-bordered">
+                    <table id="availableCouponsTable" class="table table-hover table-bordered">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Code</th>
                                 <th>Discount Percentage</th>
-                                <th>Redeemed</th>
                                 <th>Created At</th>
                                 <th>Expires At</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for coupon in coupons %}
-                            <tr>
-                                <td>{{ coupon.code }}</td>
-                                <td>{{ coupon.discount_percentage }}%</td>
-                                <td>
-                                    {% if coupon.is_redeemed|default_if_none:"false" %}
-                                        Yes
-                                    {% else %}
-                                        No
-                                    {% endif %}
-                                </td>
-                                <td>{{ coupon.created_at }}</td>
-                                <td>{{ coupon.expires_at }}</td>
-                            </tr>
+                                {% if not coupon.is_expired and not coupon.is_redeemed %}
+                                <tr>
+                                    <td>{{ coupon.code }}</td>
+                                    <td>{{ coupon.discount_percentage }}%</td>
+                                    <td>{{ coupon.created_at }}</td>
+                                    <td>{{ coupon.expires_at }}</td>
+                                </tr>
+                                {% endif %}
                             {% empty %}
                             <tr>
-                                <td colspan="5" class="text-center">No coupons found.</td>
+                                <td colspan="4" class="empty-state">No available coupons found.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
-                        <tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-secondary text-white">
+                <span><i class="fas fa-ticket-alt me-2"></i>Expired and Redeemed Coupons</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="expiredRedeemedCouponsTable" class="table table-hover table-bordered">
+                        <thead class="thead-dark">
                             <tr>
                                 <th>Code</th>
                                 <th>Discount Percentage</th>
-                                <th>Redeemed</th>
+                                <th>Status</th>
                                 <th>Created At</th>
                                 <th>Expires At</th>
+                                <th>Status</th>
                             </tr>
-                        </tfoot>
+                        </thead>
+                        <tbody>
+                            {% for coupon in coupons %}
+                                {% if coupon.is_expired or coupon.is_redeemed %}
+                                <tr class="{% if coupon.is_expired %}expired-row{% elif coupon.is_redeemed %}redeemed-row{% endif %}">
+                                    <td>{{ coupon.code }}</td>
+                                    <td>{{ coupon.discount_percentage }}%</td>
+                                    <td>
+                                        {% if coupon.is_expired %}
+                                            Expired
+                                        {% elif coupon.is_redeemed %}
+                                            Redeemed
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ coupon.created_at }}</td>
+                                    <td>{{ coupon.expires_at }}</td>
+                                    <td>
+                                        {% if coupon.is_expired %}
+                                          <span class="status-label status-expired">Expired</span>
+                                        {% elif coupon.is_redeemed %}
+                                          <span class="status-label status-redeemed">Redeemed</span>
+                                        {% endif %}
+                                      </td>
+                                </tr>
+                                {% endif %}
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="empty-state">No expired or redeemed coupons found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             </div>
