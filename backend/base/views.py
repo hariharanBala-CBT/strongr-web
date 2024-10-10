@@ -1144,6 +1144,8 @@ class ChangeOrganizationLocationStatusView(View):
 
         if new_status == 1:
             messages.success(request, SUCCESS_MESSAGES.get('orglocation_approve'))
+        elif new_status == 3:
+            messages.success(request, SUCCESS_MESSAGES.get('location'))
         elif new_status == 4:
             messages.success(request, SUCCESS_MESSAGES.get('orglocation_cancel'))
 

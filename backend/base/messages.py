@@ -34,6 +34,7 @@ SUCCESS_MESSAGES = {
 
     #org
     'preview' : 'Preview submitted successfully',
+    'location' : 'Location details submitted successfully',
     'org_status' : 'Organization status updated successfully',
     'orglocation_status' : 'Organization location status updated successfully',
 
