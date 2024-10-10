@@ -1,41 +1,46 @@
-{% extends 'base_org.html' %}{% load static %} {% block content %}
-    <link href="{% static './css/coupon.css' %}" rel="stylesheet" />
-    
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item">
-            <a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'coupon-list' %}">Coupon List</a>
-        </li>
-        <li class="breadcrumb-item active">Coupon Create</li>
-    </ol>
+{% extends 'base_org.html' %}{% load static %}
 
-    <div class="container-fluid px-4">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-primary text-white">
+{% block content %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="{% static './css/coupon-create.css' %}" rel="stylesheet" />
+    
+    <div class="container-fluid px-4 py-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="{% url 'coupon-list' %}">Coupons</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create Coupon</li>
+            </ol>
+        </nav>
+
+        <div class="card shadow">
+            <div class="card-header">
                 <h2 class="mb-0"><i class="fas fa-tag"></i> Create a Coupon</h2>
             </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" class="coupon-form">
                     {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="{{ form.discount_percentage.id_for_label }}">{{ form.discount_percentage.label }}</label>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label for="{{ form.discount_percentage.id_for_label }}" class="form-label">{{ form.discount_percentage.label }}</label>
                             <select name="{{ form.discount_percentage.name }}" id="{{ form.discount_percentage.id_for_label }}" class="form-select">
                                 {% for value, display in form.discount_percentage.field.choices %}
                                     <option value="{{ value }}" {% if value == form.discount_percentage.value %}selected{% endif %}>{{ display }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="{{ form.expires_at.id_for_label }}">{{ form.expires_at.label }}</label>
+                        <div class="col-md-6">
+                            <label for="{{ form.expires_at.id_for_label }}" class="form-label">{{ form.expires_at.label }}</label>
                             <input type="date" name="{{ form.expires_at.name }}" id="{{ form.expires_at.id_for_label }}" value="{{ form.expires_at.value }}" class="form-control">
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <a href="{% url 'coupon-list' %}" class="btn btn-secondary">View All Coupons</a>
-                        <button type="submit" class="btn btn-primary">Create Coupon</button>
+                    <div class="mt-4 d-flex justify-content-between align-items-center">
+                        <a href="{% url 'coupon-list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Coupons
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>Create Coupon
+                        </button>
                     </div>
                 </form>
             </div>
