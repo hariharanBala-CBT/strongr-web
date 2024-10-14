@@ -242,7 +242,7 @@ class OrganizationLocationWorkingDays(models.Model):
     days = models.CharField(max_length=10,choices=day_choices)
     work_from_time = models.TimeField(null=True,blank=True)
     work_to_time = models.TimeField(null=True,blank=True)
-    is_active = models.BooleanField(default = True)
+    is_active = models.BooleanField(default = False)
 
     def __str__(self):
         return str(self.organization_location)

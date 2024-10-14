@@ -5,13 +5,44 @@ document.addEventListener('DOMContentLoaded', function() {
     const validationWarningModal = new bootstrap.Modal(document.getElementById('validationWarningModal'));
     const confirmDeleteButton = document.getElementById('confirmDelete');
     const totalForms = document.getElementById('id_happyhourpricing_set-TOTAL_FORMS');
+    const saveButton = document.getElementById('saveButton');
+    const loadingSpinner = document.getElementById('loadingSpinner');
     let rowToDelete = null;
+    let initialState = {};
 
-    // Add loading spinner to submit button
-    const submitButton = document.querySelector('button[type="submit"]');
-    const loadingSpinner = document.createElement('span');
-    loadingSpinner.className = 'spinner-border spinner-border-sm ms-2 d-none';
-    submitButton.appendChild(loadingSpinner);
+    function captureInitialState() {
+        happyHourTable.querySelectorAll('tbody tr:not(.d-none)').forEach((row, index) => {
+            initialState[index] = Array.from(row.querySelectorAll('input:not([type="hidden"]), select')).map(input => input.value);
+        });
+    }
+
+    function checkForChanges() {
+        let hasChanges = false;
+        const currentRows = happyHourTable.querySelectorAll('tbody tr:not(.d-none)');
+
+        if (currentRows.length !== Object.keys(initialState).length) {
+            hasChanges = true;
+        } else {
+            currentRows.forEach((row, index) => {
+                const currentValues = Array.from(row.querySelectorAll('input:not([type="hidden"]), select')).map(input => input.value);
+                if (!initialState[index] || !arraysEqual(currentValues, initialState[index])) {
+                    hasChanges = true;
+                }
+            });
+        }
+
+        saveButton.style.display = hasChanges ? 'inline-block' : 'none';
+    }
+
+    function arraysEqual(arr1, arr2) {
+        return arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
+    }
+
+    function trackChanges(element) {
+        element.addEventListener('input', checkForChanges);
+        element.addEventListener('change', checkForChanges);
+    }
+
 
     function validateTimes() {
         let isValid = true;
@@ -109,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (input.type !== 'hidden') {
                 input.required = true;
                 input.disabled = false;
+                trackChanges(input);
             }
         });
         newRow.querySelector('input[name$="-DELETE"]').value = '';
@@ -117,6 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
         happyHourTable.querySelector('tbody').appendChild(newRow);
         updateFormIndexes();
         bindDeleteRowEvent(newRow.querySelector('.delete-row'));
+        checkForChanges();
     }
 
     function bindDeleteRowEvent(deleteButton) {
@@ -133,6 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
             validateTimes();
             deleteConfirmModal.hide();
             rowToDelete = null;
+            checkForChanges();
         }
     });
 
@@ -166,6 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
     addHappyHourButton.addEventListener('click', addNewRow);
 
     document.querySelectorAll('.delete-row').forEach(bindDeleteRowEvent);
+    happyHourTable.querySelectorAll('input, select').forEach(trackChanges);
 
     document.querySelector('form').addEventListener('submit', function (e) {
         let invalidElements = document.querySelectorAll('input:invalid, select:invalid');
@@ -204,6 +239,11 @@ document.addEventListener('DOMContentLoaded', function() {
     happyHourTable.addEventListener('input', function(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
             validateTimes();
+            checkForChanges();
         }
     });
+
+    captureInitialState();
+    checkForChanges();
+
 });

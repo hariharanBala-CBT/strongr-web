@@ -21,9 +21,9 @@ SUCCESS_MESSAGES = {
     'update_court' : 'Court updated successfully',
     'update_slot': 'Slot updated successfully',
     'update_workingdays': 'Working days updated successfully',
-    'update_amenities': 'Amenities updated successfully',
+    'update_amenities': 'Amenities saved successfully',
     'update_rules': 'Rules updated successfully',
-    'update_happy': 'Happy hours updated successfully',
+    'update_happy': 'Happy hours saved successfully',
 
     #delete
     'delete_image': 'Image deleted successfully',

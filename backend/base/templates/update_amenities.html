@@ -1,11 +1,10 @@
 {% load static %}
 
 <link href="{% static './css/amenities.css' %}" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div class="container-fluid px-4 mt-4">
   <div class="profile-card">
-    <!-- <h3>AMENITIES</h3> -->
-    <!-- <span>Add available Amenities in your locations</span> -->
     <form
       id="upd-amen-form"
       action="{% url 'organization_locationamenities' locationpk %}"
@@ -36,15 +35,11 @@
           </tr>
           <tr>
             <td>
-              <label for="id_is_beverages_facility"
-                >Is Beverages available</label
-              >
+              <label for="id_is_beverages_facility">Is Beverages available</label>
             </td>
             <td>{{ form.is_beverages_facility }}</td>
             <td>
-              <label for="id_is_coaching_facilities"
-                >Is Coaching Facilities available</label
-              >
+              <label for="id_is_coaching_facilities">Is Coaching Facilities available</label>
             </td>
             <td>{{ form.is_coaching_facilities }}</td>
           </tr>
@@ -58,11 +53,12 @@
       </table>
       <div class="buttons px-4 py-4" style="margin-left: 20%">
         <button
-          id="nextTabBtn"
+          id="updateBtn"
           type="submit"
           class="btn btn-primary"
           data-toggle="tooltip"
-          title="submit">
+          title="submit"
+          style="display: none;">
           Update
         </button>
       </div>
@@ -70,3 +66,37 @@
     <div class="toast" id="successToast"></div>
   </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    var formChanged = false;
+    var originalValues = {};
+
+    // Store original values
+    $('input[type="checkbox"], textarea').each(function() {
+        var $this = $(this);
+        originalValues[$this.attr('id')] = $this.is(':checkbox') ? $this.prop('checked') : $this.val();
+    });
+
+    // Function to check if form has changed
+    function checkFormChanged() {
+        formChanged = false;
+        $('input[type="checkbox"], textarea').each(function() {
+            var $this = $(this);
+            var originalValue = originalValues[$this.attr('id')];
+            var currentValue = $this.is(':checkbox') ? $this.prop('checked') : $this.val();
+            if (originalValue !== currentValue) {
+                formChanged = true;
+                return false;  // Exit the loop early if we find a change
+            }
+        });
+        $('#updateBtn').toggle(formChanged);
+    }
+
+    // Bind change event to all checkboxes and textarea
+    $('input[type="checkbox"], textarea').on('change input', checkFormChanged);
+
+    // Initial check
+    checkFormChanged();
+});
+</script>
