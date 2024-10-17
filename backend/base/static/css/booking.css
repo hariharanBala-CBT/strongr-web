@@ -446,6 +446,59 @@
     }
   }
 
+  .pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .items-per-page {
+    display: flex;
+    align-items: center;
+  }
+  
+  .items-per-page label {
+    margin-right: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+  
+  #itemsPerPage {
+    width: auto;
+    padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+    font-size: 0.9rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    appearance: none;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+  }
+  
+  #itemsPerPage:focus {
+    border-color: var(--primary-color);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+  }
+  
+  .toggle-filters-btn {
+    background-color: #6a11cb;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border-left: 30px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  
+  .toggle-filters-btn:hover {
+    background-color: #3a7bc8;
+  }
+
   .footer {
     background-color: #f8f9fa;
     padding: 10px 0;

@@ -18,7 +18,7 @@
     </div>
 
     <!-- Filter Section -->
-    <div class="col-12 mb-4">
+    <div class="col-12 mb-4" id="filterSection" style="display: none;">
       <div class="card shadow-sm">
         <div class="card-header bg-white">
           <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>Filter Bookings</h5>
@@ -66,9 +66,28 @@
     <div class="col-12">
       <div class="card shadow-sm h-100">
         <div class="card-header bg-white">
-          <h5 class="card-title mb-0"><i class="fas fa-calendar-check me-2"></i>Bookings</h5>
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0"><i class="fas fa-calendar-check me-2"></i>Bookings</h5>
+              <div class="pagination-controls">
+                <button id="toggleFilterBtn" class="toggle-filters-btn">
+                  <i class="fas fa-filter me-2"></i> Filter
+                </button>
+              </div>
+          </div>
         </div>
         <div class="card-body">
+          <div class="pagination-controls">
+            <div class="items-per-page">
+              <select id="itemsPerPage" class="form-select form-select-sm">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+              </select> <p class="mx-2 mt-2 justify-content align-items-center"> records per page</p>
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-hover align-middle">
               <thead class="table-light">
@@ -149,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const rows = Array.from(document.querySelectorAll('#bookingTable tr'));
   let filteredRows = rows;
 
-  const itemsPerPage = 10;
+  let itemsPerPage = 5;
   let currentPage = 1;
   let totalPages = Math.ceil(rows.length / itemsPerPage);
 
@@ -160,6 +179,13 @@ document.addEventListener('DOMContentLoaded', function () {
   gameFilter.addEventListener('change', applyFilters);
   dateFilter.addEventListener('change', applyFilters);
   paymentStatusFilter.addEventListener('change', applyFilters);
+  
+  const itemsPerPageInput = document.getElementById('itemsPerPage');
+    itemsPerPageInput.addEventListener('change', function() {
+    itemsPerPage = parseInt(this.value, 5);
+    currentPage = 1;
+    applyFilters();
+  });
 
   function applyFilters() {
     const game = gameFilter.value.toLowerCase();
@@ -187,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return gameMatch && dateMatch && paymentStatusMatch;
     });
 
-    currentPage = 1;
+    totalPages = Math.ceil(filteredRows.length / itemsPerPage);
     showPage(currentPage);
     setupPagination();
   }
@@ -231,6 +257,30 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
   }
+
+  function clearFilters() {
+    gameFilter.value = '';
+    dateFilter.value = '';
+    paymentStatusFilter.value = '';
+    filteredRows = rows;
+    itemsPerPageInput.value = '1';
+    itemsPerPage = 1;
+    currentPage = 1;
+    showPage(currentPage);
+    setupPagination();
+  }
+
+  const toggleFilterBtn = document.getElementById('toggleFilterBtn');
+  const filterSection = document.getElementById('filterSection');
+
+  toggleFilterBtn.addEventListener('click', function() {
+    if (filterSection.style.display === 'none') {
+      filterSection.style.display = 'block';
+    } else {
+      filterSection.style.display = 'none';
+      clearFilters()
+    }
+  });
 
   showPage(currentPage);
   setupPagination();
