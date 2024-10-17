@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
   const itemsPerPageInput = document.getElementById('itemsPerPage');
     itemsPerPageInput.addEventListener('change', function() {
-    itemsPerPage = parseInt(this.value, 5);
+    itemsPerPage = parseInt(this.value);
     currentPage = 1;
     applyFilters();
   });
