@@ -254,8 +254,20 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         currentPage = i;
         showPage(currentPage);
+        updateActivePage(i);
       });
     }
+  }
+
+  function updateActivePage(page) {
+    const paginationLinks = document.querySelectorAll('#pagination .page-item');
+    paginationLinks.forEach((li, index) => {
+      if (index + 1 === page) {
+        li.classList.add('active');
+      } else {
+        li.classList.remove('active');
+      }
+    });
   }
 
   function clearFilters() {
