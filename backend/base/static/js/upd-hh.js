@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (validateTimes()) {
             loadingSpinner.classList.remove('d-none');
-            submitButton.disabled = true;
+            saveButton.disabled = true;
             this.submit();
         }
     });
