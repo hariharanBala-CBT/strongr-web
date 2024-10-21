@@ -1773,8 +1773,6 @@ def booking_schedule(request):
         booking_status__in=[Booking.CONFIRMED, Booking.PENDING]
     )
 
-    print("bookings",bookings)
-
     for booking in bookings:
         day = booking.booking_date.strftime('%Y-%m-%d')
         if booking.slot:
@@ -1784,15 +1782,14 @@ def booking_schedule(request):
             slot_str = f"{booking.additional_slot.start_time.strftime('%H:%M')} to {booking.additional_slot.end_time.strftime('%H:%M')}"
             availability[day][slot_str] = 'Booked'
         else:
-            continue  # Skip if neither slot nor additional_slot is set
+            continue
 
     formatted_availability = {}
     for date, slots in availability.items():
         formatted_availability[date] = {}
         for time_slot, status in slots.items():
             formatted_availability[date][time_slot] = status
-            print("status",status)
-
+            
     context = {
         'courts': courts,
         'selected_court': selected_court,
@@ -1838,8 +1835,9 @@ class HappyhoursLocationListView(GroupAccessMixin, ListView):
         return OrganizationLocation.objects.filter(organization=organization)
 
 
-class HappyHourPricingManageView(View):
+class HappyHourPricingManageView(GroupAccessMixin, View):
     template_name = 'happyhours_update.html'
+    group_required = ['Organization']
     
     def get(self, request, pk):
         org_loc = get_object_or_404(OrganizationLocation, pk=pk)
