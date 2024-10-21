@@ -539,7 +539,7 @@ function ClubDetailScreen() {
                       </div>
                       <div className="review-wrapper-last">
                         <div>
-                          {userInfo && <button> {t("writeReview")}</button>}
+                          {userInfo && <p> {t("writeReview")}</p>}
                           <p>
                             {!userInfo && (
                               <span className="login-remainder">

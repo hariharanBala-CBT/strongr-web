@@ -241,7 +241,7 @@ function HomeScreen(history) {
                 </div>
                 <div className="work-content">
                   <h5>
-                    <a href="!#">{t("selectCoachesVenues")}</a>
+                    <a href="/">{t("selectCoachesVenues")}</a>
                   </h5>
                   <p>
                     {t("selectCoachesVenuesDescription")}
@@ -264,7 +264,7 @@ function HomeScreen(history) {
                 </div>
                 <div className="work-content">
                   <h5>
-                    <a href="!#">{t("bookingProcess")}</a>
+                    <a href="/">{t("bookingProcess")}</a>
                   </h5>
                   <p>
                     {t("bookingProcessDescription")}
