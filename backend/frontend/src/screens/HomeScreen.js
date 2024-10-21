@@ -246,7 +246,7 @@ function HomeScreen(history) {
                   <p>
                     {t("selectCoachesVenuesDescription")}
                   </p>
-                  <a className="btn" href="!#">
+                  <a className="btn" href="/">
                     {t("goToCoaches")}{" "}
                     <span>
                       <ArrowRight />
@@ -269,7 +269,7 @@ function HomeScreen(history) {
                   <p>
                     {t("bookingProcessDescription")}
                   </p>
-                  <a className="btn" href="!#">
+                  <a className="btn" href="/">
                   {t("bookNow")}{" "}
                     <span>
                       <ArrowRight />
