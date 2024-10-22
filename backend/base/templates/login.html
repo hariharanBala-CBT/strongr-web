@@ -9,6 +9,9 @@
     <link href="{% static 'css/login.css' %}" rel="stylesheet">
 </head>
 <body>
+
+    <div class="background-animation" id="backgroundAnimation"></div>
+
     <div class="login-container">
         <div class="login-header">
             <a class="h2 mb-4" href="/">STRONGR.</a>
@@ -17,7 +20,7 @@
 
         <form method="post" id="login-form">
             {% csrf_token %}
-            
+
             {% if form.errors %}
                 {% for field, errors in form.errors.items %}
                     {% for error in errors %}
@@ -33,7 +36,7 @@
             {% endif %}
 
             <div class="form-group">
-                <input type="text" name="username" id="{{ form.username.id_for_label }}" 
+                <input type="text" name="username" id="{{ form.username.id_for_label }}"
                        placeholder="{{ form.username.field.widget.attrs.placeholder }}"
                        {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
                 <i class="fas fa-user"></i>
@@ -61,7 +64,7 @@
             </div>
 
             <button type="submit" class="login-button" id="login-button">Log In</button>
-            
+
             <div class="links">
                 <a href="{% url 'password_reset' %}">Forgot Password?</a>
                 <span>|</span>
@@ -74,7 +77,7 @@
         function togglePassword() {
             const passwordInput = document.getElementById('{{ form.password.id_for_label }}');
             const toggleIcon = document.getElementById('password-toggle-icon');
-            
+
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 toggleIcon.classList.remove('fa-eye');
@@ -104,6 +107,29 @@
                 }, 5000);
             });
         });
+
+        const gameIcons = [
+            '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M4 12h16"/><path d="M12 4v16"/></svg>', // Tennis
+            '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4v16M6 6q6 8 12 0"/></svg>', // Volleyball
+            '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M10 14l2 6l2-6"/><line x1="8" y1="16" x2="16" y2="16"/></svg>', // Running
+            '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12q8-4 16 0"/><circle cx="16" cy="6" r="3"/><path d="M4 16q8-4 16 0"/></svg>' // Swimming
+        ];
+
+        function createGameIcon() {
+            const icon = document.createElement('div');
+            icon.classList.add('game-icon');
+            icon.innerHTML = gameIcons[Math.floor(Math.random() * gameIcons.length)];
+            icon.style.left = Math.random() * 100 + 'vw';
+            icon.style.top = Math.random() * 100 + 'vh';
+            icon.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            document.getElementById('backgroundAnimation').appendChild(icon);
+
+            setTimeout(() => {
+                icon.remove();
+            }, 20000);
+        }
+
+        setInterval(createGameIcon, 2000);
     </script>
 </body>
 </html>
