@@ -1,109 +1,136 @@
-{% load static %}{% load url_filters %}
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
 
-    <title>STRONGR.</title>
+<head>
 
-    <link href="{% static 'css/signupstyle.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/vendor.bundle.base.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/materialdesignicons.min.css' %}" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <title>Strongr | Explore Your Passion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="{% static 'css/signupstyle.css' %}" rel="stylesheet" />
 
-  </head>
+</head>
 
-  <body>
-    <div class="container-scroller">
-      <div class="container-fluid page-body-wrapper full-page-wrapper">
-        <div class="row w-100 m-0">
-          <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
-            <div class="card col-lg-4 mx-auto">
-              <div class="card-body px-5 py-5">
-                <h1 class="mt-4 mb-4 text-center">SIGN UP</h1>
-                <form method="post">
-                  {% csrf_token %}
-                  <div class="form-group mt-3 mb-3">
-                    <label for="{{ form.first_name.id_for_label }}">First Name</label>
-                    <div class="input-icon">
-                      <i class="fas fa-user"></i>
-                      {{ form.first_name }}
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="{{ form.last_name.id_for_label }}">Last Name</label>
-                    <div class="input-icon">
-                      <i class="fas fa-user"></i>
-                      {{ form.last_name }}
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="{{ form.organization_name.id_for_label }}">Organization Name</label>
-                    <div class="input-icon">
-                      <i class="fas fa-building"></i>
-                      {{ form.organization_name }}
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="{{ form.email.id_for_label }}">Email</label>
-                    <div class="input-icon">
-                      <i class="fas fa-envelope"></i>
-                      {{ form.email }}
-                    </div>
-                    {% if form.email.errors %}
-                    <div class="error">
-                      {% for error in form.email.errors %}
-                      <p>{{ error }}</p>
-                      {% endfor %}
-                    </div>
-                    {% endif %}
-                  </div>
-                  <div class="form-group">
-                    <label for="{{ form.phone_number.id_for_label }}">Phone number</label>
-                    <div class="input-icon">
-                      <i class="fas fa-phone"></i>
-                      {{ form.phone_number }}
-                    </div>
-                    {% if form.phone_number.errors %}
-                    <div class="error">
-                      {% for error in form.phone_number.errors %}
-                      <p>{{ error }}</p>
-                      {% endfor %}
-                    </div>
-                    {% endif %}
-                  </div>
-                  <div class="text-center">
-                    <button type="submit" class="btn btn-primary btn-block enter-btn">Sign Up</button>
-                  </div>
+<body>
 
-                  <div class="d-flex mt-3 mb-3">
-                    <button class="btn btn-facebook col mr-2">
-                      <i class="mdi mdi-facebook"></i> Facebook
-                    </button>
-                    <button class="btn btn-google col">
-                      <i class="mdi mdi-google-plus"></i> Google plus
-                    </button>
-                  </div>
-                  <p class="sign-up text-center">
-                    Already have an Account? <a href="{% url 'login' %}">Login</a>
-                  </p>
-                </form>
-                <div class="text-center mt-4">
-                  <p>Need a Guide?</p>
-                  <a href="{% static 'guide/organization.pdf' %}" target="_blank" rel="noopener noreferrer">Click Here!</a>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="background-animation" id="backgroundAnimation"></div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader">
+      <div class="loader-spinner"></div>
+      <div class="loader-text">Creating your account...</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Join Strongr Today</h1>
+    <form id="signup-form" method="post" action="{% url 'signup' %}">
+      {% csrf_token %}
+      <div class="input-group">
+        <label for="{{ form.first_name.id_for_label }}">First Name</label>
+        <div class="input-icon">
+          <i class="fas fa-user"></i>
+          {{ form.first_name }}
         </div>
       </div>
-    </div>
 
-    <script src="{% static 'js/vendor.bundle.base.js' %}"></script>
-    <script src="{% static 'js/off-canvas.js' %}"></script>
-    <script src="{% static 'js/hoverable-collapse.js' %}"></script>
-    <script src="{% static 'js/misc.js' %}"></script>
-    <script src="{% static 'js/settings.js' %}"></script>
-    <script src="{% static 'js/todolist.js' %}"></script>
-  </body>
+      <div class="input-group">
+        <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+        <div class="input-icon">
+          <i class="fas fa-user"></i>
+          {{ form.last_name }}
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="{{ form.organization_name.id_for_label }}">Organization Name</label>
+        <div class="input-icon">
+          <i class="fas fa-building"></i>
+          {{ form.organization_name }}
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="{{ form.email.id_for_label }}">Email</label>
+        <div class="input-icon">
+          <i class="fas fa-envelope"></i>
+          {{ form.email }}
+        </div>
+        {% if form.email.errors %}
+        <div class="error">
+          {% for error in form.email.errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="input-group">
+        <label for="{{ form.phone_number.id_for_label }}">Phone number</label>
+        <div class="input-icon">
+          <i class="fas fa-phone"></i>
+          {{ form.phone_number }}
+        </div>
+        {% if form.phone_number.errors %}
+        <div class="error">
+          {% for error in form.phone_number.errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <button type="submit" id="submitButton">
+        <span>Create Account</span>
+        <div class="button-spinner"></div>
+      </button>
+    </form>
+
+    <div class="social-signup">
+      <button class="social-btn facebook" id="facebookBtn">
+        <i class="fab fa-facebook"></i>
+        Facebook
+      </button>
+      <button class="social-btn google" id="googleBtn">
+        <i class="fab fa-google"></i>
+        Google
+      </button>
+      <p class="login-link">Already have an Account? <a href="{% url 'login' %}">Login</a></p>
+      <p class="guide-link">Need a Guide? <a href="{% static 'guide/organization.pdf' %}" target="_blank"
+          rel="noopener noreferrer">Click Here!</a></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('signup-form').addEventListener('submit', function () {
+      document.getElementById('loadingOverlay').style.display = 'flex';
+    });
+
+    const gameIcons = [
+            '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+            '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>',
+            '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>',
+            '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>'
+        ];
+
+        function createGameIcon() {
+            const icon = document.createElement('div');
+            icon.classList.add('game-icon');
+            icon.innerHTML = gameIcons[Math.floor(Math.random() * gameIcons.length)];
+            icon.style.left = Math.random() * 100 + 'vw';
+            icon.style.top = Math.random() * 100 + 'vh';
+            icon.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            document.getElementById('backgroundAnimation').appendChild(icon);
+
+            setTimeout(() => {
+                icon.remove();
+            }, 20000);
+        }
+
+        setInterval(createGameIcon, 2000);
+  </script>
+
+</body>
+
 </html>

@@ -1,125 +1,109 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>STRONGR-Login</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="{% static 'css/login.css' %}" rel="stylesheet">
 </head>
-<body class="bg-gradient-primary">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-12 col-md-9">
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <a class="h4 text-gray-900 mb-4" href="/" style="font-weight: 900;">STRONGR.</a>
-                                        <h6>Login</h6>
-                                    </div>
-                                    <form class="user" method="post">
-                                        {% csrf_token %}
-                                        <div class="form-group">
-                                            {{ form.username}}
-                                            <span class="icon-container">
-                                                <i class="fa fa-user"></i>
-                                            </span>
-                                            {% if form.username.errors %}
-                                                <div role="alert" aria-live="assertive" class="alert alert-danger" id="errors">
-                                                    {{ form.username.errors }}
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="form-group">
-                                            <div>
-                                                {{ form.password }}
-                                                <span id="toggle-password" class="toggle-password" onclick="togglePasswordVisibility()">
-                                                    <i class="fas fa-eye" id="toggle-password-icon"></i>
-                                                </span>
-                                            </div>
-                                            {% if form.password.errors %}
-                                                <div role="alert" aria-live="assertive" class="alert alert-danger" id="errors">
-                                                    {{ form.password.errors }}
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                        <button class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </button>
-                                        <hr>
-                                        <a href="#" class="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i> Login with Google
-                                        </a>
-                                        <a href="#" class="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                                        </a>
-                                    </form>
-                                    <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="{% url 'password_reset' %}">Forgot Password?</a>
-                                    </div>
-                                    <div class="text-center">
-                                        <a class="small" href="{% url 'signup' %}">Create an Account!</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <a class="h2 mb-4" href="/">STRONGR.</a>
+            <p>Enter your credentials to continue</p>
         </div>
+
+        <form method="post" id="login-form">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="error-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="form-group">
+                <input type="text" name="username" id="{{ form.username.id_for_label }}" 
+                       placeholder="{{ form.username.field.widget.attrs.placeholder }}"
+                       {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
+                <i class="fas fa-user"></i>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password" id="{{ form.password.id_for_label }}"
+                       placeholder="{{ form.password.field.widget.attrs.placeholder }}">
+                <i class="fas fa-lock"></i>
+                <button type="button" class="password-toggle" onclick="togglePassword()">
+                    <i class="fas fa-eye" id="password-toggle-icon"></i>
+                </button>
+            </div>
+
+            <div class="loading-container" id="loading-spinner">
+                <div class="loading-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="loading-text">Logging in...</div>
+            </div>
+
+            <button type="submit" class="login-button" id="login-button">Log In</button>
+            
+            <div class="links">
+                <a href="{% url 'password_reset' %}">Forgot Password?</a>
+                <span>|</span>
+                <a href="{% url 'signup' %}">Create Account</a>
+            </div>
+        </form>
     </div>
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
     <script>
-        function togglePasswordVisibility() {
-            const passwordField = document.getElementById('id_password');
-            const icon = document.getElementById('toggle-password-icon');
-            if (passwordField && icon) {
-                if (passwordField.type === 'password') {
-                    passwordField.type = 'text';
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    passwordField.type = 'password';
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
+        function togglePassword() {
+            const passwordInput = document.getElementById('{{ form.password.id_for_label }}');
+            const toggleIcon = document.getElementById('password-toggle-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
             } else {
-                console.error('Element not found');
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const $alert = document.querySelector('.alert');
-            if ($alert) {
-                setTimeout(() => {
-                    $alert.style.display = 'none';
-                }, 2500);
-            }
+        // Show loading spinner when form is submitted
+        document.getElementById('login-form').addEventListener('submit', function() {
+            document.getElementById('login-button').disabled = true;
+            document.getElementById('loading-spinner').style.display = 'flex';
+        });
 
-            const passwordField = document.getElementById('id_password');
-            if (passwordField) {
-                passwordField.addEventListener('input', () => {
-                    const $alert = document.querySelector('.alert');
-                    if ($alert) {
-                        $alert.style.display = 'none';
-                    }
-                });
-            }
+        // Auto-hide error messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', () => {
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(message => {
+                setTimeout(() => {
+                    message.style.opacity = '0';
+                    setTimeout(() => {
+                        message.style.display = 'none';
+                    }, 300);
+                }, 5000);
+            });
         });
     </script>
-
 </body>
 </html>
