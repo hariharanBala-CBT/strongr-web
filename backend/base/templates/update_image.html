@@ -79,6 +79,7 @@
       }
 
       function openPopup(event) {
+          validateForm()
           event.preventDefault();
           document.getElementById("popup").style.display = "block";
           document.getElementById("overlay").style.display = "block";

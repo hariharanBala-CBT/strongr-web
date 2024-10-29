@@ -628,8 +628,8 @@ class OrganizationUpdateLocationImageView(GroupAccessMixin, UpdateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        error_messages = ''.join([f'{error}' for error in form.errors.values()])
-        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', {error_messages}))
+        error_messages = ' '.join([error[0] for error in form.errors.values()])
+        messages.error(self.request, ERROR_MESSAGES.get('form_validation_failed', error_messages))
         return self.render_to_response(self.get_context_data(form=form))
 
     def get_context_data(self, **kwargs):
