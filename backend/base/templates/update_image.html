@@ -17,7 +17,7 @@
                 <form id="upd-img-form" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
                   {% csrf_token %}
                   <div class="mb-3">
-                    <label for="id_image" class="form-label">Image</label>
+                    <label for="id_image" class="form-label">Image<span class="text-danger">*</span></label>
                       {{ form.image }}
                       {% if form.instance.image %}
                           <img src="{{ form.instance.image.url|fix_https }}" alt="Current Image" class="mt-3">
