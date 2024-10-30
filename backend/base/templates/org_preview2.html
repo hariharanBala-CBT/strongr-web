@@ -134,7 +134,11 @@
                                                             <div class="carousel-inner">
                                                                 {% for image in location_item.images %}
                                                                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                                                        {% if image.image %}
                                                                         <img class="d-block w-100" src="{{ image.image.url|fix_https }}" alt="image" width="350" height="450">
+                                                                        {% else %}
+                                                                        <img class="d-block w-100" src="https://cbtstrongr.s3.amazonaws.com/images/no-image.jpg" alt="image">
+                                                                        {% endif %}
                                                                     </div>
                                                                 {% empty %}
                                                                     <div class="carousel-item active">
