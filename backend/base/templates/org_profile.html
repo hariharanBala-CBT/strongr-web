@@ -2,98 +2,84 @@
 {% load static %}
 {% block content %}
 <link href="{% static './css/profile.css' %}" rel="stylesheet" />
-<div class="container-fluid px-4 m">
-  <ol class="breadcrumb mb-1">
-    <li class="breadcrumb-item">
-      <a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a>
-    </li>
-    <li class="breadcrumb-item active">Profile</li>
-  </ol>
+<div class="container-fluid px-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fas fa-home"></i></a></li>
+      <li class="breadcrumb-item active" aria-current="page">Profile</li>
+    </ol>
+  </nav>
+  
+  <div id="successToast" class="toast"></div>
+  
+  <div class="profile-container">
+    <div class="profile-header">
+      <h1><i class="fas fa-user-circle mr-2"></i> Profile</h1>
+    </div>
 
-  <div class="profile-card">
-    <h1 class="my-4">Profile</h1>
-    <div>
-      <form method="post" id="profile_updateForm">
-        {% csrf_token %}
-        <div class="table-responsive">
-          <table id="simple-datatables">
-            <tbody>
-              <tr>
-                <td><label for="id_organization_name">Organization Name</label></td>
-                <td>
-                  <input
-                    type="text"
-                    name="organization_name"
-                    value="{{ object.organization_name }}"
-                    maxlength="50"
-                    required=""
-                    disabled=""
-                    id="id_organization_name"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td><label for="id_email">Email</label></td>
-                <td>
-                  <input
-                    type="text"
-                    name="email"
-                    value="{{ request.user.email }}"
-                    maxlength="50"
-                    required=""
-                    disabled=""
-                    id="id_email"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td><label for="id_phone_number">Phone Number<span class="text-danger">*</span></label></td>
-                <td>
-                  {{ form.phone_number }}
-                  <div id="error_phone_number" class="text-danger"></div>
-                </td>
-              </tr>
-              <tr>
-                <td><label for="id_alt_number">Alternate Phone Number</label></td>
-                <td>
-                  {{ form.alt_number }}
-                  <div id="error_alt_number" class="text-danger"></div>
-                </td>
-              </tr>
-              <tr>
-                <td><label for="id_description">Description</label></td>
-                <td>{{ form.description }}</td>
-              </tr>
-              <tr>
-                <td><label for="id_is_gst_applicable">Is GST Applicable?</label></td>
-                <td>
-                  {{ form.is_gst_applicable }}
-                </td>
-              </tr>
-              <tr id="gst_percentage_row" style="display: none;">
-                <td><label for="id_gst_percentage">GST Percentage</label></td>
-                <td>
-                  {{ form.gst_percentage }}
-                  <div id="error_gst_percentage" class="text-danger"></div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="u-button">
-          <button type="submit" class="btn btn-primary">Update</button>
-        </div>
-      </form>
-      <div class="toast" id="successToast"></div>
-      <div id="confirmationModal" class="modal" aria-hidden="true" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+    <form method="post" id="profile_updateForm" class="profile-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="id_organization_name">Organization Name</label>
+        <input type="text" class="form-control" name="organization_name" value="{{ object.organization_name }}" maxlength="50" required disabled id="id_organization_name">
+      </div>
+
+      <div class="form-group">
+        <label for="id_email">Email</label>
+        <input type="email" class="form-control" name="email" value="{{ request.user.email }}" maxlength="50" required disabled id="id_email">
+      </div>
+
+      <div class="form-group">
+        <label for="id_phone_number">Phone Number<span class="text-danger">*</span></label>
+        {{ form.phone_number }}
+        <div id="error_phone_number" class="error-message"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="id_alt_number">Alternate Phone Number</label>
+        {{ form.alt_number }}
+        <div id="error_alt_number" class="error-message"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="id_description">Description</label>
+        {{ form.description }}
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label for="id_is_gst_applicable">
+          {{ form.is_gst_applicable }}
+          Is GST Applicable?
+        </label>
+      </div>
+
+      <div class="form-group" id="gst_percentage_row" style="display: none;">
+        <label for="id_gst_percentage">GST Percentage</label>
+        {{ form.gst_percentage }}
+        <div id="error_gst_percentage" class="error-message"></div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn-update">Update Profile</button>
+      </div>
+    </form>
+
+
+    <div id="confirmationModal" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <h2 id="modalLabel">Confirm Update</h2>
-          <p id="updateDetails">
-            Are you sure you want to update the profile details?
-          </p>
-          <div class="buttons">
-            <button id="cancelUpdateButton">Cancel</button>
-            <button id="confirmUpdateButton">Confirm</button>
+          <div class="modal-header">
+            <h5 class="modal-title">Confirm Update</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to update the profile details?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelUpdateButton">Cancel</button>
+            <button type="button" class="btn btn-primary" id="confirmUpdateButton">Confirm</button>
           </div>
         </div>
       </div>
@@ -162,7 +148,7 @@
     toast.style.display = "block";
     setTimeout(() => {
       toast.style.display = "none";
-    }, 5000);
+    }, 3500);
   }
 
   function submitFormData() {
@@ -194,7 +180,7 @@
         showToast(data.message);
         setTimeout(() => {
           window.location.href = "{% url 'organization_profile' %}";
-        }, 2000);
+        }, 5000);
       }
     })
     .catch((error) => {
@@ -225,7 +211,7 @@
       phoneError.style.display = "block";
       setTimeout(() => {
         phoneError.style.display = "none";
-      }, 1500);
+      }, 3500);
       isValid = false;
     } else {
       phoneError.style.display = "none";
@@ -236,7 +222,7 @@
       altPhoneError.style.display = "block";
       setTimeout(() => {
         altPhoneError.style.display = "none";
-      }, 1500);
+      }, 3500);
       isValid = false;
     } else {
       altPhoneError.style.display = "none";
@@ -248,7 +234,7 @@
       gstPercentageError.style.display = "block";
       setTimeout(() => {
         gstPercentageError.style.display = "none";
-      }, 1500);
+      }, 3500);
       isValid = false;
     } else {
       gstPercentageError.style.display = "none";
