@@ -42,4 +42,13 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const currentUrl = window.location.pathname;
+    const Link = document.querySelector('a.nav-link[href="/organizationlocationlist/"]');
+    Link.classList.add("active");
+  });
+</script>
+
 {% endblock %}

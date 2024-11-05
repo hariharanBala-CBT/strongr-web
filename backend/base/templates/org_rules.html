@@ -90,6 +90,12 @@
     </div>
 
     <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const Link = document.querySelector('a.nav-link[href="/organization_location_list/rules"]');
+            Link.classList.add("active");
+        });
+
         let ruleCounter = 1;
         let currentEditRuleElement = null;
         let currentDeleteRuleElement = null;

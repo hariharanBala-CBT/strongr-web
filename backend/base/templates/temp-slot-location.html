@@ -65,4 +65,14 @@
     ></a>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapseElement = document.querySelector("#collapseLayouts");
+    const Link = document.querySelector('a.nav-link[href="/temp-slot-location/"]');
+    collapseElement.classList.toggle("show");
+    Link.classList.add("active");
+  });
+</script>
+
 {% endblock %}

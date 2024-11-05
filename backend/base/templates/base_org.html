@@ -77,13 +77,13 @@
                             Slots
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'slot-location' %}active{% endif %}" href="{% url 'slot-location' %}">Slot-list</a>
-                                <a class="nav-link {% if request.resolver_match.url_name == 'temp-slot-location' %}active{% endif %}" href="{% url 'temp-slot-location'%}">Additional Slots</a>
-                                <a class="nav-link {% if request.resolver_match.url_name == 'temp-deslot-location' %}active{% endif %}" href="{% url 'temp-deslot-location'%}">Unavailable Slots</a>
-                            </nav>
-                        </div>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'slot-location' %}active{% endif %}" href="{% url 'slot-location' %}">Slot-list</a>
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'temp-slot-location' %}active{% endif %}" href="{% url 'temp-slot-location'%}">Additional Slots</a>
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'temp-deslot-location' %}active{% endif %}" href="{% url 'temp-deslot-location'%}">Unavailable Slots</a>
+                                </nav>
+                            </div>
                         <a class="nav-link {% if request.resolver_match.url_name == 'preview' %}active{% endif %}" href="{% url 'preview' %}">
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-list"></i></div>
                             Preview

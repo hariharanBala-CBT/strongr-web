@@ -75,13 +75,14 @@ class OrganizationLocationForm(ModelForm):
         widgets = {
             'address_line_1': forms.Textarea(attrs={'rows': 2, 'cols': 20}),
             'address_line_2': forms.Textarea(attrs={'rows': 2, 'cols': 20}),
-            'location_description': forms.Textarea(attrs={'rows': 2, 'cols': 20})
+            'location_description': forms.Textarea(attrs={'rows': 2, 'cols': 20}),
+            'phone_number': forms.TextInput(attrs={'type': 'text', 'id': 'phone_number'})
         }
 
     def clean_pincode(self):
         pincode = self.cleaned_data.get('pincode')
         if not (100000 <= pincode <= 999999):
-            raise ValidationError('Make sure pincode is 6-digits')
+            raise ValidationError('Pincode must be 6-digits')
         return pincode
 
     def clean_phone_number(self):

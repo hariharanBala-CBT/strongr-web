@@ -68,6 +68,12 @@
             note.style.display = "none";
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const collapseElement = document.querySelector("#collapseLayouts");
+        collapseElement.classList.toggle("show");
+    });
+
 </script>
 
 {% endblock %}

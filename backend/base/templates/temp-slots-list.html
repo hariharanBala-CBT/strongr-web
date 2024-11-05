@@ -64,7 +64,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="buttons px-4 py-4">
             <div><a href="{% url 'temp-slot-location' %}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i></a></div>
         </div>
@@ -118,4 +118,14 @@
             }
 
         </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            const collapseElement = document.querySelector("#collapseLayouts");
+            const Link = document.querySelector('a.nav-link[href="/temp-slot-location/"]');
+            collapseElement.classList.toggle("show");
+            Link.classList.add("active");
+            });
+        </script>
+
 {% endblock %}

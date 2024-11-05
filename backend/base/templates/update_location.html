@@ -62,6 +62,11 @@
 
 <script src="{% static 'js/tab.js' %}"></script>
 <script>
+    document.querySelector('input[name="phone_number"]').addEventListener('input', function(event) {
+        // Replace any non-digit character with an empty string
+        this.value = this.value.replace(/\D/g, '');
+    });
+
     const form = document.getElementById("upd-loc-form");
     const updateBtn = document.getElementById("updateBtn");
     let initialFormData = new FormData(form);
@@ -106,12 +111,12 @@
         let isValid = true;
 
         if (!phonePattern.test(phoneNumber)) {
-            document.getElementById("phone-number-error").innerText = "Phone number must have at least 10 digits.";
+            document.getElementById("phone-number-error").innerText = "Phone number must have 10 digits.";
             isValid = false;
         }
 
         if (!pincodePattern.test(pincode)) {
-            document.getElementById("pincode-error").innerText = "Pincode must have at least 6 digits.";
+            document.getElementById("pincode-error").innerText = "Pincode must have 6 digits.";
             isValid = false;
         }
 

@@ -25,7 +25,7 @@
                           <p>Upload a new image</p>
                       {% endif %}
                 </div>
-                  
+
                   <div class="buttons px-4 py-4">
                     <a type="button" class="btn btn-secondary" onclick="goBack()"><i class="fa-solid fa-arrow-left-long"></i></a>
                     <button type="submit" onclick="openPopup(event)" class="btn btn-primary" data-toggle="tooltip" title="submit"><i class="fa-solid fa-arrow-right-long"></i></button>
@@ -34,10 +34,10 @@
               </div>
             </div>
           </div>
-        
+
         <!-- Popup content -->
         <div class="popup" id="popup">
-          <div class="popup-content">  
+          <div class="popup-content">
               <h2>Confirm Update</h2>
               <p>Are you sure you want to continue?</p>
               <div style="display: flex; justify-content: space-between;">
@@ -47,19 +47,25 @@
           </div>
       </div>
         <div class="overlay" id="overlay"></div>
-      
+
 
     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentUrl = window.location.pathname;
+        const Link = document.querySelector('a.nav-link[href="/organizationlocationlist/"]');
+        Link.classList.add("active");
+      });
+
       function validateForm() {
         // Check if the "Clear Image" checkbox is checked
         var clearImageCheckbox = document.getElementById("image-clear_id");
-        
+
         if (clearImageCheckbox.checked) {
             // Clear the file input
             var imageInput = document.getElementById("id_image");
             imageInput.value = null;
         }
-        
+
         // Check if an image is selected
         var imageInput = document.getElementById("id_image");
         if (!imageInput.files.length && !clearImageCheckbox.checked) {
@@ -68,7 +74,7 @@
         }
         return true;
       }
-    
+
       function handleYes(event){
           form = document.getElementById("upd-img-form");
           form.submit()

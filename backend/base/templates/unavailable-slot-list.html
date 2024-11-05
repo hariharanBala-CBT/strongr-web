@@ -6,7 +6,7 @@
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="{% url 'organization_page' %}"><i class="fa fa-home" aria-hidden="true"></i></a></li>
         <li class="breadcrumb-item"><a href="{% url 'temp-deslot-location' %}">Unavailable Slots</a></li>
-        <li class="breadcrumb-item">Unavailable-Slot-List</li>
+        <li class="breadcrumb-item">Unavailable Slot List</li>
     </ol>
 
     <div class="container-fluid px-4 mt-4">
@@ -119,5 +119,13 @@
             document.getElementById("overlay").style.display = "none";
         }
 
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const collapseElement = document.querySelector("#collapseLayouts");
+          const Link = document.querySelector('a.nav-link[href="/temp-unavailableslot-location/"]');
+          collapseElement.classList.toggle("show");
+          Link.classList.add("active");
+        });
     </script>
 {% endblock %}

@@ -40,4 +40,11 @@
 	<a href="{% url 'tenantuser_page' %}" class="btn btn-primary mt-4 back-btn" data-toggle="tooltip" title="back"><i
 		class="fas fa-arrow-left"></i></a>
 </div>
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+	  const currentUrl = window.location.pathname;
+	  const Link = document.querySelector('a.nav-link[href="/user/"]');
+	  Link.classList.add("active");
+	});
+</script>
 {% endblock %}

@@ -9,9 +9,9 @@
     <a href="{% url 'temp-slot-location' %}">Additional Slots</a>
   </li>
   <li class="breadcrumb-item">
-    <a href="{% url 'temp-slot-list' pk=locationpk %}">Temporary-Slot</a>
+    <a href="{% url 'temp-slot-list' pk=locationpk %}">Additional Slot list</a>
   </li>
-  <li class="breadcrumb-item">Add-Temp-Slot</li>
+  <li class="breadcrumb-item">Add Additional Slot</li>
 </ol>
 
 <div class="container-fluid px-4 m">
@@ -86,4 +86,14 @@
     </form>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const collapseElement = document.querySelector("#collapseLayouts");
+    const Link = document.querySelector('a.nav-link[href="/temp-slot-location/"]');
+    collapseElement.classList.toggle("show");
+    Link.classList.add("active");
+  });
+</script>
+
 {% endblock %}

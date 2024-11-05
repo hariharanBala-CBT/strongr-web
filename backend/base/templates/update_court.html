@@ -71,6 +71,12 @@
     <div class="overlay" id="overlay"></div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const currentUrl = window.location.pathname;
+            const Link = document.querySelector('a.nav-link[href="/organizationlocationlist/"]');
+            Link.classList.add("active");
+        });
+
         window.addEventListener('DOMContentLoaded', event => {
             const form = document.querySelector('form');
 

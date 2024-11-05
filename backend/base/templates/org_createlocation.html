@@ -66,5 +66,51 @@
       <div class="buttons px-4 py-4"></div>
     </div>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const currentUrl = window.location.pathname;
+      const Link = document.querySelector('a.nav-link[href="/organizationlocationlist/"]');
+      Link.classList.add("active");
+    });
+
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const phoneNumberField = document.getElementById("phone_number");
+  
+      phoneNumberField.addEventListener("input", function (e) {
+        // Remove any non-numeric characters
+        this.value = this.value.replace(/[^0-9]/g, '');
+  
+        // Check if input exceeds 10 digits
+        if (this.value.length > 10) {
+          this.value = this.value.slice(0, 10); // Limit to 10 digits
+          showError("Phone number must be 10 digits long. Can not add exceeding digits."); // Display error
+        } else {
+          removeError(); // Remove error if within limit
+        }
+      });
+  
+      function showError(message) {
+        let errorDiv = document.getElementById("phoneError");
+        if (!errorDiv) {
+          errorDiv = document.createElement("div");
+          errorDiv.id = "phoneError";
+          errorDiv.className = "text-danger";
+          phoneNumberField.parentNode.appendChild(errorDiv);
+        }
+        errorDiv.textContent = message;
+      }
+  
+      function removeError() {
+        const errorDiv = document.getElementById("phoneError");
+        if (errorDiv) {
+          errorDiv.textContent = "";
+        }
+      }
+    });
+  </script>
+  
+  
   {% endblock %}
 </div>

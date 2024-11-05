@@ -80,7 +80,6 @@ urlpatterns = [
 
 
      path('approvallist/' ,ApprovalListView.as_view(),name='approval_list'),
-     path('user/' ,TenantEmployeeHomeView.as_view(), name='tenantuser_page'),
      path('organization_list/' ,OrganizationListView.as_view(),name='organization_list'),
      path('cancelled_organization_list/' ,CancelOrganizationListView.as_view(),name='cancelled_organization_list'),
      path('pending_organization_list/' ,PendingOrganizationListView.as_view(),name='pending_organization_list'),
