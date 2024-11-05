@@ -121,5 +121,17 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
   <script src="{% static 'js/upd-hh.js' %}"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const currentUrl = window.location.pathname;
+      
+      const happyHoursLink = document.querySelector('a.nav-link[href="/Happy-hours/location/"]');
+  
+      if (happyHoursLink && currentUrl.startsWith("/happyhours/manage/")) {
+        happyHoursLink.classList.add("active");
+      }
+    });
+  </script>
+  
 
 {% endblock %}
