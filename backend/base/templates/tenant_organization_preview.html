@@ -344,11 +344,18 @@
 		document.addEventListener('DOMContentLoaded', function () {
 			var hash = window.location.hash;
 
+			const Link = document.querySelector('a.nav-link[href="/organization_list/"]');
+		  	Link.classList.add("active");
+
 			if (hash) {
 				var tabElement = document.querySelector(hash.replace('#', '#loc-'));
 				if (tabElement) {
 					var tab = new bootstrap.Tab(tabElement);
 					tab.show();
+					const Link0 = document.querySelector('a.nav-link[href="/organization_list/"]');
+					Link0.classList.remove("active");
+					const Link1 = document.querySelector('a.nav-link[href="/location_list/"]');
+		  			Link1.classList.add("active");
 				}
 			} else {
 				// Show the first tab by default
@@ -356,6 +363,8 @@
 				if (firstTab) {
 					var tab = new bootstrap.Tab(firstTab);
 					tab.show();
+					const Link = document.querySelector('a.nav-link[href="/organization_list/"]');
+		  			Link.classList.add("active");
 				}
 			}
 
@@ -389,11 +398,4 @@
 			});
 		});
 	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-		  const currentUrl = window.location.pathname;
-		  const Link = document.querySelector('a.nav-link[href="/organization_list/"]');
-		  Link.classList.add("active");
-		});
-	  </script>
 {% endblock %}
