@@ -38,13 +38,13 @@
             <div class="form-group">
                 <input type="text" name="username" id="{{ form.username.id_for_label }}"
                        placeholder="{{ form.username.field.widget.attrs.placeholder }}"
-                       {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
+                       {% if form.username.value %}value="{{ form.username.value }}"{% endif %} required>
                 <i class="fas fa-user"></i>
             </div>
 
             <div class="form-group">
                 <input type="password" name="password" id="{{ form.password.id_for_label }}"
-                       placeholder="{{ form.password.field.widget.attrs.placeholder }}">
+                       placeholder="{{ form.password.field.widget.attrs.placeholder }}" required>
                 <i class="fas fa-lock"></i>
                 <button type="button" class="password-toggle" onclick="togglePassword()">
                     <i class="fas fa-eye" id="password-toggle-icon"></i>
