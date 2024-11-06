@@ -66,6 +66,16 @@
                                 </div>
                             </div>
 
+                            <!-- Loading Overlay -->
+                            <div id="loadingOverlay" tabindex="-1" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1050; align-items: center; justify-content: center; color: #fff; font-size: 1.5em;">
+                                <div>
+                                    <div class="spinner-border text-light" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-3">Submitting location data and sending status email...</p>
+                                </div>
+                            </div>
+
                             <!-- Locations -->
                             <h3 class="mb-4">Locations</h3>
 
@@ -492,7 +502,7 @@
         </script>
         <script>
             document.addEventListener('DOMContentLoaded', (event) => {
-            
+
                 // Store active tab ID on form submission
                 const forms = document.querySelectorAll('form[id^="locationformsubmit-"]');
                 forms.forEach(form => {
@@ -504,9 +514,14 @@
                         } else {
                             console.log(`Could not find tab pane for form with ID ${this.id}.`);
                         }
+                        const overlay = document.getElementById('loadingOverlay');
+                        overlay.style.display = 'flex';
+                        overlay.setAttribute('aria-live', 'assertive');
+                        document.body.setAttribute('aria-hidden', 'true');
+                        overlay.focus();
                     });
                 });
-        
+
                 // Restore active tab on page load
                 const activeTabId = localStorage.getItem('activeTabId');
                 if (activeTabId) {
@@ -527,5 +542,5 @@
                     console.log("No active tab ID found in localStorage on page load.");
                 }
             });
-        </script>        
+        </script>
 {% endblock %}
