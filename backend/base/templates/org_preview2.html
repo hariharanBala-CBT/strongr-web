@@ -7,7 +7,7 @@
                 </a></li>
                 <li class="breadcrumb-item">Preview</li>
             </ol>
-                            
+
             <h1 class="mt-4 mb-4">Preview</h1>
 
             <div class="container-fluid mt-4">
@@ -202,7 +202,7 @@
                                                                 {% else %}
                                                                     <p>No games available. <a href="{% url 'mainview' location_item.location.id %}#gameTab">Add Games</a></p>
                                                                 {% endif %}
-                                                            </div>                                                            
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -381,7 +381,7 @@
                                                         {% if profile.status == 1 %}
                                                             {% if location_item.location.status != 1 and location_item.location.status != 3 %}
                                                             <div class="btn-group" role="group">
-                                                                <form method="post"
+                                                                <form method="post" id="locationformsubmit-{{ location_item.location.id }}"
                                                                     action="{% url 'change_location_status' location_item.location.id '3' %}">
                                                                     {% csrf_token %}
                                                                     <button type="submit"
@@ -490,5 +490,42 @@
                 footer.style.display = 'none';
             });
         </script>
-
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+            
+                // Store active tab ID on form submission
+                const forms = document.querySelectorAll('form[id^="locationformsubmit-"]');
+                forms.forEach(form => {
+                    form.addEventListener('submit', function() {
+                        const tabPane = this.closest('.tab-pane');
+                        if (tabPane) {
+                            const tabId = tabPane.id;
+                            localStorage.setItem('activeTabId', tabId);
+                        } else {
+                            console.log(`Could not find tab pane for form with ID ${this.id}.`);
+                        }
+                    });
+                });
+        
+                // Restore active tab on page load
+                const activeTabId = localStorage.getItem('activeTabId');
+                if (activeTabId) {
+                    const activeTab = document.getElementById(activeTabId);
+                    if (activeTab) {
+                        const tabButton = document.querySelector(`[aria-controls="${activeTabId}"]`);
+                        if (tabButton) {
+                            const tab = new bootstrap.Tab(tabButton);
+                            tab.show();
+                        } else {
+                            console.log(`Tab button for ${activeTabId} not found.`);
+                        }
+                    } else {
+                        console.log(`Active tab element ${activeTabId} not found.`);
+                    }
+                    localStorage.removeItem('activeTabId');
+                } else {
+                    console.log("No active tab ID found in localStorage on page load.");
+                }
+            });
+        </script>        
 {% endblock %}
