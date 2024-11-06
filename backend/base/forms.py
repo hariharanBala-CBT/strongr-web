@@ -60,9 +60,9 @@ class LoginForm(forms.Form):
         return password
 
 def validate_phone_number(value):
-    if len(str(value)) != 10:
+    if value and len(str(value)) != 10:
         raise ValidationError("Phone number must be 10 digits long")
-        
+
 class OrganizationProfileForm(forms.ModelForm):
     organization_name = forms.CharField(max_length=50, disabled=True)
     phone_number = forms.CharField(validators=[validate_phone_number])
@@ -74,6 +74,10 @@ class OrganizationProfileForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 2, 'cols': 25})
         }
+    
+    def clean_alt_number(self):
+        alt_number = self.cleaned_data.get('alt_number')
+        return alt_number or None
 
 class OrganizationLocationForm(ModelForm):
     class Meta:
