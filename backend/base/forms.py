@@ -59,8 +59,15 @@ class LoginForm(forms.Form):
 
         return password
 
+def validate_phone_number(value):
+    if len(str(value)) != 10:
+        raise ValidationError("Phone number must be 10 digits long")
+        
 class OrganizationProfileForm(forms.ModelForm):
     organization_name = forms.CharField(max_length=50, disabled=True)
+    phone_number = forms.CharField(validators=[validate_phone_number])
+    alt_number = forms.CharField(required=False, validators=[validate_phone_number])
+
     class Meta:
         model = Organization
         fields = ['organization_name', 'phone_number', 'alt_number', 'description', 'is_gst_applicable', 'gst_percentage']
