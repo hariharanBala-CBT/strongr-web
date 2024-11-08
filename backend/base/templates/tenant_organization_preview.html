@@ -29,8 +29,8 @@
                     <li><span class="label">Name:</span> {{ organization.organization_name }}</li>
                     <li><span class="label">Email:</span> {{ organization.user.email }}</li>
                     <li><span class="label">Phone:</span> {{ organization.phone_number }}</li>
-                    <li><span class="label">Alternate Phone:</span> {{ organization.alt_number }}</li>
-                    <li><span class="label">Description:</span> {{ organization.description }}</li>
+                    <li><span class="label">Alternate Phone:</span> {{ organization.alt_number|default:"-" }}</li>
+                    <li><span class="label">Description:</span> {{ organization.description|default:"-" }}</li>
                     <li>
                         <span class="label">Status:</span>
                         {% if organization.status == 1 %}
@@ -55,7 +55,7 @@
                         <button type="submit" class="btn btn-success me-2">Approve</button>
                     </form>
                     {% if organization.status != 1 and organization.status != 4 %}
-                    <button class="btn btn-danger" id="cancelBtn">Cancel</button>
+                    <button class="btn btn-danger" style="border-top-left-radius: 45px; border-bottom-left-radius: 45px;" id="cancelBtn">Cancel</button>
                     {% endif %}
                 </div>
                 {% endif %}
@@ -173,7 +173,7 @@
 										<div class="accordion-body">
 											<ul class="list-unstyled">
 												<li>Pricing: {{ game.pricing }}</li>
-												<li class="desc-games">Description: {% if game.description %}{{ game.description }}{% else %}None{% endif %}</li>
+												<li class="desc-games">Description: {% if game.description %}{{ game.description }}{% else %}-{% endif %}</li>
 											</ul>
 											{% if game.happyhourpricing_set.exists %}
 											<ul class="list-unstyled">
@@ -259,7 +259,7 @@
 								<ul>
 									{% for workingtime in location_item.workingtimes %}
 									<li>
-										<div class="label">{{ workingtime.get_days_display }}</div>: {{ workingtime.work_from_time }} - {{ workingtime.work_to_time }}
+										<div class="label">{{ workingtime.get_days_display }}</div>: {{ workingtime.work_from_time|default:"-" }} - {{ workingtime.work_to_time|default:"-" }}
 									</li>
 									{% endfor %}
 								</ul>
@@ -298,7 +298,7 @@
 									<button type="submit" class="btn btn-success me-2">Approve</button>
 								</form>
 								{% if location_item.location.status != 4 %}
-									<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ location_item.location.id }}">Cancel</button>
+									<button class="btn btn-danger" style="border-radius: 25px;" data-bs-toggle="modal" data-bs-target="#cancelModal{{ location_item.location.id }}">Cancel</button>
 								{% endif %}
 									<!-- Modal -->
 									<div class="modal fade" id="cancelModal{{ location_item.location.id }}" tabindex="-1" aria-labelledby="cancelModalLabel{{ location_item.location.id }}" aria-hidden="true">
