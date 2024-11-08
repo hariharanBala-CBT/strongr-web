@@ -31,20 +31,12 @@
                                         <li>
                                             <div class="label">Phone</div>:&nbsp; {{profile.phone_number}}
                                         </li>
-                                        {% if profile.alt_number %}
                                         <li>
-                                            <div class="label"> Alternate Phone</div>:&nbsp; {{profile.alt_number}}
+                                            <div class="label"> Alternate Phone</div>:&nbsp; {{profile.alt_number|default:"-"}}
                                         </li>
-                                        {% endif %}
-                                        {% if profile.description|length > 0 %}
                                         <li>
-                                            <div class="label">Description</div>:&nbsp; {{profile.description}}
+                                            <div class="label">Description</div>:&nbsp; {{profile.description|default:"-"}}
                                         </li>
-                                        {% elif profile.description|length == 0 %}
-                                        <li>
-                                            <div class="label">Description</div>:&nbsp; -
-                                        </li>
-                                        {% endif %}
                                         <li>
                                             <div class="label">Status</div>:&nbsp;
                                                 {% if profile.status == 1 %}
