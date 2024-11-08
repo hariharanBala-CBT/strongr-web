@@ -168,7 +168,7 @@
                             {% else %}
                                 <div class="preview-prompt">
                                     <i class="fas fa-info-circle"></i>
-                                    Submit data in <a href="{% url 'preview' %}">preview</a>
+                                    Submit data in <a href="{% url 'preview' %}#{{ location_detail.location.area|slugify }}-{{ location_detail.location.id }}">preview</a>
                                 </div>
                             {% endif %}
                         {% endif %}

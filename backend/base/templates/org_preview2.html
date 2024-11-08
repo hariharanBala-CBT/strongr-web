@@ -488,59 +488,77 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', (event) => {
-                var submitButton = document.getElementById("submit-btn-{{ location_item.location.id }}");
-                if (submitButton && submitButton.getAttribute("disabled")) {
-                    // Initialize tooltip if button is disabled
-                    new bootstrap.Tooltip(submitButton);
-                }
-            });
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-            document.addEventListener('DOMContentLoaded', () => {
-                const footer = document.querySelector('footer');
-                footer.style.display = 'none';
-            });
-        </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', (event) => {
+    // Handle tooltips for disabled submit buttons
+    var submitButtons = document.querySelectorAll("[id^='submit-btn-']");
+    submitButtons.forEach(button => {
+        if (button && button.getAttribute("disabled")) {
+            new bootstrap.Tooltip(button);
+        }
+    });
 
-                // Store active tab ID on form submission
-                const forms = document.querySelectorAll('form[id^="locationformsubmit-"]');
-                forms.forEach(form => {
-                    form.addEventListener('submit', function() {
-                        const tabPane = this.closest('.tab-pane');
-                        if (tabPane) {
-                            const tabId = tabPane.id;
-                            localStorage.setItem('activeTabId', tabId);
-                        } else {
-                            console.log(`Could not find tab pane for form with ID ${this.id}.`);
-                        }
-                        const overlay = document.getElementById('loadingOverlay');
-                        overlay.style.display = 'flex';
-                        overlay.setAttribute('aria-live', 'assertive');
-                        document.body.setAttribute('aria-hidden', 'true');
-                        overlay.focus();
-                    });
-                });
+    // Set current year
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    
+    // Hide footer
+    const footer = document.querySelector('footer');
+    footer.style.display = 'none';
 
-                // Restore active tab on page load
-                const activeTabId = localStorage.getItem('activeTabId');
-                if (activeTabId) {
-                    const activeTab = document.getElementById(activeTabId);
-                    if (activeTab) {
-                        const tabButton = document.querySelector(`[aria-controls="${activeTabId}"]`);
-                        if (tabButton) {
-                            const tab = new bootstrap.Tab(tabButton);
-                            tab.show();
-                        } else {
-                            console.log(`Tab button for ${activeTabId} not found.`);
-                        }
-                    } else {
-                        console.log(`Active tab element ${activeTabId} not found.`);
-                    }
-                    localStorage.removeItem('activeTabId');
-                } else {
-                    console.log("No active tab ID found in localStorage on page load.");
-                }
-            });
+    // Handle form submissions and loading overlay
+    const forms = document.querySelectorAll('form[id^="locationformsubmit-"]');
+    forms.forEach(form => {
+        form.addEventListener('submit', function() {
+            const tabPane = this.closest('.tab-pane');
+            if (tabPane) {
+                const tabId = tabPane.id;
+                localStorage.setItem('activeTabId', tabId);
+            } else {
+                console.log(`Could not find tab pane for form with ID ${this.id}.`);
+            }
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = 'flex';
+            overlay.setAttribute('aria-live', 'assertive');
+            document.body.setAttribute('aria-hidden', 'true');
+            overlay.focus();
+        });
+    });
+
+    // Function to activate tab by ID
+    const activateTab = (tabId) => {
+        if (!tabId) return;
+        
+        const tabButton = document.querySelector(`[aria-controls="${tabId}"]`);
+        if (tabButton) {
+            const tab = new bootstrap.Tab(tabButton);
+            tab.show();
+        } else {
+            console.log(`Tab button for ${tabId} not found.`);
+        }
+    };
+
+    // Check for hash in URL
+    const hash = window.location.hash;
+    if (hash) {
+        const tabId = hash.substring(1); // Remove the # symbol
+        activateTab(tabId);
+    } else {
+        // If no hash, check for stored active tab
+        const activeTabId = localStorage.getItem('activeTabId');
+        if (activeTabId) {
+            activateTab(activeTabId);
+            localStorage.removeItem('activeTabId');
+        } else {
+            console.log("No active tab ID found in localStorage or URL hash on page load.");
+        }
+    }
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', () => {
+        const newHash = window.location.hash;
+        if (newHash) {
+            const tabId = newHash.substring(1);
+            activateTab(tabId);
+        }
+    });
+});
         </script>
 {% endblock %}
