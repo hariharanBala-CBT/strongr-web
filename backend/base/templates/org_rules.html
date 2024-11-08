@@ -90,25 +90,24 @@
     </div>
 
     <script>
-
         document.addEventListener("DOMContentLoaded", function () {
             const Link = document.querySelector('a.nav-link[href="/organization_location_list/rules"]');
             Link.classList.add("active");
         });
 
-        let ruleCounter = 1;
+        let ruleCounter = 0;
         let currentEditRuleElement = null;
         let currentDeleteRuleElement = null;
 
         function loadExistingRules() {
             const rulesText = document.getElementById('rules').value;
             const rulesList = document.getElementById('rules-list');
-            const rules = rulesText.split('\n').filter(rule => rule.trim() !== '');
+            const rules = rulesText.split('\n').filter(rule => rule.trim() !== '' && rule.toLowerCase() !== 'none');
 
             rules.forEach(rule => {
+                ruleCounter++;
                 const ruleItem = createRuleElement(rule);
                 rulesList.appendChild(ruleItem);
-                ruleCounter++;
             });
         }
 
@@ -135,10 +134,10 @@
         function addRule() {
             const ruleText = document.getElementById('ruleInput').value;
             if (ruleText.trim() !== "") {
+                ruleCounter++;
                 const rulesList = document.getElementById('rules-list');
                 const ruleItem = createRuleElement(ruleText);
                 rulesList.appendChild(ruleItem);
-                ruleCounter++;
                 document.getElementById('ruleInput').value = "";
                 updateTextarea();
             }
@@ -169,6 +168,14 @@
             currentDeleteRuleElement.remove();
             updateTextarea();
             bootstrap.Modal.getInstance(document.getElementById('deleteRuleModal')).hide();
+            
+            // Renumber remaining rules
+            const rules = document.querySelectorAll('.rule');
+            ruleCounter = 0;
+            rules.forEach((rule, index) => {
+                ruleCounter++;
+                rule.querySelector('.rule-number').textContent = `Rule ${ruleCounter}: `;
+            });
         }
 
         function updateTextarea() {
