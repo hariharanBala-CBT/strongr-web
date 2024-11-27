@@ -130,6 +130,7 @@ EMAIL_HOST_PASSWORD = "iccviintoqqnanyq"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},

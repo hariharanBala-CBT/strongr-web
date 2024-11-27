@@ -291,6 +291,7 @@ class Message(models.Model):
 
 class Coupon(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
     code = models.CharField(max_length=12, unique=True)
     discount_percentage = models.IntegerField(choices=[
         (10, '10%'),
@@ -316,4 +317,3 @@ class Coupon(models.Model):
 
     def __str__(self):
         return f"{self.code} - {self.discount_percentage}%"
-

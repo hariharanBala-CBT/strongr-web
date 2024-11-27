@@ -465,7 +465,9 @@ class CustomPasswordResetForm(PasswordResetForm):
         return email
 
 class CouponForm(forms.ModelForm):
-    expires_at = forms.DateField(label='Select date', widget=forms.DateInput(attrs={'type': 'date'}))
+    expires_at = forms.DateField(label='Select Expiry Date', widget=forms.DateInput(attrs={'type': 'date'}))
+    customer = forms.ModelChoiceField(queryset=Customer.objects.all(), label='Select Customer')
+
     class Meta:
         model = Coupon
-        fields = ['discount_percentage', 'expires_at']
+        fields = ['discount_percentage', 'expires_at', 'customer']

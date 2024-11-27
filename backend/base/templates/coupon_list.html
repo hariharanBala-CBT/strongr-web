@@ -26,6 +26,7 @@
                             <tr>
                                 <th>Code</th>
                                 <th>Discount Percentage</th>
+                                <th>User</th>
                                 <th>Created At</th>
                                 <th>Expires At</th>
                             </tr>
@@ -37,6 +38,7 @@
                                 <tr>
                                     <td>{{ coupon.code }}</td>
                                     <td>{{ coupon.discount_percentage }}%</td>
+                                    <td>{{ coupon.customer }}</td>
                                     <td>{{ coupon.created_at }}</td>
                                     <td>{{ coupon.expires_at }}</td>
                                 </tr>
@@ -63,6 +65,7 @@
                             <tr>
                                 <th>Code</th>
                                 <th>Discount Percentage</th>
+                                <th>User</th>
                                 <th>Created At</th>
                                 <th>Expires At</th>
                                 <th>Status</th>
@@ -75,6 +78,7 @@
                                 <tr class="{% if coupon.expires_at|date:"Y-m-d" < current_date %}expired-row{% else %}redeemed-row{% endif %}">
                                     <td>{{ coupon.code }}</td>
                                     <td>{{ coupon.discount_percentage }}%</td>
+                                    <td>{{ coupon.customer }}</td>
                                     <td>{{ coupon.created_at }}</td>
                                     <td>{{ coupon.expires_at }}</td>
                                     <td>

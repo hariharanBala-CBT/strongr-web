@@ -55,6 +55,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from functools import wraps
+from base.utils import *
 
 def group_required(group_name):
     def decorator(view_func):
@@ -1810,8 +1811,26 @@ class CouponCreateView(CreateView):
     template_name = 'coupon_form.html'
     success_url = reverse_lazy('coupon-list')
 
+    def generate_coupon_code(self, discount_percentage):
+        random_part = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+        return f"{random_part}{discount_percentage:02}"
+
     def form_valid(self, form):
         form.instance.organization = self.request.user.organization
+        customer_number = form.instance.customer.phone_number
+        email = form.instance.customer.user.email
+        discount_percentage = self.request.POST.get('discount_percentage')
+        form.instance.code = self.generate_coupon_code(discount_percentage)
+        send_coupon_sms(customer_number, form.instance.code)
+        send_coupon_whatsapp(customer_number, form.instance.code)
+
+        subject = MAIL_MESSAGES.get('welcome')
+        message = f"Congratulations! You've received a coupon: {form.instance.code}. Use it soon!"
+
+        from_email = EMAIL_HOST_USER
+        recipient_list = [email]
+        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
         messages.success(self.request, SUCCESS_MESSAGES.get('create_coupon'))
         return super().form_valid(form)
 

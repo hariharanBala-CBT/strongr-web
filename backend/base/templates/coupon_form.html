@@ -22,17 +22,25 @@
                 <form method="post" class="coupon-form">
                     {% csrf_token %}
                     <div class="row g-4">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="{{ form.discount_percentage.id_for_label }}" class="form-label">{{ form.discount_percentage.label }}</label>
-                            <select name="{{ form.discount_percentage.name }}" id="{{ form.discount_percentage.id_for_label }}" class="form-select">
+                            <select name="{{ form.discount_percentage.name }}" id="{{ form.discount_percentage.id_for_label }}" class="form-select" required>
                                 {% for value, display in form.discount_percentage.field.choices %}
                                     <option value="{{ value }}" {% if value == form.discount_percentage.value %}selected{% endif %}>{{ display }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label for="{{ form.customer.id_for_label }}" class="form-label">{{ form.customer.label }}</label>
+                            <select name="{{ form.customer.name }}" id="{{ form.customer.id_for_label }}" class="form-select" required>
+                                {% for value, display in form.customer.field.choices %}
+                                    <option value="{{ value }}" {% if value == form.customer.value %}selected{% endif %}>{{ display }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
                             <label for="{{ form.expires_at.id_for_label }}" class="form-label">{{ form.expires_at.label }}</label>
-                            <input type="date" name="{{ form.expires_at.name }}" id="{{ form.expires_at.id_for_label }}" value="{{ form.expires_at.value }}" class="form-control">
+                            <input type="date" name="{{ form.expires_at.name }}" id="{{ form.expires_at.id_for_label }}" value="{{ form.expires_at.value }}" class="form-control" required>
                         </div>
                     </div>
                     <div class="mt-4 d-flex justify-content-between align-items-center">
