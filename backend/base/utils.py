@@ -50,26 +50,24 @@ def validate_email(email):
 
     return re.match(pattern, email) is not None
 
-def send_coupon_whatsapp(customer_phone, coupon_code):
-    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-    try:
-        message = client.messages.create(
-            body=f"🎉 You've received a coupon: {coupon_code}! Use it soon!",
-            from_=TWILIO_WHATSAPP_NUMBER,
-            to=f'whatsapp:{customer_phone}'
-        )
-        return message.sid
-    except Exception as e:
-        print(f"Error sending WhatsApp message: {e}")
-        return None
+def send_coupon_whatsapp(phone_number, coupon_code, discount_percentage):
 
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    
+    message = client.messages.create(
+        from_='whatsapp:+14155238886',
+        body=f"Congratulations! You've received a coupon: {coupon_code}. Use it soon!",
+        to=f'whatsapp:+91{phone_number}'
+    )
+
+    print(message.sid)
 def send_coupon_sms(customer_phone, coupon_code):
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     try:
         message = client.messages.create(
             body=f"Congratulations! You've received a coupon: {coupon_code}. Use it soon!",
             from_=TWILIO_PHONE_NUMBER,
-            to=customer_phone
+            to=f"+91{customer_phone}",
         )
         return message.sid
     except Exception as e:
