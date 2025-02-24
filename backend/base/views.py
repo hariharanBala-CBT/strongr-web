@@ -1822,8 +1822,8 @@ class CouponCreateView(CreateView):
         email = form.instance.customer.user.email
         discount_percentage = self.request.POST.get('discount_percentage')
         form.instance.code = self.generate_coupon_code(discount_percentage)
-        send_coupon_sms(customer_number, form.instance.code)
-        send_coupon_whatsapp(customer_number, form.instance.code,discount_percentage)
+        # send_coupon_sms(customer_number, form.instance.code)
+        # send_coupon_whatsapp(customer_number, form.instance.code,discount_percentage)
 
         subject = MAIL_MESSAGES.get('welcome')
         message = f"Congratulations! You've received a coupon: {form.instance.code}. Use it soon!"
